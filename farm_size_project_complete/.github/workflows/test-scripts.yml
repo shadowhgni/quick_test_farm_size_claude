@@ -17,10 +17,7 @@ name: Test R Scripts
 on:
   push:
     branches: [main, develop]
-    paths:
-      - 'scripts/**'
-      - '.github/workflows/**'
-      - 'renv.lock'
+    
   pull_request:
     branches: [main]
   workflow_dispatch:  # Allow manual triggering
