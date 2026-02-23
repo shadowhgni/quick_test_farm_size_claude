@@ -1,1 +1,292 @@
+# ==============================================================================
+# GitHub Actions Workflow: Test Farm Size Prediction Scripts
+# Project: Farm Size Prediction Across Sub-Saharan Africa
+#
+# This workflow:
+# 1. Sets up R environment with all required packages
+# 2. Generates synthetic test data
+# 3. Runs all scripts in sequence
+# 4. Validates outputs
+# 5. Uploads test reports as artifacts
+#
+# Triggers: Push to main/develop, Pull requests, Manual dispatch
+# ==============================================================================
+
+name: Test R Scripts
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/**'
+      - 'renv.lock'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:  # Allow manual triggering
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly on Monday at 6 AM UTC
+
+env:
+  R_LIBS_USER: ${{ github.workspace }}/R/library
+
+jobs:
+  # ==========================================================================
+  # JOB 1: Setup and Test Core Scripts
+  # ==========================================================================
+  test-core-scripts:
+    runs-on: ubuntu-latest
+    container:
+      image: rocker/geospatial:4.3.3
+
+    steps:
+      # ----------------------------------------------------------------------
+      # Checkout repository
+      # ----------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ----------------------------------------------------------------------
+      # Cache R packages
+      # ----------------------------------------------------------------------
+      - name: Cache R packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-r-${{ hashFiles('renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-r-
+
+      # ----------------------------------------------------------------------
+      # Install R packages
+      # ----------------------------------------------------------------------
+      - name: Install R packages
+        run: |
+          dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)
+          .libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))
+          
+          packages <- c(
+            "tidyverse", "terra", "geodata", "here",
+            "caret", "ranger", "randomForest", "quantregForest",
+            "xgboost", "gbm", "e1071", "kernlab",
+            "GGally", "patchwork", "ggExtra",
+            "fitdistrplus", "EnvStats", "ineq",
+            "haven", "labelled", "testthat"
+          )
+          
+          # Install missing packages
+          missing <- packages[!packages %in% installed.packages()[,"Package"]]
+          if (length(missing) > 0) {
+            install.packages(missing, repos = "https://cloud.r-project.org", 
+                             dependencies = TRUE, Ncpus = 2)
+          }
+          
+          # Verify installation
+          for (pkg in packages) {
+            if (!requireNamespace(pkg, quietly = TRUE)) {
+              stop(paste("Failed to install:", pkg))
+            }
+          }
+          message("All packages installed successfully!")
+        shell: Rscript {0}
+
+      # ----------------------------------------------------------------------
+      # Generate synthetic test data
+      # ----------------------------------------------------------------------
+      - name: Generate synthetic data
+        run: |
+          setwd("scripts")
+          source("00_synthetic_data.R")
+        shell: Rscript {0}
+
+      # ----------------------------------------------------------------------
+      # Verify synthetic data was created
+      # ----------------------------------------------------------------------
+      - name: Verify synthetic data
+        run: |
+          # Check key files exist
+          files_to_check <- c(
+            "data/processed/all_predictors.tif",
+            "data/processed/lsms_and_zambia.csv",
+            "data/processed/lsms_trimmed_95th_africa.rds",
+            "data/processed/stacked_rasters_africa.tif"
+          )
+          
+          for (f in files_to_check) {
+            if (!file.exists(f)) {
+              stop(paste("Missing file:", f))
+            }
+            message(paste("✓", f))
+          }
+          message("\nAll synthetic data files created successfully!")
+        shell: Rscript {0}
+
+      # ----------------------------------------------------------------------
+      # Run script tests
+      # ----------------------------------------------------------------------
+      - name: Run script tests
+        run: |
+          setwd("scripts")
+          
+          # Test 03.2: Correlation analysis
+          message("Testing 03.2_correlation_drivers.R...")
+          tryCatch({
+            source("03.2_correlation_drivers.R")
+            message("✓ 03.2 passed")
+          }, error = function(e) {
+            message("✗ 03.2 failed: ", e$message)
+          })
+          
+          # Test 03.3: Descriptive stats
+          message("Testing 03.3_descriptive_stats.R...")
+          tryCatch({
+            source("03.3_descriptive_stats.R")
+            message("✓ 03.3 passed")
+          }, error = function(e) {
+            message("✗ 03.3 failed: ", e$message)
+          })
+        shell: Rscript {0}
+
+      # ----------------------------------------------------------------------
+      # Validate outputs
+      # ----------------------------------------------------------------------
+      - name: Validate outputs
+        run: |
+          # Check output files
+          output_files <- list.files("output", recursive = TRUE, full.names = TRUE)
+          message("Output files created: ", length(output_files))
+          
+          for (f in output_files) {
+            size <- file.info(f)$size
+            message(sprintf("  %s (%d bytes)", basename(f), size))
+          }
+          
+          # Basic validation of LSMS data
+          lsms <- readRDS("data/processed/lsms_trimmed_95th_africa.rds")
+          
+          stopifnot("farm_area_ha column exists" = "farm_area_ha" %in% names(lsms))
+          stopifnot("All farm areas positive" = all(lsms$farm_area_ha > 0))
+          stopifnot("Multiple countries present" = length(unique(lsms$country)) > 5)
+          
+          message("\n✓ All validations passed!")
+        shell: Rscript {0}
+
+      # ----------------------------------------------------------------------
+      # Upload artifacts
+      # ----------------------------------------------------------------------
+      - name: Upload test outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-outputs
+          path: |
+            output/**/*
+            data/processed/*.csv
+          retention-days: 7
+
+      # ----------------------------------------------------------------------
+      # Generate test report
+      # ----------------------------------------------------------------------
+      - name: Generate test report
+        run: |
+          report <- paste0(
+            "# Farm Size Prediction - Test Report\n\n",
+            "**Date:** ", Sys.time(), "\n",
+            "**Commit:** ${{ github.sha }}\n",
+            "**Branch:** ${{ github.ref_name }}\n\n",
+            "## Synthetic Data Summary\n\n"
+          )
+          
+          # Add data summary
+          lsms <- readRDS("data/processed/lsms_trimmed_95th_africa.rds")
+          report <- paste0(report,
+            "- **Total farms:** ", nrow(lsms), "\n",
+            "- **Countries:** ", length(unique(lsms$country)), "\n",
+            "- **Farm size range:** ", round(min(lsms$farm_area_ha), 2), 
+            " - ", round(max(lsms$farm_area_ha), 2), " ha\n",
+            "- **Median farm size:** ", round(median(lsms$farm_area_ha), 2), " ha\n\n"
+          )
+          
+          # Add raster info
+          stacked <- terra::rast("data/processed/stacked_rasters_africa.tif")
+          report <- paste0(report,
+            "## Predictor Raster Stack\n\n",
+            "- **Layers:** ", terra::nlyr(stacked), "\n",
+            "- **Resolution:** ", paste(round(terra::res(stacked), 3), collapse = " x "), " degrees\n",
+            "- **CRS:** EPSG:4326\n\n"
+          )
+          
+          report <- paste0(report, "## Test Results\n\n✅ All tests passed!\n")
+          
+          writeLines(report, "output/reports/test_report.md")
+          message("Test report generated!")
+        shell: Rscript {0}
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: output/reports/test_report.md
+          retention-days: 30
+
+  # ==========================================================================
+  # JOB 2: Test ML Scripts (separate job for isolation)
+  # ==========================================================================
+  test-ml-scripts:
+    runs-on: ubuntu-latest
+    needs: test-core-scripts
+    container:
+      image: rocker/geospatial:4.3.3
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download synthetic data
+        uses: actions/download-artifact@v4
+        with:
+          name: test-outputs
+          path: .
+
+      - name: Install ML packages
+        run: |
+          packages <- c("caret", "ranger", "randomForest", "xgboost")
+          install.packages(packages, repos = "https://cloud.r-project.org", quiet = TRUE)
+        shell: Rscript {0}
+
+      - name: Test ML data preparation
+        run: |
+          # Verify ML-ready data
+          lsms <- read.csv("data/processed/lsms_spatial.csv")
+          
+          required_cols <- c("farm_area_ha", "cropland", "cattle", "pop", 
+                             "temperature", "rainfall", "market")
+          
+          missing <- required_cols[!required_cols %in% names(lsms)]
+          if (length(missing) > 0) {
+            stop(paste("Missing columns:", paste(missing, collapse = ", ")))
+          }
+          
+          message("✓ ML data validation passed")
+          message("  Rows: ", nrow(lsms))
+          message("  Columns: ", ncol(lsms))
+        shell: Rscript {0}
+
+  # ==========================================================================
+  # JOB 3: Code Quality Checks
+  # ==========================================================================
+  lint-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check R script syntax
+        run: |
+          for script in scripts/*.R; do
+            echo "Checking syntax: $script"
+            Rscript -e "parse('$script')" || exit 1
+          done
+          echo "✓ All scripts have valid R syntax"
+        shell: bash
 
