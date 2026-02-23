@@ -3,7 +3,7 @@
 # Project: Farm Size Prediction Across Sub-Saharan Africa
 # Purpose: Download all spatial data layers that can be auto-downloaded
 #
-# Author: [Original author]
+# Author: [Original author] is me
 # Documentation: Claude (Anthropic) - February 2026
 #
 # Description:
