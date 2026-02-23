@@ -1,37 +1,47 @@
 # ==============================================================================
-# Script: 02.3_measured_vs_reported.R
+# Script: 02.2_harmonize_farm_area.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Analyze agreement between GPS-measured and farmer-reported plot sizes
+# Purpose: Harmonize farm area calculations across countries and integrate Zambia data
 #
-# Author: [Original author]
+# Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026
 #
 # Description:
-#   This script quantifies the relationship between GPS-measured and
-#   farmer-reported plot areas to understand measurement accuracy and
-#   inform the farm size calculation methodology.
+#   This script combines raw LSMS data from all countries, corrects measurement
+#   errors, calculates farm-level area from plot-level data, and integrates
+#   Zambian RALS data which uses a different survey methodology.
 #
 # Inputs:
-#   - ../data/processed/lsms_and_zambia.rds (from 02.2)
+#   - ../data/processed/{Country}_{Year}_raw.csv (from 02.1)
+#   - ../data/raw/received/Zambia/# RALS_for_Typology.csv (Zambia RALS data)
+#   - ../data/raw/received/lsms_and_geodata.rda (2021 paper reference data)
 #
 # Outputs:
-#   - Console output: measurement statistics
+#   - ../data/processed/lsms_number_of_farms_all_inclusive.csv
+#   - ../data/processed/lsms_raw_data.csv
+#   - ../data/processed/lsms_and_zambia.csv
+#   - ../data/processed/lsms_and_zambia.rds
 #
-# Key Statistics:
-#   - Percentage of plots with GPS measurements
-#   - Correlation between reported and measured areas
-#   - Standard deviation of reporting error ratio
+# Processing Steps:
+#   1. Read all country CSV files
+#   2. Correct measurement errors (unit confusion, outliers)
+#   3. Calculate plot area (prefer measured over reported)
+#   4. Aggregate plots to farm-level area
+#   5. Integrate Zambia RALS data
+#   6. Cross-check against previous analysis
+#
+# Measurement Error Corrections:
+#   - Remove placeholder values (99, 999, 9999, etc.)
+#   - Fix sq_meter/hectare confusion (factor of 10,000)
+#   - Remove implausible values (>100 ha per plot)
+#   - Prefer GPS-measured over farmer-reported when both available
 #
 # Dependencies:
 #   - tidyverse: Data manipulation
 #
 # Usage:
-#   # Requires 02.2 to be run first
-#   source("02.3_measured_vs_reported.R")
-#
-# Notes:
-#   - This is a diagnostic script for understanding data quality
-#   - Results inform the measurement preference in 02.2
+#   # Requires 02.1 to be run first
+#   source("02.2_harmonize_farm_area.R")
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -51,121 +61,257 @@ input_path <- '../data/raw/spatial'
 processed_path <- '../data/processed'
 
 # ------------------------------------------------------------------------------
-# 2. LOAD DATA
+# 2. READ ALL COUNTRY RAW DATA
 # ------------------------------------------------------------------------------
-message("=== Loading LSMS data ===")
+message("=== Reading all country CSV files ===")
 
-xx <- readRDS(file.path(processed_path, 'lsms_and_zambia.rds'))
+# Find all raw data files
+my_countries <- dir(processed_path, full.names = TRUE)
+my_countries <- my_countries[grepl('[0-9]_raw\\.csv$', my_countries)]
+message("Found ", length(my_countries), " country-year files")
 
-# Join raw plot data with farm-level data
-all_lsms_raw_data <- xx$all_lsms_raw_data |>
-  inner_join(xx$lsms_farm_size, by = c("x", "y", "country", "year", "farm_id", "hh_size"))
+# Initialize data frames
+all_countries <- data.frame()
+all_lsms_raw_data <- data.frame()
 
-message("Total plots: ", nrow(all_lsms_raw_data))
-
-# ------------------------------------------------------------------------------
-# 3. CALCULATE MEASUREMENT STATISTICS
-# ------------------------------------------------------------------------------
-message("\n=== Measurement Statistics ===")
-
-# Percentage of plots that were GPS-measured
-n_total <- nrow(all_lsms_raw_data)
-n_measured <- all_lsms_raw_data |>
-  select(measured_plot_area_ha) |>
-  na.omit() |>
-  nrow()
-
-pct_measured <- round(100 * n_measured / n_total, 1)
-
-message("Plots with GPS measurement: ", n_measured, " / ", n_total, 
-        " (", pct_measured, "%)")
-
-# ------------------------------------------------------------------------------
-# 4. CORRELATION ANALYSIS
-# ------------------------------------------------------------------------------
-message("\n=== Correlation Analysis ===")
-
-# Filter to plots with both reported and measured values
-# Exclude outliers (reported > 100 ha)
-comparison_data <- all_lsms_raw_data |>
-  filter(
-    !is.na(reported_area_ha),
-    !is.na(measured_plot_area_ha),
-    reported_area_ha <= 100
+# Read and combine all files
+for (i in seq_along(my_countries)) {
+  cty <- basename(my_countries[i])
+  ppp <- read_csv(my_countries[i], show_col_types = FALSE)
+  
+  # Extract country and year from filename
+  nb_farms <- length(unique(ppp$farm_id))
+  one_country <- data.frame(
+    country = substr(cty, 1, nchar(cty) - 13),
+    year = substr(cty, nchar(cty) - 11, nchar(cty) - 8),
+    nb_farms = nb_farms
   )
-
-message("Plots with both values (reported ≤ 100 ha): ", nrow(comparison_data))
-
-# Pearson correlation
-r_sq <- round(
-  cor(comparison_data$reported_area_ha, 
-      comparison_data$measured_plot_area_ha, 
-      use = 'complete.obs'),
-  3
-)
-
-message("Correlation (r): ", r_sq)
-message("R-squared: ", round(r_sq^2, 3))
-
-# ------------------------------------------------------------------------------
-# 5. REPORTING ERROR ANALYSIS
-# ------------------------------------------------------------------------------
-message("\n=== Reporting Error Analysis ===")
-
-# Ratio of reported to measured (>1 = overreporting, <1 = underreporting)
-comparison_data <- comparison_data |>
-  mutate(
-    ratio = reported_area_ha / measured_plot_area_ha
-  ) |>
-  filter(is.finite(ratio))
-
-mean_ratio <- round(mean(comparison_data$ratio, na.rm = TRUE), 2)
-median_ratio <- round(median(comparison_data$ratio, na.rm = TRUE), 2)
-sd_ratio <- round(sd(comparison_data$ratio, na.rm = TRUE), 2)
-
-message("Reported/Measured ratio:")
-message("  Mean:   ", mean_ratio)
-message("  Median: ", median_ratio)
-message("  SD:     ", sd_ratio)
-
-# Interpretation
-if (median_ratio > 1) {
-  message("\n  Interpretation: Farmers tend to OVERREPORT plot sizes")
-} else if (median_ratio < 1) {
-  message("\n  Interpretation: Farmers tend to UNDERREPORT plot sizes")
-} else {
-  message("\n  Interpretation: No systematic bias in reporting")
+  all_countries <- bind_rows(all_countries, one_country)
+  
+  # Standardize column types and combine
+  all_lsms_raw_data <- all_lsms_raw_data |>
+    bind_rows(
+      ppp |>
+        mutate(
+          ea_id = as.character(ea_id),
+          farm_id = as.character(farm_id),
+          plot_land_use = as.character(plot_land_use),
+          measured_plot = as.character(measured_plot),
+          report_unit = as.character(report_unit)
+        ) |>
+        distinct()
+    )
+  
+  message("  ", cty, ": ", nb_farms, " farms")
 }
 
-# ------------------------------------------------------------------------------
-# 6. BY-COUNTRY BREAKDOWN
-# ------------------------------------------------------------------------------
-message("\n=== By-Country Breakdown ===")
+# Sort by country and year
+all_countries <- all_countries |>
+  mutate(nb_farms = as.integer(nb_farms)) |>
+  arrange(country, desc(year))
 
-country_stats <- all_lsms_raw_data |>
-  filter(!is.na(measured_plot_area_ha)) |>
+message("\nTotal plots: ", nrow(all_lsms_raw_data))
+message("Total unique farms: ", sum(all_countries$nb_farms))
+
+# ------------------------------------------------------------------------------
+# 3. CORRECT MEASUREMENT ERRORS
+# ------------------------------------------------------------------------------
+message("\n=== Correcting measurement errors ===")
+
+all_lsms_raw_data <- all_lsms_raw_data |>
+  mutate(
+    # Remove placeholder values (series of 9s indicating missing data)
+    measured_plot_area_ha = case_when(
+      measured_plot_area_ha %in% c(99, 999, 9999, 99999, 999999) ~ NA,
+      .default = measured_plot_area_ha
+    ),
+    
+    # Fix unit confusion: sq_meters recorded as hectares
+    # Small plots (reported <1 ha) with large measured values (>10)
+    measured_plot_area_ha = case_when(
+      measured_plot_area_ha > 10 & reported_area_ha < 1 ~ 
+        measured_plot_area_ha / 10000,
+      # Large plots with very large measured values (>1000)
+      measured_plot_area_ha > 1000 & reported_area_ha >= 1 ~ 
+        measured_plot_area_ha / 10000,
+      .default = measured_plot_area_ha
+    ),
+    
+    # Remove implausible values (>100 ha per plot)
+    measured_plot_area_ha = case_when(
+      measured_plot_area_ha > 100 ~ NA,
+      .default = measured_plot_area_ha
+    )
+  )
+
+# Count corrections
+n_orig <- nrow(all_lsms_raw_data)
+n_measured <- sum(!is.na(all_lsms_raw_data$measured_plot_area_ha))
+message("Plots with GPS measurement: ", n_measured, " (", 
+        round(100 * n_measured / n_orig, 1), "%)")
+
+# ------------------------------------------------------------------------------
+# 4. CALCULATE PLOT AREA (HARMONIZED)
+# ------------------------------------------------------------------------------
+message("\n=== Calculating harmonized plot area ===")
+
+# Decision rule for plot area:
+# 1. Use measured area if available and valid
+# 2. Fall back to reported area if measured is NA or 0
+# 3. If measured >> reported (>5x) and measured > 20ha, use reported (likely error)
+
+lsms_raw_data <- all_lsms_raw_data |>
+  mutate(
+    plot_area_ha = case_when(
+      is.na(measured_plot_area_ha) ~ reported_area_ha,
+      measured_plot_area_ha <= 0 ~ reported_area_ha,
+      measured_plot_area_ha / reported_area_ha > 5 & measured_plot_area_ha > 20 ~ 
+        reported_area_ha,
+      .default = measured_plot_area_ha
+    )
+  )
+
+# ------------------------------------------------------------------------------
+# 5. AGGREGATE TO FARM LEVEL
+# ------------------------------------------------------------------------------
+message("\n=== Aggregating to farm level ===")
+
+# Identify farms with any missing plot area
+excluded_farms <- lsms_raw_data |>
+  filter(is.na(plot_area_ha)) |>
+  select(country, year, farm_id) |>
+  distinct()
+
+message("Farms excluded (missing plot data): ", nrow(excluded_farms))
+
+# Calculate farm-level area (sum of all plots)
+lsms_farm_size <- lsms_raw_data |>
+  anti_join(excluded_farms, by = c("country", "year", "farm_id")) |>
+  group_by(x, y, country, year, farm_id, hh_size) |>
+  summarize(
+    farm_area_ha = sum(plot_area_ha, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+message("Farms with complete data: ", nrow(lsms_farm_size))
+
+# Alternative: strict version (only GPS-measured plots)
+excluded_farms_strict <- all_lsms_raw_data |>
+  filter(is.na(measured_plot_area_ha)) |>
+  select(country, year, farm_id) |>
+  distinct()
+
+lsms_farm_size_strict <- all_lsms_raw_data |>
+  anti_join(excluded_farms_strict, by = c("country", "year", "farm_id")) |>
+  group_by(x, y, country, year, farm_id, hh_size) |>
+  summarize(
+    farm_area_ha = sum(measured_plot_area_ha, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+message("Farms with ALL plots measured: ", nrow(lsms_farm_size_strict),
+        " (", round(100 * nrow(lsms_farm_size_strict) / nrow(lsms_farm_size), 1), 
+        "% of total)")
+
+# ------------------------------------------------------------------------------
+# 6. INTEGRATE ZAMBIA RALS DATA
+# ------------------------------------------------------------------------------
+message("\n=== Integrating Zambia RALS data ===")
+
+zambia_file <- '../data/raw/received/Zambia/# RALS_for_Typology.csv'
+
+if (file.exists(zambia_file)) {
+  zam <- read_csv(zambia_file, show_col_types = FALSE)
+  
+  zam_raw <- zam |>
+    rename(x = lon, y = lat) |>
+    mutate(
+      country = 'Zambia',
+      ea_id = paste0(year, '_', prov, '_', dist, '_', cluster),
+      farm_id = paste0(ea_id, '_', hh),
+      farm_area_ha = round(cultland_ha, 4)
+    ) |>
+    select(x, y, cluster, country, year, farm_id, hh_size, farm_area_ha)
+  
+  # Average coordinates by cluster (for privacy)
+  zam_raw <- zam_raw |>
+    select(-c(x, y)) |>
+    inner_join(
+      zam_raw |>
+        group_by(cluster) |>
+        summarize(x = mean(x, na.rm = TRUE), y = mean(y, na.rm = TRUE)),
+      by = "cluster"
+    ) |>
+    select(-cluster)
+  
+  message("Zambia farms: ", nrow(zam_raw))
+  
+  # Combine LSMS and Zambia
+  lsms_and_zambia <- bind_rows(
+    lsms_farm_size |>
+      # Filter to approximate Africa extent
+      filter(!is.na(x), !is.na(y), 
+             x + 18 > 0, x - 52 < 0, 
+             y + 35 > 0, y - 38 < 0),
+    zam_raw
+  )
+} else {
+  message("WARNING: Zambia RALS file not found")
+  lsms_and_zambia <- lsms_farm_size |>
+    filter(!is.na(x), !is.na(y),
+           x + 18 > 0, x - 52 < 0,
+           y + 35 > 0, y - 38 < 0)
+}
+
+message("Total farms (LSMS + Zambia): ", nrow(lsms_and_zambia))
+
+# ------------------------------------------------------------------------------
+# 7. SUMMARY STATISTICS
+# ------------------------------------------------------------------------------
+message("\n=== Summary Statistics ===")
+
+summary_stats <- lsms_and_zambia |>
   group_by(country) |>
   summarize(
-    n_measured = n(),
-    pct_measured = round(100 * n() / sum(!is.na(reported_area_ha)), 1),
+    n_farms = n(),
+    median_ha = round(median(farm_area_ha, na.rm = TRUE), 2),
+    mean_ha = round(mean(farm_area_ha, na.rm = TRUE), 2),
+    sd_ha = round(sd(farm_area_ha, na.rm = TRUE), 2),
     .groups = 'drop'
-  ) |>
-  arrange(desc(n_measured))
+  )
 
-print(country_stats, n = 20)
+print(summary_stats)
 
 # ------------------------------------------------------------------------------
-# 7. SUMMARY
+# 8. SAVE OUTPUTS
 # ------------------------------------------------------------------------------
-message("\n", paste(rep("=", 50), collapse = ""))
-message("SUMMARY")
-message(paste(rep("=", 50), collapse = ""))
-message("• ", pct_measured, "% of plots have GPS measurements")
-message("• Correlation between reported and measured: r = ", r_sq)
-message("• Median reporting ratio: ", median_ratio, 
-        " (", ifelse(median_ratio > 1, "overreporting", "underreporting"), ")")
-message("• SD of reporting ratio: ", sd_ratio, 
-        " (higher = more variable reporting)")
+message("\n=== Saving outputs ===")
+
+write_csv(all_countries, 
+          file = file.path(processed_path, 'lsms_number_of_farms_all_inclusive.csv'))
+message("Saved: lsms_number_of_farms_all_inclusive.csv")
+
+write_csv(all_lsms_raw_data, 
+          file = file.path(processed_path, 'lsms_raw_data.csv'))
+message("Saved: lsms_raw_data.csv")
+
+write_csv(lsms_and_zambia, 
+          file = file.path(processed_path, 'lsms_and_zambia.csv'))
+message("Saved: lsms_and_zambia.csv")
+
+saveRDS(
+  list(
+    all_countries = all_countries,
+    all_lsms_raw_data = all_lsms_raw_data,
+    lsms_farm_size = lsms_farm_size,
+    lsms_farm_size_strict = lsms_farm_size_strict,
+    lsms_and_zambia = lsms_and_zambia
+  ),
+  file = file.path(processed_path, 'lsms_and_zambia.rds')
+)
+message("Saved: lsms_and_zambia.rds")
+
+message("\n=== Processing Complete ===")
 
 # ==============================================================================
 # END OF SCRIPT

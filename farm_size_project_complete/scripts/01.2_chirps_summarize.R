@@ -1,36 +1,38 @@
 # ==============================================================================
-# Script: 01.2_chirps_summarize.R
+# Script: 01.1_chirps_download.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Aggregate dekadal CHIRPS rainfall to monthly and yearly totals
+# Purpose: Download CHIRPS dekadal rainfall data for Africa (1981-2024)
 #
-# Author: [Original author]
+# Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026
 #
 # Inputs:
-#   - ../data/raw/spatial/rainfall/CHIRPS/*.tif (dekadal rainfall rasters)
+#   - Internet connection to UCSB CHIRPS server
 #
 # Outputs:
-#   - ../data/raw/spatial/rainfall/rainfall_monthly/chirps-monthly-rainfall-YYYY-MM.tif
-#   - ../data/raw/spatial/rainfall/rainfall_yearly/chirps-yearly-rainfall-YYYY.tif
+#   - ../data/raw/spatial/rainfall/*.gz (compressed dekadal rainfall rasters)
+#   - ../data/raw/spatial/rainfall/CHIRPS/*.tif (decompressed rasters)
 #
 # Dependencies:
-#   - terra: Raster data handling
-#   - geodata: Country boundary data
+#   - curl: HTTP file downloads
+#   - R.utils: File decompression (gunzip)
 #
-# Processing:
-#   - Loads dekadal (10-day) rainfall rasters
-#   - Sums 3 dekads to monthly totals (mm/month)
-#   - Sums 12 months to yearly totals (mm/year)
-#   - Crops to Sub-Saharan Africa extent
-#   - Handles negative values (sets to NA)
+# Data Source:
+#   CHIRPS (Climate Hazards Group InfraRed Precipitation with Station data)
+#   URL: https://data.chc.ucsb.edu/products/CHIRPS-2.0/africa_dekad/tifs/
+#   Resolution: 0.05° (~5.5 km)
+#   Temporal: Dekadal (10-day periods, 3 per month)
+#   Coverage: 1981-present, Africa
 #
 # Usage:
-#   # Requires 01.1_chirps_download.R to be run first
-#   source("01.2_chirps_summarize.R")
+#   source("01.1_chirps_download.R")
+#   # Downloads ~1,584 files (44 years × 12 months × 3 dekads)
+#   # Estimated size: ~15 GB compressed, ~50 GB decompressed
 #
 # Notes:
-#   - Processing is memory-intensive for long time series
-#   - 2024 may be incomplete (partial year)
+#   - Downloads are resumable (skips existing files)
+#   - Dekad 1: days 1-10, Dekad 2: days 11-20, Dekad 3: days 21-end
+#   - Network errors are caught and logged (script continues)
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -43,160 +45,166 @@ setwd(paste0(here::here(), '/scripts'))
 rm(list = ls())
 
 # Load required packages
-require(terra)
-require(geodata)
+require(curl)
 
 # ------------------------------------------------------------------------------
 # 2. CONFIGURATION
 # ------------------------------------------------------------------------------
-# Spatial data repository path
+# Spatial data repository path (relative from scripts folder)
 input_path <- '../data/raw/spatial'
 
-# Time range
-years <- 1981:2024
-months <- sprintf("%02d", 1:12)  # "01" to "12"
+# CHIRPS data source URL
+chirps_url <- 'https://data.chc.ucsb.edu/products/CHIRPS-2.0/africa_dekad/tifs/'
+
+# Time range for downloads
+years <- seq(1981, 2024, 1)
+months <- sprintf("%02d", 1:12)  # Zero-padded: "01" to "12"
+dekads <- 1:3                     # Three dekads per month
 
 # ------------------------------------------------------------------------------
-# 3. DEFINE SUB-SAHARAN AFRICA EXTENT
+# 3. GENERATE FILE LIST
 # ------------------------------------------------------------------------------
-message("=== Loading SSA boundaries ===")
+# Build list of all CHIRPS filenames to download
+# Format: chirps-v2.0.YYYY.MM.D.tif.gz
 
-# Download world boundaries
-country <- geodata::world(path = input_path, resolution = 5, level = 0)
+message("=== Generating file list ===")
 
-# Get ISO country codes
-isocodes <- geodata::country_codes()
+filenames <- expand.grid(
+  year = years,
+  month = months,
+  dekad = dekads,
+  stringsAsFactors = FALSE
+) |>
+  dplyr::mutate(
+    filename = paste0("chirps-v2.0.", year, ".", month, ".", dekad, ".tif.gz")
+  ) |>
+  dplyr::pull(filename)
 
-# Filter to Sub-Saharan Africa (excluding small islands)
-isocodes_ssa <- subset(
-  isocodes,
-  NAME == 'Sudan' |
-  UNREGION1 == 'Middle Africa' |
-  UNREGION1 == 'Western Africa' |
-  UNREGION1 == 'Southern Africa' |
-  UNREGION1 == 'Eastern Africa'
-)
-
-# Remove small island nations
-islands_to_remove <- c(
-  'Cabo Verde', 'Comoros', 'Mauritius', 'Mayotte',
-  'Réunion', 'Saint Helena', 'São Tomé and Príncipe', 'Seychelles'
-)
-isocodes_ssa <- subset(isocodes_ssa, !(NAME %in% islands_to_remove))
-
-# Extract SSA polygon
-ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
-message("SSA countries loaded: ", nrow(ssa))
+message("Total files to download: ", length(filenames))
 
 # ------------------------------------------------------------------------------
 # 4. CREATE OUTPUT DIRECTORIES
 # ------------------------------------------------------------------------------
-# Monthly rainfall directory
-monthly_dir <- file.path(input_path, 'rainfall', 'rainfall_monthly')
-if (!dir.exists(monthly_dir)) {
-  dir.create(monthly_dir, recursive = TRUE)
-  message("Created: ", monthly_dir)
+# Directory for compressed files
+rainfall_dir <- file.path(input_path, 'rainfall')
+if (!dir.exists(rainfall_dir)) {
+  dir.create(rainfall_dir, recursive = TRUE)
+  message("Created directory: ", rainfall_dir)
 }
 
-# Yearly rainfall directory
-yearly_dir <- file.path(input_path, 'rainfall', 'rainfall_yearly')
-if (!dir.exists(yearly_dir)) {
-  dir.create(yearly_dir, recursive = TRUE)
-  message("Created: ", yearly_dir)
-}
-
-# ------------------------------------------------------------------------------
-# 5. AGGREGATE DEKADAL TO MONTHLY AND YEARLY
-# ------------------------------------------------------------------------------
-message("\n=== Processing CHIRPS data ===")
-
-# Source directory for dekadal data
+# Directory for decompressed files
 chirps_dir <- file.path(input_path, 'rainfall', 'CHIRPS')
+if (!dir.exists(chirps_dir)) {
+  dir.create(chirps_dir, recursive = TRUE)
+  message("Created directory: ", chirps_dir)
+}
+
+# ------------------------------------------------------------------------------
+# 5. DOWNLOAD COMPRESSED FILES
+# ------------------------------------------------------------------------------
+message("\n=== Downloading CHIRPS data ===")
+
+# Get list of already downloaded files
+downloaded_gz <- basename(Sys.glob(file.path(rainfall_dir, "*.gz")))
+message("Already downloaded: ", length(downloaded_gz), " files")
+
+# Download missing files
+download_count <- 0
+error_count <- 0
+
+for (filename in filenames) {
+  # Skip if already downloaded
+  if (filename %in% downloaded_gz) next
+  
+  # Attempt download
+  tryCatch({
+    dest_file <- file.path(rainfall_dir, filename)
+    curl::curl_download(
+      url = paste0(chirps_url, filename),
+      destfile = dest_file,
+      quiet = TRUE
+    )
+    download_count <- download_count + 1
+    
+    # Progress message every 50 files
+    if (download_count %% 50 == 0) {
+      message("Downloaded: ", download_count, " files...")
+    }
+  }, error = function(e) {
+    error_count <<- error_count + 1
+    message("ERROR downloading: ", filename)
+  })
+}
+
+message("Downloads complete: ", download_count, " new files")
+if (error_count > 0) {
+  message("WARNING: ", error_count, " files failed to download")
+}
+
+# ------------------------------------------------------------------------------
+# 6. DECOMPRESS FILES
+# ------------------------------------------------------------------------------
+message("\n=== Decompressing CHIRPS data ===")
+
+# Get list of already decompressed files
+downloaded_tif <- basename(Sys.glob(file.path(chirps_dir, "*.tif")))
+message("Already decompressed: ", length(downloaded_tif), " files")
+
+# Decompress missing files
+decompress_count <- 0
 
 for (year in years) {
-  message("\nProcessing year: ", year)
-  
-  # Initialize yearly accumulator
-  yearly_stack <- terra::rast()
-  
   for (month in months) {
-    # Initialize monthly accumulator
-    monthly_stack <- terra::rast()
-    
-    for (dekad in 1:3) {
-      # Build filename
+    for (dekad in dekads) {
+      # Build filenames
       tif_name <- paste0('chirps-v2.0.', year, '.', month, '.', dekad, '.tif')
-      tif_path <- file.path(chirps_dir, tif_name)
+      gz_name <- paste0(tif_name, '.gz')
       
-      # Check if file exists
-      if (!file.exists(tif_path)) {
-        message("  Missing: ", tif_name)
-        next
-      }
+      # Skip if already decompressed
+      if (tif_name %in% downloaded_tif) next
       
-      # Load and process raster
+      # Check if compressed file exists
+      gz_path <- file.path(rainfall_dir, gz_name)
+      if (!file.exists(gz_path)) next
+      
+      # Attempt decompression
       tryCatch({
-        r <- terra::rast(tif_path)
+        R.utils::gunzip(
+          filename = gz_path,
+          destname = file.path(chirps_dir, tif_name),
+          remove = FALSE,
+          overwrite = TRUE
+        )
+        decompress_count <- decompress_count + 1
         
-        # Crop to SSA extent
-        r <- terra::crop(r, ssa, mask = TRUE)
-        
-        # Set negative values to NA (data quality)
-        r[r < 0] <- NA
-        
-        # Name the layer for tracking
-        names(r) <- paste0("rain_", year, "_", month, "_", dekad)
-        
-        # Add to stacks
-        monthly_stack <- c(monthly_stack, r)
-        yearly_stack <- c(yearly_stack, r)
-        
+        # Progress message
+        if (decompress_count %% 100 == 0) {
+          message("Decompressed: ", decompress_count, " files...")
+        }
       }, error = function(e) {
-        message("  Error loading: ", tif_name, " - ", e$message)
+        message("ERROR decompressing: ", gz_name)
       })
     }
-    
-    # Sum dekads to monthly total
-    if (terra::nlyr(monthly_stack) > 0) {
-      monthly_total <- sum(monthly_stack, na.rm = TRUE)
-      names(monthly_total) <- paste0(year, '.', month, '_mm')
-      
-      # Save monthly raster
-      monthly_file <- file.path(
-        monthly_dir,
-        paste0('chirps-monthly-rainfall-', year, '-', month, '.tif')
-      )
-      terra::writeRaster(monthly_total, monthly_file, overwrite = TRUE)
-    }
-  }
-  
-  # Sum months to yearly total (skip incomplete years)
-  if (year != max(years) && terra::nlyr(yearly_stack) == 36) {
-    yearly_total <- sum(yearly_stack, na.rm = TRUE)
-    names(yearly_total) <- paste0(year, '_mm')
-    
-    # Save yearly raster
-    yearly_file <- file.path(
-      yearly_dir,
-      paste0('chirps-yearly-rainfall-', year, '.tif')
-    )
-    terra::writeRaster(yearly_total, yearly_file, overwrite = TRUE)
-    message("  Saved yearly total: ", year)
   }
 }
 
-# ------------------------------------------------------------------------------
-# 6. SUMMARY
-# ------------------------------------------------------------------------------
-message("\n=== Processing Summary ===")
+message("Decompression complete: ", decompress_count, " new files")
 
-monthly_files <- length(Sys.glob(file.path(monthly_dir, "*.tif")))
-yearly_files <- length(Sys.glob(file.path(yearly_dir, "chirps-yearly*.tif")))
+# ------------------------------------------------------------------------------
+# 7. SUMMARY
+# ------------------------------------------------------------------------------
+message("\n=== Download Summary ===")
+final_gz <- length(Sys.glob(file.path(rainfall_dir, "*.gz")))
+final_tif <- length(Sys.glob(file.path(chirps_dir, "*.tif")))
+message("Compressed files (.gz): ", final_gz)
+message("Decompressed files (.tif): ", final_tif)
+message("Expected total: ", length(filenames))
 
-message("Monthly rasters created: ", monthly_files)
-message("Yearly rasters created: ", yearly_files)
-message("Expected monthly: ", length(years) * 12)
-message("Expected yearly: ", length(years) - 1, " (excluding current year)")
+if (final_tif == length(filenames)) {
+  message("SUCCESS: All CHIRPS files downloaded and decompressed!")
+} else {
+  message("NOTE: Some files may be missing (recent dates or download errors)")
+}
 
 # ==============================================================================
 # END OF SCRIPT

@@ -1,34 +1,96 @@
 # ==============================================================================
-# Script: 00_synthetic_data_base.R
+# Script: 00_synthetic_data.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Generate synthetic data using ONLY base R (no external packages)
+# Purpose: Generate synthetic data for testing all scripts without real data
 #
-# Author: Claude (Anthropic) - February 2026
+# Authors: Deo, Joao, Robert, Fred
+# Code documentation: Claude (Anthropic) - February 2026
 #
-# This version works in restricted environments without terra/tidyverse
+# Description:
+#   This script generates synthetic spatial and survey data that mimics the
+#   structure of real LSMS and spatial predictor data. It enables:
+#   1. Testing script logic without requiring large data downloads
+#   2. CI/CD pipeline testing in GitHub Actions
+#   3. Demonstration of workflow to new users
+#
+# Usage:
+#   source("00_synthetic_data.R")
+#   # All synthetic data will be created in ../data/
+#
+# Output Files:
+#   - ../data/raw/spatial/spam/spam2017_cropland_ssa.tif
+#   - ../data/raw/spatial/rainfall/rainfall_yearly/#_long_term_rainfall_avg.tif
+#   - ../data/raw/spatial/cattle-density/2010_cattle_density_ssa.tif
+#   - ../data/raw/spatial/population/2020_population_density_ssa.tif
+#   - ../data/processed/all_predictors.tif
+#   - ../data/processed/lsms_and_zambia.csv
+#   - ../data/processed/lsms_trimmed_95th_africa.rds
+#   - ../data/processed/stacked_rasters_africa.tif
 # ==============================================================================
 
-message("\n")
-message(paste(rep("=", 70), collapse = ""))
-message("SYNTHETIC DATA GENERATION (Base R)")
-message(paste(rep("=", 70), collapse = ""))
-message("Started: ", Sys.time())
+# ------------------------------------------------------------------------------
+# 1. SETUP
+# ------------------------------------------------------------------------------
+message("=== Synthetic Data Generation Framework ===")
+message("Creating test data for CI/CD pipeline...\n")
 
+# Load packages (with fallback for missing packages)
+required_packages <- c("terra", "tidyverse")
+for (pkg in required_packages) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg, repos = "https://cloud.r-project.org", quiet = TRUE)
+  }
+  library(pkg, character.only = TRUE)
+}
+
+# Set seed for reproducibility
 set.seed(42)
 
 # ------------------------------------------------------------------------------
-# 1. CREATE DIRECTORY STRUCTURE
+# 2. CONFIGURATION
 # ------------------------------------------------------------------------------
-message("\n[1/6] Creating directory structure...")
+# SSA approximate extent
+ssa_extent <- terra::ext(-18, 52, -35, 15)
+
+# Raster resolution (coarse for speed)
+res <- 0.5  # ~55 km at equator
+
+# Number of synthetic farms
+n_farms <- 5000
+
+# Countries with LSMS data
+lsms_countries <- c(
+  "Ethiopia", "Malawi", "Nigeria", "Tanzania", "Uganda", "Zambia",
+  "Ghana", "Niger", "Mali", "Burkina", "Senegal", "Benin", 
+  "Togo", "Rwanda", "Cote_d_Ivoire", "Guinea_Bissau"
+)
+
+# Country centroids (approximate)
+country_coords <- data.frame(
+  country = lsms_countries,
+  lon = c(38, 34, 8, 35, 32, 28, -1, 8, -4, -1.5, -14, 2, 1, 30, -5, -15),
+  lat = c(9, -13, 9, -6, 1, -15, 8, 17, 17, 12, 14, 9, 8, -2, 7, 12),
+  stringsAsFactors = FALSE
+)
+
+# ------------------------------------------------------------------------------
+# 3. CREATE DIRECTORY STRUCTURE
+# ------------------------------------------------------------------------------
+message("Creating directory structure...")
 
 dirs <- c(
   "../data/raw/spatial/gadm",
+  "../data/raw/spatial/spam/spam2010",
   "../data/raw/spatial/spam/spam2017",
-  "../data/raw/spatial/rainfall/rainfall_yearly",
+  "../data/raw/spatial/spam/spam2020",
+  "../data/raw/spatial/landuse",
   "../data/raw/spatial/cattle-density",
   "../data/raw/spatial/population",
   "../data/raw/spatial/soil_world",
+  "../data/raw/spatial/wc2.1_30s",
   "../data/raw/spatial/temperature",
+  "../data/raw/spatial/rainfall/rainfall_yearly",
+  "../data/raw/spatial/rainfall/rainfall_monthly",
   "../data/raw/spatial/travel",
   "../data/raw/spatial/maize_water_lim_yield",
   "../data/raw/spatial/livestock-du2025",
@@ -47,108 +109,170 @@ dirs <- c(
 for (d in dirs) {
   if (!dir.exists(d)) {
     dir.create(d, recursive = TRUE)
+    message("  Created: ", d)
   }
 }
-message("  Created ", length(dirs), " directories")
 
 # ------------------------------------------------------------------------------
-# 2. CONFIGURATION
+# 4. GENERATE SYNTHETIC RASTER LAYERS
 # ------------------------------------------------------------------------------
-message("\n[2/6] Setting configuration...")
+message("\nGenerating synthetic raster layers...")
 
-n_farms <- 5000
-n_grid_points <- 1000  # For raster-like data
-
-lsms_countries <- c(
-  "Ethiopia", "Malawi", "Nigeria", "Tanzania", "Uganda", "Zambia",
-  "Ghana", "Niger", "Mali", "Burkina", "Senegal", "Benin",
-  "Togo", "Rwanda", "Cote_d_Ivoire", "Guinea_Bissau"
-)
-
-# Country centroids (lon, lat)
-country_coords <- data.frame(
-  country = lsms_countries,
-  lon = c(38, 34, 8, 35, 32, 28, -1, 8, -4, -1.5, -14, 2, 1, 30, -5, -15),
-  lat = c(9, -13, 9, -6, 1, -15, 8, 17, 17, 12, 14, 9, 8, -2, 7, 12),
-  stringsAsFactors = FALSE
-)
-
-message("  Countries: ", length(lsms_countries))
-message("  Target farms: ", n_farms)
-
-# ------------------------------------------------------------------------------
-# 3. GENERATE SYNTHETIC RASTER DATA (as CSV grid)
-# ------------------------------------------------------------------------------
-message("\n[3/6] Generating synthetic spatial predictor grid...")
-
-# Create grid covering SSA
-lon_seq <- seq(-18, 52, length.out = 50)
-lat_seq <- seq(-35, 15, length.out = 40)
-grid <- expand.grid(x = lon_seq, y = lat_seq)
-
-# Add predictor values with spatial patterns
-grid$cropland <- pmax(0, rnorm(nrow(grid), 500, 300) + 
-                       (grid$y + 10) * 10)  # Higher near equator
-
-grid$cattle <- pmax(0, rnorm(nrow(grid), 50, 40) +
-                     abs(grid$y) * 2)  # Pattern with latitude
-
-grid$pop <- pmax(0, rnorm(nrow(grid), 100, 150) +
-                  runif(nrow(grid), 0, 200))
-
-grid$cropland_per_capita <- ifelse(grid$pop > 0, 
-                                    grid$cropland / grid$pop, 
-                                    NA)
-
-grid$sand <- pmax(0, pmin(100, rnorm(nrow(grid), 40, 20)))
-
-grid$elevation <- pmax(0, rnorm(nrow(grid), 800, 500) +
-                        abs(grid$y) * 20)
-
-grid$slope <- pmax(0, rnorm(nrow(grid), 0.05, 0.03))
-
-grid$temperature <- pmax(10, pmin(35, 
-                                   28 - abs(grid$y) * 0.3 + 
-                                   rnorm(nrow(grid), 0, 3)))
-
-grid$rainfall <- pmax(0, rnorm(nrow(grid), 1000, 500) -
-                       abs(grid$y - 5) * 20)
-
-grid$market <- pmax(0, rnorm(nrow(grid), 120, 80))
-
-grid$maizeyield <- pmax(0, rnorm(nrow(grid), 5000, 2000))
-
-# Save as CSV (simulating raster extraction)
-write.csv(grid, "../data/processed/predictor_grid.csv", row.names = FALSE)
-message("  Grid points: ", nrow(grid))
-message("  Predictors: ", ncol(grid) - 2)
-
-# Save individual predictor files (as CSV representations)
-for (var in c("cropland", "cattle", "pop", "sand", "temperature", "rainfall", "market")) {
-  pred_data <- grid[, c("x", "y", var)]
-  write.csv(pred_data, 
-            paste0("../data/raw/spatial/", var, "_synthetic.csv"), 
-            row.names = FALSE)
+#' Create a synthetic raster with realistic spatial autocorrelation
+#' @param name Layer name
+#' @param extent Terra extent object
+#' @param res Resolution in degrees
+#' @param mean_val Mean value for the layer
+#' @param sd_val Standard deviation
+#' @param positive Force positive values
+#' @return SpatRaster
+create_synthetic_raster <- function(name, extent, res, mean_val, sd_val, positive = TRUE) {
+  # Create base raster
+  r <- terra::rast(extent, res = res, crs = "EPSG:4326")
+  
+  # Generate spatially autocorrelated values using distance-based smoothing
+  # Start with random values
+  n_cells <- terra::ncell(r)
+  values <- rnorm(n_cells, mean = mean_val, sd = sd_val)
+  
+  # Add spatial pattern (latitude-based gradient + noise)
+  coords <- terra::xyFromCell(r, 1:n_cells)
+  lat_effect <- (coords[, 2] - mean(coords[, 2])) / sd(coords[, 2]) * sd_val * 0.3
+  lon_effect <- (coords[, 1] - mean(coords[, 1])) / sd(coords[, 1]) * sd_val * 0.1
+  
+  values <- values + lat_effect + lon_effect
+  
+  if (positive) {
+    values <- pmax(values, 0)
+  }
+  
+  terra::values(r) <- values
+  names(r) <- name
+  
+  return(r)
 }
 
-# ------------------------------------------------------------------------------
-# 4. GENERATE SYNTHETIC LSMS FARM DATA
-# ------------------------------------------------------------------------------
-message("\n[4/6] Generating synthetic LSMS farm data...")
+# Generate predictor layers
+message("  Creating cropland layer...")
+cropland <- create_synthetic_raster("cropland", ssa_extent, res, 
+                                     mean_val = 500, sd_val = 300)
+terra::writeRaster(cropland, "../data/raw/spatial/spam/spam2017_cropland_ssa.tif", 
+                   overwrite = TRUE)
+terra::writeRaster(cropland, "../data/raw/spatial/spam/cropland_ssa.tif", 
+                   overwrite = TRUE)
 
+message("  Creating cattle density layer...")
+cattle <- create_synthetic_raster("cattle", ssa_extent, res, 
+                                   mean_val = 50, sd_val = 40)
+terra::writeRaster(cattle, "../data/raw/spatial/cattle-density/2010_cattle_density_ssa.tif", 
+                   overwrite = TRUE)
+
+message("  Creating population density layer...")
+pop <- create_synthetic_raster("pop", ssa_extent, res, 
+                                mean_val = 100, sd_val = 150)
+terra::writeRaster(pop, "../data/raw/spatial/population/2020_population_density_ssa.tif", 
+                   overwrite = TRUE)
+
+message("  Creating soil sand content layer...")
+sand <- create_synthetic_raster("sand", ssa_extent, res, 
+                                 mean_val = 40, sd_val = 20)
+sand <- terra::clamp(sand, lower = 0, upper = 100)
+terra::writeRaster(sand, "../data/raw/spatial/soil_world/sand_content_0_30cm_ssa.tif", 
+                   overwrite = TRUE)
+
+message("  Creating elevation layer...")
+elevation <- create_synthetic_raster("elevation", ssa_extent, res, 
+                                      mean_val = 800, sd_val = 500)
+terra::writeRaster(elevation, "../data/raw/spatial/wc2.1_30s/elevation_ssa.tif", 
+                   overwrite = TRUE)
+
+message("  Creating slope layer...")
+slope <- create_synthetic_raster("slope", ssa_extent, res, 
+                                  mean_val = 0.05, sd_val = 0.03)
+terra::writeRaster(slope, "../data/raw/spatial/wc2.1_30s/terrain_slope_ssa.tif", 
+                   overwrite = TRUE)
+
+message("  Creating temperature layer...")
+temperature <- create_synthetic_raster("temperature", ssa_extent, res, 
+                                         mean_val = 25, sd_val = 5, positive = FALSE)
+temperature <- terra::clamp(temperature, lower = 10, upper = 35)
+terra::writeRaster(temperature, "../data/raw/spatial/temperature/avg_temperature_ssa.tif", 
+                   overwrite = TRUE)
+
+message("  Creating rainfall layer...")
+rainfall <- create_synthetic_raster("rainfall", ssa_extent, res, 
+                                     mean_val = 1000, sd_val = 500)
+terra::writeRaster(rainfall, "../data/raw/spatial/rainfall/rainfall_ssa.tif", 
+                   overwrite = TRUE)
+terra::writeRaster(rainfall, "../data/raw/spatial/rainfall/rainfall_yearly/#_long_term_rainfall_avg.tif", 
+                   overwrite = TRUE)
+
+message("  Creating market access layer...")
+market <- create_synthetic_raster("market", ssa_extent, res, 
+                                   mean_val = 120, sd_val = 80)
+terra::writeRaster(market, "../data/raw/spatial/travel/travel_time_to_cities_ssa.tif", 
+                   overwrite = TRUE)
+
+message("  Creating maize yield layer...")
+maizeyield <- create_synthetic_raster("maizeyield", ssa_extent, res, 
+                                       mean_val = 5000, sd_val = 2000)
+terra::writeRaster(maizeyield, "../data/raw/spatial/maize_water_lim_yield/maize_yield_ssa.tif", 
+                   overwrite = TRUE)
+
+# Cropland per capita
+cropland_per_capita <- cropland / pop
+cropland_per_capita[is.infinite(cropland_per_capita)] <- NA
+names(cropland_per_capita) <- "cropland_per_capita"
+
+# ------------------------------------------------------------------------------
+# 5. CREATE STACKED PREDICTOR FILE
+# ------------------------------------------------------------------------------
+message("\nCreating stacked predictor files...")
+
+all_predictors <- c(cropland, cattle, pop, cropland_per_capita,
+                    sand, elevation, slope, temperature, rainfall, market, maizeyield)
+names(all_predictors) <- c("cropland", "cattle", "pop", "cropland_per_capita",
+                            "sand", "elevation", "slope", "temperature", 
+                            "rainfall", "market", "maizeyield")
+
+terra::writeRaster(all_predictors, "../data/processed/all_predictors.tif", overwrite = TRUE)
+message("  Saved: all_predictors.tif")
+
+# Stacked rasters for ML (subset)
+stacked <- c(cropland, cattle, pop, cropland_per_capita, sand, slope,
+             temperature, rainfall, maizeyield, market)
+names(stacked) <- c("cropland", "cattle", "pop", "cropland_per_capita",
+                     "sand", "slope", "temperature", "rainfall", "maizeyield", "market")
+
+terra::writeRaster(stacked, "../data/processed/stacked_rasters_africa.tif", overwrite = TRUE)
+message("  Saved: stacked_rasters_africa.tif")
+
+# ------------------------------------------------------------------------------
+# 6. GENERATE SYNTHETIC LSMS DATA
+# ------------------------------------------------------------------------------
+message("\nGenerating synthetic LSMS survey data...")
+
+#' Generate synthetic farm data for a country
+#' @param country Country name
+#' @param n Number of farms
+#' @param lon_center Country longitude center
+#' @param lat_center Country latitude center
+#' @return Data frame with farm data
 generate_country_farms <- function(country, n, lon_center, lat_center) {
   # Generate locations around country center
   x <- rnorm(n, mean = lon_center, sd = 2)
   y <- rnorm(n, mean = lat_center, sd = 2)
   
-  # Farm size: log-normal distribution (realistic)
+  # Generate farm attributes
+  # Farm size follows log-normal distribution (realistic)
   farm_area_ha <- rlnorm(n, meanlog = 0.3, sdlog = 0.8)
   farm_area_ha <- pmin(farm_area_ha, 50)  # Cap at 50 ha
   
-  # Household size: Poisson
+  # Household size follows Poisson
+
   hh_size <- rpois(n, lambda = 5) + 1
   
-  # Survey years
+  # Generate years (2008-2021)
   years <- sample(c(2010, 2012, 2014, 2016, 2018, 2020), n, replace = TRUE)
   
   data.frame(
@@ -166,180 +290,118 @@ generate_country_farms <- function(country, n, lon_center, lat_center) {
 # Generate data for all countries
 farms_per_country <- ceiling(n_farms / length(lsms_countries))
 
-all_farms <- lapply(1:nrow(country_coords), function(i) {
-  generate_country_farms(
-    country_coords$country[i],
-    farms_per_country,
-    country_coords$lon[i],
-    country_coords$lat[i]
-  )
-})
-
-lsms_data <- do.call(rbind, all_farms)
+lsms_data <- purrr::map2_dfr(
+  country_coords$country,
+  seq_len(nrow(country_coords)),
+  function(cty, idx) {
+    generate_country_farms(
+      cty, 
+      farms_per_country, 
+      country_coords$lon[idx], 
+      country_coords$lat[idx]
+    )
+  }
+)
 
 # Filter to SSA extent
-lsms_data <- lsms_data[lsms_data$x >= -18 & lsms_data$x <= 52 &
-                        lsms_data$y >= -35 & lsms_data$y <= 15, ]
+lsms_data <- lsms_data |>
+  filter(x >= -18, x <= 52, y >= -35, y <= 15)
 
 message("  Generated ", nrow(lsms_data), " synthetic farms")
-message("  Countries: ", length(unique(lsms_data$country)))
 
 # Save raw LSMS data
 write.csv(lsms_data, "../data/processed/lsms_and_zambia.csv", row.names = FALSE)
+message("  Saved: lsms_and_zambia.csv")
 
 # ------------------------------------------------------------------------------
-# 5. CREATE ANALYSIS-READY DATASETS
+# 7. CREATE ANALYSIS-READY DATASETS
 # ------------------------------------------------------------------------------
-message("\n[5/6] Creating analysis-ready datasets...")
+message("\nCreating analysis-ready datasets...")
 
-# Function to find nearest grid point and extract values
-extract_predictor_values <- function(farm_data, grid_data) {
-  result <- farm_data
-  
-  # Initialize predictor columns
-  predictors <- c("cropland", "cattle", "pop", "cropland_per_capita",
-                  "sand", "elevation", "slope", "temperature", 
-                  "rainfall", "market", "maizeyield")
-  
-  for (p in predictors) {
-    result[[p]] <- NA
-  }
-  
-  # For each farm, find nearest grid point
-  for (i in 1:nrow(farm_data)) {
-    distances <- sqrt((grid_data$x - farm_data$x[i])^2 + 
-                       (grid_data$y - farm_data$y[i])^2)
-    nearest <- which.min(distances)
-    
-    for (p in predictors) {
-      if (p %in% names(grid_data)) {
-        result[[p]][i] <- grid_data[[p]][nearest]
-      }
-    }
-  }
-  
-  return(result)
-}
+# Extract predictor values at farm locations
+coords_df <- lsms_data |> select(x, y)
+extracted_values <- terra::extract(stacked, coords_df, ID = FALSE)
 
-message("  Extracting predictor values at farm locations...")
-lsms_spatial <- extract_predictor_values(lsms_data, grid)
+# Combine with farm data
+lsms_spatial <- cbind(
+  lsms_data,
+  gadm_0 = substr(lsms_data$country, 1, 3),
+  gadm_1 = paste0(lsms_data$country, "_Region1"),
+  gadm_2 = paste0(lsms_data$country, "_District1"),
+  gadm_3 = NA,
+  gadm_4 = NA,
+  extracted_values
+) |>
+  na.omit()
 
-# Add GADM columns
-lsms_spatial$gadm_0 <- substr(lsms_spatial$country, 1, 3)
-lsms_spatial$gadm_1 <- paste0(lsms_spatial$country, "_Region1")
-lsms_spatial$gadm_2 <- paste0(lsms_spatial$country, "_District1")
-lsms_spatial$gadm_3 <- NA
-lsms_spatial$gadm_4 <- NA
-
-# Remove rows with NA predictors
-lsms_spatial <- lsms_spatial[complete.cases(lsms_spatial[, c("cropland", "rainfall")]), ]
-
-# Save untrimmed
+# Save different trimmed versions
 saveRDS(lsms_spatial, "../data/processed/lsms_untrimmed_africa.rds")
+message("  Saved: lsms_untrimmed_africa.rds")
 
-# Trim by percentile (per country)
-trim_by_country <- function(data, percentile = 0.95) {
-  result <- data.frame()
-  for (cty in unique(data$country)) {
-    cty_data <- data[data$country == cty, ]
-    threshold <- quantile(cty_data$farm_area_ha, percentile, na.rm = TRUE)
-    cty_trimmed <- cty_data[cty_data$farm_area_ha <= threshold, ]
-    result <- rbind(result, cty_trimmed)
-  }
-  return(result)
-}
+# 95th percentile trim by country
+lsms_trimmed <- lsms_spatial |>
+  group_by(country) |>
+  filter(farm_area_ha <= quantile(farm_area_ha, 0.95)) |>
+  ungroup()
 
-lsms_95 <- trim_by_country(lsms_spatial, 0.95)
-lsms_99 <- trim_by_country(lsms_spatial, 0.99)
+saveRDS(lsms_trimmed, "../data/processed/lsms_trimmed_95th_africa.rds")
+message("  Saved: lsms_trimmed_95th_africa.rds")
 
-saveRDS(lsms_95, "../data/processed/lsms_trimmed_95th_africa.rds")
+# 99th percentile trim
+lsms_99 <- lsms_spatial |>
+  group_by(country) |>
+  filter(farm_area_ha <= quantile(farm_area_ha, 0.99)) |>
+  ungroup()
+
 saveRDS(lsms_99, "../data/processed/lsms_trimmed_99th_africa.rds")
+message("  Saved: lsms_trimmed_99th_africa.rds")
 
-message("  Trimmed datasets: 95th (", nrow(lsms_95), "), 99th (", nrow(lsms_99), ")")
-
-# ML-ready dataset
-ml_cols <- c("x", "y", "farm_area_ha", "cropland", "cattle", "pop", 
-             "cropland_per_capita", "sand", "slope", "temperature", 
-             "rainfall", "maizeyield", "market")
-lsms_ml <- lsms_95[, ml_cols[ml_cols %in% names(lsms_95)]]
-lsms_ml <- lsms_ml[complete.cases(lsms_ml), ]
+# Final ML dataset
+lsms_ml <- lsms_trimmed |>
+  select(x, y, farm_area_ha, cropland, cattle, pop, cropland_per_capita,
+         sand, slope, temperature, rainfall, maizeyield, market) |>
+  na.omit()
 
 write.csv(lsms_ml, "../data/processed/lsms_spatial.csv", row.names = FALSE)
 saveRDS(lsms_ml, "../data/processed/lsms_spatial_africa.Rds")
+message("  Saved: lsms_spatial.csv")
 
-# Save country raw files
+# Save stacked raster as RDS
+saveRDS(stacked, "../data/processed/stacked_africa.Rds")
+
+# ------------------------------------------------------------------------------
+# 8. GENERATE COUNTRY-SPECIFIC RAW FILES
+# ------------------------------------------------------------------------------
+message("\nGenerating country-specific raw files...")
+
+# Simulate individual country raw files (as would come from 02.1)
 for (cty in unique(lsms_data$country)) {
-  cty_data <- lsms_data[lsms_data$country == cty, ]
-  for (yr in unique(cty_data$year)) {
-    yr_data <- cty_data[cty_data$year == yr, ]
-    if (nrow(yr_data) > 0) {
-      # Add extra columns
-      yr_data$ea_id <- paste0(cty, "_EA_", sample(1:100, nrow(yr_data), replace = TRUE))
-      yr_data$field_id <- paste0(yr_data$farm_id, "_F1")
-      yr_data$plot_id <- paste0(yr_data$field_id, "_P1")
-      yr_data$reported_area <- yr_data$farm_area_ha * runif(nrow(yr_data), 0.8, 1.2)
-      yr_data$report_unit <- "hectare"
-      yr_data$reported_area_ha <- yr_data$reported_area
-      yr_data$plot_land_use <- "Cultivated"
-      yr_data$measured_plot <- sample(c("Yes", "No"), nrow(yr_data), replace = TRUE, prob = c(0.7, 0.3))
-      yr_data$measured_plot_area_ha <- ifelse(yr_data$measured_plot == "Yes", yr_data$farm_area_ha, NA)
-      
-      write.csv(yr_data, paste0("../data/processed/", cty, "_", yr, "_raw.csv"), row.names = FALSE)
-    }
+  cty_data <- lsms_data |> filter(country == cty)
+  
+  # Add plot-level variables
+  cty_raw <- cty_data |>
+    mutate(
+      ea_id = paste0(cty, "_EA_", sample(1:100, n(), replace = TRUE)),
+      field_id = paste0(farm_id, "_F1"),
+      plot_id = paste0(field_id, "_P1"),
+      reported_area = farm_area_ha * runif(n(), 0.8, 1.2),
+      report_unit = "hectare",
+      reported_area_ha = reported_area,
+      plot_land_use = "Cultivated",
+      measured_plot = sample(c("Yes", "No"), n(), replace = TRUE, prob = c(0.7, 0.3)),
+      measured_plot_area_ha = ifelse(measured_plot == "Yes", farm_area_ha, NA)
+    )
+  
+  for (yr in unique(cty_raw$year)) {
+    yr_data <- cty_raw |> filter(year == yr)
+    filename <- paste0("../data/processed/", cty, "_", yr, "_raw.csv")
+    write.csv(yr_data, filename, row.names = FALSE)
   }
 }
+message("  Generated raw files for ", length(unique(lsms_data$country)), " countries")
 
 # ------------------------------------------------------------------------------
-# 6. GENERATE DESCRIPTIVE STATISTICS
-# ------------------------------------------------------------------------------
-message("\n[6/6] Generating descriptive statistics...")
-
-# By country statistics
-countries <- unique(lsms_data$country)
-stats_list <- lapply(countries, function(cty) {
-  cty_data <- lsms_data[lsms_data$country == cty, ]
-  data.frame(
-    country = cty,
-    n_waves = length(unique(cty_data$year)),
-    n_obs = nrow(cty_data),
-    min_year = min(cty_data$year),
-    max_year = max(cty_data$year),
-    mean_ha = round(mean(cty_data$farm_area_ha), 2),
-    median_ha = round(median(cty_data$farm_area_ha), 2),
-    q10 = round(quantile(cty_data$farm_area_ha, 0.10), 2),
-    q90 = round(quantile(cty_data$farm_area_ha, 0.90), 2),
-    pct_below_1ha = round(100 * mean(cty_data$farm_area_ha < 1), 1),
-    stringsAsFactors = FALSE
-  )
-})
-country_stats <- do.call(rbind, stats_list)
-
-# Add total row
-total_row <- data.frame(
-  country = "TOTAL",
-  n_waves = sum(country_stats$n_waves),
-  n_obs = sum(country_stats$n_obs),
-  min_year = min(country_stats$min_year),
-  max_year = max(country_stats$max_year),
-  mean_ha = round(mean(lsms_data$farm_area_ha), 2),
-  median_ha = round(median(lsms_data$farm_area_ha), 2),
-  q10 = round(quantile(lsms_data$farm_area_ha, 0.10), 2),
-  q90 = round(quantile(lsms_data$farm_area_ha, 0.90), 2),
-  pct_below_1ha = round(100 * mean(lsms_data$farm_area_ha < 1), 1),
-  stringsAsFactors = FALSE
-)
-country_stats <- rbind(country_stats, total_row)
-
-write.csv(country_stats, "../output/tables/summary_descriptive_stats_survey.csv", row.names = FALSE)
-
-# Correlation matrix (simple)
-cor_vars <- c("farm_area_ha", "cropland", "cattle", "pop", "temperature", "rainfall", "market")
-cor_data <- lsms_ml[, cor_vars[cor_vars %in% names(lsms_ml)]]
-cor_matrix <- cor(cor_data, use = "complete.obs")
-write.csv(round(cor_matrix, 3), "../output/tables/correlation_matrix.csv")
-
-# ------------------------------------------------------------------------------
-# SUMMARY
+# 9. SUMMARY
 # ------------------------------------------------------------------------------
 message("\n")
 message(paste(rep("=", 70), collapse = ""))
@@ -347,18 +409,21 @@ message("SYNTHETIC DATA GENERATION COMPLETE")
 message(paste(rep("=", 70), collapse = ""))
 
 message("\nGenerated files:")
-message("  Processed data: ", length(list.files("../data/processed", pattern = "\\.(csv|rds|Rds)$")))
-message("  Output tables:  ", length(list.files("../output/tables", pattern = "\\.csv$", recursive = TRUE)))
+message("  Raster layers:    ", length(list.files("../data/raw/spatial", 
+                                                    pattern = "\\.tif$", recursive = TRUE)), " files")
+message("  Processed data:   ", length(list.files("../data/processed", 
+                                                    pattern = "\\.(csv|rds|Rds)$")), " files")
+message("  Synthetic farms:  ", nrow(lsms_data))
+message("  Countries:        ", length(unique(lsms_data$country)))
 
-message("\nData summary:")
-message("  Total farms:    ", nrow(lsms_data))
-message("  Countries:      ", length(unique(lsms_data$country)))
-message("  Farm size range:", round(min(lsms_data$farm_area_ha), 2), "-", 
-        round(max(lsms_data$farm_area_ha), 2), "ha")
-message("  Median farm:    ", round(median(lsms_data$farm_area_ha), 2), "ha")
+message("\nData characteristics:")
+message("  Farm size range:  ", round(min(lsms_data$farm_area_ha), 2), " - ", 
+        round(max(lsms_data$farm_area_ha), 2), " ha")
+message("  Farm size median: ", round(median(lsms_data$farm_area_ha), 2), " ha")
+message("  Raster extent:    ", paste(round(as.vector(ssa_extent), 1), collapse = ", "))
+message("  Raster resolution:", res, " degrees")
 
-message("\nFinished: ", Sys.time())
-message(paste(rep("=", 70), collapse = ""))
+message("\nYou can now run the pipeline scripts for testing!")
 
 # ==============================================================================
 # END OF SCRIPT

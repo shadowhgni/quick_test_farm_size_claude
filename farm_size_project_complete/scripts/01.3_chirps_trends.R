@@ -1,33 +1,36 @@
 # ==============================================================================
-# Script: 01.3_chirps_trends.R
+# Script: 01.2_chirps_summarize.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Calculate long-term rainfall statistics from yearly CHIRPS data
+# Purpose: Aggregate dekadal CHIRPS rainfall to monthly and yearly totals
 #
-# Author: [Original author]
+# Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026
 #
 # Inputs:
-#   - ../data/raw/spatial/rainfall/rainfall_yearly/chirps-yearly-rainfall-*.tif
+#   - ../data/raw/spatial/rainfall/CHIRPS/*.tif (dekadal rainfall rasters)
 #
 # Outputs:
-#   - ../data/raw/spatial/rainfall/rainfall_yearly/#_long_term_rainfall_avg.tif
-#   - ../data/raw/spatial/rainfall/rainfall_yearly/#_long_term_rainfall_cv.tif
+#   - ../data/raw/spatial/rainfall/rainfall_monthly/chirps-monthly-rainfall-YYYY-MM.tif
+#   - ../data/raw/spatial/rainfall/rainfall_yearly/chirps-yearly-rainfall-YYYY.tif
 #
 # Dependencies:
 #   - terra: Raster data handling
+#   - geodata: Country boundary data
 #
 # Processing:
-#   - Loads all yearly rainfall rasters (1981-2023)
-#   - Calculates pixel-wise mean annual rainfall (mm/year)
-#   - Calculates pixel-wise coefficient of variation (CV = SD/mean)
+#   - Loads dekadal (10-day) rainfall rasters
+#   - Sums 3 dekads to monthly totals (mm/month)
+#   - Sums 12 months to yearly totals (mm/year)
+#   - Crops to Sub-Saharan Africa extent
+#   - Handles negative values (sets to NA)
 #
 # Usage:
-#   # Requires 01.2_chirps_summarize.R to be run first
-#   source("01.3_chirps_trends.R")
+#   # Requires 01.1_chirps_download.R to be run first
+#   source("01.2_chirps_summarize.R")
 #
 # Notes:
-#   - CV indicates rainfall variability (higher = more variable)
-#   - Output files prefixed with '#' to sort first in directory listings
+#   - Processing is memory-intensive for long time series
+#   - 2024 may be incomplete (partial year)
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -41,6 +44,7 @@ rm(list = ls())
 
 # Load required packages
 require(terra)
+require(geodata)
 
 # ------------------------------------------------------------------------------
 # 2. CONFIGURATION
@@ -48,111 +52,151 @@ require(terra)
 # Spatial data repository path
 input_path <- '../data/raw/spatial'
 
-# Input/output directory
+# Time range
+years <- 1981:2024
+months <- sprintf("%02d", 1:12)  # "01" to "12"
+
+# ------------------------------------------------------------------------------
+# 3. DEFINE SUB-SAHARAN AFRICA EXTENT
+# ------------------------------------------------------------------------------
+message("=== Loading SSA boundaries ===")
+
+# Download world boundaries
+country <- geodata::world(path = input_path, resolution = 5, level = 0)
+
+# Get ISO country codes
+isocodes <- geodata::country_codes()
+
+# Filter to Sub-Saharan Africa (excluding small islands)
+isocodes_ssa <- subset(
+  isocodes,
+  NAME == 'Sudan' |
+  UNREGION1 == 'Middle Africa' |
+  UNREGION1 == 'Western Africa' |
+  UNREGION1 == 'Southern Africa' |
+  UNREGION1 == 'Eastern Africa'
+)
+
+# Remove small island nations
+islands_to_remove <- c(
+  'Cabo Verde', 'Comoros', 'Mauritius', 'Mayotte',
+  'Réunion', 'Saint Helena', 'São Tomé and Príncipe', 'Seychelles'
+)
+isocodes_ssa <- subset(isocodes_ssa, !(NAME %in% islands_to_remove))
+
+# Extract SSA polygon
+ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
+message("SSA countries loaded: ", nrow(ssa))
+
+# ------------------------------------------------------------------------------
+# 4. CREATE OUTPUT DIRECTORIES
+# ------------------------------------------------------------------------------
+# Monthly rainfall directory
+monthly_dir <- file.path(input_path, 'rainfall', 'rainfall_monthly')
+if (!dir.exists(monthly_dir)) {
+  dir.create(monthly_dir, recursive = TRUE)
+  message("Created: ", monthly_dir)
+}
+
+# Yearly rainfall directory
 yearly_dir <- file.path(input_path, 'rainfall', 'rainfall_yearly')
-
-# ------------------------------------------------------------------------------
-# 3. LOAD YEARLY RAINFALL DATA
-# ------------------------------------------------------------------------------
-message("=== Loading yearly rainfall data ===")
-
-# Find all yearly rainfall rasters
-# Note: Original script used underscore pattern; updated script uses hyphen
-yearly_files <- Sys.glob(file.path(yearly_dir, 'chirps-yearly-rainfall-*.tif'))
-
-# Fallback to underscore pattern if no files found
-if (length(yearly_files) == 0) {
-  yearly_files <- Sys.glob(file.path(yearly_dir, 'chirps_yearly_rainfall_*.tif'))
+if (!dir.exists(yearly_dir)) {
+  dir.create(yearly_dir, recursive = TRUE)
+  message("Created: ", yearly_dir)
 }
 
-if (length(yearly_files) == 0) {
-  stop("No yearly rainfall files found in: ", yearly_dir)
+# ------------------------------------------------------------------------------
+# 5. AGGREGATE DEKADAL TO MONTHLY AND YEARLY
+# ------------------------------------------------------------------------------
+message("\n=== Processing CHIRPS data ===")
+
+# Source directory for dekadal data
+chirps_dir <- file.path(input_path, 'rainfall', 'CHIRPS')
+
+for (year in years) {
+  message("\nProcessing year: ", year)
+  
+  # Initialize yearly accumulator
+  yearly_stack <- terra::rast()
+  
+  for (month in months) {
+    # Initialize monthly accumulator
+    monthly_stack <- terra::rast()
+    
+    for (dekad in 1:3) {
+      # Build filename
+      tif_name <- paste0('chirps-v2.0.', year, '.', month, '.', dekad, '.tif')
+      tif_path <- file.path(chirps_dir, tif_name)
+      
+      # Check if file exists
+      if (!file.exists(tif_path)) {
+        message("  Missing: ", tif_name)
+        next
+      }
+      
+      # Load and process raster
+      tryCatch({
+        r <- terra::rast(tif_path)
+        
+        # Crop to SSA extent
+        r <- terra::crop(r, ssa, mask = TRUE)
+        
+        # Set negative values to NA (data quality)
+        r[r < 0] <- NA
+        
+        # Name the layer for tracking
+        names(r) <- paste0("rain_", year, "_", month, "_", dekad)
+        
+        # Add to stacks
+        monthly_stack <- c(monthly_stack, r)
+        yearly_stack <- c(yearly_stack, r)
+        
+      }, error = function(e) {
+        message("  Error loading: ", tif_name, " - ", e$message)
+      })
+    }
+    
+    # Sum dekads to monthly total
+    if (terra::nlyr(monthly_stack) > 0) {
+      monthly_total <- sum(monthly_stack, na.rm = TRUE)
+      names(monthly_total) <- paste0(year, '.', month, '_mm')
+      
+      # Save monthly raster
+      monthly_file <- file.path(
+        monthly_dir,
+        paste0('chirps-monthly-rainfall-', year, '-', month, '.tif')
+      )
+      terra::writeRaster(monthly_total, monthly_file, overwrite = TRUE)
+    }
+  }
+  
+  # Sum months to yearly total (skip incomplete years)
+  if (year != max(years) && terra::nlyr(yearly_stack) == 36) {
+    yearly_total <- sum(yearly_stack, na.rm = TRUE)
+    names(yearly_total) <- paste0(year, '_mm')
+    
+    # Save yearly raster
+    yearly_file <- file.path(
+      yearly_dir,
+      paste0('chirps-yearly-rainfall-', year, '.tif')
+    )
+    terra::writeRaster(yearly_total, yearly_file, overwrite = TRUE)
+    message("  Saved yearly total: ", year)
+  }
 }
 
-message("Found ", length(yearly_files), " yearly rasters")
-
-# Load as multi-layer raster stack
-years_stack <- terra::rast(yearly_files)
-message("Loaded raster stack with ", terra::nlyr(years_stack), " layers")
-message("Years: ", min(terra::time(years_stack)), " to ", max(terra::time(years_stack)))
-
 # ------------------------------------------------------------------------------
-# 4. CALCULATE LONG-TERM STATISTICS
+# 6. SUMMARY
 # ------------------------------------------------------------------------------
-message("\n=== Calculating long-term statistics ===")
+message("\n=== Processing Summary ===")
 
-# Mean annual rainfall (mm/year)
-message("Calculating mean...")
-longterm_avg <- terra::app(years_stack, fun = mean, na.rm = TRUE)
-names(longterm_avg) <- 'rainfall_avg_mm'
+monthly_files <- length(Sys.glob(file.path(monthly_dir, "*.tif")))
+yearly_files <- length(Sys.glob(file.path(yearly_dir, "chirps-yearly*.tif")))
 
-# Standard deviation
-message("Calculating standard deviation...")
-longterm_std <- terra::app(years_stack, fun = sd, na.rm = TRUE)
-names(longterm_std) <- 'rainfall_sd_mm'
-
-# Coefficient of variation (CV = SD / Mean)
-# CV > 0.3 indicates high interannual variability
-message("Calculating coefficient of variation...")
-longterm_cv <- longterm_std / longterm_avg
-names(longterm_cv) <- 'rainfall_cv'
-
-# ------------------------------------------------------------------------------
-# 5. VISUALIZE RESULTS
-# ------------------------------------------------------------------------------
-message("\n=== Generating preview plots ===")
-
-# Plot both statistics side by side
-par(mfrow = c(1, 2))
-terra::plot(
-  longterm_avg,
-  main = "Mean Annual Rainfall (mm)",
-  col = rev(terrain.colors(50))
-)
-terra::plot(
-  longterm_cv,
-  main = "Rainfall CV",
-  col = hcl.colors(50, "YlOrRd")
-)
-par(mfrow = c(1, 1))
-
-# ------------------------------------------------------------------------------
-# 6. SAVE OUTPUTS
-# ------------------------------------------------------------------------------
-message("\n=== Saving outputs ===")
-
-# Long-term average
-avg_file <- file.path(yearly_dir, '#_long_term_rainfall_avg.tif')
-terra::writeRaster(longterm_avg, avg_file, overwrite = TRUE)
-message("Saved: ", avg_file)
-
-# Coefficient of variation
-cv_file <- file.path(yearly_dir, '#_long_term_rainfall_cv.tif')
-terra::writeRaster(longterm_cv, cv_file, overwrite = TRUE)
-message("Saved: ", cv_file)
-
-# ------------------------------------------------------------------------------
-# 7. SUMMARY STATISTICS
-# ------------------------------------------------------------------------------
-message("\n=== Summary Statistics ===")
-
-# Mean rainfall stats
-avg_vals <- terra::values(longterm_avg, na.rm = TRUE)
-message("Mean Annual Rainfall (mm):")
-message("  Min:    ", round(min(avg_vals), 1))
-message("  Median: ", round(median(avg_vals), 1))
-message("  Max:    ", round(max(avg_vals), 1))
-
-# CV stats
-cv_vals <- terra::values(longterm_cv, na.rm = TRUE)
-message("\nRainfall CV:")
-message("  Min:    ", round(min(cv_vals), 3))
-message("  Median: ", round(median(cv_vals), 3))
-message("  Max:    ", round(max(cv_vals), 3))
-
-# Classify variability
-pct_high_var <- mean(cv_vals > 0.3, na.rm = TRUE) * 100
-message("\n  % area with high variability (CV > 0.3): ", round(pct_high_var, 1), "%")
+message("Monthly rasters created: ", monthly_files)
+message("Yearly rasters created: ", yearly_files)
+message("Expected monthly: ", length(years) * 12)
+message("Expected yearly: ", length(years) - 1, " (excluding current year)")
 
 # ==============================================================================
 # END OF SCRIPT

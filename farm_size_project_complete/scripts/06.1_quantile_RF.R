@@ -1,0 +1,55 @@
+# ==============================================================================
+# Script: 05.3_RF_robustness.R
+# Project: Farm Size Prediction Across Sub-Saharan Africa
+# Purpose: Assess robustness of optimized RF model
+#
+# Authors: Deo, Joao, Robert, Fred
+# Code documentation: Claude (Anthropic) - February 2026
+# ==============================================================================
+
+
+require(tidyverse)
+
+# Clean environment
+rm(list=ls())
+
+# Set working directory
+setwd(paste0(here::here(), '/scripts'))
+
+# ------------------------------------------------------------------------------
+#define the countries for which LSMS data are available
+sixteen_countries <- c('Benin', 'Burkina', 'Cote_d_Ivoire', 'Ethiopia', 'Ghana', 'Guinea_Bissau', 'Malawi', 'Mali', 'Niger', 'Nigeria', 'Rwanda','Senegal', 'Tanzania', 'Togo', 'Uganda', 'Zambia')
+sixteen_country_codes <- c('BEN', 'BFA', 'CIV', 'ETH', 'GHA', 'GNB', 'MWI', 'MLI', 'NER', 'NGA', 'RWA', 'SEN', 'TZA', 'TGO', 'UGA', 'ZMB')
+# ------------------------------------------------------------------------------
+# Use the summarized table of R squares as given by Robert's super-computers
+rsq_table <- readRDS('../output/tables/RF_optim_summarized_table.rds')
+
+# explicitly show the mbucket values
+rsq_table <- rsq_table |>
+  mutate(mbucket = as.integer(gsub('\\.rds$', '', gsub('.*\\-', '', filename),ignore.case = T)))
+rsq_long <- rsq_table |>
+  pivot_longer(cols = c(mtry, min.node.size, mbucket),
+               names_to = 'hyper_parameter',
+               values_to = 'val')
+P00 <- ggplot(rsq_long, aes(val, Rsquared, colour = splitrule)) + 
+  geom_point(alpha = 0.6) + 
+  labs(x = 'Tested value', y = expression(R^2)) + 
+  facet_grid(~ hyper_parameter, scales = 'free') + 
+  scale_colour_manual(values = c('blue', 'red')) +
+  theme_test()
+P00
+
+P01 <- ggplot(rsq_long |>
+                group_by(hyper_parameter, val, splitrule) |>
+                summarize(Rsquared = mean(Rsquared, na.rm = T)), 
+              aes(val, Rsquared, colour = splitrule)) + 
+  geom_line() + geom_point() +
+  labs(x = 'Tested value', y = expression('Average ' ~ R^2)) + 
+  facet_grid(~ hyper_parameter, scales = 'free') + 
+  scale_colour_manual(values = c('blue', 'red')) +
+  theme_test()
+P01
+png(paste0('../output/graphs/hyper_parms_robustness.png'), height = 5, width = 7.5, units = 'in', res = 600)
+P01
+ggsave(paste0('../output/graphs/hyper_parms_robustness.png'))
+dev.off()
