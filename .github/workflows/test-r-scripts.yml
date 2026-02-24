@@ -59,7 +59,10 @@ jobs:
       # ----------------------------------------------------------------------
       - name: Create directories
         run: |
+          mkdir -p ${{ env.PROJECT_DIR }}/scripts
+          mkdir -p ${{ env.PROJECT_DIR }}/data
           mkdir -p ${{ env.PROJECT_DIR }}/data/processed
+          mkdir -p ${{ env.PROJECT_DIR }}/output
           mkdir -p ${{ env.PROJECT_DIR }}/output/figures
           mkdir -p ${{ env.PROJECT_DIR }}/output/reports
           mkdir -p ${{ env.PROJECT_DIR }}/output/models
