@@ -130,12 +130,12 @@ jobs:
           
           # Test 03.2: Correlation analysis
           message("Testing 03.2_correlation_drivers.R...")
+          
           tryCatch({
             source("03.2_correlation_drivers.R")
             message("✓ 03.2 passed")
-          }, error = function(e) {
-            message("✗ 03.2 failed: ", e$message)
-          })
+          }, error = function(e) message(e)
+          )
           
           # Test 03.3: Descriptive stats
           message("Testing 03.3_descriptive_stats.R...")
