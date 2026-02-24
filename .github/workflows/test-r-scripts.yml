@@ -95,7 +95,7 @@ jobs:
       # ----------------------------------------------------------------------
       - name: Generate synthetic data
         run: |
-          setwd("scripts")
+          setwd(paste0(here::here(), '/scripts'))
           source("00_synthetic_data.R")
         shell: Rscript {0}
 
@@ -126,7 +126,7 @@ jobs:
       # ----------------------------------------------------------------------
       - name: Run script tests
         run: |
-          setwd("scripts")
+          setwd(paste0(here::here(), '/scripts'))
           
           # Test 03.2: Correlation analysis
           message("Testing 03.2_correlation_drivers.R...")
