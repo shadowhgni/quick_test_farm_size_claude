@@ -1,0 +1,92 @@
+# ==============================================================================
+# GitHub Actions Workflow: Test Farm Size Prediction Scripts
+# Project: Farm Size Prediction Across Sub-Saharan Africa
+#
+# This workflow runs quickly (~2-3 minutes) by:
+# 1. Using base R only (no package installation)
+# 2. Running the base R synthetic data generator
+# 3. Running the base R test suite
+# ==============================================================================
+
+name: Test R Scripts
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.3.3'
+
+      - name: Check R script syntax
+        run: |
+          if [ -d "scripts" ]; then
+            SCRIPTS_DIR="scripts"
+          elif [ -d "farm_size_project_complete/scripts" ]; then
+            SCRIPTS_DIR="farm_size_project_complete/scripts"
+          else
+            echo "No scripts directory found!"; exit 1
+          fi
+          for script in $SCRIPTS_DIR/*.R; do
+            echo "Checking: $script"
+            Rscript -e "parse('$script')" || exit 1
+          done
+          echo "✓ All scripts valid"
+
+  test-base-r:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: syntax-check
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.3.3'
+
+      - name: Find scripts directory
+        id: find-scripts
+        run: |
+          if [ -d "scripts" ]; then
+            echo "scripts_dir=scripts" >> $GITHUB_OUTPUT
+          elif [ -d "farm_size_project_complete/scripts" ]; then
+            echo "scripts_dir=farm_size_project_complete/scripts" >> $GITHUB_OUTPUT
+          else
+            echo "No scripts directory found!"; exit 1
+          fi
+
+      - name: Generate synthetic data
+        run: |
+          cd ${{ steps.find-scripts.outputs.scripts_dir }}
+          Rscript 00_synthetic_data_base.R
+
+      - name: Run tests
+        run: |
+          cd ${{ steps.find-scripts.outputs.scripts_dir }}
+          Rscript 00_run_tests_base.R
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-report
+          path: |
+            **/output/reports/*.md
+            **/output/tables/*.csv
+          retention-days: 30
