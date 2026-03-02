@@ -26,7 +26,7 @@ jobs:
 
   # ── Job 1: Fast syntax check (no packages needed) ──────────────────────────
   syntax-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
 
     steps:
@@ -58,7 +58,7 @@ jobs:
 
   # ── Job 2: Full pipeline with packages ─────────────────────────────────────
   full-pipeline:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 120
     needs: syntax-check
 
@@ -71,7 +71,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends \
             libgdal-dev libgeos-dev libgeos++-dev \
-            libproj-dev libproj22 \
+            libproj-dev \
             libudunits2-dev \
             libmagick++-dev \
             libfontconfig1-dev libharfbuzz-dev libfribidi-dev \
@@ -79,8 +79,8 @@ jobs:
             libxml2-dev libssl-dev libcurl4-openssl-dev \
             cmake
           sudo ldconfig
-          echo "libproj files: $(find /usr -name 'libproj.so*' 2>/dev/null | tr '\n' ' ')"
-          echo "GDAL version: $(gdal-config --version 2>/dev/null || echo 'not found')" 
+          echo "PROJ libs: $(find /usr/lib -name 'libproj.so*' | tr '\n' ' ')"
+          echo "GDAL: $(gdal-config --version 2>/dev/null || echo not found)" 
 
       # ── R setup ────────────────────────────────────────────────────────────
       - uses: r-lib/actions/setup-r@v2
