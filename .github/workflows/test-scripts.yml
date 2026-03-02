@@ -188,9 +188,9 @@ jobs:
       # ── Run full pipeline test (always capture output) ───────────────────
       - name: Run full sequential pipeline test
         run: |
-          mkdir -p farm_size_project_complete/ci-logs
+          mkdir -p ${{ steps.find-scripts.outputs.project_dir }}/ci-logs
           cd ${{ steps.find-scripts.outputs.scripts_dir }}
-          Rscript --vanilla 00_run_all_tests.R             2>&1 | tee ../../ci-logs/raw-output.txt || true
+          Rscript --vanilla 00_run_all_tests.R             2>&1 | tee ../ci-logs/raw-output.txt || true
         timeout-minutes: 100
 
       # ── Commit log back so it can be retrieved via git pull ───────────────
