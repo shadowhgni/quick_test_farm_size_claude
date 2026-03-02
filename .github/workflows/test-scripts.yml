@@ -99,66 +99,66 @@ jobs:
           Rscript -e '
           options(
             repos = c(
-              RSPM  = "https://packagemanager.posit.co/cran/__linux__/jammy/latest",
-              CRAN  = "https://cloud.r-project.org"
+              RSPM = "https://packagemanager.posit.co/cran/__linux__/jammy/latest",
+              CRAN = "https://cloud.r-project.org"
             ),
-            Ncpus = 2,
-            install.packages.compile.from.source = "never"
+            Ncpus = 2L,
+            warn = 1L
           )
 
-          # Install pak for fast parallel installs
-          if (!requireNamespace("pak", quietly = TRUE))
-            install.packages("pak")
-
-          # All packages used across the 48 scripts
-          pkgs <- c(
-            # Core
-            "here", "tidyverse", "dplyr", "purrr", "reshape2",
-            "haven", "labelled", "readxl", "fuzzyjoin", "stringdist",
-            # Spatial
-            "terra", "sf", "spdep", "tmap", "geodata",
-            # Machine learning
-            "randomForest", "ranger", "quantregForest", "xgboost",
-            "caret", "e1071", "gbm", "mlr", "tuneRanger", "doParallel",
-            # Statistics
-            "quantreg", "car", "MASS", "moments", "ineq",
-            "fields", "EnvStats", "fitdistrplus",
-            # Visualisation
-            "GGally", "patchwork", "ggpubr", "cowplot",
-            "viridis", "RColorBrewer", "plotrix", "ggExtra",
-            # Web / download
-            "httr", "curl", "rvest", "R.utils",
-            # File I/O
-            "zip", "remotes",
-            # Test / docs
-            "testthat", "rmarkdown", "knitr",
-            # Misc
-            "XNomial", "kernlab"
-          )
-
-          missing <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]
-          if (length(missing) > 0) {
-            message("Installing ", length(missing), " packages: ",
-                    paste(missing, collapse = ", "))
-            pak::pak(missing, ask = FALSE)
-          } else {
-            message("All packages already installed.")
+          safe_install <- function(pkgs) {
+            for (p in pkgs) {
+              if (!requireNamespace(p, quietly = TRUE)) {
+                message("  installing: ", p)
+                tryCatch(
+                  install.packages(p, dependencies = TRUE, quiet = TRUE),
+                  error   = function(e) message("  FAILED  : ", p, " — ", conditionMessage(e)),
+                  warning = function(w) message("  WARNING : ", p, " — ", conditionMessage(w))
+                )
+              } else {
+                message("  present : ", p)
+              }
+            }
           }
 
-          # GitHub-only packages
-          github_pkgs <- c("afrimapr/afrilearndata", "rCarto/SpatialML")
-          for (gp in github_pkgs) {
-            pkg_name <- sub(".*/", "", gp)
-            if (!requireNamespace(pkg_name, quietly = TRUE)) {
-              message("Installing GitHub: ", gp)
+          # Install in dependency order — base utilities first
+          safe_install(c(
+            "remotes", "here",
+            "dplyr", "tidyr", "readr", "purrr", "stringr",
+            "ggplot2", "tibble", "forcats", "lubridate",
+            "tidyverse",
+            "haven", "labelled", "readxl", "reshape2",
+            "fuzzyjoin", "stringdist",
+            "terra", "sf", "spdep", "geodata",
+            "randomForest", "ranger", "quantregForest",
+            "xgboost", "gbm", "e1071", "kernlab",
+            "caret", "doParallel",
+            "quantreg", "car", "MASS", "moments",
+            "ineq", "fields", "EnvStats", "fitdistrplus",
+            "GGally", "patchwork", "ggpubr", "cowplot",
+            "viridis", "RColorBrewer", "plotrix", "ggExtra",
+            "httr", "curl", "rvest", "R.utils",
+            "zip", "XNomial",
+            "testthat", "rmarkdown", "knitr"
+          ))
+
+          # GitHub-only packages (non-fatal)
+          for (gp in c("afrimapr/afrilearndata", "rCarto/SpatialML")) {
+            pkg <- sub(".*/", "", gp)
+            if (!requireNamespace(pkg, quietly = TRUE)) {
+              message("  GitHub  : ", gp)
               tryCatch(
                 remotes::install_github(gp, dependencies = TRUE, quiet = TRUE),
-                error = function(e) message("  SKIP (GitHub): ", gp, " — ", e$message)
+                error = function(e) message("  SKIP    : ", gp, " — ", conditionMessage(e))
               )
             }
           }
 
-          message("Package installation complete.")
+          # Optional heavy packages (mlr, tuneRanger — large, try last)
+          safe_install(c("mlr", "tuneRanger"))
+
+          message("\nDone. Installed packages:")
+          print(rownames(installed.packages()))
           '
 
       # ── Find project directory ─────────────────────────────────────────────
