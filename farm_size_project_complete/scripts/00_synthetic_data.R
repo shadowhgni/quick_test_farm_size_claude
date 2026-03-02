@@ -283,7 +283,7 @@ make_gadm_vect <- function(cty, code, lon_c, lat_c) {
                          cx-0.6, cy-0.6), ncol=2, byrow=TRUE),
                 type = "polygons", crs = "EPSG:4326")
   })
-  v <- do.call(rbind, polys)
+  v <- Reduce(rbind, polys)
   # Add standard GADM fields
   terra::values(v) <- data.frame(
     GID_0  = code,
@@ -306,7 +306,7 @@ gadm_list <- mapply(make_gadm_vect,
   country_bbox$lon_c, country_bbox$lat_c,
   SIMPLIFY = FALSE)
 
-sixteen_count_distr <- do.call(rbind, gadm_list)
+sixteen_count_distr <- Reduce(rbind, gadm_list)
 
 # Save each country's GADM in the expected geodata cache structure
 for (i in seq_along(sixteen_countries)) {
