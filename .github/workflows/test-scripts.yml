@@ -61,6 +61,8 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 120
     needs: syntax-check
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -183,12 +185,40 @@ jobs:
       - name: Create .here anchor
         run: touch ${{ steps.find-scripts.outputs.project_dir }}/.here
 
-      # ── Run full pipeline test ─────────────────────────────────────────────
+      # ── Run full pipeline test (always capture output) ───────────────────
       - name: Run full sequential pipeline test
         run: |
+          mkdir -p farm_size_project_complete/ci-logs
           cd ${{ steps.find-scripts.outputs.scripts_dir }}
-          Rscript --vanilla 00_run_all_tests.R
+          Rscript --vanilla 00_run_all_tests.R             2>&1 | tee ../../ci-logs/raw-output.txt || true
         timeout-minutes: 100
+
+      # ── Commit log back so it can be retrieved via git pull ───────────────
+      - name: Commit test log to repo
+        if: always()
+        run: |
+          PROJECT="${{ steps.find-scripts.outputs.project_dir }}"
+          mkdir -p ${PROJECT}/ci-logs
+          # Combine raw output + markdown report into one retrievable file
+          {
+            echo "# CI Run Log"
+            echo "Run: ${{ github.run_id }}  Commit: ${{ github.sha }}  Time: $(date -u)"
+            echo ""
+            echo "## Raw Output"
+            echo '```'
+            cat ${PROJECT}/ci-logs/raw-output.txt 2>/dev/null || echo "(no output captured)"
+            echo '```'
+            echo ""
+            echo "## Pipeline Report"
+            cat ${PROJECT}/output/reports/full_pipeline_test_report.md 2>/dev/null || echo "(report not generated)"
+          } > ${PROJECT}/ci-logs/latest.md
+          git config user.email "ci-bot@farm-size.dev"
+          git config user.name "CI Bot"
+          git add ${PROJECT}/ci-logs/
+          git diff --cached --quiet ||             git commit -m "ci: update test log [skip ci]"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # ── Upload test artifacts ──────────────────────────────────────────────
       - name: Upload test report
@@ -199,5 +229,4 @@ jobs:
           path: |
             **/output/reports/*.md
             **/output/tables/*.csv
-            **/output/tables/*.rds
           retention-days: 30
