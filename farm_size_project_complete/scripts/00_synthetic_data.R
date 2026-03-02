@@ -324,10 +324,12 @@ message("5. Creating output table stubs...")
 
 # Model comparison tables (scripts 04.x)
 model_names <- c("tps_xy","rf","rf_xy","rf_xyz","gbm","gbm_xy","gbm_xyz","svm","svm_xy","svm_xyz")
-wide <- as.data.frame(
-  cbind(model = model_names,
-        setNames(replicate(16, round(runif(10, 0.2, 0.7), 2), simplify = FALSE),
-                 sixteen_countries)))
+wide <- data.frame(
+  model = model_names,
+  matrix(round(runif(10L * 16L, 0.2, 0.7), 2), nrow = 10L, ncol = 16L,
+         dimnames = list(NULL, sixteen_countries)),
+  stringsAsFactors = FALSE, check.names = FALSE
+)
 write.csv(wide,  file.path(output_path, "tables/comparison_ML_models_per_country.csv"), row.names = FALSE)
 saveRDS(wide,    file.path(output_path, "tables/comparison_ML_models_per_country.rds"))
 
