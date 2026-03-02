@@ -12,28 +12,29 @@
 message("=== FULL Synthetic Data Generation for CI ===\n")
 set.seed(42)
 
-# Verify packages available; attempt emergency install if missing
-required_pkgs <- c("terra", "dplyr", "ggplot2", "tidyr", "purrr")
-missing_pkgs  <- required_pkgs[!sapply(required_pkgs, requireNamespace, quietly = TRUE)]
-if (length(missing_pkgs) > 0) {
-  message("MISSING PACKAGES: ", paste(missing_pkgs, collapse = ", "))
-  message("Attempting emergency install...")
-  install.packages(missing_pkgs,
+# Verify terra is loadable; if binary fails due to missing system lib, reinstall from source
+if (!requireNamespace("terra", quietly = TRUE)) {
+  message("terra not installed — installing...")
+  install.packages("terra",
     repos = c("https://packagemanager.posit.co/cran/__linux__/jammy/latest",
               "https://cloud.r-project.org"),
     dependencies = TRUE, quiet = FALSE)
 }
 
-# Report what is actually available
-for (p in c("terra", "dplyr", "ggplot2")) {
-  message(p, ": ", if (requireNamespace(p, quietly=TRUE)) "OK" else "MISSING")
-}
+# Test if terra actually loads (shared lib might be missing even if installed)
+terra_ok <- tryCatch({ library(terra); TRUE }, error = function(e) {
+  message("terra binary failed (", conditionMessage(e), ") — trying source build...")
+  install.packages("terra", type = "source",
+    repos = "https://cloud.r-project.org", dependencies = TRUE, quiet = FALSE)
+  tryCatch({ library(terra); TRUE }, error = function(e2) {
+    stop("Cannot load terra: ", conditionMessage(e2))
+  })
+})
 
 suppressPackageStartupMessages({
-  library(terra)
   library(dplyr)
-  library(ggplot2)
 })
+message("terra: OK  dplyr: OK")
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 processed_path <- "../data/processed"

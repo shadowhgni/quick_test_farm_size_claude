@@ -70,13 +70,17 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends \
-            libgdal-dev libgeos-dev libproj-dev libudunits2-dev \
+            libgdal-dev libgeos-dev libgeos++-dev \
+            libproj-dev libproj22 \
+            libudunits2-dev \
             libmagick++-dev \
             libfontconfig1-dev libharfbuzz-dev libfribidi-dev \
             libfreetype6-dev libpng-dev libtiff-dev libjpeg-dev \
             libxml2-dev libssl-dev libcurl4-openssl-dev \
-            libsodium-dev libsecret-1-dev \
             cmake
+          sudo ldconfig
+          echo "libproj files: $(find /usr -name 'libproj.so*' 2>/dev/null | tr '\n' ' ')"
+          echo "GDAL version: $(gdal-config --version 2>/dev/null || echo 'not found')" 
 
       # ── R setup ────────────────────────────────────────────────────────────
       - uses: r-lib/actions/setup-r@v2
