@@ -91,12 +91,23 @@ run_script <- function(script_name, timeout_sec = 600) {
   writeLines(patched, tmp)
   on.exit(unlink(tmp), add = TRUE)
 
+  log_file <- tempfile(fileext = ".log")
+  on.exit({ if (file.exists(log_file)) unlink(log_file) }, add = TRUE)
+
   t0  <- proc.time()["elapsed"]
   ret <- system2("Rscript",
                  c("--vanilla", shQuote(tmp)),
-                 stdout = FALSE, stderr = FALSE,
+                 stdout = log_file, stderr = log_file,
                  timeout = timeout_sec)
   elapsed <- round(proc.time()["elapsed"] - t0, 1)
+
+  # Print output so CI logs show the real error
+  if (file.exists(log_file)) {
+    out <- readLines(log_file, warn = FALSE)
+    if (length(out) > 0)
+      cat(paste0("[", script_name, "] ", tail(out, 40), "
+"), sep = "")
+  }
 
   list(passed  = (ret == 0),
        elapsed = elapsed,

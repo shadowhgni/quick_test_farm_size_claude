@@ -12,9 +12,27 @@
 message("=== FULL Synthetic Data Generation for CI ===\n")
 set.seed(42)
 
+# Verify packages available; attempt emergency install if missing
+required_pkgs <- c("terra", "dplyr", "ggplot2", "tidyr", "purrr")
+missing_pkgs  <- required_pkgs[!sapply(required_pkgs, requireNamespace, quietly = TRUE)]
+if (length(missing_pkgs) > 0) {
+  message("MISSING PACKAGES: ", paste(missing_pkgs, collapse = ", "))
+  message("Attempting emergency install...")
+  install.packages(missing_pkgs,
+    repos = c("https://packagemanager.posit.co/cran/__linux__/jammy/latest",
+              "https://cloud.r-project.org"),
+    dependencies = TRUE, quiet = FALSE)
+}
+
+# Report what is actually available
+for (p in c("terra", "dplyr", "ggplot2")) {
+  message(p, ": ", if (requireNamespace(p, quietly=TRUE)) "OK" else "MISSING")
+}
+
 suppressPackageStartupMessages({
   library(terra)
-  library(tidyverse)
+  library(dplyr)
+  library(ggplot2)
 })
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
@@ -186,8 +204,7 @@ write.csv(lsms_raw, file.path(processed_path, "lsms_and_zambia.csv"), row.names 
 # lsms_and_zambia.rds as a LIST (required by 03.1_pooled_data.R)
 lsms_rds_list <- list(
   all_lsms_raw_data = lsms_raw,
-  lsms_farm_size    = lsms_raw |>
-    select(x, y, country, year, farm_id, hh_size, farm_area_ha)
+  lsms_farm_size    = lsms_raw[, c("x","y","country","year","farm_id","hh_size","farm_area_ha")]
 )
 saveRDS(lsms_rds_list, file.path(processed_path, "lsms_and_zambia.rds"))
 message("   LSMS CSV + RDS done  (", nrow(lsms_raw), " farms).")
@@ -325,8 +342,8 @@ cty_auto <- data.frame(country = sixteen_countries,
   rsq = round(runif(16, 0.2, 0.7), 2))
 write.csv(cty_auto, file.path(output_path, "tables/country_auto_evaluation_rsquares.csv"), row.names = FALSE)
 
-pairwise <- expand.grid(train = sixteen_countries, test = sixteen_countries) |>
-  mutate(rsq = round(runif(n(), 0.1, 0.7), 2))
+pairwise <- expand.grid(train = sixteen_countries, test = sixteen_countries, stringsAsFactors = FALSE)
+pairwise$rsq <- round(runif(nrow(pairwise), 0.1, 0.7), 2)
 write.csv(pairwise, file.path(output_path, "tables/country_pairwise_point_based_cross_validation.csv"), row.names = FALSE)
 
 var_imp <- data.frame(
@@ -368,10 +385,11 @@ message("   Output stubs done.")
 message("6. Creating processed data stubs...")
 
 # fsize_distribution_resample_long.rds (used by 08.3, 09.1, 10.1)
-theor_farms <- lsms_ml |>
-  select(x, y, country, farm_area_ha) |>
-  mutate(q10 = farm_area_ha * 0.5, q50 = farm_area_ha, q90 = farm_area_ha * 1.8,
-         pred_mean = farm_area_ha * runif(n(), 0.8, 1.2))
+theor_farms <- lsms_ml[, c("x","y","country","farm_area_ha")]
+theor_farms$q10 <- theor_farms$farm_area_ha * 0.5
+theor_farms$q50 <- theor_farms$farm_area_ha
+theor_farms$q90 <- theor_farms$farm_area_ha * 1.8
+theor_farms$pred_mean <- theor_farms$farm_area_ha * runif(nrow(theor_farms), 0.8, 1.2)
 theor_farms_application <- theor_farms
 saveRDS(list(theor_farms = theor_farms, theor_farms_application = theor_farms_application),
   file.path(processed_path, "fsize_distribution_resample_long.rds"))
