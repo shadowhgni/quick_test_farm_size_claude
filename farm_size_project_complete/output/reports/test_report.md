@@ -1,29 +1,31 @@
-# Farm Size Prediction - Test Report
+# Farm Size Prediction - CI Test Report
 
-**Generated:** 2026-02-23 12:20:58.327147
+**Generated:** 2026-03-02 07:01:48.456913
 **R Version:** R version 4.3.3 (2024-02-29)
+**Platform:** x86_64-pc-linux-gnu
 
 ## Summary
 
-- Total Tests: 7
-- Passed: 7
-- Failed: 0
-- Time: 0.2s
+| Metric | Value |
+|--------|-------|
+| Total Tests | 5 |
+| Passed      | 5 |
+| Failed      | 0 |
+| Total Time  | 0.2s |
 
-## Results
+## Test Results
 
-- ✅ Directory Structure (0.01s)
-- ✅ Core Data Files (0.03s)
-- ✅ LSMS Data Integrity (0.02s)
-- ✅ Trimmed Dataset (0.01s)
-- ✅ ML Dataset (0.03s)
-- ✅ Output Files (0s)
-- ✅ Country Raw Files (0s)
+| Test | Status | Time | Description |
+|------|--------|------|-------------|
+| file_existence | <U+2705> PASS | 0.1s | Required output files present |
+| lsms_integrity | <U+2705> PASS | 0s | LSMS data integrity checks |
+| grid_integrity | <U+2705> PASS | 0s | Raster grid integrity checks |
+| ml_dataset | <U+2705> PASS | 0s | ML-ready dataset checks |
+| farm_size_distribution | <U+2705> PASS | 0s | Farm size distribution sanity |
 
 ## Data Summary
 
-- Farms: 4,324
-- Countries: 16
-- Farm size median: 1.39 ha
-- Farm size range: 0.08 - 26.55 ha
-
+- **Farms:** 3,384
+- **Countries:** 16
+- **Farm size range:** 0.09 - 6.02 ha
+- **Median farm size:** 1.27 ha

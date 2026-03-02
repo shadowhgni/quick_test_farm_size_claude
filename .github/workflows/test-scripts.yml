@@ -1,11 +1,16 @@
 # ==============================================================================
-# GitHub Actions Workflow: Test Farm Size Prediction Scripts
+# GitHub Actions Workflow: Full Pipeline Test
 # Project: Farm Size Prediction Across Sub-Saharan Africa
 #
-# This workflow runs quickly (~2-3 minutes) by:
-# 1. Using base R only (no package installation)
-# 2. Running the base R synthetic data generator
-# 3. Running the base R test suite
+# Jobs:
+#   1. syntax-check  – parse() all 48 scripts; needs no packages (~2 min)
+#   2. full-pipeline – install packages, generate synthetic data, run all scripts
+#
+# Package strategy:
+#   - System GDAL/GEOS/PROJ libs installed via apt
+#   - Binary R packages from Posit Public Package Manager (fast, pre-compiled)
+#   - pak-based installation with full dependency resolution
+#   - Cache keyed on renv.lock + package list hash
 # ==============================================================================
 
 name: Test R Scripts
@@ -18,75 +23,177 @@ on:
   workflow_dispatch:
 
 jobs:
+
+  # ── Job 1: Fast syntax check (no packages needed) ──────────────────────────
   syntax-check:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-r@v2
         with:
           r-version: '4.3.3'
 
       - name: Check R script syntax
         run: |
-          if [ -d "scripts" ]; then
-            SCRIPTS_DIR="scripts"
-          elif [ -d "farm_size_project_complete/scripts" ]; then
+          if [ -d "farm_size_project_complete/scripts" ]; then
             SCRIPTS_DIR="farm_size_project_complete/scripts"
+          elif [ -d "scripts" ]; then
+            SCRIPTS_DIR="scripts"
           else
             echo "No scripts directory found!"; exit 1
           fi
+          FAIL=0
           for script in $SCRIPTS_DIR/*.R; do
-            echo "Checking: $script"
-            Rscript -e "parse('$script')" || exit 1
+            Rscript -e "parse('$script')" > /dev/null 2>&1 || {
+              echo "SYNTAX ERROR: $script"
+              Rscript -e "parse('$script')"
+              FAIL=1
+            }
           done
-          echo "✓ All scripts valid"
+          [ $FAIL -eq 0 ] && echo "✓ All $(ls $SCRIPTS_DIR/*.R | wc -l) scripts pass syntax check"
+          exit $FAIL
 
-  test-base-r:
+  # ── Job 2: Full pipeline with packages ─────────────────────────────────────
+  full-pipeline:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 120
     needs: syntax-check
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
+      # ── System libraries required by terra / sf / magick ──────────────────
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libgdal-dev libgeos-dev libproj-dev libudunits2-dev \
+            libmagick++-dev \
+            libfontconfig1-dev libharfbuzz-dev libfribidi-dev \
+            libfreetype6-dev libpng-dev libtiff-dev libjpeg-dev \
+            libxml2-dev libssl-dev libcurl4-openssl-dev \
+            libsodium-dev libsecret-1-dev \
+            cmake
+
+      # ── R setup ────────────────────────────────────────────────────────────
+      - uses: r-lib/actions/setup-r@v2
         with:
           r-version: '4.3.3'
+          use-public-rspm: true   # Posit PPM — pre-compiled binaries for Ubuntu
 
+      # ── R package cache ────────────────────────────────────────────────────
+      - name: Cache R packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: r-pkgs-${{ runner.os }}-${{ hashFiles('farm_size_project_complete/renv.lock', '.github/workflows/test-scripts.yml') }}
+          restore-keys: |
+            r-pkgs-${{ runner.os }}-
+
+      # ── Install all required packages ──────────────────────────────────────
+      - name: Install R packages
+        run: |
+          Rscript -e '
+          options(
+            repos = c(
+              RSPM  = "https://packagemanager.posit.co/cran/__linux__/jammy/latest",
+              CRAN  = "https://cloud.r-project.org"
+            ),
+            Ncpus = 2,
+            install.packages.compile.from.source = "never"
+          )
+
+          # Install pak for fast parallel installs
+          if (!requireNamespace("pak", quietly = TRUE))
+            install.packages("pak")
+
+          # All packages used across the 48 scripts
+          pkgs <- c(
+            # Core
+            "here", "tidyverse", "dplyr", "purrr", "reshape2",
+            "haven", "labelled", "readxl", "fuzzyjoin", "stringdist",
+            # Spatial
+            "terra", "sf", "spdep", "tmap", "geodata",
+            # Machine learning
+            "randomForest", "ranger", "quantregForest", "xgboost",
+            "caret", "e1071", "gbm", "mlr", "tuneRanger", "doParallel",
+            # Statistics
+            "quantreg", "car", "MASS", "moments", "ineq",
+            "fields", "EnvStats", "fitdistrplus",
+            # Visualisation
+            "GGally", "patchwork", "ggpubr", "cowplot",
+            "viridis", "RColorBrewer", "plotrix", "ggExtra",
+            # Web / download
+            "httr", "curl", "rvest", "R.utils",
+            # File I/O
+            "zip", "remotes",
+            # Test / docs
+            "testthat", "rmarkdown", "knitr",
+            # Misc
+            "XNomial", "kernlab"
+          )
+
+          missing <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]
+          if (length(missing) > 0) {
+            message("Installing ", length(missing), " packages: ",
+                    paste(missing, collapse = ", "))
+            pak::pak(missing, ask = FALSE)
+          } else {
+            message("All packages already installed.")
+          }
+
+          # GitHub-only packages
+          github_pkgs <- c("afrimapr/afrilearndata", "rCarto/SpatialML")
+          for (gp in github_pkgs) {
+            pkg_name <- sub(".*/", "", gp)
+            if (!requireNamespace(pkg_name, quietly = TRUE)) {
+              message("Installing GitHub: ", gp)
+              tryCatch(
+                remotes::install_github(gp, dependencies = TRUE, quiet = TRUE),
+                error = function(e) message("  SKIP (GitHub): ", gp, " — ", e$message)
+              )
+            }
+          }
+
+          message("Package installation complete.")
+          '
+
+      # ── Find project directory ─────────────────────────────────────────────
       - name: Find scripts directory
         id: find-scripts
         run: |
-          if [ -d "scripts" ]; then
-            echo "scripts_dir=scripts" >> $GITHUB_OUTPUT
-          elif [ -d "farm_size_project_complete/scripts" ]; then
+          if [ -d "farm_size_project_complete/scripts" ]; then
             echo "scripts_dir=farm_size_project_complete/scripts" >> $GITHUB_OUTPUT
+            echo "project_dir=farm_size_project_complete"         >> $GITHUB_OUTPUT
+          elif [ -d "scripts" ]; then
+            echo "scripts_dir=scripts" >> $GITHUB_OUTPUT
+            echo "project_dir=."       >> $GITHUB_OUTPUT
           else
-            echo "No scripts directory found!"; exit 1
+            echo "No scripts directory!"; exit 1
           fi
 
-      - name: Generate synthetic data
+      # ── Ensure .here anchor exists ─────────────────────────────────────────
+      - name: Create .here anchor
+        run: touch ${{ steps.find-scripts.outputs.project_dir }}/.here
+
+      # ── Run full pipeline test ─────────────────────────────────────────────
+      - name: Run full sequential pipeline test
         run: |
           cd ${{ steps.find-scripts.outputs.scripts_dir }}
-          Rscript 00_synthetic_data_base.R
+          Rscript --vanilla 00_run_all_tests.R
+        timeout-minutes: 100
 
-      - name: Run tests
-        run: |
-          cd ${{ steps.find-scripts.outputs.scripts_dir }}
-          Rscript 00_run_tests_base.R
-
+      # ── Upload test artifacts ──────────────────────────────────────────────
       - name: Upload test report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-report
+          name: pipeline-test-report
           path: |
             **/output/reports/*.md
             **/output/tables/*.csv
+            **/output/tables/*.rds
           retention-days: 30
