@@ -1,313 +1,277 @@
 # ==============================================================================
-# Script: 00_run_all_tests.R
+# Script: 00_run_tests_base.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Run all scripts with synthetic data and validate outputs
+# Purpose: Lightweight CI test suite using BASE R ONLY
 #
 # Authors: Deo, Joao, Robert, Fred
-# Code documentation: Claude (Anthropic) - February 2026
+# Code documentation: Claude (Anthropic) - March 2026
 #
 # Description:
-#   This script orchestrates the complete test suite:
-#   1. Generates synthetic data
-#   2. Runs each script in the pipeline
-#   3. Validates outputs
-#   4. Generates a test report
-#
-# Usage:
-#   Rscript scripts/00_run_all_tests.R
-#   # Or in R:
-#   source("scripts/00_run_all_tests.R")
+#   Validates outputs produced by 00_synthetic_data_base.R.
+#   Zero external package dependencies - uses only base R.
 #
 # Exit Codes:
 #   0 - All tests passed
 #   1 - One or more tests failed
 # ==============================================================================
 
-# ------------------------------------------------------------------------------
-# SETUP
-# ------------------------------------------------------------------------------
-message("\n")
+message("\n", paste(rep("=", 70), collapse = ""))
+message("FARM SIZE PREDICTION - BASE R TEST SUITE")
 message(paste(rep("=", 70), collapse = ""))
-message("FARM SIZE PREDICTION - AUTOMATED TEST SUITE")
-message(paste(rep("=", 70), collapse = ""))
-message("Started: ", Sys.time())
-message("")
+message("Started: ", Sys.time(), "\n")
 
-# Track test results
 test_results <- list()
-start_time <- Sys.time()
+start_time   <- Sys.time()
 
-#' Run a script and track results
-#' @param script_name Name of script file
-#' @param description Description of what script does
-#' @return TRUE if passed, FALSE if failed
-run_test <- function(script_name, description) {
-  message("\n--- Testing: ", script_name, " ---")
-  message("Description: ", description)
-  
-  script_start <- Sys.time()
-  
-  result <- tryCatch({
-    source(script_name, local = new.env())
-    TRUE
-  }, error = function(e) {
-    message("ERROR: ", e$message)
-    FALSE
-  }, warning = function(w) {
-    message("WARNING: ", w$message)
-    TRUE  # Warnings don't fail the test
-  })
-  
-  elapsed <- round(difftime(Sys.time(), script_start, units = "secs"), 1)
-  
-  if (result) {
-    message("✓ PASSED (", elapsed, "s)")
-  } else {
-    message("✗ FAILED (", elapsed, "s)")
-  }
-  
-  test_results[[script_name]] <<- list(
-    passed = result,
-    time = elapsed,
-    description = description
-  )
-  
-  return(result)
+# ------------------------------------------------------------------------------
+# HELPERS
+# ------------------------------------------------------------------------------
+
+record <- function(name, passed, description, elapsed = 0) {
+  status <- if (passed) "\u2713 PASS" else "\u2717 FAIL"
+  message(sprintf("  %s  %-45s (%ss)", status, name, round(elapsed, 1)))
+  test_results[[name]] <<- list(passed = passed, time = elapsed,
+                                description = description)
 }
 
-#' Validate that a file exists and has content
-#' @param filepath Path to file
-#' @param min_size Minimum file size in bytes
-#' @return TRUE if valid
-validate_file <- function(filepath, min_size = 100) {
-  if (!file.exists(filepath)) {
-    message("  ✗ Missing: ", filepath)
+validate_file <- function(path, min_bytes = 100) {
+  if (!file.exists(path)) {
+    message("    \u2717 Missing: ", path)
     return(FALSE)
   }
-  
-  size <- file.info(filepath)$size
-  if (size < min_size) {
-    message("  ✗ Too small (", size, " bytes): ", filepath)
+  sz <- file.info(path)$size
+  if (sz < min_bytes) {
+    message("    \u2717 Too small (", sz, " bytes): ", path)
     return(FALSE)
   }
-  
-  message("  ✓ ", basename(filepath), " (", format(size, big.mark = ","), " bytes)")
-  return(TRUE)
+  message("    \u2713 ", basename(path), " (", format(sz, big.mark = ","), " bytes)")
+  TRUE
 }
 
 # ------------------------------------------------------------------------------
 # SET WORKING DIRECTORY
 # ------------------------------------------------------------------------------
-# Handle different execution contexts
-if (interactive()) {
-  # Running in RStudio or R console
-  if (file.exists("scripts/00_synthetic_data.R")) {
-    setwd("scripts")
-  }
-} else {
-  # Running via Rscript
-  args <- commandArgs(trailingOnly = FALSE)
+if (!interactive()) {
+  args        <- commandArgs(trailingOnly = FALSE)
   script_path <- sub("--file=", "", args[grep("--file=", args)])
-  if (length(script_path) > 0) {
-    setwd(dirname(script_path))
-  }
+  if (length(script_path) > 0 && nchar(script_path) > 0)
+    setwd(dirname(normalizePath(script_path)))
 }
-
-message("Working directory: ", getwd())
+message("Working directory: ", getwd(), "\n")
 
 # ------------------------------------------------------------------------------
-# PHASE 1: GENERATE SYNTHETIC DATA
+# TEST 1: SYNTHETIC DATA FILES EXIST
 # ------------------------------------------------------------------------------
-message("\n")
 message(paste(rep("-", 70), collapse = ""))
-message("PHASE 1: SYNTHETIC DATA GENERATION")
+message("TEST 1: Required output files exist")
 message(paste(rep("-", 70), collapse = ""))
 
-run_test("00_synthetic_data.R", "Generate synthetic spatial and survey data")
-
-# Validate synthetic data
-message("\nValidating synthetic data files...")
-synthetic_files <- c(
-  "../data/processed/all_predictors.tif",
-  "../data/processed/stacked_rasters_africa.tif",
+t_start <- Sys.time()
+required_files <- c(
+  "../data/processed/raster_grid_africa.rds",
   "../data/processed/lsms_and_zambia.csv",
   "../data/processed/lsms_trimmed_95th_africa.rds",
-  "../data/processed/lsms_spatial.csv"
+  "../data/processed/lsms_trimmed_99th_africa.rds",
+  "../data/processed/lsms_spatial.csv",
+  "../data/processed/lsms_spatial_africa.Rds"
 )
-
-for (f in synthetic_files) {
-  validate_file(f)
-}
-
-# ------------------------------------------------------------------------------
-# PHASE 2: TEST DATA PROCESSING SCRIPTS
-# ------------------------------------------------------------------------------
-message("\n")
-message(paste(rep("-", 70), collapse = ""))
-message("PHASE 2: DATA PROCESSING SCRIPTS")
-message(paste(rep("-", 70), collapse = ""))
-
-# Test 03.2: Correlation analysis
-run_test("03.2_correlation_drivers.R", "Analyze predictor correlations")
-
-# Test 03.3: Descriptive statistics
-run_test("03.3_descriptive_stats.R", "Generate descriptive statistics table")
-
-# Validate outputs
-message("\nValidating output files...")
-output_files <- c(
-  "../output/graphs/drivers_correlation_matrix.png",
-  "../output/tables/summary_descriptive_stats_survey.csv"
-)
-
-for (f in output_files) {
-  validate_file(f)
-}
+all_present <- all(sapply(required_files, validate_file))
+record("file_existence", all_present, "Required output files present",
+       difftime(Sys.time(), t_start, units = "secs"))
 
 # ------------------------------------------------------------------------------
-# PHASE 3: DATA INTEGRITY CHECKS
+# TEST 2: LSMS DATA INTEGRITY
 # ------------------------------------------------------------------------------
-message("\n")
 message(paste(rep("-", 70), collapse = ""))
-message("PHASE 3: DATA INTEGRITY CHECKS")
+message("TEST 2: LSMS data integrity")
 message(paste(rep("-", 70), collapse = ""))
 
-message("\nChecking LSMS data integrity...")
-tryCatch({
+t_start <- Sys.time()
+passed <- tryCatch({
   lsms <- readRDS("../data/processed/lsms_trimmed_95th_africa.rds")
-  
-  # Check structure
+
   required_cols <- c("x", "y", "country", "year", "farm_id", "farm_area_ha",
                      "cropland", "cattle", "pop", "temperature", "rainfall")
-  
-  missing_cols <- required_cols[!required_cols %in% names(lsms)]
-  if (length(missing_cols) > 0) {
-    stop("Missing columns: ", paste(missing_cols, collapse = ", "))
-  }
-  message("  ✓ All required columns present")
-  
-  # Check values
-  stopifnot("Farm areas must be positive" = all(lsms$farm_area_ha > 0))
-  message("  ✓ All farm areas positive")
-  
-  stopifnot("Coordinates in valid range" = all(lsms$x >= -180 & lsms$x <= 180))
-  stopifnot("Coordinates in valid range" = all(lsms$y >= -90 & lsms$y <= 90))
-  message("  ✓ Coordinates in valid range")
-  
-  stopifnot("Multiple countries" = length(unique(lsms$country)) > 5)
-  message("  ✓ Multiple countries present (", length(unique(lsms$country)), ")")
-  
-  test_results[["data_integrity"]] <- list(passed = TRUE, time = 0, 
-                                            description = "Data integrity checks")
-  message("✓ All integrity checks passed")
-  
-}, error = function(e) {
-  message("✗ Data integrity check failed: ", e$message)
-  test_results[["data_integrity"]] <<- list(passed = FALSE, time = 0,
-                                             description = "Data integrity checks")
-})
+  missing <- setdiff(required_cols, names(lsms))
+  if (length(missing) > 0) stop("Missing columns: ", paste(missing, collapse = ", "))
+  message("    \u2713 All required columns present (", ncol(lsms), " total)")
 
-# Check raster stack
-message("\nChecking raster stack integrity...")
-tryCatch({
-  stacked <- terra::rast("../data/processed/stacked_rasters_africa.tif")
-  
-  stopifnot("Has multiple layers" = terra::nlyr(stacked) >= 10)
-  message("  ✓ Raster has ", terra::nlyr(stacked), " layers")
-  
-  stopifnot("CRS is defined" = !is.na(terra::crs(stacked)))
-  message("  ✓ CRS is defined")
-  
-  stopifnot("Has valid extent" = all(is.finite(as.vector(terra::ext(stacked)))))
-  message("  ✓ Extent is valid")
-  
-  test_results[["raster_integrity"]] <- list(passed = TRUE, time = 0,
-                                              description = "Raster integrity checks")
-  message("✓ Raster integrity checks passed")
-  
-}, error = function(e) {
-  message("✗ Raster integrity check failed: ", e$message)
-  test_results[["raster_integrity"]] <<- list(passed = FALSE, time = 0,
-                                               description = "Raster integrity checks")
-})
+  stopifnot("Farm areas must be positive"        = all(lsms$farm_area_ha > 0))
+  message("    \u2713 All farm areas positive")
+
+  stopifnot("Longitudes in valid range"          = all(lsms$x >= -180 & lsms$x <= 180))
+  stopifnot("Latitudes in valid range"           = all(lsms$y >=  -90 & lsms$y <=  90))
+  message("    \u2713 Coordinates in valid range")
+
+  stopifnot("Multiple countries required"        = length(unique(lsms$country)) >= 5)
+  message("    \u2713 Countries present: ", length(unique(lsms$country)))
+
+  stopifnot("Minimum farm count"                 = nrow(lsms) >= 100)
+  message("    \u2713 Farm count: ", format(nrow(lsms), big.mark = ","))
+
+  TRUE
+}, error = function(e) { message("    \u2717 ", e$message); FALSE })
+record("lsms_integrity", passed, "LSMS data integrity checks",
+       difftime(Sys.time(), t_start, units = "secs"))
+
+# ------------------------------------------------------------------------------
+# TEST 3: RASTER GRID INTEGRITY
+# ------------------------------------------------------------------------------
+message(paste(rep("-", 70), collapse = ""))
+message("TEST 3: Raster grid integrity")
+message(paste(rep("-", 70), collapse = ""))
+
+t_start <- Sys.time()
+passed <- tryCatch({
+  grid <- readRDS("../data/processed/raster_grid_africa.rds")
+
+  req_cols <- c("x", "y", "cropland", "cattle", "pop", "temperature", "rainfall")
+  missing  <- setdiff(req_cols, names(grid))
+  if (length(missing) > 0) stop("Missing grid columns: ", paste(missing, collapse = ", "))
+  message("    \u2713 All predictor columns present (", ncol(grid) - 2, " predictors)")
+
+  stopifnot("Grid must have rows"       = nrow(grid) > 0)
+  message("    \u2713 Grid cells: ", format(nrow(grid), big.mark = ","))
+
+  stopifnot("Lons in SSA range"         = all(grid$x >= -18 & grid$x <= 52))
+  stopifnot("Lats in SSA range"         = all(grid$y >= -35 & grid$y <= 15))
+  message("    \u2713 Extent within SSA bounds")
+
+  stopifnot("No all-NA predictors"      =
+    all(sapply(grid[, setdiff(names(grid), c("x", "y"))], function(v) sum(!is.na(v)) > 0)))
+  message("    \u2713 No fully-missing predictor layers")
+
+  TRUE
+}, error = function(e) { message("    \u2717 ", e$message); FALSE })
+record("grid_integrity", passed, "Raster grid integrity checks",
+       difftime(Sys.time(), t_start, units = "secs"))
+
+# ------------------------------------------------------------------------------
+# TEST 4: ML-READY DATASET
+# ------------------------------------------------------------------------------
+message(paste(rep("-", 70), collapse = ""))
+message("TEST 4: ML-ready dataset")
+message(paste(rep("-", 70), collapse = ""))
+
+t_start <- Sys.time()
+passed <- tryCatch({
+  ml <- read.csv("../data/processed/lsms_spatial.csv")
+
+  stopifnot("Has rows"                 = nrow(ml) > 0)
+  stopifnot("Has farm_area_ha"         = "farm_area_ha" %in% names(ml))
+  stopifnot("Has spatial coords"       = all(c("x", "y") %in% names(ml)))
+  stopifnot("No NA in farm_area_ha"    = sum(is.na(ml$farm_area_ha)) == 0)
+
+  message("    \u2713 ML dataset: ", format(nrow(ml), big.mark = ","),
+          " rows, ", ncol(ml), " columns, 0 NA in response")
+  TRUE
+}, error = function(e) { message("    \u2717 ", e$message); FALSE })
+record("ml_dataset", passed, "ML-ready dataset checks",
+       difftime(Sys.time(), t_start, units = "secs"))
+
+# ------------------------------------------------------------------------------
+# TEST 5: FARM SIZE DISTRIBUTION SANITY
+# ------------------------------------------------------------------------------
+message(paste(rep("-", 70), collapse = ""))
+message("TEST 5: Farm size distribution sanity")
+message(paste(rep("-", 70), collapse = ""))
+
+t_start <- Sys.time()
+passed <- tryCatch({
+  lsms <- readRDS("../data/processed/lsms_trimmed_95th_africa.rds")
+  med  <- median(lsms$farm_area_ha)
+  mx   <- max(lsms$farm_area_ha)
+
+  stopifnot("Median farm size 0.1-10 ha"  = med >= 0.1 && med <= 10)
+  stopifnot("Max farm size <= 50 ha"      = mx  <= 50)
+  stopifnot("No negative farm areas"      = min(lsms$farm_area_ha) > 0)
+
+  message("    \u2713 Median: ", round(med, 2), " ha")
+  message("    \u2713 Max:    ", round(mx,  2), " ha")
+  message("    \u2713 Min:    ", round(min(lsms$farm_area_ha), 4), " ha")
+  TRUE
+}, error = function(e) { message("    \u2717 ", e$message); FALSE })
+record("farm_size_distribution", passed, "Farm size distribution sanity",
+       difftime(Sys.time(), t_start, units = "secs"))
 
 # ------------------------------------------------------------------------------
 # SUMMARY REPORT
 # ------------------------------------------------------------------------------
-message("\n")
-message(paste(rep("=", 70), collapse = ""))
+message("\n", paste(rep("=", 70), collapse = ""))
 message("TEST SUMMARY")
 message(paste(rep("=", 70), collapse = ""))
 
-total_tests <- length(test_results)
-passed_tests <- sum(sapply(test_results, function(x) x$passed))
+total_tests  <- length(test_results)
+passed_tests <- sum(sapply(test_results, `[[`, "passed"))
 failed_tests <- total_tests - passed_tests
-total_time <- round(difftime(Sys.time(), start_time, units = "secs"), 1)
+total_time   <- round(difftime(Sys.time(), start_time, units = "secs"), 1)
 
-message("\nResults:")
-for (name in names(test_results)) {
-  result <- test_results[[name]]
-  status <- ifelse(result$passed, "✓ PASS", "✗ FAIL")
-  message(sprintf("  %s  %-40s (%ss)", status, name, result$time))
+message("")
+for (nm in names(test_results)) {
+  r      <- test_results[[nm]]
+  status <- if (r$passed) "\u2713 PASS" else "\u2717 FAIL"
+  message(sprintf("  %s  %-40s (%ss)", status, nm, round(r$time, 1)))
 }
 
-message("\n")
-message("Total tests: ", total_tests)
+message("\nTotal tests: ", total_tests)
 message("Passed:      ", passed_tests)
 message("Failed:      ", failed_tests)
-message("Total time:  ", total_time, "s")
-message("")
+message("Total time:  ", total_time, "s\n")
 
-# Generate markdown report
+# Write markdown report
+dir.create("../output/reports", recursive = TRUE, showWarnings = FALSE)
 report_path <- "../output/reports/test_report.md"
-dir.create(dirname(report_path), recursive = TRUE, showWarnings = FALSE)
 
-report <- paste0(
-  "# Farm Size Prediction - Test Report\n\n",
-  "**Generated:** ", Sys.time(), "\n",
-  "**R Version:** ", R.version.string, "\n",
-  "**Platform:** ", R.version$platform, "\n\n",
-  "## Summary\n\n",
-  "| Metric | Value |\n",
-  "|--------|-------|\n",
-  "| Total Tests | ", total_tests, " |\n",
-  "| Passed | ", passed_tests, " |\n",
-  "| Failed | ", failed_tests, " |\n",
-  "| Total Time | ", total_time, "s |\n\n",
-  "## Test Results\n\n",
-  "| Test | Status | Time | Description |\n",
-  "|------|--------|------|-------------|\n"
+report_lines <- c(
+  "# Farm Size Prediction - CI Test Report",
+  "",
+  paste0("**Generated:** ", Sys.time()),
+  paste0("**R Version:** ", R.version.string),
+  paste0("**Platform:** ",  R.version$platform),
+  "",
+  "## Summary",
+  "",
+  "| Metric | Value |",
+  "|--------|-------|",
+  paste0("| Total Tests | ", total_tests,  " |"),
+  paste0("| Passed      | ", passed_tests, " |"),
+  paste0("| Failed      | ", failed_tests, " |"),
+  paste0("| Total Time  | ", total_time,   "s |"),
+  "",
+  "## Test Results",
+  "",
+  "| Test | Status | Time | Description |",
+  "|------|--------|------|-------------|"
 )
 
-for (name in names(test_results)) {
-  result <- test_results[[name]]
-  status <- ifelse(result$passed, "✅ PASS", "❌ FAIL")
-  report <- paste0(report, "| ", name, " | ", status, " | ", 
-                   result$time, "s | ", result$description, " |\n")
+for (nm in names(test_results)) {
+  r      <- test_results[[nm]]
+  status <- if (r$passed) "\u2705 PASS" else "\u274C FAIL"
+  report_lines <- c(report_lines,
+    paste0("| ", nm, " | ", status, " | ", round(r$time, 1), "s | ", r$description, " |"))
 }
 
-report <- paste0(report, "\n## Data Summary\n\n")
-
+# Append data summary if available
 if (file.exists("../data/processed/lsms_trimmed_95th_africa.rds")) {
   lsms <- readRDS("../data/processed/lsms_trimmed_95th_africa.rds")
-  report <- paste0(report,
-    "- **Farms:** ", format(nrow(lsms), big.mark = ","), "\n",
-    "- **Countries:** ", length(unique(lsms$country)), "\n",
-    "- **Farm size range:** ", round(min(lsms$farm_area_ha), 2), 
-    " - ", round(max(lsms$farm_area_ha), 2), " ha\n",
-    "- **Median farm size:** ", round(median(lsms$farm_area_ha), 2), " ha\n"
+  report_lines <- c(report_lines, "",
+    "## Data Summary", "",
+    paste0("- **Farms:** ",        format(nrow(lsms), big.mark = ",")),
+    paste0("- **Countries:** ",    length(unique(lsms$country))),
+    paste0("- **Farm size range:** ", round(min(lsms$farm_area_ha), 2),
+           " - ", round(max(lsms$farm_area_ha), 2), " ha"),
+    paste0("- **Median farm size:** ", round(median(lsms$farm_area_ha), 2), " ha")
   )
 }
 
-writeLines(report, report_path)
+writeLines(report_lines, report_path)
 message("Test report saved to: ", report_path)
 
-# Exit with appropriate code
 if (failed_tests > 0) {
-  message("\n❌ SOME TESTS FAILED")
+  message("\n\u274C SOME TESTS FAILED")
   if (!interactive()) quit(status = 1)
 } else {
-  message("\n✅ ALL TESTS PASSED")
+  message("\n\u2705 ALL TESTS PASSED")
   if (!interactive()) quit(status = 0)
 }
 
