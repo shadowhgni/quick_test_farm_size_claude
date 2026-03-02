@@ -1,388 +1,187 @@
 # ==============================================================================
-# Script: 00_download_spatial_data.R
+# Script: 00_install_packages.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Download all spatial data layers that can be auto-downloaded
+# Purpose: Install all R packages required by the project
 #
 # Authors: Deo, Joao, Robert, Fred
-# Code documentation: Claude (Anthropic) - February 2026
-#
-# Description:
-#   This script downloads all spatial data layers that are available via the
-#   geodata R package. Some layers require manual download (see below).
-#
-# Outputs (in ../data/raw/spatial/):
-#   - gadm/: GADM administrative boundaries for all SSA countries
-#   - spam/: SPAM 2010 and 2017 cropland area
-#   - landuse/: ESA, GLAD, GeoSurvey cropland
-#   - population/: GPW population density
-#   - soil_world/: SoilGrids sand content
-#   - wc2.1_30s/: WorldClim elevation
-#   - temperature/: WorldClim temperature
-#   - travel/: Travel time to cities
-#
-# MANUAL DOWNLOADS REQUIRED:
-#   These files cannot be auto-downloaded and must be obtained manually:
-#
-#   1. SPAM 2020 Cropland
-#      URL: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/SWPENT
-#      Files: Download all *_H_*_A.tif files
-#      Place in: ../data/raw/spatial/spam/spam2020/
-#
-#   2. Cattle Density - GLW 2010 [MAIN ANALYSIS - used as ML predictor]
-#      Source: Gridded Livestock of the World (GLW) v3
-#      URL: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GIVQ75
-#      File: 5_Ct_2010_DA.tif (cattle heads per km², ~1 km resolution)
-#      Place in: ../data/raw/spatial/cattle-glw2010/
-#      Usage: Primary cattle density predictor in Random Forest models
-#      Citation: Gilbert et al. (2018). Global distribution data for cattle,
-#                buffaloes, horses, sheep, goats, pigs, chickens and ducks in 2010.
-#
-#   3. Cattle Density - Du et al. 2025 [FIGURE 3 - temporal analysis]
-#      Source: Annual Global Gridded Livestock Mapping 1961-2021
-#      DOI: 10.5281/zenodo.17128483
-#      URL: https://zenodo.org/records/17128483
-#      Files: 
-#        - LivestockMap.zip (7.4 GB) - Annual 5km livestock density 1961-2021
-#        - MapUncertainty.zip (10.2 GB) - Per-pixel uncertainty layers
-#      Species: cattle, buffaloes, sheep, goats, horses, pigs, chickens, ducks
-#      Resolution: 5 km, heads/km²
-#      Place in: ../data/raw/spatial/cattle-du2025/
-#      Usage: Temporal livestock trends for Figure 3
-#      Citation: Du, Z., Yu, L., Zhao, Y., et al. (2025). Annual global gridded 
-#                livestock mapping from 1961 to 2021. Zenodo.
-#
-#   4. Poverty/Wealth Index
-#      URL: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/5OGWYM
-#      File: poverty.zip
-#      Place in: ../data/raw/spatial/poverty/
-#
-#   5. Maize Water-Limited Yield (Bonilla-Cedrez et al., 2021)
-#      Contact authors or data repository for: watlimsummary.tif
-#      Place in: ../data/raw/spatial/maize_water_lim_yield/
-#
-#   6. FAOSTAT GDP Per Capita
-#      URL: https://www.fao.org/faostat/en/#data/MK
-#      Download: GDP per capita for all SSA countries
-#      Place in: ../data/raw/web_scrapped/faostat/FAOSTAT_data_GDP_per_capita.csv
+# Code documentation: Claude (Anthropic) - March 2026
 #
 # Usage:
-#   source("00_download_spatial_data.R")
-#   # Estimated download time: 30-60 minutes depending on connection
-#   # Estimated disk space: ~10 GB
+#   Rscript 00_install_packages.R
+#   # Or in R: source("00_install_packages.R")
 #
 # Notes:
-#   - Internet connection required
-#   - Downloads are resumable (skips existing files)
-#   - Some downloads may take considerable time (SPAM data especially)
+#   - terra requires system libraries: libgdal-dev, libgeos-dev, libproj-dev
+#     Install on Ubuntu/Debian: sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev
+#   - tabulapdf requires Java (rJava): sudo apt-get install -y default-jdk
+#   - magick requires ImageMagick: sudo apt-get install -y libmagick++-dev
+#   - sf requires: sudo apt-get install -y libudunits2-dev libgdal-dev
+#
+# Package sources:
+#   CRAN  : all standard packages below
+#   GitHub: afrilearndata (afrimapr/afrilearndata)
+#           SpatialML    (rCarto/SpatialML)
 # ==============================================================================
 
-# ------------------------------------------------------------------------------
-# 1. SETUP
-# ------------------------------------------------------------------------------
-setwd(paste0(here::here(), '/scripts'))
-rm(list = ls())
-
-# Load required packages
-require(geodata)
-require(terra)
-
-# Set memory options for large rasters
-terra::terraOptions(memfrac = 0.3, todisk = TRUE, verbose = FALSE)
+message("=== Farm Size Project - Package Installer ===\n")
 
 # ------------------------------------------------------------------------------
-# 2. CONFIGURATION
+# 1. CRAN PACKAGES
 # ------------------------------------------------------------------------------
-# Spatial data repository path
-input_path <- '../data/raw/spatial'
 
-# Create directory structure
-dirs_to_create <- c(
-  file.path(input_path, 'gadm'),
-  file.path(input_path, 'spam', 'spam2010'),
-  file.path(input_path, 'spam', 'spam2017'),
-  file.path(input_path, 'spam', 'spam2020'),
-  file.path(input_path, 'landuse'),
-  file.path(input_path, 'cattle-glw2010'),
-  file.path(input_path, 'cattle-du2025'),
-  file.path(input_path, 'population'),
-  file.path(input_path, 'soil_world'),
-  file.path(input_path, 'wc2.1_30s'),
-  file.path(input_path, 'temperature'),
-  file.path(input_path, 'rainfall'),
-  file.path(input_path, 'travel'),
-  file.path(input_path, 'maize_water_lim_yield'),
-  file.path(input_path, 'FAO-GDP'),
-  file.path(input_path, 'poverty'),
-  file.path(input_path, 'AEZ')
+cran_packages <- c(
+  # ── Core data wrangling ──────────────────────────────────────────────────
+  "tidyverse",       # dplyr, ggplot2, purrr, tidyr, readr, stringr, forcats
+  "dplyr",           # data manipulation (explicit, for :: usage)
+  "purrr",           # functional programming
+  "reshape2",        # melt/cast data frames
+  "haven",           # read SPSS/Stata/SAS files (LSMS survey data)
+  "labelled",        # labelled data from survey files
+  "readxl",          # read Excel files
+  "fuzzyjoin",       # fuzzy matching joins
+  "stringdist",      # string distance for fuzzy matching
+  "here",            # project-relative paths
+
+  # ── Spatial / GIS ────────────────────────────────────────────────────────
+  "terra",           # raster & vector spatial data (core dependency)
+  "sf",              # simple features vector data
+  "spdep",           # spatial dependence / Moran's I
+  "tmap",            # thematic mapping
+  "geodata",         # download spatial data (GADM, SPAM, WorldClim, etc.)
+
+  # ── Machine learning ─────────────────────────────────────────────────────
+  "randomForest",    # Random Forest (baseline model)
+  "ranger",          # fast Random Forest implementation
+  "quantregForest",  # Quantile Regression Forest
+  "xgboost",         # Gradient Boosted Trees
+  "caret",           # ML training framework
+  "e1071",           # SVM + misc ML utilities
+  "gbm",             # Gradient Boosting Machines
+  "mlr",             # Machine learning framework
+  "tuneRanger",      # Hyperparameter tuning for ranger
+  "doParallel",      # Parallel backend for foreach/caret
+
+  # ── Statistical modeling ─────────────────────────────────────────────────
+  "quantreg",        # Quantile regression (Koenker)
+  "car",             # Companion to applied regression
+  "MASS",            # Modern Applied Statistics with S
+  "moments",         # Skewness, kurtosis
+  "ineq",            # Gini coefficient, inequality measures
+  "fields",          # Spatial statistics / thin-plate splines
+  "EnvStats",        # Environmental statistics
+
+  # ── Visualisation ────────────────────────────────────────────────────────
+  "ggplot2",         # Elegant graphics (included in tidyverse)
+  "GGally",          # ggplot2 extensions (pair plots)
+  "patchwork",       # Combining ggplot2 panels
+  "ggpubr",          # Publication-ready ggplot2 plots
+  "cowplot",         # ggplot2 plot composition
+  "viridis",         # Colour-blind-friendly palettes
+  "RColorBrewer",    # Colour palettes
+  "plotrix",         # Misc plot utilities
+
+  # ── Web / data download ──────────────────────────────────────────────────
+  "httr",            # HTTP requests
+  "curl",            # HTTP client
+  "rvest",           # Web scraping
+  "R.utils",         # Misc utilities incl. gunzip
+
+  # ── File I/O / utilities ─────────────────────────────────────────────────
+  "zip",             # Read/write ZIP archives
+  "magick",          # Image processing (requires ImageMagick system lib)
+  "tabulapdf",       # Extract tables from PDFs (requires Java/rJava)
+  "profvis",         # Profiling
+
+  # ── Large data ───────────────────────────────────────────────────────────
+  "disk.frame",      # Larger-than-RAM data frames
+
+  # ── Package management ───────────────────────────────────────────────────
+  "remotes",         # Install packages from GitHub/URL
+  "XNomial"          # Exact multinomial test
 )
 
-for (d in dirs_to_create) {
-  if (!dir.exists(d)) {
-    dir.create(d, recursive = TRUE)
-    message("Created: ", d)
+# Install missing CRAN packages
+install_if_missing <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    message("Installing: ", pkg)
+    install.packages(pkg,
+                     repos = "https://cloud.r-project.org",
+                     dependencies = TRUE,
+                     quiet = FALSE)
+  } else {
+    message("Already installed: ", pkg)
   }
 }
 
-# ------------------------------------------------------------------------------
-# 3. DEFINE SUB-SAHARAN AFRICA COUNTRIES
-# ------------------------------------------------------------------------------
-message("\n=== Identifying SSA countries ===")
-
-# Get country codes
-isocodes <- geodata::country_codes()
-
-# Filter to Sub-Saharan Africa
-isocodes_ssa <- subset(
-  isocodes,
-  NAME == 'Sudan' |
-  UNREGION1 == 'Middle Africa' |
-  UNREGION1 == 'Western Africa' |
-  UNREGION1 == 'Southern Africa' |
-  UNREGION1 == 'Eastern Africa'
-)
-
-# Remove small islands
-islands <- c('Cabo Verde', 'Comoros', 'Mauritius', 'Mayotte',
-             'Réunion', 'Saint Helena', 'São Tomé and Príncipe', 'Seychelles')
-isocodes_ssa <- subset(isocodes_ssa, !(NAME %in% islands))
-
-ssa_codes <- isocodes_ssa$ISO3
-message("SSA countries to download: ", length(ssa_codes))
-
-# ------------------------------------------------------------------------------
-# 4. DOWNLOAD WORLD BOUNDARIES
-# ------------------------------------------------------------------------------
-message("\n=== Downloading world boundaries ===")
-tryCatch({
-  world <- geodata::world(path = input_path, resolution = 5, level = 0)
-  message("SUCCESS: World boundaries downloaded")
-}, error = function(e) {
-  message("ERROR: ", e$message)
+message("--- Installing CRAN packages ---\n")
+results <- lapply(cran_packages, function(pkg) {
+  tryCatch({
+    install_if_missing(pkg)
+    list(pkg = pkg, ok = TRUE, msg = "")
+  }, error = function(e) {
+    message("ERROR installing ", pkg, ": ", e$message)
+    list(pkg = pkg, ok = FALSE, msg = e$message)
+  })
 })
 
 # ------------------------------------------------------------------------------
-# 5. DOWNLOAD GADM BOUNDARIES
+# 2. GITHUB PACKAGES
 # ------------------------------------------------------------------------------
-message("\n=== Downloading GADM boundaries ===")
-message("This may take 10-20 minutes...")
+message("\n--- Installing GitHub packages ---\n")
 
-gadm_dir <- file.path(input_path, 'gadm')
+if (!requireNamespace("remotes", quietly = TRUE))
+  install.packages("remotes", repos = "https://cloud.r-project.org")
 
-for (code in ssa_codes) {
-  country_dir <- file.path(gadm_dir, code)
-  if (!dir.exists(country_dir)) dir.create(country_dir, recursive = TRUE)
-  
-  # Try to download each admin level
-  for (level in 0:3) {
-    tryCatch({
-      gadm <- geodata::gadm(country = code, level = level, 
-                            version = 'latest', path = country_dir)
-      message("  ", code, " level ", level, " - OK")
-    }, error = function(e) {
-      # Level not available - normal for many countries
-    })
+github_packages <- list(
+  list(
+    repo    = "afrimapr/afrilearndata",
+    pkg     = "afrilearndata",
+    desc    = "African spatial datasets for learning/examples"
+  ),
+  list(
+    repo    = "rCarto/SpatialML",
+    pkg     = "SpatialML",
+    desc    = "Geographically Weighted Random Forest"
+  )
+)
+
+for (gp in github_packages) {
+  if (!requireNamespace(gp$pkg, quietly = TRUE)) {
+    message("Installing from GitHub: ", gp$repo, " (", gp$desc, ")")
+    tryCatch(
+      remotes::install_github(gp$repo, dependencies = TRUE),
+      error = function(e) message("ERROR: ", e$message)
+    )
+  } else {
+    message("Already installed: ", gp$pkg)
   }
 }
-message("GADM download complete")
 
 # ------------------------------------------------------------------------------
-# 6. DOWNLOAD SPAM CROPLAND DATA
+# 3. SUMMARY
 # ------------------------------------------------------------------------------
-message("\n=== Downloading SPAM cropland data ===")
-message("This may take 30+ minutes...")
+message("\n", paste(rep("=", 70), collapse = ""))
+message("INSTALLATION SUMMARY")
+message(paste(rep("=", 70), collapse = ""))
 
-all_spam_crops <- geodata::spamCrops()$code
-message("SPAM crops to download: ", length(all_spam_crops))
+failed  <- Filter(function(r) !r$ok, results)
+success <- Filter(function(r)  r$ok, results)
 
-# SPAM 2017 (Africa-specific)
-message("\nDownloading SPAM 2017...")
-spam2017_dir <- file.path(input_path, 'spam', 'spam2017')
-for (crop in all_spam_crops) {
-  tryCatch({
-    geodata::crop_spam(crop, 'harv_area', path = spam2017_dir, africa = TRUE)
-    message("  SPAM 2017 ", crop, " - OK")
-  }, error = function(e) {
-    message("  SPAM 2017 ", crop, " - SKIP")
-  })
+message("\nCRAN packages: ", length(success), "/", length(cran_packages), " installed OK")
+message("GitHub packages: see messages above\n")
+
+if (length(failed) > 0) {
+  message("Failed packages (may need system libraries):")
+  for (r in failed) message("  - ", r$pkg, ": ", r$msg)
+  message("")
+  message("Tip for Ubuntu/Debian - install system dependencies first:")
+  message("  sudo apt-get install -y \\")
+  message("    libgdal-dev libgeos-dev libproj-dev \\")
+  message("    libudunits2-dev libmagick++-dev \\")
+  message("    default-jdk  # for tabulapdf/rJava")
 }
 
-# SPAM 2010 (global, includes Sudan)
-message("\nDownloading SPAM 2010...")
-spam2010_dir <- file.path(input_path, 'spam', 'spam2010')
-for (crop in all_spam_crops) {
-  tryCatch({
-    geodata::crop_spam(crop, 'harv_area', path = spam2010_dir, africa = FALSE)
-    message("  SPAM 2010 ", crop, " - OK")
-  }, error = function(e) {
-    message("  SPAM 2010 ", crop, " - SKIP")
-  })
-}
-
-message("SPAM download complete")
-message("NOTE: SPAM 2020 requires manual download from Harvard Dataverse")
-
-# ------------------------------------------------------------------------------
-# 7. DOWNLOAD CROPLAND MASKS
-# ------------------------------------------------------------------------------
-message("\n=== Downloading cropland masks ===")
-
-tryCatch({
-  message("Downloading ESA WorldCover cropland...")
-  esa <- geodata::cropland(source = 'WorldCover', path = input_path)
-  message("  ESA WorldCover - OK")
-}, error = function(e) message("  ESA WorldCover - ERROR: ", e$message))
-
-tryCatch({
-  message("Downloading GeoSurvey cropland...")
-  geo <- geodata::cropland(source = 'QED', path = input_path)
-  message("  GeoSurvey - OK")
-}, error = function(e) message("  GeoSurvey - ERROR: ", e$message))
-
-tryCatch({
-  message("Downloading GLAD cropland...")
-  glad <- geodata::cropland(source = 'GLAD', year = 2019, path = input_path)
-  message("  GLAD - OK")
-}, error = function(e) message("  GLAD - ERROR: ", e$message))
-
-# ------------------------------------------------------------------------------
-# 8. DOWNLOAD POPULATION DENSITY
-# ------------------------------------------------------------------------------
-message("\n=== Downloading population density ===")
-
-tryCatch({
-  pop <- geodata::population(2020, 0.5, path = input_path)
-  message("  GPW Population 2020 - OK")
-}, error = function(e) message("  GPW Population - ERROR: ", e$message))
-
-# ------------------------------------------------------------------------------
-# 9. DOWNLOAD SOIL DATA
-# ------------------------------------------------------------------------------
-message("\n=== Downloading soil data ===")
-
-for (depth in c(5, 15, 30)) {
-  tryCatch({
-    soil <- geodata::soil_world('sand', depth, path = input_path)
-    message("  Sand content ", depth, "cm - OK")
-  }, error = function(e) {
-    message("  Sand content ", depth, "cm - ERROR: ", e$message)
-  })
-}
-
-# ------------------------------------------------------------------------------
-# 10. DOWNLOAD ELEVATION
-# ------------------------------------------------------------------------------
-message("\n=== Downloading elevation ===")
-
-tryCatch({
-  elev <- geodata::elevation_global(0.5, path = input_path)
-  message("  Elevation - OK")
-}, error = function(e) message("  Elevation - ERROR: ", e$message))
-
-# ------------------------------------------------------------------------------
-# 11. DOWNLOAD TEMPERATURE
-# ------------------------------------------------------------------------------
-message("\n=== Downloading temperature ===")
-message("Downloading by country...")
-
-for (code in ssa_codes) {
-  tryCatch({
-    temp <- geodata::worldclim_country(code, 'tavg', path = input_path)
-    message("  Temperature ", code, " - OK")
-  }, error = function(e) {
-    # Some countries may not have data
-  })
-}
-
-# ------------------------------------------------------------------------------
-# 12. DOWNLOAD TRAVEL TIME
-# ------------------------------------------------------------------------------
-message("\n=== Downloading travel time ===")
-
-tryCatch({
-  travel <- geodata::travel_time(to = 'city', size = 6, up = TRUE, path = input_path)
-  message("  Travel time to cities - OK")
-}, error = function(e) message("  Travel time - ERROR: ", e$message))
-
-# ------------------------------------------------------------------------------
-# 13. SUMMARY
-# ------------------------------------------------------------------------------
-message("\n")
-message("=" |> rep(70) |> paste(collapse = ""))
-message("DOWNLOAD SUMMARY")
-message("=" |> rep(70) |> paste(collapse = ""))
-
-# Count downloaded files
-count_files <- function(pattern, path) {
-  length(list.files(path, pattern = pattern, recursive = TRUE))
-}
-
-message("\nAuto-downloaded data:")
-message("  GADM boundaries:    ", count_files("\\.rds$", file.path(input_path, 'gadm')), " files")
-message("  SPAM 2017:          ", count_files("\\.tif$", file.path(input_path, 'spam', 'spam2017')), " files")
-message("  SPAM 2010:          ", count_files("\\.tif$", file.path(input_path, 'spam', 'spam2010')), " files")
-message("  Cropland masks:     ", count_files("\\.tif$", file.path(input_path, 'landuse')), " files")
-message("  Population:         ", count_files("\\.tif$", file.path(input_path, 'population')), " files")
-message("  Soil:               ", count_files("\\.tif$", file.path(input_path, 'soil_world')), " files")
-message("  Elevation:          ", count_files("\\.tif$", file.path(input_path, 'wc2.1_30s')), " files")
-message("  Temperature:        ", count_files("\\.tif$", file.path(input_path, 'temperature')), " files")
-message("  Travel time:        ", count_files("\\.tif$", file.path(input_path, 'travel')), " files")
-
-message("\n")
-message("=" |> rep(70) |> paste(collapse = ""))
-message("MANUAL DOWNLOADS REQUIRED")
-message("=" |> rep(70) |> paste(collapse = ""))
-message("\n1. SPAM 2020 Cropland")
-message("   URL: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/SWPENT")
-message("   Place in: ", file.path(input_path, 'spam', 'spam2020'))
-
-message("\n2. Cattle Density - GLW 2010 [MAIN ANALYSIS - ML predictor]")
-message("   URL: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GIVQ75")
-message("   File: 5_Ct_2010_DA.tif")
-message("   Place in: ", file.path(input_path, 'cattle-glw2010'))
-
-message("\n3. Cattle Density - Du et al. 2025 [FIGURE 3 - temporal analysis]")
-message("   DOI: 10.5281/zenodo.17128483")
-message("   URL: https://zenodo.org/records/17128483")
-message("   Files: LivestockMap.zip (7.4 GB), MapUncertainty.zip (10.2 GB)")
-message("   Place in: ", file.path(input_path, 'cattle-du2025'))
-
-message("\n4. Poverty/Wealth Index")
-message("   URL: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/5OGWYM")
-message("   File: poverty.zip")
-message("   Place in: ", file.path(input_path, 'poverty'))
-
-message("\n5. Maize Water-Limited Yield")
-message("   Source: Bonilla-Cedrez et al., 2021")
-message("   File: watlimsummary.tif")
-message("   Place in: ", file.path(input_path, 'maize_water_lim_yield'))
-
-message("\n6. FAOSTAT GDP Per Capita")
-message("   URL: https://www.fao.org/faostat/en/#data/MK")
-message("   Place in: ../data/raw/web_scrapped/faostat/")
-
-message("\n7. CHIRPS Rainfall")
-message("   Run script: 01.1_chirps_download.R")
-message("   (Automated download from UCSB)")
-
-message("\n")
-message("=" |> rep(70) |> paste(collapse = ""))
-message("CATTLE DENSITY SOURCES SUMMARY")
-message("=" |> rep(70) |> paste(collapse = ""))
-message("\n  GLW 2010 (cattle-glw2010/):")
-message("    - Used for: ML model predictors (main analysis)")
-message("    - Resolution: ~1 km")
-message("    - Single year: 2010")
-message("    - Source: Gilbert et al. (2018)")
-message("\n  Du et al. 2025 (cattle-du2025/):")
-message("    - Used for: Figure 3 (temporal livestock trends)")
-message("    - Resolution: 5 km")
-message("    - Time series: 1961-2021 (annual)")
-message("    - Source: Du et al. (2025), Zenodo")
-
-message("\n")
-message("=" |> rep(70) |> paste(collapse = ""))
-message("Download script complete!")
-message("=" |> rep(70) |> paste(collapse = ""))
+message("\nAll done!")
 
 # ==============================================================================
 # END OF SCRIPT
