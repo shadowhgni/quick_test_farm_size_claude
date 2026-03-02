@@ -141,7 +141,7 @@ for (cfg in gadm_configs) {
 }
 
 # Combine all country boundaries
-sixteen_count_distr <- do.call(rbind, gadm_list)
+sixteen_count_distr <- Reduce(function(a, b) rbind(a, b), gadm_list)
 
 # ------------------------------------------------------------------------------
 # 4. LOAD PREDICTOR STACK

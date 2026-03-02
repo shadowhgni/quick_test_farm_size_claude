@@ -18,7 +18,7 @@ require(tidyverse)
 
 #############################################################################################################
 # Here are stored all the maps that will serve as predictors in the machine-learning (ML) models. Adjust accordingly
-input_path <- 'C:/Users/DHOUGNI/OneDrive - CIMMYT/Documents/Harare 2023/Spatial_data_repository'
+input_path <- '../data/raw/spatial'
 
 #############################################################################################################
 #define the region of interest: subSaharan Africa, excluding small islands 

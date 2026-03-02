@@ -72,7 +72,7 @@ qrf_best_model <- caret::train(
   data = lsms_spatial,
   method = 'ranger',
   preProcess = c('center', 'scale', 'spatialSign'),
-  trainControl = train_control,
+  trControl = train_control,
   quantreg = T,
   keep.inbag = T,
   tuneGrid = tune_grid,
@@ -80,7 +80,7 @@ qrf_best_model <- caret::train(
   num.trees = 1500
 )
 tree_info <- ranger::treeInfo(qrf_best_model$finalModel, tree = 1)
-save(rf_full_model, file = '../data/processed/2024-11-22.qrf_best_model_with_95th_trimmed_data.rdata')
+save(qrf_best_model, file = '../data/processed/2024-11-22.qrf_best_model_with_95th_trimmed_data.rdata')
 fin <- Sys.time() - deb; print(fin)
 
 

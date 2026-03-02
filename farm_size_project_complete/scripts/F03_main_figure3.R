@@ -19,7 +19,7 @@ rm(list=ls())
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
-input_path <- 'C:/Users/DHOUGNI/OneDrive - CIMMYT/Documents/Harare 2023/Spatial_data_repository'
+input_path <- '../data/raw/spatial'
 country <- geodata::world(path=input_path, resolution=5, level=0)
 isocodes <- geodata::country_codes()
 isocodes_ssa <- subset(isocodes, NAME=='Sudan' | UNREGION1=='Middle Africa' | UNREGION1=='Western Africa' | UNREGION1=='Southern Africa' | UNREGION1=='Eastern Africa')

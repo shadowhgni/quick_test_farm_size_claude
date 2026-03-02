@@ -60,19 +60,19 @@ for(ind in 1:nrow(my_exple)){
   P01 <- ggplot(df, aes(obs, mod1)) + 
     geom_point(colour = 'blue') + 
     geom_smooth(method = lm, se = F) + 
-    annotate('text', x = 6, y = 5, label = bquote(R^2 == .(round(cor(df$obs, df$mod1)^2, 2)))) + 
+    annotate('text', x = 6, y = 5, label = sprintf('R² = %.2f', cor(df$obs, df$mod1)^2)) + 
     theme_test()
   
   P02 <- ggplot(df, aes(obs, mod2)) + 
     geom_point(colour = 'red') + 
     geom_smooth(method = lm, se = F, colour = 'red') + 
-    annotate('text', x = 6, y = 5, label = bquote(R^2 == .(round(cor(df$obs, df$mod2)^2, 2)))) +
+    annotate('text', x = 6, y = 5, label = sprintf('R2 = %.2f', cor(df$obs, df$mod2)^2)) +
     theme_test()
   
   P03 <- ggplot(df, aes(mod1, mod2)) + 
     geom_point(colour = 'black') + 
     geom_smooth(method = lm, se = F, colour = 'black') + 
-    annotate('text', x = 6, y = 5, label = bquote(cor_coef == .(round(cor(df$mod1, df$mod2), 2)))) +
+    annotate('text', x = 6, y = 5, label = sprintf('r = %.2f', cor(df$mod1, df$mod2))) +
     theme_test()
   print(P01 + P02 + P03)
 }

@@ -362,13 +362,17 @@ saveRDS(loo, file.path(output_path, "tables/leave_one_RF.rds"))
 saveRDS(loo, file.path(output_path, "tables/leave_one_TPS.rds"))
 saveRDS(loo, file.path(output_path, "tables/leave_one_cor.rds"))
 
-# RF optimisation table (used by 06.1)
+# RF optimisation table (used by 06.1 and 05.3)
+# Needs: filename, Rsquared, RMSE, MAE, mtry, min.node.size, splitrule, mbucket
 rf_optim <- data.frame(
-  filename = paste0("rf_optim_", 1:20, ".rds"),
-  mbucket  = 1:20,
-  rsq      = round(runif(20, 0.3, 0.7), 3),
-  mtry     = sample(2:6, 20, replace = TRUE),
-  min.node.size = sample(3:10, 20, replace = TRUE)
+  filename      = paste0("rf-", 1:20, "-1.rds"),
+  Rsquared      = round(runif(20, 0.3, 0.7), 3),
+  RMSE          = round(runif(20, 0.5, 1.5), 3),
+  MAE           = round(runif(20, 0.3, 1.0), 3),
+  mtry          = sample(2:6, 20, replace = TRUE),
+  min.node.size = sample(3:10, 20, replace = TRUE),
+  splitrule     = sample(c("variance", "extratrees"), 20, replace = TRUE),
+  mbucket       = 1:20
 )
 saveRDS(rf_optim, file.path(output_path, "tables/RF_optim_summarized_table.rds"))
 write.csv(rf_optim, file.path(output_path, "tables/RF_optim_summarized_table.csv"), row.names = FALSE)
@@ -496,14 +500,29 @@ for (cty in sixteen_countries) {
 }
 
 # Pre-save the summary outputs that 04.5's summarize() would produce
-loo_rf  <- data.frame(country = sixteen_countries, code = sixteen_country_codes,
-                      model = "RF", means = FALSE, test = FALSE,
-                      rsq = round(runif(16, 0.2, 0.6), 3))
-loo_tps <- data.frame(country = sixteen_countries, code = sixteen_country_codes,
-                      model = "TPS", means = FALSE, test = TRUE,
-                      rsq = round(runif(16, 0.2, 0.6), 3))
-loo_cor <- data.frame(code = sixteen_country_codes, means = FALSE,
-                      cor = round(runif(16, 0.5, 0.9), 3))
+# Note: 04.6 filters means=='TRUE' and expects column Rsquared; provide both TRUE and FALSE rows
+loo_rf  <- rbind(
+  data.frame(country = sixteen_countries, code = sixteen_country_codes,
+             model = "RF", means = FALSE, test = FALSE,
+             Rsquared = round(runif(16, 0.2, 0.6), 3)),
+  data.frame(country = sixteen_countries, code = sixteen_country_codes,
+             model = "RF", means = TRUE, test = FALSE,
+             Rsquared = round(runif(16, 0.2, 0.6), 3))
+)
+loo_tps <- rbind(
+  data.frame(country = sixteen_countries, code = sixteen_country_codes,
+             model = "TPS", means = FALSE, test = TRUE,
+             rsq = round(runif(16, 0.2, 0.6), 3)),
+  data.frame(country = sixteen_countries, code = sixteen_country_codes,
+             model = "TPS", means = TRUE, test = TRUE,
+             rsq = round(runif(16, 0.2, 0.6), 3))
+)
+loo_cor <- rbind(
+  data.frame(code = sixteen_country_codes, means = FALSE,
+             cor = round(runif(16, 0.5, 0.9), 3)),
+  data.frame(code = sixteen_country_codes, means = TRUE,
+             cor = round(runif(16, 0.5, 0.9), 3))
+)
 
 saveRDS(loo_rf,  file.path(output_path, "tables/leave_one_RF.rds"))
 saveRDS(loo_tps, file.path(output_path, "tables/leave_one_TPS.rds"))

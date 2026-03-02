@@ -143,11 +143,11 @@ leave_one_country_models <- function(the_country, the_code, model, means, test, 
 
 summarize <- function() {
 	frf <- list.files("output/leave_one", "RF.*\\.rds", full.names=TRUE)
-	x <- do.call(rbind, lapply(frf, readRDS)$results)
+	x <- do.call(rbind, lapply(frf, function(f) readRDS(f)$results))
 	saveRDS(x, "output/leave_one_RF.rds")
 
 	ftps <- list.files("output/leave_one", "TPS.*\\.rds", full.names=TRUE)
-	y <- do.call(rbind, lapply(ftps, readRDS)$results)
+	y <- do.call(rbind, lapply(ftps, function(f) readRDS(f)$results))
 	saveRDS(y, "output/leave_one_TPS.rds")
 
 	# compare TPS predictions (focal country data seen) with RF predictions (focal country data not seen)

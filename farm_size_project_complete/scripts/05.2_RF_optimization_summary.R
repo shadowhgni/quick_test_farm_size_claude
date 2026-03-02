@@ -64,7 +64,7 @@ train_control <- caret::trainControl(method = 'cv', number = 10, savePredictions
 tune_grid <- expand.grid(
   mtry = 3:10,                     
   splitrule = 'extratrees',                       
-  min.node.size = c(5, 45:55, 60, 100, )
+  min.node.size = c(5, 45:55, 60, 100)
 )
 
 rf_full_model <- caret::train(

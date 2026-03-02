@@ -9,6 +9,7 @@
 
 
 ff <- list.files("output/RFoptim", pattern="\\.Rds$", full=TRUE)
+if (length(ff) == 0L) { message("No RFoptim files - skipping (needs 05.1 outputs)"); quit(save="no", status=0L) }
 res <- lapply(ff, \(f) readRDS(f)$results)
 
 res <- data.frame(filename=basename(ff), do.call(rbind, res))

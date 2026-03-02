@@ -16,7 +16,9 @@
 
 
 require(tidyverse)
-fig3 <- readRDS('2026-01-24.CHINA_croplands_per_crop_per_aez.rds')
+china_file <- '2026-01-24.CHINA_croplands_per_crop_per_aez.rds'
+if (!file.exists(china_file)) { message('China cropland RDS not found - skipping S01'); quit(save='no', status=0L) }
+fig3 <- readRDS(china_file)
 fig3a <- fig3$df_rel_long |> filter(product %in% c('all_crops', 'cattle'), aez != 'all_aez')
 fig3b <- fig3$df_rel_long |> 
   filter(product %in% c('maize', 'sorghum', 'millet', 'cassava', 'legumes', 'non_food'), 
