@@ -449,9 +449,53 @@ saveRDS(div_table, "Suppl.Fig06_divergence_table.rds")
 message("   Figure stubs done.")
 
 # ==============================================================================
-# 8. COUNTRY-YEAR RAW FILES (for 02.x scripts if they run)
+# 8b. LEAVE-ONE STUBS for 04.5_cross_country_graphs.R
 # ==============================================================================
-message("8. Creating country-year raw files...")
+message("8b. Creating leave-one stubs for 04.5...")
+
+leave_one_dir <- file.path(output_path, "leave_one")
+dir.create(leave_one_dir, recursive = TRUE, showWarnings = FALSE)
+
+for (cty in sixteen_countries) {
+  code <- sixteen_country_codes[match(cty, sixteen_countries)]
+  n_pts <- 50L
+  dummy_pred <- rnorm(n_pts)
+  dummy_res  <- data.frame(country = cty, code = code, model = "RF",
+                           means = FALSE, test = FALSE,
+                           rsq = round(runif(1, 0.2, 0.6), 3))
+  # RF leave-one: training on rest, test on country
+  saveRDS(list(prediction = dummy_pred, results = dummy_res),
+          file.path(leave_one_dir, paste0("loc_", code, "_RF_all_test.rds")))
+  # TPS: evaluated on country only
+  saveRDS(list(prediction = dummy_pred,
+               results = data.frame(country = cty, code = code, model = "TPS",
+                                    means = FALSE, test = TRUE,
+                                    rsq = round(runif(1, 0.2, 0.6), 3))),
+          file.path(leave_one_dir, paste0("loc_", code, "_TPS_all_test.rds")))
+}
+
+# Pre-save the summary outputs that 04.5's summarize() would produce
+loo_rf  <- data.frame(country = sixteen_countries, code = sixteen_country_codes,
+                      model = "RF", means = FALSE, test = FALSE,
+                      rsq = round(runif(16, 0.2, 0.6), 3))
+loo_tps <- data.frame(country = sixteen_countries, code = sixteen_country_codes,
+                      model = "TPS", means = FALSE, test = TRUE,
+                      rsq = round(runif(16, 0.2, 0.6), 3))
+loo_cor <- data.frame(code = sixteen_country_codes, means = FALSE,
+                      cor = round(runif(16, 0.5, 0.9), 3))
+
+saveRDS(loo_rf,  file.path(output_path, "tables/leave_one_RF.rds"))
+saveRDS(loo_tps, file.path(output_path, "tables/leave_one_TPS.rds"))
+saveRDS(loo_cor, file.path(output_path, "tables/leave_one_cor.rds"))
+saveRDS(loo_rf,  file.path(output_path, "leave_one_RF.rds"))
+saveRDS(loo_tps, file.path(output_path, "leave_one_TPS.rds"))
+saveRDS(loo_cor, file.path(output_path, "leave_one_cor.rds"))
+message("   Leave-one stubs done  (", nrow(loo_rf), " countries × 2 models).")
+
+# ==============================================================================
+# 9. COUNTRY-YEAR RAW FILES (for 02.x scripts if they run)
+# ==============================================================================
+message("9. Creating country-year raw files...")
 for (cty in sixteen_countries)
   for (yr in c(2010,2012,2014,2016,2018,2020)) {
     d <- lsms_raw[lsms_raw$country == cty & lsms_raw$year == yr, ]
