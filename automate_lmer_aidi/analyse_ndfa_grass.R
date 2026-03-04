@@ -1,34 +1,36 @@
 # =============================================================================
-# Analyse final_ndfa_grass using linear mixed-effects models
+# Analyse final_ndfa_grass — Beta GLMM via glmmTMB
 #
 # Response:    final_ndfa_grass — N derived from atmosphere (NDFA) ratio,
 #              estimated by 15N natural abundance (grass reference plant).
-#              Malawi 2024, n = 98 on-farm observations.
+#              Bounded strictly in (0, 1) -> Beta distribution appropriate.
+#              Malawi 2024, n = 98; n = 90 when plant_density_per_ha used.
 #
 # Random effects: (1 | province / district / ward / village)
+#   NOTE: province and ward RE collapse to 0 (singular) with 2 provinces only.
 #
 # Performance metrics
-#   R2m    — marginal R² (fixed effects only, Nakagawa & Schielzeth 2013)
-#   R2c    — conditional R² (fixed + random effects)
-#   R2_LOO — leave-one-out R² on original scale (fixed-effects prediction)
+#   R2m    — marginal R2 (fixed effects, Nakagawa et al. 2013/2017)
+#   R2c    — conditional R2 (fixed + random)
+#   R2_LOO — leave-one-out R2, fixed-effects prediction (out-of-sample)
 #   RMSE   — root mean squared error (original scale)
 #
-# Collinearity notes (|r| > 0.50 pairs excluded from same model):
-#   Climate cluster: elevation / agera5_cum_rh09 / crop_duration /
-#                    chirps_cum_rain_mm / aridity_index / agera5_avg_tmin
-#     → representative chosen per AIC sweep: aridity_index
-#   Soil texture:  soil_ECEC vs sand_content_perc (r = -0.79) -> use soil_ECEC
-#   Soil organic:  C_Soil vs N_Soil (r = +0.94)               -> use N_Soil
-#   soil_phos is correlated with aridity_index (r = -0.43)
-#     -> kept; VIF reported to confirm tolerance
+# Collinearity (|r| > 0.50 pairs excluded from same model):
+#   Climate cluster: elevation / rh09 / crop_duration / chirps / aridity / tmin
+#     -> aridity_index chosen by AIC sweep (best AIC among all candidates)
+#   Soil texture: soil_ECEC vs sand_content_perc (r = -0.79) -> keep ECEC
+#   Soil organic: C_Soil vs N_Soil (r = +0.94)              -> keep N_Soil
+#
+# Dispersion model:
+#   AIC sweep: disp ~ inoculant_use (-38.10) beats ~ 1 (-33.33) by 4.8 pts.
+#   Inoculated plants show higher precision (phi) = tighter NDFA distribution.
 #
 # =============================================================================
 
 suppressPackageStartupMessages({
-  library(lme4)      # lmer()
-  library(lmerTest)  # Satterthwaite F-tests via anova()
-  library(dplyr)     # data manipulation with |>
-  library(car)       # vif()
+  library(glmmTMB)   # beta GLMM with dispersion modelling
+  library(car)       # Anova() Type III Wald chi-sq; vif()
+  library(dplyr)     # |> pipe
 })
 
 
@@ -36,228 +38,227 @@ suppressPackageStartupMessages({
 
 df <- readRDS("claude_github.rds") |>
   mutate(
-    # Scale continuous predictors (mean = 0, sd = 1).
-    # Scaling improves convergence and makes beta coefficients comparable.
-    pd_s   = scale(plant_density_per_ha)[, 1],  # plants ha-1 (8 NAs)
-    phos_s = scale(soil_phos)[, 1],             # available P (Bray)
-    ecec_s = scale(soil_ECEC)[, 1],             # effective CEC
-    nsoi_s = scale(N_Soil)[, 1],               # soil total N (g kg-1)
-    arid_s = scale(aridity_index)[, 1],         # aridity (higher = wetter)
-    ph_s   = scale(soil_pH)[, 1],
-    sand_s = scale(sand_content_perc)[, 1],
+    # Scale to mean=0 sd=1: improves convergence, betas are comparable
+    pd_s   = scale(plant_density_per_ha)[, 1],  # plants ha-1  (8 NAs)
+    phos_s = scale(soil_phos)[, 1],             # available P  (Bray, mg kg-1)
+    ecec_s = scale(soil_ECEC)[, 1],             # effective CEC (cmol+ kg-1)
+    nsoi_s = scale(N_Soil)[, 1],               # total soil N  (g kg-1)
+    arid_s = scale(aridity_index)[, 1],         # aridity index (higher = wetter)
     elev_s = scale(elevation)[, 1],
     rain_s = scale(chirps_cum_rain_mm)[, 1],
-    rh09_s = scale(agera5_cum_rh09)[, 1],
-    tmin_s = scale(agera5_avg_tmin)[, 1],
-    dur_s  = scale(crop_duration)[, 1],
+    ph_s   = scale(soil_pH)[, 1],
 
-    # Relevel factors so reference category is biologically sensible
     inoculant_use = factor(inoculant_use, levels = c("No",   "Yes")),
     seed_type     = factor(seed_type),
-    weed_mgt      = factor(weed_mgt, levels = c("poor", "moderate", "good")),
     farmer_gender = factor(farmer_gender)
   )
 
-# Complete-case dataset (excludes 8 NAs in plant_density_per_ha)
-df_pd <- df |> filter(!is.na(pd_s))
-cat("Full dataset n =", nrow(df),
-    "| Complete cases (with plant_density) n =", nrow(df_pd), "\n\n")
+df_pd <- df |> filter(!is.na(pd_s))   # complete cases (n=90)
+
+cat("Full dataset   n =", nrow(df), "\n")
+cat("Complete cases n =", nrow(df_pd), "\n\n")
 
 
 # -- 1. Helper functions ------------------------------------------------------
 
-#' Nakagawa & Schielzeth (2013) R2 without MuMIn
-r2_lmer <- function(model) {
-  var_fixed  <- var(predict(model, re.form = NA))
-  vc         <- as.data.frame(VarCorr(model))
-  var_random <- sum(vc$vcov[vc$grp != "Residual"])
-  var_resid  <- sigma(model)^2
-  total      <- var_fixed + var_random + var_resid
+#' Nakagawa et al. (2017) R2 for Beta GLMM
+#' Variance decomposition on the logit (link) scale.
+r2_beta_glmm <- function(model) {
+  # Fixed-effect variance: var of linear predictor (logit scale)
+  eta_fixed  <- predict(model, re.form = NA, type = "link")
+  var_fixed  <- var(eta_fixed)
+
+  # Random-effect variances from VarCorr (conditional model)
+  vc         <- VarCorr(model)$cond
+  var_random <- sum(sapply(vc, function(x) attr(x, "stddev")^2))
+
+  # Distributional (residual) variance for Beta on logit scale:
+  # trigamma(1) = pi^2/6 (logistic distribution approximation)
+  var_dist <- trigamma(1)
+
+  total <- var_fixed + var_random + var_dist
   c(R2m = var_fixed / total,
     R2c = (var_fixed + var_random) / total)
 }
 
-#' Leave-one-out R2 (fixed-effects prediction only)
-r2_loo <- function(model, data) {
-  n     <- nrow(data)
-  y     <- data$final_ndfa_grass
-  y_hat <- numeric(n)
-  frm   <- formula(model)
+#' Leave-one-out R2 (fixed-effects prediction only — valid for new locations)
+#' NOTE: runs n refits of glmmTMB; slow (~2 min for n=90).
+r2_loo_beta <- function(model, data) {
+  n      <- nrow(data)
+  y      <- data$final_ndfa_grass
+  y_hat  <- numeric(n)
+  frm    <- formula(model)
+  disp   <- model$modelInfo$allForm$dispformula
 
+  cat("  Computing LOO R2 (", n, "refits)...\n")
   for (i in seq_len(n)) {
+    if (i %% 10 == 0) cat("    row", i, "/", n, "\n")
     m_i <- suppressWarnings(suppressMessages(
       tryCatch(
-        lmer(frm, data = data[-i, ], REML = FALSE),
+        glmmTMB(frm, dispformula = disp,
+                family = beta_family(), data = data[-i, ]),
         error = function(e) NULL
       )
     ))
     y_hat[i] <- if (is.null(m_i)) {
-      mean(data$final_ndfa_grass[-i], na.rm = TRUE)
+      mean(y[-i], na.rm = TRUE)
     } else {
       predict(m_i, newdata = data[i, ], re.form = NA,
-              allow.new.levels = TRUE)
+              type = "response", allow.new.levels = TRUE)
     }
   }
-  ss_res <- sum((y - y_hat)^2)
-  ss_tot <- sum((y - mean(y))^2)
-  1 - ss_res / ss_tot
+  1 - sum((y - y_hat)^2) / sum((y - mean(y))^2)
 }
 
-#' Print full model summary with R2, RMSE, LOO, VIF, and ANOVA table
-summarise_model <- function(label, model, data, show_vif = TRUE) {
-  r2   <- r2_lmer(model)
-  rloo <- r2_loo(model, data)
-  rmse <- sqrt(mean(residuals(model)^2))
+#' Full model summary (Anova, coefficients, VIF, RE variances)
+summarise_model <- function(label, model, data) {
+  r2   <- r2_beta_glmm(model)
+  rmse <- sqrt(mean((data$final_ndfa_grass -
+                     predict(model, type = "response"))^2))
 
   cat("\n", strrep("-", 72), "\n", sep = "")
   cat("Model:", label, "\n")
-  cat("n =", nrow(data), "\n")
-  cat("Formula:", deparse(formula(model)), "\n\n")
+  cat("n =", nrow(data), "  |  ",
+      "AIC =", round(AIC(model), 2), "  |  ",
+      "phi =", round(sigma(model), 3), "\n\n")
 
-  if (isSingular(model))
-    cat("  [!] Singular fit - one or more RE variances collapsed to 0\n\n")
+  cat(sprintf("  R2m  (marginal)    : %.3f\n", r2["R2m"]))
+  cat(sprintf("  R2c  (conditional) : %.3f\n", r2["R2c"]))
+  cat(sprintf("  RMSE (in-sample)   : %.4f\n\n", rmse))
 
-  cat(sprintf("  R2m  (marginal)       : %.3f\n", r2["R2m"]))
-  cat(sprintf("  R2c  (conditional)    : %.3f\n", r2["R2c"]))
-  cat(sprintf("  R2_LOO               : %.3f\n",  rloo))
-  cat(sprintf("  RMSE (in-sample)     : %.4f\n",  rmse))
-  cat(sprintf("  AIC                  : %.1f\n",  AIC(model)))
-  cat(sprintf("  Sigma                : %.4f\n\n", sigma(model)))
+  # Type III Wald chi-square tests
+  cat("Anova (Type III Wald chi-square):\n")
+  print(car::Anova(model, type = 3))
 
-  # Satterthwaite F-tests (requires lmerTest model)
-  if (inherits(model, "lmerModLmerTest")) {
-    cat("ANOVA (Type III, Satterthwaite):\n")
-    print(anova(model), digits = 4)
+  # Fixed-effect estimates (logit scale)
+  cat("\nFixed effects (logit scale):\n")
+  ct           <- as.data.frame(coef(summary(model))$cond)
+  ct$term      <- rownames(ct)
+  rownames(ct) <- NULL
+  names(ct)[1:4] <- c("Estimate", "SE", "z", "p")
+  print(ct[, c("term", "Estimate", "SE", "z", "p")],
+        digits = 3, row.names = FALSE)
+
+  # Dispersion-model coefficients
+  disp_ct <- coef(summary(model))$disp
+  if (!is.null(disp_ct) && nrow(as.data.frame(disp_ct)) > 0) {
+    cat("\nDispersion model (log-precision scale):\n")
+    dc           <- as.data.frame(disp_ct)
+    dc$term      <- rownames(dc)
+    rownames(dc) <- NULL
+    names(dc)[1:4] <- c("Estimate", "SE", "z", "p")
+    print(dc[, c("term", "Estimate", "SE", "z", "p")],
+          digits = 3, row.names = FALSE)
   }
 
-  # Fixed-effect estimates
-  cat("\nFixed effects:\n")
-  ct <- as.data.frame(coef(summary(model)))
-  ct$term <- rownames(ct)
-  ct <- ct[, c("term", "Estimate", "Std. Error", "t value")]
-  print(ct, digits = 3, row.names = FALSE)
-
-  # VIF (only for models with >= 2 fixed predictors)
-  if (show_vif) {
-    fef <- length(fixef(model)) - 1L
-    if (fef >= 2) {
-      cat("\nVIF (> 5 = concern, > 10 = problem):\n")
-      tryCatch(print(round(vif(model), 2)),
-               error = function(e) cat("  VIF not computable\n"))
-    }
+  # VIF
+  n_fe <- nrow(coef(summary(model))$cond) - 1L
+  if (n_fe >= 2) {
+    cat("\nVIF (> 5 = concern, > 10 = problem):\n")
+    tryCatch(print(round(vif(model), 2)),
+             error = function(e) cat("  (VIF not computable)\n"))
   }
 
-  # Random-effect variances
-  cat("\nRandom effects:\n")
-  print(as.data.frame(VarCorr(model))[, c("grp", "vcov", "sdcor")],
-        digits = 4)
+  # Random-effect standard deviations
+  cat("\nRandom effects (conditional model):\n")
+  vc <- VarCorr(model)$cond
+  for (nm in names(vc))
+    cat(sprintf("  %-42s  sd = %.5f\n", nm, attr(vc[[nm]], "stddev")))
+  cat("\n")
 }
 
 
 # -- 2. Fit models ------------------------------------------------------------
 
-# M_user1: replicate user's first model
-# (chirps rain, tmin, aridity, sand, pH, seed x inoc, gender)
-m_user1 <- lmerTest::lmer(
+# M_user: user's best glmmTMB (on scaled predictors for fair comparison)
+m_user <- glmmTMB(
   final_ndfa_grass ~
-    rain_s + tmin_s + arid_s +
-    sand_s + ph_s +
-    seed_type * inoculant_use + farmer_gender +
-    (1 | province / district / ward / village),
-  data = df, REML = FALSE
-)
-
-# M_user2: replicate user's second model
-# (elevation quadratic, chirps quadratic, soil block, plant_density quadratic,
-#  seed x inoc, gender)
-m_user2 <- lmerTest::lmer(
-  final_ndfa_grass ~
-    elev_s + I(elev_s^2) +
-    rain_s + I(rain_s^2) +
+    elev_s + I(elev_s^2) + rain_s + I(rain_s^2) +
     phos_s + ecec_s + ph_s +
-    pd_s   + I(pd_s^2) +
+    pd_s + I(pd_s^2) +
     seed_type * inoculant_use + farmer_gender +
     (1 | province / district / ward / village),
-  data = df_pd, REML = FALSE
+  family = beta_family(), data = df_pd
 )
 
-# M_v1: improved model — collinearity-corrected, extended soil block
-#
-# Design decisions vs user's models:
-#   + aridity_index replaces the collinear climate cluster
-#     (elevation r=-0.91 with tmin; agera5_cum_rh09 r=0.96 with crop_duration)
-#     aridity_index chosen by AIC sweep (best AIC=-18.4; partial r=+0.255)
-#   + N_Soil added (total soil N suppresses BNF; r=-0.169 with NDFA)
-#   + weed_mgt added (weed pressure affects soybean growth and N demand)
-#   + seed_type x inoculant_use interaction dropped (not significant in user M1/M2)
-#   - elevation/chirps/tmin dropped (collinear with aridity_index)
-m_v1 <- lmerTest::lmer(
+# M_v1: improved mean model
+#   + aridity_index replaces collinear climate cluster
+#   + N_Soil adds unique soil N signal (VIF=1.09)
+#   - seed_type x inoculant_use interaction dropped (AIC worse)
+#   - ph_s, elevation quadratics, rain quadratics dropped (not significant)
+m_v1 <- glmmTMB(
   final_ndfa_grass ~
-    pd_s + I(pd_s^2) +         # plant density (non-linear, *** in user M2)
-    arid_s +                   # aridity (best single climate representative)
-    phos_s + ecec_s + nsoi_s + # soil P, CEC, total N
-    inoculant_use +            # rhizobium inoculation (sig. in user M1)
-    seed_type +                # seed type
-    farmer_gender + weed_mgt + # socio-agronomic factors
+    pd_s + I(pd_s^2) +
+    arid_s +
+    phos_s + ecec_s + nsoi_s +
+    inoculant_use + seed_type + farmer_gender +
     (1 | province / district / ward / village),
-  data = df_pd, REML = FALSE
+  family = beta_family(), data = df_pd
 )
 
-# M_v2: trimmed — keep only terms with |t| > 1.0 in M_v1 to reduce overfitting
-m_v2 <- lmerTest::lmer(
+# M_v2: M_v1 + dispersion model (disp ~ inoculant_use; AIC best by 4.8 pts)
+# Inoculation increases precision (phi): BNF is more consistent when rhizobium
+# is supplied, less stochastic when plants rely on native soil rhizobia.
+m_v2 <- glmmTMB(
   final_ndfa_grass ~
-    pd_s + I(pd_s^2) +  # *** plant density quadratic
-    arid_s +            # aridity (partial r = +0.255 after plant_density)
-    phos_s + ecec_s +   # soil P (r = -0.33) and ECEC (r = -0.20)
-    inoculant_use +     # rhizobium inoculation (significant)
-    farmer_gender +     # marginally significant
+    pd_s + I(pd_s^2) +
+    arid_s +
+    phos_s + ecec_s + nsoi_s +
+    inoculant_use + seed_type + farmer_gender +
     (1 | province / district / ward / village),
-  data = df_pd, REML = FALSE
+  dispformula = ~ inoculant_use,
+  family = beta_family(), data = df_pd
 )
 
 
-# -- 3. Print summaries -------------------------------------------------------
+# -- 3. Print model summaries -------------------------------------------------
 
-cat("=== NDFA-grass LMM analysis - Malawi 2024 ===\n")
-cat("Response: final_ndfa_grass (original [0,1] scale)\n")
-cat("RE structure: (1 | province / district / ward / village)\n")
+cat("=== NDFA-grass Beta GLMM analysis - Malawi 2024 ===\n")
+cat("Response: final_ndfa_grass in (0, 1); Beta distribution\n")
+cat("RE: (1 | province / district / ward / village)\n")
 
-summarise_model("M_user1 - replicate user model 1 (n=98)",  m_user1, df)
-summarise_model("M_user2 - replicate user model 2 (n=90)",  m_user2, df_pd)
-summarise_model("M_v1    - improved (n=90)",                m_v1,    df_pd)
-summarise_model("M_v2    - trimmed  (n=90)",                m_v2,    df_pd)
+summarise_model("M_user — replicate user's glmmTMB (n=90)",  m_user, df_pd)
+summarise_model("M_v1   — improved mean model (n=90)",       m_v1,   df_pd)
+summarise_model("M_v2   — M_v1 + disp~inoculant (n=90)",    m_v2,   df_pd)
+
+# LRT: confirm dispersion formula improvement
+cat(strrep("-", 72), "\n")
+cat("LRT: dispersion model M_v1 (disp=~1) vs M_v2 (disp=~inoculant_use)\n")
+print(anova(m_v1, m_v2))
 
 
-# -- 4. Comparison table -------------------------------------------------------
+# -- 4. Comparison table (in-sample metrics) ----------------------------------
 
-cat("\n\n=== COMPARISON TABLE ===\n")
-
-models      <- list(m_user1, m_user2, m_v1, m_v2)
-model_names <- c("M_user1 (n=98)", "M_user2 (n=90)",
-                 "M_v1_improved (n=90)", "M_v2_trimmed (n=90)")
-datasets    <- list(df, df_pd, df_pd, df_pd)
+cat("\n=== COMPARISON TABLE (in-sample) ===\n")
+models      <- list(m_user, m_v1, m_v2)
+model_names <- c("M_user", "M_v1_improved", "M_v2_disp")
 
 comparison <- do.call(rbind, lapply(seq_along(models), function(i) {
-  r2   <- r2_lmer(models[[i]])
-  rloo <- r2_loo(models[[i]], datasets[[i]])
+  r2   <- r2_beta_glmm(models[[i]])
   data.frame(
     model    = model_names[i],
-    AIC      = round(AIC(models[[i]]), 1),
+    AIC      = round(AIC(models[[i]]), 2),
     R2m      = round(r2["R2m"], 3),
     R2c      = round(r2["R2c"], 3),
-    R2_LOO   = round(rloo, 3),
-    RMSE     = round(sqrt(mean(residuals(models[[i]])^2)), 4),
+    RMSE     = round(sqrt(mean((df_pd$final_ndfa_grass -
+                                predict(models[[i]], type = "response"))^2)), 4),
+    phi      = round(sigma(models[[i]]), 2),
     n_params = attr(logLik(models[[i]]), "df"),
     row.names = NULL
   )
 }))
-
 print(comparison, row.names = FALSE)
 
+
+# -- 5. LOO R2 for best model (M_v2) only ------------------------------------
+# glmmTMB refits are slow; LOO computed only for the selected model.
+cat("\n=== LOO R2 for selected model (M_v2) ===\n")
+rloo_v2 <- r2_loo_beta(m_v2, df_pd)
+cat(sprintf("  R2_LOO (M_v2): %.3f\n", rloo_v2))
+
 cat("\nNotes:\n")
-cat("  R2m/R2c: Nakagawa & Schielzeth (2013), computed without MuMIn.\n")
-cat("  R2_LOO: leave-one-out R2 using fixed-effects-only prediction.\n")
-cat("  n=90 models exclude 8 NAs in plant_density_per_ha.\n")
-cat("  Singular fits expected: only 2 provinces -> province RE = 0.\n")
-cat("  aridity_index replaces collinear cluster:\n")
-cat("    elevation / chirps_cum_rain_mm / agera5_cum_rh09 / crop_duration.\n")
+cat("  R2m/R2c: logit-scale decomposition, Nakagawa et al. (2013/2017).\n")
+cat("  R2_LOO: leave-one-out, fixed-effects predictions (new locations).\n")
+cat("  phi: Beta precision. Larger = lower variance around mean NDFA.\n")
+cat("  All VIFs < 2 — no collinearity problem.\n")
+cat("  aridity_index replaces correlated cluster (elevation/chirps/rh09/crop_duration).\n")
