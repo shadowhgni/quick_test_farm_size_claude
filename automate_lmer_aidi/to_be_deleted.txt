@@ -1,2 +1,0 @@
-# See if Claude is smart enough to iteratively improve predictor selection for a lmer
-# use AIDI soybean dataset as example
