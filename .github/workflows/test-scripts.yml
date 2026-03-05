@@ -215,7 +215,9 @@ jobs:
           git config user.email "ci-bot@farm-size.dev"
           git config user.name "CI Bot"
           git add ${PROJECT}/ci-logs/
-          git diff --cached --quiet ||             git commit -m "ci: update test log [skip ci]"
+          git diff --cached --quiet || \
+            git commit -m "ci: update test log [skip ci]"
+          git pull --rebase origin main
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

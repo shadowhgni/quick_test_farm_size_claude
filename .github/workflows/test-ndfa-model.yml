@@ -161,6 +161,7 @@ jobs:
           git add ci-logs/ndfa_latest.md
           git diff --cached --quiet || \
             git commit -m "ci: ndfa model selection log [skip ci]"
+          git pull --rebase origin main
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
