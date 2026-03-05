@@ -32,10 +32,41 @@ suppressPackageStartupMessages({
 rm(list = ls())
 
 # =============================================================================
+# CI mode — GitHub Actions sets CI=true automatically.
+# Reduced settings keep the job under 30 min without changing any logic.
+# =============================================================================
+ci_mode <- nchar(Sys.getenv("CI")) > 0
+if (ci_mode) {
+  cat(">>> CI MODE: reduced folds, predictor sets, and RF trees\n\n")
+  N_FOLDS      <- 3L   # 5 in production
+  MAX_TRIES    <- 2L   # 5 in production
+  RF_TREES     <- 50L  # 500 in production
+  RF_TUNE      <- 2L   # 3 in production
+  # Restrict to 4 most informative sets to keep runtime predictable
+  SETS_TO_RUN  <- c("mgmt", "mgmt_clim_soil", "full_selected", "full_temporal")
+} else {
+  N_FOLDS      <- 5L
+  MAX_TRIES    <- 5L
+  RF_TREES     <- 500L
+  RF_TUNE      <- 3L
+  SETS_TO_RUN  <- NULL  # NULL = run all 8
+}
+
+# =============================================================================
 # 0. Load & prepare data
 # =============================================================================
 
-dat00 <- readRDS('../data/processed/2026-03-02.intermediate_soybean_df.rds')
+# Flexible path: honours DATA_PATH env-var so CI can point to synthetic data
+# without touching this script.  Falls back to the standard relative path.
+data_dir <- Sys.getenv("NDFA_DATA_DIR",
+                       unset = file.path("..", "data", "processed"))
+rds_file <- file.path(data_dir, "2026-03-02.intermediate_soybean_df.rds")
+
+if (!file.exists(rds_file))
+  stop("Data file not found: ", rds_file,
+       "\nSet NDFA_DATA_DIR or run 00_synthetic_ndfa.R first.")
+
+dat00 <- readRDS(rds_file)
 
 df <- dat00 |>
   filter(country == 'malawi') |>
@@ -165,7 +196,7 @@ predictor_sets <- list(
 # 2. Helper: glmmTMB retry wrapper
 # =============================================================================
 
-fit_glmmTMB_retry <- function(..., max_tries = 5L, seed = 42L) {
+fit_glmmTMB_retry <- function(..., max_tries = MAX_TRIES, seed = 42L) {
   args <- list(...)
   for (attempt in seq_len(max_tries)) {
     set.seed(seed + attempt - 1L)
@@ -216,13 +247,22 @@ cat("=============================================================\n")
 cat("PHASE 1: Predictor selection (glmmTMB 5-fold CV)\n")
 cat("=============================================================\n\n")
 
-set.seed(123)
-folds <- rsample::vfold_cv(df, v = 5, strata = "final_ndfa_grass")
+# Filter sets for CI mode (NULL = keep all)
+sets_active <- if (!is.null(SETS_TO_RUN)) {
+  predictor_sets[names(predictor_sets) %in% SETS_TO_RUN]
+} else {
+  predictor_sets
+}
+cat("Running", length(sets_active), "predictor sets with",
+    N_FOLDS, "folds each\n\n")
 
-selector_results <- lapply(names(predictor_sets), function(set_name) {
+set.seed(123)
+folds <- rsample::vfold_cv(df, v = N_FOLDS, strata = "final_ndfa_grass")
+
+selector_results <- lapply(names(sets_active), function(set_name) {
 
   cat("Predictor set:", set_name, "\n")
-  fml <- as.formula(paste("final_ndfa_grass ~", predictor_sets[[set_name]]))
+  fml <- as.formula(paste("final_ndfa_grass ~", sets_active[[set_name]]))
 
   fold_rmse <- vapply(seq_len(nrow(folds)), function(i) {
     tr  <- rsample::training(folds$splits[[i]])
@@ -288,7 +328,7 @@ cat("Fixed-effect predictors passed to RF:\n  ")
 cat(paste(pred_vars, collapse = ", "), "\n\n")
 
 set.seed(123)
-folds2 <- rsample::vfold_cv(df, v = 5, strata = "final_ndfa_grass")
+folds2 <- rsample::vfold_cv(df, v = N_FOLDS, strata = "final_ndfa_grass")
 
 all_preds <- vector("list", nrow(folds2))
 
@@ -338,8 +378,8 @@ for (i in seq_len(nrow(folds2))) {
       y          = tr_rf$final_ndfa_grass,
       method     = "ranger",
       trControl  = tc,
-      tuneLength = 3,
-      num.trees  = 500,
+      tuneLength = RF_TUNE,
+      num.trees  = RF_TREES,
       importance = "permutation"
     )
     pmax(pmin(predict(m, newdata = val_rf), 1), 0)
@@ -428,8 +468,8 @@ saveRDS(
     fold_metrics    = fold_metrics,
     predictions     = predictions_df
   ),
-  file = paste0('../data/processed/', output_date,
-                '.ndfa_model_selection_cv_results.rds')
+  file = file.path(data_dir, paste0(output_date,
+                   '.ndfa_model_selection_cv_results.rds'))
 )
 cat("\nResults saved to data/processed/",
     output_date, ".ndfa_model_selection_cv_results.rds\n", sep = "")

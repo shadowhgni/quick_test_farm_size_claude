@@ -1,0 +1,191 @@
+# =============================================================================
+# GitHub Actions Workflow: NDFA Model Selection Test
+# Script under test: automate_lmer_aidi/select_ndfa_model.R
+#
+# Steps:
+#   1. syntax-check  – parse() both scripts; no packages needed (~1 min)
+#   2. run-model-selection – install packages, generate synthetic data,
+#                            run select_ndfa_model.R in CI mode, commit log
+#
+# CI mode (Sys.getenv("CI") != "") activates automatically and uses:
+#   - 3 folds instead of 5
+#   - 4 predictor sets instead of 8
+#   - 50 RF trees instead of 500
+#   - max 2 glmmTMB retry attempts
+# Runtime target: < 25 min
+#
+# Data path: NDFA_DATA_DIR env var points both scripts to the same temp dir
+#            inside the repo (automate_lmer_aidi/data/processed/).
+#            Nothing outside the repo is needed.
+# =============================================================================
+
+name: Test NDFA model selection
+
+on:
+  push:
+    paths:
+      - 'automate_lmer_aidi/select_ndfa_model.R'
+      - 'automate_lmer_aidi/00_synthetic_ndfa.R'
+      - '.github/workflows/test-ndfa-model.yml'
+  pull_request:
+    paths:
+      - 'automate_lmer_aidi/**'
+  workflow_dispatch:
+
+jobs:
+
+  # ── Job 1: Fast syntax check ───────────────────────────────────────────────
+  syntax-check:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.3.3'
+
+      - name: Parse R scripts
+        run: |
+          FAIL=0
+          for f in automate_lmer_aidi/select_ndfa_model.R \
+                   automate_lmer_aidi/00_synthetic_ndfa.R \
+                   automate_lmer_aidi/analyse_ndfa_grass.R; do
+            [ -f "$f" ] || continue
+            Rscript -e "parse('$f')" > /dev/null 2>&1 || {
+              echo "SYNTAX ERROR: $f"
+              Rscript -e "parse('$f')"
+              FAIL=1
+            }
+          done
+          [ $FAIL -eq 0 ] && echo "✓ All scripts pass syntax check"
+          exit $FAIL
+
+  # ── Job 2: Full run with packages ─────────────────────────────────────────
+  run-model-selection:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    needs: syntax-check
+    permissions:
+      contents: write
+
+    env:
+      # Both scripts read/write from the same directory inside the repo.
+      # Path is relative to automate_lmer_aidi/ (the working dir below).
+      NDFA_DATA_DIR: data/processed
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.3.3'
+          use-public-rspm: true   # Posit PPM — pre-compiled Ubuntu binaries
+
+      # ── Package cache keyed on workflow file ──────────────────────────────
+      - name: Cache R packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: r-ndfa-${{ runner.os }}-${{ hashFiles('.github/workflows/test-ndfa-model.yml') }}
+          restore-keys: r-ndfa-${{ runner.os }}-
+
+      # ── Install packages ─────────────────────────────────────────────────
+      - name: Install R packages
+        run: |
+          Rscript -e '
+          options(
+            repos = c(
+              RSPM = "https://packagemanager.posit.co/cran/__linux__/jammy/latest",
+              CRAN = "https://cloud.r-project.org"
+            ),
+            Ncpus = 2L
+          )
+          pkgs <- c(
+            "glmmTMB",    # Beta GLMM
+            "lmerTest",   # Gaussian LMM
+            "ranger",     # RF engine
+            "caret",      # RF wrapper
+            "rsample",    # vfold_cv
+            "dplyr"
+          )
+          to_install <- pkgs[!vapply(pkgs, requireNamespace,
+                                    logical(1), quietly = TRUE)]
+          if (length(to_install)) {
+            message("Installing: ", paste(to_install, collapse = ", "))
+            install.packages(to_install, dependencies = TRUE)
+          } else {
+            message("All packages already cached.")
+          }
+          '
+
+      # ── Create data dir & generate synthetic data ────────────────────────
+      - name: Generate synthetic data
+        working-directory: automate_lmer_aidi
+        run: Rscript 00_synthetic_ndfa.R
+
+      # ── Run model selection ──────────────────────────────────────────────
+      - name: Run select_ndfa_model.R
+        working-directory: automate_lmer_aidi
+        run: Rscript select_ndfa_model.R 2>&1 | tee ci_output.txt
+        # CI=true is set automatically by GitHub Actions — CI mode activates.
+
+      # ── Verify key outputs were produced ────────────────────────────────
+      - name: Check expected output
+        working-directory: automate_lmer_aidi
+        run: |
+          # Script must print the selector table and phase 2 results
+          grep -q "Best predictor set" ci_output.txt || {
+            echo "FAIL: 'Best predictor set' not found in output"
+            exit 1
+          }
+          grep -q "PHASE 2 RESULTS" ci_output.txt || {
+            echo "FAIL: 'PHASE 2 RESULTS' not found in output"
+            exit 1
+          }
+          # RDS output file must exist
+          RDS_COUNT=$(ls data/processed/*ndfa_model_selection_cv_results.rds \
+                      2>/dev/null | wc -l)
+          [ "$RDS_COUNT" -gt 0 ] || {
+            echo "FAIL: No results RDS file written to data/processed/"
+            exit 1
+          }
+          echo "✓ All expected outputs present"
+
+      # ── Commit log ──────────────────────────────────────────────────────
+      - name: Commit CI log
+        if: always()
+        working-directory: automate_lmer_aidi
+        run: |
+          mkdir -p ci-logs
+          {
+            echo "# NDFA Model Selection CI Log"
+            echo "Run: ${{ github.run_id }}  Commit: ${{ github.sha }}"
+            echo "Time: $(date -u)"
+            echo ""
+            echo "## Output"
+            echo '```'
+            cat ci_output.txt 2>/dev/null || echo "(no output)"
+            echo '```'
+          } > ci-logs/ndfa_latest.md
+          git config user.email "ci-bot@farm-size.dev"
+          git config user.name "CI Bot"
+          git add ci-logs/ndfa_latest.md
+          git diff --cached --quiet || \
+            git commit -m "ci: ndfa model selection log [skip ci]"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── Upload artifacts ─────────────────────────────────────────────────
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ndfa-model-selection-results
+          path: |
+            automate_lmer_aidi/ci_output.txt
+            automate_lmer_aidi/ci-logs/ndfa_latest.md
+            automate_lmer_aidi/data/processed/*ndfa_model_selection_cv_results.rds
+          retention-days: 30
