@@ -70,11 +70,6 @@ jobs:
     permissions:
       contents: write
 
-    env:
-      # Both scripts read/write from the same directory inside the repo.
-      # Path is relative to automate_lmer_aidi/ (the working dir below).
-      NDFA_DATA_DIR: data/processed
-
     steps:
       - uses: actions/checkout@v4
 
@@ -120,11 +115,6 @@ jobs:
           }
           '
 
-      # ── Create data dir & generate synthetic data ────────────────────────
-      - name: Generate synthetic data
-        working-directory: automate_lmer_aidi
-        run: Rscript 00_synthetic_ndfa.R
-
       # ── Run model selection ──────────────────────────────────────────────
       - name: Run select_ndfa_model.R
         working-directory: automate_lmer_aidi
@@ -135,7 +125,6 @@ jobs:
       - name: Check expected output
         working-directory: automate_lmer_aidi
         run: |
-          # Script must print the selector table and phase 2 results
           grep -q "Best predictor set" ci_output.txt || {
             echo "FAIL: 'Best predictor set' not found in output"
             exit 1
@@ -144,11 +133,9 @@ jobs:
             echo "FAIL: 'PHASE 2 RESULTS' not found in output"
             exit 1
           }
-          # RDS output file must exist
-          RDS_COUNT=$(ls data/processed/*ndfa_model_selection_cv_results.rds \
-                      2>/dev/null | wc -l)
+          RDS_COUNT=$(ls *ndfa_model_selection_cv_results.rds 2>/dev/null | wc -l)
           [ "$RDS_COUNT" -gt 0 ] || {
-            echo "FAIL: No results RDS file written to data/processed/"
+            echo "FAIL: No results RDS file written"
             exit 1
           }
           echo "✓ All expected outputs present"
@@ -187,5 +174,5 @@ jobs:
           path: |
             automate_lmer_aidi/ci_output.txt
             automate_lmer_aidi/ci-logs/ndfa_latest.md
-            automate_lmer_aidi/data/processed/*ndfa_model_selection_cv_results.rds
+            automate_lmer_aidi/*ndfa_model_selection_cv_results.rds
           retention-days: 30

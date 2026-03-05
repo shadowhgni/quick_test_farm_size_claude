@@ -56,20 +56,11 @@ if (ci_mode) {
 # 0. Load & prepare data
 # =============================================================================
 
-# Flexible path: honours DATA_PATH env-var so CI can point to synthetic data
-# without touching this script.  Falls back to the standard relative path.
-data_dir <- Sys.getenv("NDFA_DATA_DIR",
-                       unset = file.path("..", "data", "processed"))
-rds_file <- file.path(data_dir, "2026-03-02.intermediate_soybean_df.rds")
-
-if (!file.exists(rds_file))
-  stop("Data file not found: ", rds_file,
-       "\nSet NDFA_DATA_DIR or run 00_synthetic_ndfa.R first.")
-
-dat00 <- readRDS(rds_file)
+# claude_github.rds lives in the same folder as this script.
+# Run from that folder (setwd or Rscript from automate_lmer_aidi/).
+dat00 <- readRDS("claude_github.rds")
 
 df <- dat00 |>
-  filter(country == 'malawi') |>
   dplyr::select(
     final_ndfa_grass,
     # Farmer / household
@@ -468,8 +459,7 @@ saveRDS(
     fold_metrics    = fold_metrics,
     predictions     = predictions_df
   ),
-  file = file.path(data_dir, paste0(output_date,
-                   '.ndfa_model_selection_cv_results.rds'))
+  file = paste0(output_date, '.ndfa_model_selection_cv_results.rds')
 )
-cat("\nResults saved to data/processed/",
+cat("\nResults saved to ",
     output_date, ".ndfa_model_selection_cv_results.rds\n", sep = "")
