@@ -65,7 +65,7 @@ jobs:
   # ── Job 2: Full run with packages ─────────────────────────────────────────
   run-model-selection:
     runs-on: ubuntu-22.04
-    timeout-minutes: 40
+    timeout-minutes: 50
     needs: syntax-check
     permissions:
       contents: write

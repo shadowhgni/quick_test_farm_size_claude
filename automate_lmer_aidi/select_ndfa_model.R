@@ -3,18 +3,20 @@
 #
 # Two-phase workflow:
 #   Phase 1 — Predictor selection: 5-fold CV with glmmTMB (Beta GLMM) across
-#             8 candidate predictor sets.  Winner = lowest mean CV RMSE.
+#             28 candidate predictor sets (2–10 fixed-effect predictors each).
+#             Winner = lowest mean CV RMSE.
 #   Phase 2 — Model comparison: 5-fold CV on the winning predictor set,
 #             comparing glmmTMB (Beta GLMM), lmerTest (Gaussian LMM), and
 #             Random Forest (ranger via caret).
 #
-# Candidate predictor sets are informed by:
+# Predictor search informed by:
+#   • Raw correlations with final_ndfa_grass (agera5_cum_rh09 r=0.31,
+#     elevation 0.30, crop_duration 0.25, soil_phos -0.33, tmin -0.27)
 #   • Collinearity analysis in analyse_ndfa_grass.R
-#     (aridity > chirps/elev cluster by AIC; ECEC + N_Soil + phos best soil block)
-#   • M_v2 from analyse_ndfa_grass.R = "full_selected" here (our benchmark)
+#   • M_v2 from analyse_ndfa_grass.R included as benchmark ("prev_best")
 #
 # Random effects in GLMM / LMM: (1 | province/district/ward/village)
-# RF uses the same predictor columns as the winning formula (no extra variables).
+# RF uses same fixed-effect predictors as winner — no extra variables.
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) — March 2026
@@ -43,14 +45,16 @@ if (ci_mode) {
   MAX_TRIES    <- 2L   # 5 in production
   RF_TREES     <- 50L  # 500 in production
   RF_TUNE      <- 2L   # 3 in production
-  # Restrict to 4 most informative sets to keep runtime predictable
-  SETS_TO_RUN  <- c("mgmt", "mgmt_clim_soil", "full_selected", "full_temporal")
+  # 8 representative sets spanning the search space — keeps CI under 25 min
+  SETS_TO_RUN  <- c("prev_best", "rh09_soil_mgmt", "elev_rh09_mgmt",
+                    "rh09_phos_tmin_mgmt", "dur_rh09_soil_mgmt",
+                    "parsimonious_rh09", "kitchen_sink", "weed_mgmt_clim")
 } else {
   N_FOLDS      <- 5L
   MAX_TRIES    <- 5L
   RF_TREES     <- 500L
   RF_TUNE      <- 3L
-  SETS_TO_RUN  <- NULL  # NULL = run all 8
+  SETS_TO_RUN  <- NULL  # NULL = run all 28
 }
 
 # =============================================================================
@@ -70,23 +74,24 @@ df <- dat00 |>
     province, district, ward, village,
     # Soil
     C_Soil, N_Soil, soil_pH, soil_ECEC, sand_content_perc, soil_phos,
-    # Climate
-    chirps_cum_rain_mm, aridity_index, agera5_avg_tmin,
-    agera5_cum_srad_mj, agera5_cum_rh09,
+    # Climate / environment
+    chirps_cum_rain_mm, aridity_index, agera5_avg_tmin, agera5_avg_tmax,
+    agera5_cum_srad_mj, agera5_cum_rh09, elevation, gdd,
     # Crop management
-    planting_date, crop_duration, plant_density_per_ha,
-    seed_type, inoculant_use, fertilizer_use, weeding_mode,
-    previous_crop_2
+    planting_date, crop_duration, plant_density_per_ha, seeding_rate_kg_ha,
+    seed_type, inoculant_use, fertilizer_use, weeding_mode, weed_mgt,
+    planting_method, previous_crop_2, mineral_n_rate_kg_ha
   ) |>
   na.omit()
 
 cat("Dataset: n =", nrow(df), "\n\n")
 
-# Scale continuous predictors (mean = 0, sd = 1) — consistent with
-# analyse_ndfa_grass.R convention (scaling done on full dataset).
+# Scale all continuous predictors (mean=0, sd=1).
+# Scaling is done on the full dataset — fold subsets inherit the same scale.
 df <- df |>
   mutate(
     pd_s    = scale(plant_density_per_ha)[, 1],
+    sr_s    = scale(seeding_rate_kg_ha)[, 1],
     arid_s  = scale(aridity_index)[, 1],
     phos_s  = scale(soil_phos)[, 1],
     ecec_s  = scale(soil_ECEC)[, 1],
@@ -96,92 +101,181 @@ df <- df |>
     sand_s  = scale(sand_content_perc)[, 1],
     rain_s  = scale(chirps_cum_rain_mm)[, 1],
     tmin_s  = scale(agera5_avg_tmin)[, 1],
+    tmax_s  = scale(agera5_avg_tmax)[, 1],
     srad_s  = scale(agera5_cum_srad_mj)[, 1],
-    rh_s    = scale(agera5_cum_rh09)[, 1],
+    rh_s    = scale(agera5_cum_rh09)[, 1],   # r=+0.31 — strongest climate corr
+    elev_s  = scale(elevation)[, 1],          # r=+0.30 — not in prior analysis
+    gdd_s   = scale(gdd)[, 1],
     pdate_s = scale(planting_date)[, 1],
-    dur_s   = scale(crop_duration)[, 1],
+    dur_s   = scale(crop_duration)[, 1],      # r=+0.25
     fsz_s   = scale(main_soya_field_ha)[, 1],
     leg_s   = scale(leg_importance_perc)[, 1],
+    nrate_s = scale(mineral_n_rate_kg_ha)[, 1],
     # Factors
-    inoculant_use = factor(inoculant_use, levels = c("No", "Yes")),
-    seed_type     = factor(seed_type),
-    farmer_gender = factor(farmer_gender),
+    inoculant_use   = factor(inoculant_use,   levels = c("No", "Yes")),
+    seed_type       = factor(seed_type),
+    farmer_gender   = factor(farmer_gender),
     previous_crop_2 = factor(previous_crop_2),
     fertilizer_use  = factor(fertilizer_use),
-    weeding_mode    = factor(weeding_mode)
+    weeding_mode    = factor(weeding_mode),
+    weed_mgt        = factor(weed_mgt),       # good/moderate/poor
+    planting_method = factor(planting_method)
   )
 
-RE <- "(1 | province/district/ward/village)"
+RE   <- "(1 | province/district/ward/village)"
+MGMT <- "inoculant_use + seed_type + farmer_gender"  # core management block
 
 # =============================================================================
-# 1. Define candidate predictor sets
+# 1. Define candidate predictor sets (2–10 fixed-effect predictors each)
 # =============================================================================
-# All sets share the same random-effects structure.
-# Naming logic:
-#   mgmt    = core management block (inoculant, seed type, farmer gender)
-#   +clim   = adds aridity (best climate predictor by AIC from prior analysis)
-#   +soil   = adds soil block (phos, ECEC, N_Soil)
-#   +dens   = adds plant density (quadratic)
-#   full_selected = M_v2 from analyse_ndfa_grass.R (benchmark)
-#   +rain   = swap aridity for chirps rainfall
-#   +soil_full = expand soil block with pH and sand
-#   +temporal = add planting date and crop duration
+# Organisation:
+#   A. Baselines & prior benchmark
+#   B. Climate-focused (testing rh09/elevation vs aridity)
+#   C. Soil-focused
+#   D. Management-focused
+#   E. Mixed: climate + soil + management (3–8 vars)
+#   F. Parsimonious (2–4 vars)
+#   G. Kitchen sink (~10 vars)
+# All sets include RE.
 
 predictor_sets <- list(
 
-  mgmt = paste(
-    "inoculant_use + seed_type + farmer_gender",
-    RE, sep = " + "
-  ),
+  # ── A. Baselines & prior benchmark ──────────────────────────────────────
+  # Management only
+  mgmt_only = paste(MGMT, RE, sep = " + "),
 
-  mgmt_clim = paste(
-    "arid_s + inoculant_use + seed_type + farmer_gender",
-    RE, sep = " + "
-  ),
+  # M_v2 from analyse_ndfa_grass.R — aridity + phos/ECEC/N_Soil + dens + mgmt
+  prev_best = paste(
+    "pd_s + I(pd_s^2) + arid_s + phos_s + ecec_s + nsoi_s",
+    MGMT, RE, sep = " + "),
 
-  mgmt_soil = paste(
-    "phos_s + ecec_s + nsoi_s + inoculant_use + seed_type + farmer_gender",
-    RE, sep = " + "
-  ),
+  # ── B. Climate-focused ──────────────────────────────────────────────────
+  # rh09 alone + mgmt (rh09 r=+0.31, best raw correlate)
+  rh09_mgmt = paste("rh_s + inoculant_use + seed_type", RE, sep = " + "),
 
-  mgmt_clim_soil = paste(
-    "arid_s + phos_s + ecec_s + nsoi_s",
-    "inoculant_use + seed_type + farmer_gender",
-    RE, sep = " + "
-  ),
+  # elevation alone + mgmt (elev r=+0.30, never tested before)
+  elev_mgmt = paste("elev_s + inoculant_use + seed_type", RE, sep = " + "),
 
-  # M_v2 from analyse_ndfa_grass.R — benchmark
-  full_selected = paste(
-    "pd_s + I(pd_s^2) + arid_s",
-    "phos_s + ecec_s + nsoi_s",
-    "inoculant_use + seed_type + farmer_gender",
-    RE, sep = " + "
-  ),
+  # rh09 + elevation (complementary: moisture vs altitude)
+  elev_rh09_mgmt = paste(
+    "elev_s + rh_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
 
-  # Alternative: use chirps rainfall instead of aridity
-  alt_rain = paste(
-    "pd_s + I(pd_s^2) + rain_s",
-    "phos_s + ecec_s + nsoi_s",
-    "inoculant_use + seed_type + farmer_gender",
-    RE, sep = " + "
-  ),
+  # crop_duration (r=+0.25) + mgmt
+  dur_mgmt = paste(
+    "dur_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
 
-  # Expanded soil block
-  full_soil_expanded = paste(
-    "pd_s + I(pd_s^2) + arid_s",
+  # tmin (r=-0.27) + mgmt
+  tmin_mgmt = paste(
+    "tmin_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # rh09 + tmin (temperature × humidity interaction-free)
+  rh09_tmin_mgmt = paste(
+    "rh_s + tmin_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # chirps + aridity (from prior analysis — aridity beat chirps individually)
+  rain_arid_mgmt = paste(
+    "rain_s + arid_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # GDD (growing degree-days) + mgmt
+  gdd_mgmt = paste(
+    "gdd_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # ── C. Soil-focused ─────────────────────────────────────────────────────
+  # phos alone (r=-0.33, best raw soil correlate) + mgmt
+  phos_mgmt = paste(
+    "phos_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # Full soil block + mgmt
+  soil_full_mgmt = paste(
     "phos_s + ecec_s + nsoi_s + ph_s + sand_s",
-    "inoculant_use + seed_type + farmer_gender",
-    RE, sep = " + "
-  ),
+    MGMT, RE, sep = " + "),
 
-  # Add temporal management
-  full_temporal = paste(
-    "pd_s + I(pd_s^2) + arid_s",
-    "phos_s + ecec_s + nsoi_s",
+  # Minimal soil (phos + ECEC — best AIC pair from prior analysis) + mgmt
+  phos_ecec_mgmt = paste(
+    "phos_s + ecec_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # ── D. Management-focused ───────────────────────────────────────────────
+  # Weed management quality (categorical) + mgmt
+  weed_mgmt = paste(
+    "weed_mgt + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # Plant density (quadratic) + mgmt
+  dens_mgmt = paste(
+    "pd_s + I(pd_s^2) + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # Previous crop + mgmt (legume rotation effect)
+  prevcrop_mgmt = paste(
+    "previous_crop_2 + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # Planting date + crop duration + mgmt (phenological timing)
+  temporal_mgmt = paste(
+    "pdate_s + dur_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # N fertilizer rate + mgmt (N suppression of BNF hypothesis)
+  nfert_mgmt = paste(
+    "nrate_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # ── E. Mixed: climate + soil + management ───────────────────────────────
+  # rh09 + phos + tmin + mgmt (top-3 numeric correlates + inoculant)
+  rh09_phos_tmin_mgmt = paste(
+    "rh_s + phos_s + tmin_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # rh09 + soil block + mgmt (replace aridity with rh09)
+  rh09_soil_mgmt = paste(
+    "rh_s + phos_s + ecec_s + nsoi_s",
+    MGMT, RE, sep = " + "),
+
+  # elevation + rh09 + soil block + mgmt
+  elev_rh09_soil_mgmt = paste(
+    "elev_s + rh_s + phos_s + ecec_s + nsoi_s",
+    MGMT, RE, sep = " + "),
+
+  # crop_duration + rh09 + soil + mgmt (phenology + moisture + soil)
+  dur_rh09_soil_mgmt = paste(
+    "dur_s + rh_s + phos_s + ecec_s + nsoi_s",
+    MGMT, RE, sep = " + "),
+
+  # Weed management + climate + soil + mgmt
+  weed_mgmt_clim = paste(
+    "weed_mgt + rh_s + phos_s + ecec_s",
     "inoculant_use + seed_type + farmer_gender",
-    "pdate_s + dur_s",
-    RE, sep = " + "
-  )
+    RE, sep = " + "),
+
+  # tmin + crop_duration + phos + mgmt (short, biologically interpretable)
+  tmin_dur_phos_mgmt = paste(
+    "tmin_s + dur_s + phos_s + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + "),
+
+  # ── F. Parsimonious (2–4 predictors) ────────────────────────────────────
+  # rh09 + inoculant (minimal biologically motivated model)
+  parsimonious_rh09 = paste(
+    "rh_s + inoculant_use", RE, sep = " + "),
+
+  # rh09 + phos + inoculant (3 predictors, top correlates)
+  parsimonious_3 = paste(
+    "rh_s + phos_s + inoculant_use", RE, sep = " + "),
+
+  # ── G. Kitchen sink (~10 fixed-effect predictors) ───────────────────────
+  # Everything that's not collinear with something else
+  kitchen_sink = paste(
+    "elev_s + rh_s + tmin_s + dur_s",
+    "phos_s + ecec_s + nsoi_s + ph_s",
+    "weed_mgt + inoculant_use + seed_type + farmer_gender",
+    RE, sep = " + ")
 )
 
 # =============================================================================
