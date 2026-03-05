@@ -217,6 +217,7 @@ jobs:
           git add ${PROJECT}/ci-logs/
           git diff --cached --quiet || \
             git commit -m "ci: update test log [skip ci]"
+          git add -A
           git pull --rebase origin main
           git push origin main
         env:

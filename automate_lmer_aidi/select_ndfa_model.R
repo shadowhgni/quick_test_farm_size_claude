@@ -22,6 +22,7 @@
 
 suppressPackageStartupMessages({
   library(glmmTMB)    # Beta GLMM
+  library(lme4)       # nobars() for RE stripping; lmerTest depends on it
   library(lmerTest)   # Gaussian LMM
   library(caret)      # RF via ranger
   library(dplyr)
@@ -307,13 +308,11 @@ best_preds_rhs <- predictor_sets[[best_set]]
 glmm_fml  <- as.formula(paste("final_ndfa_grass ~", best_preds_rhs))
 lmer_fml  <- glmm_fml   # same formula; lmerTest treats beta as Gaussian
 
-# Columns used by the winning formula (for RF feature matrix)
-# Strip the RE term to get fixed-effect predictor names
-fixed_rhs  <- gsub(RE, "", best_preds_rhs)
-fixed_rhs  <- gsub("\\+ *$", "", trimws(fixed_rhs))
-# Extract bare variable names (handles poly(), I(), etc.)
-pred_vars  <- all.vars(as.formula(paste("~", fixed_rhs)))
-pred_vars  <- unique(pred_vars[pred_vars != "final_ndfa_grass"])
+# Columns used by the winning formula (for RF feature matrix.
+# lme4::nobars() strips (1|...) RE terms before all.vars() — using
+# all.vars() directly on a formula with | causes a parse error.
+pred_vars <- all.vars(lme4::nobars(glmm_fml))
+pred_vars <- unique(pred_vars[pred_vars != "final_ndfa_grass"])
 
 cat("Fixed-effect predictors passed to RF:\n  ")
 cat(paste(pred_vars, collapse = ", "), "\n\n")
