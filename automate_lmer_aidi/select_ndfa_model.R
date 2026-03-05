@@ -39,23 +39,13 @@ rm(list = ls())
 # Reduced settings keep the job under 30 min without changing any logic.
 # =============================================================================
 ci_mode <- nchar(Sys.getenv("CI")) > 0
-if (ci_mode) {
-  cat(">>> CI MODE: reduced folds, predictor sets, and RF trees\n\n")
-  N_FOLDS      <- 3L   # 5 in production
-  MAX_TRIES    <- 2L   # 5 in production
-  RF_TREES     <- 50L  # 500 in production
-  RF_TUNE      <- 2L   # 3 in production
-  # 8 representative sets spanning the search space — keeps CI under 25 min
-  SETS_TO_RUN  <- c("prev_best", "rh09_soil_mgmt", "elev_rh09_mgmt",
-                    "rh09_phos_tmin_mgmt", "dur_rh09_soil_mgmt",
-                    "parsimonious_rh09", "kitchen_sink", "weed_mgmt_clim")
-} else {
-  N_FOLDS      <- 5L
-  MAX_TRIES    <- 5L
-  RF_TREES     <- 500L
-  RF_TUNE      <- 3L
-  SETS_TO_RUN  <- NULL  # NULL = run all 28
-}
+if (ci_mode) cat(">>> Running in GitHub Actions — full settings, no shortcuts\n\n")
+
+N_FOLDS      <- 5L
+MAX_TRIES    <- 5L
+RF_TREES     <- 500L
+RF_TUNE      <- 3L
+SETS_TO_RUN  <- NULL  # NULL = run all 28
 
 # =============================================================================
 # 0. Load & prepare data
