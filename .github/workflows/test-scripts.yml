@@ -217,8 +217,9 @@ jobs:
           git add ${PROJECT}/ci-logs/
           git diff --cached --quiet || \
             git commit -m "ci: update test log [skip ci]"
-          git add -A
+          git stash --include-untracked || true
           git pull --rebase origin main
+          git stash pop || true
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
