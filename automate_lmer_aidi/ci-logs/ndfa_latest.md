@@ -1,12 +1,12 @@
 # NDFA Model Selection CI Log
-Run: 22714152807  Commit: a8363bc9d94606f5d7343e91020ff2a549991499
-Time: Thu Mar  5 10:48:41 UTC 2026
+Run: 22714615635  Commit: dc9dd5c66096aa3db986ff12e1e4372fd416325a
+Time: Thu Mar  5 11:02:09 UTC 2026
 
 ## Output
 ```
 >>> CI MODE: reduced folds, predictor sets, and RF trees
 
-Dataset: n = 90 
+Dataset: n = 86 
 
 =============================================================
 PHASE 1: Predictor selection (glmmTMB 5-fold CV)
@@ -15,23 +15,23 @@ PHASE 1: Predictor selection (glmmTMB 5-fold CV)
 Running 4 predictor sets with 3 folds each
 
 Predictor set: mgmt 
-  Mean CV RMSE = 0.1492  (sd = 0.0133)
+  Mean CV RMSE = 0.2011  (sd = 0.0118)
 
 Predictor set: mgmt_clim_soil 
-  Mean CV RMSE = 0.1270  (sd = 0.0169)
+  Mean CV RMSE = 0.2019  (sd = 0.0237)
 
 Predictor set: full_selected 
-  Mean CV RMSE = 0.1041  (sd = 0.0103)
+  Mean CV RMSE = 0.1964  (sd = 0.0237)
 
 Predictor set: full_temporal 
-  Mean CV RMSE = 0.1045  (sd = 0.0094)
+  Mean CV RMSE = 0.2003  (sd = 0.0266)
 
 === Predictor selection summary (sorted by CV RMSE) ===
             set RMSE_mean RMSE_sd n_folds_ok
-  full_selected    0.1041  0.0103          3
-  full_temporal    0.1045  0.0094          3
- mgmt_clim_soil    0.1270  0.0169          3
-           mgmt    0.1492  0.0133          3
+  full_selected    0.1964  0.0237          3
+  full_temporal    0.2003  0.0266          3
+           mgmt    0.2011  0.0118          3
+ mgmt_clim_soil    0.2019  0.0237          3
 
 >> Best predictor set: 'full_selected'
 
