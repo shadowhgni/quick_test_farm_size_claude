@@ -1,6 +1,6 @@
 # NDFA Model Selection CI Log
-Run: 22716485914  Commit: b24a0072bad8f3eb3048aab9c5c2f2ef9372bef9
-Time: Thu Mar  5 11:52:28 UTC 2026
+Run: 22718257971  Commit: ef4a49bcf0de9f9c9f15af5bf9feefb2483edd01
+Time: Thu Mar  5 12:42:54 UTC 2026
 
 ## Output
 ```
@@ -40,9 +40,48 @@ PHASE 2: 3-model comparison on best predictor set
   Set: full_selected 
 =============================================================
 
-Error in str2lang(x) : <text>:1:103: unexpected '|'
-1: ~ pd_s + I(pd_s^2) + arid_s + phos_s + ecec_s + nsoi_s + inoculant_use + seed_type + farmer_gender + (|
-                                                                                                          ^
-Calls: all.vars ... as.formula -> formula -> formula.character -> str2lang
-Execution halted
+Warning message:
+the ‘nobars’ function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainter to do so.
+This warning is displayed once per session. 
+Fixed-effect predictors passed to RF:
+  pd_s, arid_s, phos_s, ecec_s, nsoi_s, inoculant_use, seed_type, farmer_gender 
+
+--- Fold 1 of 5 ---
+  glmmTMB (Beta GLMM)... done.
+  lmerTest (Gaussian LMM)... done.
+  Random Forest (ranger)... done.
+
+--- Fold 2 of 5 ---
+  glmmTMB (Beta GLMM)... done.
+  lmerTest (Gaussian LMM)... done.
+  Random Forest (ranger)... done.
+
+--- Fold 3 of 5 ---
+  glmmTMB (Beta GLMM)... done.
+  lmerTest (Gaussian LMM)... done.
+  Random Forest (ranger)... done.
+
+There were 39 warnings (use warnings() to see them)
+=============================================================
+PHASE 2 RESULTS — Best predictor set: full_selected 
+=============================================================
+
+--- Overall CV performance (mean ± sd across 5 folds) ---
+    Model R2_mean  R2_sd RMSE_mean RMSE_sd RRMSE_mean MAE_mean MAE_sd
+  glmmTMB  0.1681 0.1596    0.1964  0.0237     0.4536   0.1532 0.0235
+ lmerTest  0.1557 0.1354    0.1981  0.0220     0.4574   0.1558 0.0257
+       RF  0.1468 0.1657    0.1983  0.0160     0.4578   0.1590 0.0118
+
+--- Fold-level performance ---
+# A tibble: 3 × 13
+   fold glmmTMB_R2 glmmTMB_RMSE glmmTMB_RRMSE glmmTMB_MAE lmerTest_R2
+  <dbl>      <dbl>        <dbl>         <dbl>       <dbl>       <dbl>
+1     1     0.29          0.184         0.422       0.150      0.223 
+2     2    -0.0125        0.224         0.521       0.178     -0.0002
+3     3     0.227         0.181         0.418       0.132      0.244 
+# ℹ 7 more variables: lmerTest_RMSE <dbl>, lmerTest_RRMSE <dbl>,
+#   lmerTest_MAE <dbl>, RF_R2 <dbl>, RF_RMSE <dbl>, RF_RRMSE <dbl>,
+#   RF_MAE <dbl>
+
+Results saved to 2026-03-05.ndfa_model_selection_cv_results.rds
 ```
