@@ -18,9 +18,15 @@ name: Test R Scripts
 on:
   push:
     branches: [main, develop]
+    paths:
+      - 'farm_size_project_complete/**'
+      - '.github/workflows/test-scripts.yml'
   pull_request:
     branches: [main]
-  workflow_dispatch:
+    paths:
+      - 'farm_size_project_complete/**'
+      - '.github/workflows/test-scripts.yml'
+  workflow_dispatch:   # manual trigger always works regardless of paths
 
 jobs:
 

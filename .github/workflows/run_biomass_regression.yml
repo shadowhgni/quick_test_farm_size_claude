@@ -1,184 +1,133 @@
 name: Biomass Trajectory Regression
 
-# Triggers: push to main/master that touches the script or data,
-# OR manual run with optional parameter overrides.
 on:
   push:
     branches: [main, master]
     paths:
-      - 'improve_soy_biom_RS_reg/**'
+      - 'improve_soy_biom_RS_reg/**'   # only fires when THIS folder changes
   workflow_dispatch:
     inputs:
       cv_folds:
         description: 'Spatial CV folds'
-        required: false
         default: '5'
       n_trees:
-        description: 'RF number of trees'
-        required: false
+        description: 'RF trees'
         default: '500'
-      seed:
-        description: 'Random seed'
-        required: false
-        default: '42'
 
 jobs:
   run-regression:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: improve_soy_biom_RS_reg
 
     steps:
-      # ── 1. Checkout ────────────────────────────────────────────────
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
-      # ── 2. Python setup ────────────────────────────────────────────
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: 'improve_soy_biom_RS_reg/requirements.txt'
 
-      # ── 3. Install dependencies ────────────────────────────────────
       - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install pandas numpy scikit-learn xgboost shap pyreadr
+        run: pip install -r improve_soy_biom_RS_reg/requirements.txt
 
-      # ── 4. Verify data files are present ───────────────────────────
       - name: Check data files
+        working-directory: improve_soy_biom_RS_reg
         run: |
-          echo "=== Files in working directory ==="
-          ls -lh *.csv *.rds 2>/dev/null || echo "No .csv/.rds files found"
+          echo "=== Directory contents ==="
+          ls -lh
           python3 - << 'EOF'
           import sys
           from pathlib import Path
-
-          fusion_candidates = [
-              "soybean_fusion_indices_all.csv",
-              "soybean_fusion_indices_all.rds",
-          ]
-          biomass_candidates = [
-              "2026-03-02.intermediate_soybean_df.csv",
-              "2026-03-02.intermediate_soybean_df.rds",
-          ]
-
-          for group, candidates in [("FUSION", fusion_candidates),
-                                     ("BIOMASS", biomass_candidates)]:
-              found = [c for c in candidates if Path(c).exists()]
-              if found:
-                  print(f"  {group}: found {found[0]}")
-              else:
-                  print(f"  ERROR: {group} file missing! Expected one of: {candidates}")
-                  sys.exit(1)
-          print("All data files present.")
+          missing = []
+          for f in ["soybean_fusion_indices_all.csv",
+                    "2026-03-02.intermediate_soybean_df.csv",
+                    "biomass_trajectory_regression.py"]:
+              if not Path(f).exists():
+                  # also try .rds
+                  if not Path(f).with_suffix('.rds').exists():
+                      missing.append(f)
+          if missing:
+              print(f"MISSING: {missing}")
+              sys.exit(1)
+          print("All files present.")
           EOF
 
-      # ── 5. Run regression ──────────────────────────────────────────
-      - name: Run biomass trajectory regression
+      - name: Run regression
+        working-directory: improve_soy_biom_RS_reg
         run: |
           python3 biomass_trajectory_regression.py \
             --fusion   soybean_fusion_indices_all.csv \
             --biomass  "2026-03-02.intermediate_soybean_df.csv" \
             --cv-folds ${{ github.event.inputs.cv_folds || '5' }} \
             --n-trees  ${{ github.event.inputs.n_trees || '500' }} \
-            --seed     ${{ github.event.inputs.seed || '42' }} \
             --outdir   biomass_v5_outputs \
             2>&1 | tee run_log.txt
 
-      # ── 6. Print key metrics to the Actions log ────────────────────
-      - name: Print metrics summary
+      - name: Print metrics
+        working-directory: improve_soy_biom_RS_reg
+        if: always()
         run: |
-          echo ""
-          echo "════════════════════════════════════════════════════"
+          echo "================================================"
           echo "  METRICS SUMMARY"
-          echo "════════════════════════════════════════════════════"
+          echo "================================================"
           python3 - << 'EOF'
           import pandas as pd
           from pathlib import Path
-
           p = Path("biomass_v5_outputs/model_comparison.csv")
           if not p.exists():
-              print("model_comparison.csv not found — regression may have failed")
-              exit(1)
-
-          df = pd.read_csv(p)
-          print(df[["label","MAE","RMSE","R2","RPD"]].to_string(index=False))
-          print()
-          best = df.loc[df["R2"].idxmax()]
-          print(f"  Best R2 : {best['label']}")
-          print(f"  R2      : {best['R2']:.4f}")
-          print(f"  RMSE    : {best['RMSE']:.1f} kg/ha")
-          print(f"  RPD     : {best['RPD']:.2f}")
+              print("model_comparison.csv not found — script likely crashed")
+          else:
+              df = pd.read_csv(p)
+              print(df[["label","MAE","RMSE","R2","RPD"]].to_string(index=False))
+              best = df.loc[df["R2"].idxmax()]
+              print(f"\n  Best: {best['label']}  R2={best['R2']:.4f}  RMSE={best['RMSE']:.1f}  RPD={best['RPD']:.2f}")
           EOF
-
           echo ""
-          echo "════════════════════════════════════════════════════"
+          echo "================================================"
           echo "  TOP 20 FEATURES (RF MDI)"
-          echo "════════════════════════════════════════════════════"
+          echo "================================================"
           python3 - << 'EOF'
           import pandas as pd
           from pathlib import Path
-
           p = Path("biomass_v5_outputs/feature_importance_RF.csv")
           if p.exists():
-              df = pd.read_csv(p)
-              print(df.head(20).to_string(index=False))
-          else:
-              print("feature_importance_RF.csv not found")
+              print(pd.read_csv(p).head(20).to_string(index=False))
           EOF
-
           echo ""
-          echo "════════════════════════════════════════════════════"
-          echo "  TOP 15 FEATURES (SHAP mean |value|)"
-          echo "════════════════════════════════════════════════════"
+          echo "================================================"
+          echo "  TOP 15 SHAP FEATURES"
+          echo "================================================"
           python3 - << 'EOF'
           import pandas as pd
           from pathlib import Path
-
           p = Path("biomass_v5_outputs/shap_summary.csv")
           if p.exists():
-              df = pd.read_csv(p)
-              print(df.head(15).to_string(index=False))
-          else:
-              print("shap_summary.csv not found (shap may not be installed)")
+              print(pd.read_csv(p).head(15).to_string(index=False))
           EOF
 
-      # ── 7. Upload all outputs as a downloadable artefact ──────────
-      - name: Upload results artefact
+      - name: Upload artefacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: biomass-regression-results-${{ github.run_number }}
-          path: |
-            improve_soy_biom_RS_reg/biomass_v5_outputs/
-            improve_soy_biom_RS_reg/run_log.txt
+          name: biomass-results-run${{ github.run_number }}
+          path: improve_soy_biom_RS_reg/biomass_v5_outputs/
           retention-days: 30
+          if-no-files-found: warn
 
-      # ── 8. Commit results CSV back to the repo ─────────────────────
-      # (only on push events, not manual runs, to avoid noise)
-      - name: Commit results back to repo
-        if: github.event_name == 'push'
+      - name: Commit results
+        if: github.event_name == 'push' && success()
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Stage only the lightweight CSV outputs, not large model pkl files
           git add \
-            biomass_v5_outputs/model_comparison.csv \
-            biomass_v5_outputs/predictions.csv \
-            biomass_v5_outputs/feature_importance_RF.csv \
-            biomass_v5_outputs/feature_importance_XGB.csv \
-            biomass_v5_outputs/shap_summary.csv \
-            run_log.txt \
+            improve_soy_biom_RS_reg/biomass_v5_outputs/model_comparison.csv \
+            improve_soy_biom_RS_reg/biomass_v5_outputs/predictions.csv \
+            improve_soy_biom_RS_reg/biomass_v5_outputs/feature_importance_RF.csv \
+            improve_soy_biom_RS_reg/biomass_v5_outputs/feature_importance_XGB.csv \
+            improve_soy_biom_RS_reg/biomass_v5_outputs/shap_summary.csv \
+            improve_soy_biom_RS_reg/run_log.txt \
             2>/dev/null || true
-
-          # Only commit if there are changes
-          if git diff --cached --quiet; then
-            echo "No output changes to commit."
-          else
-            git commit -m "ci: biomass regression results run #${{ github.run_number }}"
-            git push
-          fi
+          git diff --cached --quiet || \
+            git commit -m "ci: biomass regression run #${{ github.run_number }}" && git push
