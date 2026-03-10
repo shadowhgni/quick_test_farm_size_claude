@@ -1,0 +1,138 @@
+======================================================================
+BIOMASS TRAJECTORY REGRESSION  v5
+  One polygon per row  |  Sensor-aware  |  Spatial CV  |  Log target
+======================================================================
+  Fusion  : soybean_fusion_indices_all.csv
+  Biomass : 2026-03-02.intermediate_soybean_df.csv
+  Target  : soya_dm_biom_kg_ha
+  Year    : 2024
+  CV      : 5 folds (spatial block)
+  Seed    : 42
+  Outdir  : biomass_v5_outputs
+======================================================================
+
+[1] Loading data...
+  Fusion: 29,915 rows x 35 cols  [soybean_fusion_indices_all.csv]
+  Biomass: 2,139 rows x 290 cols  [2026-03-02.intermediate_soybean_df.csv]
+  Biomass after NaN-target drop: 2,017 (removed 122)
+
+[2] Filtering to year 2024 and pre-harvest obs...
+  Fusion rows kept: 8,694  (dropped 6,017 post-harvest/unmapped)
+  fusion_type remaining: sar_only=5,093  optical_only=2,656  fused=945
+
+[3] Computing sensor-aware trajectory features (v6)...
+  New S2 indices: ['SAVI', 'MSAVI2', 'WDRVI', 'GNDVI', 'RENDVI', 'LSWI2']
+  Added CCCI as full time-series index
+  Added CIre2 (B07/B05 - 1)
+  Trajectory table: 1,505 polygons x 287 cols
+  Added normalized integrals for available indices
+  Optical coverage: 1,418/1,505
+  SAR coverage    : 1,024/1,505
+
+[4] Adding derived cross-sensor and nonlinear features...
+  Added 10 derived features: ['NDVI_peak_sq', 'CCCI_peak', 'EVI_NDVI_gap', 'NDVI_int_x_NDRE_int', 'LSWI_peak', 'VI_SAR_peak', 'NDRE_DpRVI_peak', 'VH_NDVI_last', 'VH_VV_ratio_peak', 'SAR_opt_dtharv_diff']
+
+[5] Satellite-only design — no external covariates (v6)
+  Spatial CV: 'district_gadm' (22 groups)
+
+[6] Assembling polygon-level dataset (one row per polygon)...
+  Dataset: 1,505 polygons x 307 cols
+  Target: mean=761  std=410  skew=0.93  min=102  max=2833
+  log(1+y) skew: -0.37  (target <0.5)
+
+[7] Building feature matrix...
+  Dropping 20 cols (>50% NaN): ['NDVI_w01_mean', 'NDVI_w01_slope', 'NDRE_w01_mean', 'NDRE_w01_slope', 'EVI_w01_mean', 'EVI_w01_slope']...
+  VarianceThreshold dropped 187 near-constant features
+  Feature matrix: 1505 x 77  (77 satellite  +  0 agronomic)
+
+[8] Spatial CV: 23 groups -> 5 folds (district_gadm)
+
+[9] Training models...
+
+  -- XGBoost --
+  XGBoost OOF                   MAE=  355.9  RMSE=  460.0  R2=-0.262  Bias=-97.3  RPD=0.89
+
+  -- RF --
+  RF OOF                        MAE=  346.6  RMSE=  447.5  R2=-0.194  Bias=-131.1  RPD=0.92
+
+  -- Ridge --
+  Ridge OOF                     MAE=  329.6  RMSE=  428.4  R2=-0.095  Bias=-111.5  RPD=0.96
+
+  CV time: 6s
+
+[10] Ensemble (R2-weighted average of OOF predictions)...
+  NOTE: all OOF R2 negative -> single best model (Ridge)
+  Weights: XGBoost=0.000  RF=0.000  Ridge=1.000
+  Ensemble (R2-weighted)        MAE=  329.6  RMSE=  428.4  R2=-0.095  Bias=-111.5  RPD=0.96
+
+[11] Retraining final models on full dataset...
+
+  Top 25 features (RF MDI):
+                   feature   RF_MDI
+   CROSS_RATIO_DB_integral 0.044471
+VH_backscatter_db_integral 0.044265
+          VV_mean_integral 0.042993
+              RVI_integral 0.042857
+             RFDI_integral 0.041716
+             RFDI_doy_peak 0.022884
+            CIre2_integral 0.020816
+             CIre_integral 0.020461
+            DpRVI_doy_peak 0.020211
+         B8A_mean_integral 0.019914
+   CROSS_RATIO_DB_doy_peak 0.019769
+              EVI_integral 0.019382
+         B04_mean_integral 0.019314
+              RVI_doy_peak 0.018962
+             SAVI_integral 0.018878
+             CCCI_integral 0.018829
+            GNDVI_integral 0.018403
+         B11_mean_integral 0.018091
+         B12_mean_integral 0.018067
+          VV_mean_doy_peak 0.017821
+       NDVI_int_x_NDRE_int 0.017678
+         B08_mean_integral 0.017624
+           RENDVI_integral 0.017561
+            WDRVI_integral 0.017522
+             NDWI_integral 0.017412
+
+[12] SHAP values...
+  Top 15 features by mean |SHAP|:
+                   feature  mean_abs_shap
+               NDVI_dtharv       0.067395
+   CROSS_RATIO_DB_doy_peak       0.044273
+            WDRVI_integral       0.041875
+VH_backscatter_db_integral       0.041845
+          VV_mean_integral       0.041757
+             CIre_integral       0.041668
+             RFDI_integral       0.040603
+   CROSS_RATIO_DB_integral       0.034292
+              RVI_integral       0.032766
+            DpRVI_doy_peak       0.029742
+            CIre2_integral       0.027289
+            VV_mean_dtharv       0.025855
+                EVI_dtharv       0.021630
+          VV_mean_doy_peak       0.021407
+             CCCI_integral       0.020333
+
+[13] Saving outputs...
+
+======================================================================
+FINAL RESULTS  (spatial out-of-fold)
+======================================================================
+  Polygons       : 1,505
+  Features       : 77  (77 satellite + 0 agronomic)
+  CV strategy    : spatial (district_gadm)  5 folds
+
+                 label   MAE  RMSE      R2  RPD
+           XGBoost OOF 355.9 460.0 -0.2619 0.89
+                RF OOF 346.6 447.5 -0.1939 0.92
+             Ridge OOF 329.6 428.4 -0.0945 0.96
+Ensemble (R2-weighted) 329.6 428.4 -0.0945 0.96
+
+  Best R2: Ridge OOF  R2=-0.095  RMSE=428.4  RPD=0.96
+
+  RPD guide: >1.4 usable  |  >1.8 good  |  >2.0 excellent
+  (biomass std = 410 kg/ha;  random baseline RMSE = 410)
+
+  Outputs -> /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/improve_soy_biom_RS_reg/biomass_v5_outputs
+======================================================================

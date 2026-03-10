@@ -1,0 +1,5 @@
+label,MAE,RMSE,R2,Bias,RPD,model,cv
+XGBoost OOF,355.9,460.0,-0.2619,-97.3,0.89,XGBoost,spatial_OOF
+RF OOF,346.6,447.5,-0.1939,-131.1,0.92,RF,spatial_OOF
+Ridge OOF,329.6,428.4,-0.0945,-111.5,0.96,Ridge,spatial_OOF
+Ensemble (R2-weighted),329.6,428.4,-0.0945,-111.5,0.96,Ensemble,
