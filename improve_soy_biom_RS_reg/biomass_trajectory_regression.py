@@ -364,23 +364,6 @@ for b04, b08, b8a, b11, b03 in [("B04_mean","B08_mean","B8A_mean","B11_mean","B0
 new_s2 = [c for c in ["SAVI","MSAVI2","WDRVI","GNDVI","RENDVI","LSWI2"] if c in df_fus.columns]
 print(f"  New S2 indices: {new_s2}")
 
-# CCCI (Canopy Chlorophyll Content Index = NDRE/NDVI) as a full time series
-# so the trajectory engine produces _peak, _mean, _last, _integral, _slope etc.
-# This is the top SHAP feature — giving it all 8 stats should lift R2.
-if "NDRE" in df_fus.columns and "NDVI" in df_fus.columns:
-    df_fus["CCCI"] = df_fus["NDRE"] / (df_fus["NDVI"].abs() + _EPS)
-    # Clip extreme CCCI values (can blow up when NDVI ≈ 0, e.g. bare soil)
-    df_fus["CCCI"] = df_fus["CCCI"].clip(-5, 5)
-    new_s2 = new_s2 + ["CCCI"]
-    print("  Added CCCI as full time-series index")
-
-# Also add Red-Edge Chlorophyll Index: CIre2 = B07/B05 - 1 (when B05/B07 available)
-if "B05_mean" in df_fus.columns and "B07_mean" in df_fus.columns:
-    df_fus["CIre2"] = df_fus["B07_mean"] / (df_fus["B05_mean"] + _EPS) - 1
-    df_fus["CIre2"] = df_fus["CIre2"].clip(-2, 20)
-    new_s2 = new_s2 + ["CIre2"]
-    print("  Added CIre2 (B07/B05 - 1)")
-
 OPT_IDX = [c for c in
            ["NDVI","EVI","NDRE","NDWI","NDMI","NBR","CIre",
             "B04_mean","B08_mean","B8A_mean","B11_mean","B12_mean"]
@@ -520,17 +503,6 @@ for poly in df_fus["agronomic_key"].unique():
 
 df_traj = pd.DataFrame(traj_records)
 print(f"  Trajectory table: {len(df_traj):,} polygons x {df_traj.shape[1]} cols")
-
-# Normalized integrals: removes the artefact that polygons with more
-# observations have larger raw integrals regardless of crop condition.
-# AUC / season_span_days → mean signal intensity over the season.
-span = df_traj["season_span_days"].replace(0, np.nan)
-for idx in ["NDVI","NDRE","EVI","CCCI","GNDVI","RENDVI","RVI","DpRVI","VH_mean"]:
-    raw_col = f"{idx}_integral"
-    new_col = f"{idx}_norm_integral"
-    if raw_col in df_traj.columns:
-        df_traj[new_col] = df_traj[raw_col] / span
-print(f"  Added normalized integrals for available indices")
 print(f"  Optical coverage: {(df_traj['n_obs_optical']>0).sum():,}/{len(df_traj):,}")
 print(f"  SAR coverage    : {(df_traj['n_obs_sar']>0).sum():,}/{len(df_traj):,}")
 
@@ -652,12 +624,8 @@ TRAJ_SUFF = ("_peak","_mean","_last","_dtharv","_std",
              "_integral","_slope","_doy_peak")
 SAT_COLS  = [c for c in df_model.columns
              if (any(c.endswith(s) for s in TRAJ_SUFF)
-                 or c.endswith("_norm_integral")   # normalized AUC features
                  or c in ["n_obs_optical","n_obs_sar","n_obs_total",
-                           "season_span_days",
-                           "green_up_doy","senescence_doy",
-                           "ndvi_at_senes","season_length",
-                           "VH_entropy","VH_autocorr_l1"]
+                           "season_span_days"]
                  or c in der)]
 
 FEAT_COLS = list(dict.fromkeys(SAT_COLS + AGRO_COLS))
@@ -695,20 +663,6 @@ if n_bad:
     X_arr[~np.isfinite(X_arr)] = 0.0
 
 X     = X_arr
-
-# Variance threshold: drop features whose variance is < 0.1% of the
-# maximum variance.  Removes near-constant columns that add noise.
-from sklearn.feature_selection import VarianceThreshold
-var_thresh = np.var(X, axis=0).max() * 0.001
-vt = VarianceThreshold(threshold=var_thresh)
-X_vt = vt.fit_transform(X)
-kept_mask = vt.get_support()
-dropped_vt = [c for c, k in zip(FEAT_COLS, kept_mask) if not k]
-if dropped_vt:
-    print(f"  VarianceThreshold dropped {len(dropped_vt)} near-constant features")
-FEAT_COLS = [c for c, k in zip(FEAT_COLS, kept_mask) if k]
-X = X_vt
-
 n_sat  = len([c for c in FEAT_COLS if c in SAT_COLS])
 n_agro = len([c for c in FEAT_COLS if c in AGRO_COLS])
 print(f"  Feature matrix: {X.shape[0]} x {X.shape[1]}"
