@@ -17,6 +17,8 @@ on:
 jobs:
   run-regression:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed for the commit-back step
 
     steps:
       - name: Checkout
