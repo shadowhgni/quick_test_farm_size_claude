@@ -20,13 +20,13 @@ on:
     branches: [main, develop]
     paths:
       - 'farm_size_project_complete/**'
-      - '.github/workflows/test-scripts.yml'
+      - '.github/workflows/test-r-scripts.yml'
   pull_request:
     branches: [main]
     paths:
       - 'farm_size_project_complete/**'
-      - '.github/workflows/test-scripts.yml'
-  workflow_dispatch:   # manual trigger always works regardless of paths
+      - '.github/workflows/test-r-scripts.yml'
+  workflow_dispatch:   # keeps the manual "Run workflow" button
 
 jobs:
 
