@@ -20,12 +20,12 @@ on:
     branches: [main, develop]
     paths:
       - 'farm_size_project_complete/**'
-      - '.github/workflows/test-r-scripts.yml'
+      - '.github/workflows/test-scripts.yml'
   pull_request:
     branches: [main]
     paths:
       - 'farm_size_project_complete/**'
-      - '.github/workflows/test-r-scripts.yml'
+      - '.github/workflows/test-scripts.yml'
   workflow_dispatch:   # keeps the manual "Run workflow" button
 
 jobs:

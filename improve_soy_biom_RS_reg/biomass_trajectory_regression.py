@@ -319,17 +319,121 @@ print("  fusion_type remaining: " + "  ".join(f"{k}={v:,}" for k, v in ft.items(
 
 # ══════════════════════════════════════════════════════════════════════
 # 3. SENSOR-AWARE TRAJECTORY FEATURES  (one row per polygon)
+#
+# v6 additions vs v5:
+#  a) More Sentinel-2 indices computed from raw bands already in the data:
+#     SAVI, MSAVI2, GNDVI, RENDVI, WDRVI, LAI_proxy, RedEdge_slope
+#  b) Sub-season windows based on soybean phenology in SSA:
+#     Early  = Jan 1 – Jan 31     (vegetative)
+#     Mid    = Feb 1 – Feb 14     (pod fill / reproductive)
+#     Late   = Feb 15 – harvest   (maturation / senescence)
+#     Window mean/max/slope computed per sensor per index.
+#  c) Phenological timing scalars:
+#     green_up_doy   = first date NDVI exceeds 0.35
+#     senescence_doy = last date NDVI exceeds 0.50
+#     season_length  = senescence_doy - green_up_doy
+#     ndvi_at_senes  = NDVI value at senescence date
+#  d) SAR temporal-structure features:
+#     VH_entropy (Shannon entropy of obs discretised to 10 bins)
+#     VH_autocorr_lag1 (lag-1 autocorrelation of VH time series)
 # ══════════════════════════════════════════════════════════════════════
-print("\n[3] Computing sensor-aware trajectory features...")
+print("\n[3] Computing sensor-aware trajectory features (v6)...")
+
+# ── Compute additional S2 indices from raw bands ─────────────────────
+_L = 0.5   # SAVI soil factor
+for b04, b08, b8a, b11, b03 in [("B04_mean","B08_mean","B8A_mean","B11_mean","B03_mean")]:
+    if all(c in df_fus.columns for c in [b04, b08]):
+        # SAVI = (NIR-Red)/(NIR+Red+L) * (1+L)
+        df_fus["SAVI"] = ((df_fus[b08] - df_fus[b04])
+                          / (df_fus[b08] + df_fus[b04] + _L + _EPS)) * (1 + _L)
+        # MSAVI2 = (2*NIR+1 - sqrt((2*NIR+1)^2 - 8*(NIR-Red))) / 2
+        _tmp = 2*df_fus[b08] + 1
+        df_fus["MSAVI2"] = (_tmp - np.sqrt(np.maximum(_tmp**2 - 8*(df_fus[b08]-df_fus[b04]), 0))) / 2
+        # WDRVI = (0.1*NIR - Red)/(0.1*NIR + Red)  — less saturated than NDVI
+        df_fus["WDRVI"] = (0.1*df_fus[b08] - df_fus[b04]) / (0.1*df_fus[b08] + df_fus[b04] + _EPS)
+    if all(c in df_fus.columns for c in [b03, b08]):
+        # GNDVI = (NIR - Green)/(NIR + Green)  — sensitive to chlorophyll
+        df_fus["GNDVI"] = (df_fus[b08] - df_fus[b03]) / (df_fus[b08] + df_fus[b03] + _EPS)
+    if all(c in df_fus.columns for c in [b8a, b04]):
+        # RENDVI = (NIR_re - Red)/(NIR_re + Red)  — red-edge NDVI
+        df_fus["RENDVI"] = (df_fus[b8a] - df_fus[b04]) / (df_fus[b8a] + df_fus[b04] + _EPS)
+    if all(c in df_fus.columns for c in [b8a, b11]):
+        # LSWI = (NIR_re - SWIR1)/(NIR_re + SWIR1)  — canopy water
+        df_fus["LSWI2"] = (df_fus[b8a] - df_fus[b11]) / (df_fus[b8a] + df_fus[b11] + _EPS)
+
+new_s2 = [c for c in ["SAVI","MSAVI2","WDRVI","GNDVI","RENDVI","LSWI2"] if c in df_fus.columns]
+print(f"  New S2 indices: {new_s2}")
+
+# CCCI (Canopy Chlorophyll Content Index = NDRE/NDVI) as a full time series
+# so the trajectory engine produces _peak, _mean, _last, _integral, _slope etc.
+# This is the top SHAP feature — giving it all 8 stats should lift R2.
+if "NDRE" in df_fus.columns and "NDVI" in df_fus.columns:
+    df_fus["CCCI"] = df_fus["NDRE"] / (df_fus["NDVI"].abs() + _EPS)
+    # Clip extreme CCCI values (can blow up when NDVI ≈ 0, e.g. bare soil)
+    df_fus["CCCI"] = df_fus["CCCI"].clip(-5, 5)
+    new_s2 = new_s2 + ["CCCI"]
+    print("  Added CCCI as full time-series index")
+
+# Also add Red-Edge Chlorophyll Index: CIre2 = B07/B05 - 1 (when B05/B07 available)
+if "B05_mean" in df_fus.columns and "B07_mean" in df_fus.columns:
+    df_fus["CIre2"] = df_fus["B07_mean"] / (df_fus["B05_mean"] + _EPS) - 1
+    df_fus["CIre2"] = df_fus["CIre2"].clip(-2, 20)
+    new_s2 = new_s2 + ["CIre2"]
+    print("  Added CIre2 (B07/B05 - 1)")
 
 OPT_IDX = [c for c in
            ["NDVI","EVI","NDRE","NDWI","NDMI","NBR","CIre",
             "B04_mean","B08_mean","B8A_mean","B11_mean","B12_mean"]
+           + new_s2
            if c in df_fus.columns]
 SAR_IDX = [c for c in
            ["VV_mean","VH_mean","RVI","DpRVI",
             "CROSS_RATIO_DB","RFDI","VH_backscatter_db"]
            if c in df_fus.columns]
+
+# ── Sub-season window definitions (DOY-based, year-agnostic) ──────────
+# Soybean SSA 2024 season: Jan–Mar harvest
+WINDOWS = {
+    "early": (pd.Timestamp("2024-01-01"), pd.Timestamp("2024-01-31")),   # vegetative
+    "mid":   (pd.Timestamp("2024-02-01"), pd.Timestamp("2024-02-14")),   # pod fill
+    "late":  (pd.Timestamp("2024-02-15"), pd.Timestamp("2024-03-31")),   # maturation
+}
+
+def _window_stats(g: pd.DataFrame, col: str, w_start, w_end) -> dict:
+    """Mean, max, and slope for one column within a date window."""
+    gw = g[(g["date"] >= w_start) & (g["date"] <= w_end)]
+    if len(gw) == 0 or col not in gw.columns:
+        return {f"{col}_w{w_start.month:02d}_mean": np.nan,
+                f"{col}_w{w_start.month:02d}_max":  np.nan,
+                f"{col}_w{w_start.month:02d}_slope":np.nan}
+    s = gw[col].values.astype(float)
+    valid = np.isfinite(s)
+    tag = f"{col}_w{w_start.month:02d}"
+    return {
+        f"{tag}_mean":  float(np.nanmean(s)) if valid.any() else np.nan,
+        f"{tag}_max":   float(np.nanmax(s))  if valid.any() else np.nan,
+        f"{tag}_slope": _slope_last2(gw["date"], gw[col]) if valid.sum() >= 2 else np.nan,
+    }
+
+
+def _sar_entropy(series: np.ndarray) -> float:
+    """Shannon entropy of a 1-D backscatter series (10 bins)."""
+    v = series[np.isfinite(series)]
+    if len(v) < 3:
+        return np.nan
+    counts, _ = np.histogram(v, bins=min(10, len(v)))
+    counts = counts[counts > 0].astype(float)
+    p = counts / counts.sum()
+    return float(-np.sum(p * np.log2(p + _EPS)))
+
+
+def _autocorr_lag1(series: np.ndarray) -> float:
+    """Lag-1 autocorrelation of a time series."""
+    v = series[np.isfinite(series)]
+    if len(v) < 3:
+        return np.nan
+    return float(np.corrcoef(v[:-1], v[1:])[0, 1])
+
 
 traj_records: list = []
 
@@ -338,24 +442,73 @@ for poly in df_fus["agronomic_key"].unique():
     harvest_dt = g_all["_harvest"].iloc[0]
     rec: dict  = {"agronomic_key": poly}
 
-    # Optical trajectory (fused + optical_only)
-    g_opt = g_all[g_all["_opt"]]
+    # ── Optical trajectory (fused + optical_only) ─────────────────────
+    g_opt = g_all[g_all["_opt"]].copy()
+
     for idx in OPT_IDX:
         rec.update(_traj_stats(g_opt, idx, harvest_dt)
                    if len(g_opt) > 0 else
                    {f"{idx}_{s}": np.nan for s in
                     ["peak","mean","last","dtharv","std","integral",
                      "slope","doy_peak"]})
+
+    # Sub-season window stats for key optical indices
+    for wname, (ws, we) in WINDOWS.items():
+        for idx in ["NDVI","NDRE","EVI","SAVI","GNDVI","RENDVI"]:
+            if idx in g_opt.columns:
+                rec.update(_window_stats(g_opt, idx, ws, we))
+
+    # Phenological timing from NDVI
+    if "NDVI" in g_opt.columns and len(g_opt) > 0:
+        ndvi_s = g_opt["NDVI"].values.astype(float)
+        doy_s  = g_opt["date"].dt.dayofyear.values
+
+        gu_mask = (ndvi_s >= 0.35) & np.isfinite(ndvi_s)
+        rec["green_up_doy"]  = float(doy_s[gu_mask][0]) if gu_mask.any() else np.nan
+
+        sn_mask = (ndvi_s >= 0.50) & np.isfinite(ndvi_s)
+        if sn_mask.any():
+            rec["senescence_doy"] = float(doy_s[sn_mask][-1])
+            rec["ndvi_at_senes"]  = float(ndvi_s[sn_mask][-1])
+        else:
+            rec["senescence_doy"] = np.nan
+            rec["ndvi_at_senes"]  = np.nan
+
+        if not np.isnan(rec.get("green_up_doy", np.nan)) and            not np.isnan(rec.get("senescence_doy", np.nan)):
+            rec["season_length"] = rec["senescence_doy"] - rec["green_up_doy"]
+        else:
+            rec["season_length"] = np.nan
+    else:
+        for k in ["green_up_doy","senescence_doy","ndvi_at_senes","season_length"]:
+            rec[k] = np.nan
+
     rec["n_obs_optical"] = len(g_opt)
 
-    # SAR trajectory (fused + sar_only)
-    g_sar = g_all[g_all["_sar"]]
+    # ── SAR trajectory (fused + sar_only) ─────────────────────────────
+    g_sar = g_all[g_all["_sar"]].copy()
+
     for idx in SAR_IDX:
         rec.update(_traj_stats(g_sar, idx, harvest_dt)
                    if len(g_sar) > 0 else
                    {f"{idx}_{s}": np.nan for s in
                     ["peak","mean","last","dtharv","std","integral",
                      "slope","doy_peak"]})
+
+    # SAR window stats
+    for wname, (ws, we) in WINDOWS.items():
+        for idx in ["VH_mean","VV_mean","RVI","DpRVI"]:
+            if idx in g_sar.columns:
+                rec.update(_window_stats(g_sar, idx, ws, we))
+
+    # SAR temporal structure
+    if "VH_mean" in g_sar.columns and len(g_sar) > 0:
+        vh_arr = g_sar["VH_mean"].values.astype(float)
+        rec["VH_entropy"]     = _sar_entropy(vh_arr)
+        rec["VH_autocorr_l1"] = _autocorr_lag1(vh_arr)
+    else:
+        rec["VH_entropy"]     = np.nan
+        rec["VH_autocorr_l1"] = np.nan
+
     rec["n_obs_sar"] = len(g_sar)
 
     rec["n_obs_total"]      = len(g_all)
@@ -367,6 +520,17 @@ for poly in df_fus["agronomic_key"].unique():
 
 df_traj = pd.DataFrame(traj_records)
 print(f"  Trajectory table: {len(df_traj):,} polygons x {df_traj.shape[1]} cols")
+
+# Normalized integrals: removes the artefact that polygons with more
+# observations have larger raw integrals regardless of crop condition.
+# AUC / season_span_days → mean signal intensity over the season.
+span = df_traj["season_span_days"].replace(0, np.nan)
+for idx in ["NDVI","NDRE","EVI","CCCI","GNDVI","RENDVI","RVI","DpRVI","VH_mean"]:
+    raw_col = f"{idx}_integral"
+    new_col = f"{idx}_norm_integral"
+    if raw_col in df_traj.columns:
+        df_traj[new_col] = df_traj[raw_col] / span
+print(f"  Added normalized integrals for available indices")
 print(f"  Optical coverage: {(df_traj['n_obs_optical']>0).sum():,}/{len(df_traj):,}")
 print(f"  SAR coverage    : {(df_traj['n_obs_sar']>0).sum():,}/{len(df_traj):,}")
 
@@ -433,43 +597,17 @@ print(f"  Added {len(der)} derived features: {der}")
 
 
 # ══════════════════════════════════════════════════════════════════════
-# 5. AGRONOMIC CONTEXT SELECTION
+# 5. SATELLITE-ONLY — no external covariates
 # ══════════════════════════════════════════════════════════════════════
-print("\n[5] Selecting RS-only climate covariates (AgERA5 / CHIRPS / GPS)...")
+print("\n[5] Satellite-only design — no external covariates (v6)")
+# All signal comes from Sentinel-1 / Sentinel-2 trajectories.
+# Climate (agera5, chirps) and GPS dropped: within spatial CV folds
+# (grouped by district) climate has near-zero within-group variance,
+# so it cannot transfer across spatial holdouts.
 
-# RS-ONLY DESIGN: only gridded remote-sensing climate products are used.
-# No field/proximal measurements (soil, management, yield components).
-# This makes the model deployable without any ground data at prediction time.
-AGRO_CANDIDATES = [
-    # AgERA5 (ERA5-based gridded climate — 0.1 deg, daily)
-    "agera5_cum_rain_mm",      # cumulative growing-season rainfall
-    "agera5_cum_srad_mj",      # cumulative solar radiation (drives photosynthesis)
-    "agera5_cum_pet",          # potential evapotranspiration (water demand)
-    "agera5_avg_tmax",         # average daily Tmax (heat stress indicator)
-    "agera5_avg_tmin",         # average daily Tmin (chilling/night respiration)
-    "agera5_cum_rh09",         # cumulative RH at 09:00 (fungal pressure proxy)
-    # CHIRPS (satellite-derived rainfall — 0.05 deg, pentadal)
-    "chirps_cum_mm",           # try both column name variants
-    "chirps_cum_rain_mm",
-    # Aridity (derived from PET/rainfall — fully RS-based)
-    "aridity_index",
-    # GPS coordinates (free spatial covariate, no field measurement required)
-    "x","y",
-]
+AGRO_COLS: List[str] = []   # empty — kept for structural compatibility
 
-AGRO_COLS: List[str] = []
-for c in AGRO_CANDIDATES:
-    if c not in df_bio.columns:
-        continue
-    s = pd.to_numeric(df_bio[c], errors="coerce")
-    if s.notna().mean() < 0.50 or s.nunique() <= 1:
-        continue
-    df_bio[c] = s
-    AGRO_COLS.append(c)
-
-print(f"  {len(AGRO_COLS)} agronomic columns: {AGRO_COLS}")
-
-# Spatial CV grouping column
+# Spatial CV grouping column (from biomass file only for grouping, not as feature)
 SPATIAL_COL: Optional[str] = None
 for cand in ["district_gadm","district","ward","village","province"]:
     if cand in df_bio.columns and df_bio[cand].nunique() >= 3:
@@ -514,8 +652,12 @@ TRAJ_SUFF = ("_peak","_mean","_last","_dtharv","_std",
              "_integral","_slope","_doy_peak")
 SAT_COLS  = [c for c in df_model.columns
              if (any(c.endswith(s) for s in TRAJ_SUFF)
+                 or c.endswith("_norm_integral")   # normalized AUC features
                  or c in ["n_obs_optical","n_obs_sar","n_obs_total",
-                           "season_span_days"]
+                           "season_span_days",
+                           "green_up_doy","senescence_doy",
+                           "ndvi_at_senes","season_length",
+                           "VH_entropy","VH_autocorr_l1"]
                  or c in der)]
 
 FEAT_COLS = list(dict.fromkeys(SAT_COLS + AGRO_COLS))
@@ -553,6 +695,20 @@ if n_bad:
     X_arr[~np.isfinite(X_arr)] = 0.0
 
 X     = X_arr
+
+# Variance threshold: drop features whose variance is < 0.1% of the
+# maximum variance.  Removes near-constant columns that add noise.
+from sklearn.feature_selection import VarianceThreshold
+var_thresh = np.var(X, axis=0).max() * 0.001
+vt = VarianceThreshold(threshold=var_thresh)
+X_vt = vt.fit_transform(X)
+kept_mask = vt.get_support()
+dropped_vt = [c for c, k in zip(FEAT_COLS, kept_mask) if not k]
+if dropped_vt:
+    print(f"  VarianceThreshold dropped {len(dropped_vt)} near-constant features")
+FEAT_COLS = [c for c, k in zip(FEAT_COLS, kept_mask) if k]
+X = X_vt
+
 n_sat  = len([c for c in FEAT_COLS if c in SAT_COLS])
 n_agro = len([c for c in FEAT_COLS if c in AGRO_COLS])
 print(f"  Feature matrix: {X.shape[0]} x {X.shape[1]}"
