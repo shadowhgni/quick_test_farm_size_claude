@@ -47,15 +47,16 @@ For each spectral index / band:
   _doy_peak  day-of-year at which the peak occurred
   n_obs_*    observation count per sensor group
 
-Agronomic context (from biomass file — auto-selected)
+Climate covariates (RS-only — no field measurements)
 -----------------------------------------------------
-Soil:    soil_pH, soil_phos, soil_OC, soil_ECEC, sand_content_perc
-Weather: agera5_cum_rain_mm, agera5_cum_srad_mj, agera5_cum_pet,
-         agera5_avg_tmax, agera5_avg_tmin, chirps_cum_rain_mm, aridity_index
-Agronomy: fertilizer_use, inoculant_use, weed_mgt_score,
-          plant_density_per_ha, mineral_n_rate_kg_ha, mineral_p_rate_kg_ha,
-          measured_main_soya_field_ha, crop_duration, gdd
-Location: elevation, x, y
+AgERA5:  agera5_cum_rain_mm, agera5_cum_srad_mj, agera5_cum_pet,
+         agera5_avg_tmax, agera5_avg_tmin, agera5_cum_rh09
+CHIRPS:  chirps_cum_rain_mm  (satellite-gauge merged rainfall)
+Derived: aridity_index       (PET/rainfall — fully gridded)
+GPS:     x, y                (free spatial covariate)
+
+NO soil, management, or field measurement data is used.
+The model is deployable anywhere with Sentinel-1/2 + AgERA5/CHIRPS coverage.
 
 Model ensemble
 --------------
@@ -434,25 +435,26 @@ print(f"  Added {len(der)} derived features: {der}")
 # ══════════════════════════════════════════════════════════════════════
 # 5. AGRONOMIC CONTEXT SELECTION
 # ══════════════════════════════════════════════════════════════════════
-print("\n[5] Selecting agronomic context features (auto)...")
+print("\n[5] Selecting RS-only climate covariates (AgERA5 / CHIRPS / GPS)...")
 
+# RS-ONLY DESIGN: only gridded remote-sensing climate products are used.
+# No field/proximal measurements (soil, management, yield components).
+# This makes the model deployable without any ground data at prediction time.
 AGRO_CANDIDATES = [
-    # Soil
-    "soil_pH","soil_phos","soil_OC","soil_ECEC","sand_content_perc","sand",
-    # Weather (prefer agera5; fallback chirps/nasa)
-    "agera5_cum_rain_mm","agera5_cum_srad_mj","agera5_cum_pet",
-    "agera5_avg_tmax","agera5_avg_tmin","agera5_cum_rh09",
-    "chirps_cum_rain_mm","aridity_index",
-    "nasa_avg_tmin","nasa_avg_tmax","nasa_cum_srad_wm2",
-    "rain_2024_dec_mar_mm","rain_2024_jan_mm","rain_2024_feb_mm","rain_2024_mar_mm",
-    # Agronomy / management
-    "fertilizer_use","inoculant_use","weed_mgt_score",
-    "plant_density_per_ha","seeding_rate_kg_ha",
-    "mineral_n_rate_kg_ha","mineral_p_rate_kg_ha","mineral_k_rate_kg_ha",
-    "measured_main_soya_field_ha","main_soya_field_ha",
-    "crop_duration","gdd",
-    # Geography
-    "elevation","x","y",
+    # AgERA5 (ERA5-based gridded climate — 0.1 deg, daily)
+    "agera5_cum_rain_mm",      # cumulative growing-season rainfall
+    "agera5_cum_srad_mj",      # cumulative solar radiation (drives photosynthesis)
+    "agera5_cum_pet",          # potential evapotranspiration (water demand)
+    "agera5_avg_tmax",         # average daily Tmax (heat stress indicator)
+    "agera5_avg_tmin",         # average daily Tmin (chilling/night respiration)
+    "agera5_cum_rh09",         # cumulative RH at 09:00 (fungal pressure proxy)
+    # CHIRPS (satellite-derived rainfall — 0.05 deg, pentadal)
+    "chirps_cum_mm",           # try both column name variants
+    "chirps_cum_rain_mm",
+    # Aridity (derived from PET/rainfall — fully RS-based)
+    "aridity_index",
+    # GPS coordinates (free spatial covariate, no field measurement required)
+    "x","y",
 ]
 
 AGRO_COLS: List[str] = []
