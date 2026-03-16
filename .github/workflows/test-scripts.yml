@@ -152,7 +152,7 @@ jobs:
             "httr", "curl", "rvest", "R.utils",
             "zip", "XNomial",
             "testthat", "rmarkdown", "knitr",
-            "writexl", "openxlsx"
+            "writexl", "openxlsx", "magick"
           ))
 
           # GitHub-only packages (non-fatal)

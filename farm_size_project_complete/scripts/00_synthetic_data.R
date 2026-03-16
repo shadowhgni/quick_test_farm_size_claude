@@ -137,13 +137,17 @@ dryland_mask <- make_rast("dryland", 0.4, 0.3, clamp = c(0,1), r_res = res_pred)
 terra::writeRaster(dryland_mask,
   file.path(processed_path, "mask_drylands_ssa.tif"), overwrite = TRUE)
 
-# Cropland mask — 07.2 does pivot_longer(cols = contains('20')) so bands need '20' in name
-# S02 loops on names(six_crop_masks)[c(3,4,6)] so need at least 6 bands
+# Cropland mask:
+#   07.2: pivot_longer(cols = contains('20')) — needs '20' substring
+#   08.2: all_cropland_mask$`SPAM 2010`, $`SPAM 2017`, $`SPAM 2020`,
+#          $`ESA 2020`, $`GLAD 2019`, $`GEOSURVEY 2015` — exact names with spaces
+#   S02:  six_crop_masks (same file); loops on names()[c(3,4,6)]
+band_nms <- c("SPAM 2010","SPAM 2017","SPAM 2020","ESA 2020","GLAD 2019","GEOSURVEY 2015")
 all_cropland <- terra::rast(lapply(
-  c("SPAM2010","SPAM2017","SPAM2020","ESA2020","Geo2015","GLW2010"),
+  band_nms,
   function(nm) make_rast(nm, 0.5, 0.3, clamp = c(0,1), r_res = res_pred)
 ))
-names(all_cropland) <- c("SPAM2010","SPAM2017","SPAM2020","ESA2020","Geo2015","GLW2010")
+names(all_cropland) <- band_nms
 terra::writeRaster(all_cropland,
   file.path(raw_spatial, "landuse/landuse/all_cropland_mask.tif"), overwrite = TRUE)
 
@@ -442,7 +446,12 @@ theor_farms <- data.frame(
   kurt        = runif(n_theor, 2.0, 8.0),
   gini        = runif(n_theor, 0.3, 0.6),
   ks_trunc_D  = runif(n_theor, 0.05, 0.4),
-  ks_trunc_pval = runif(n_theor, 0.01, 0.99)
+  ks_trunc_pval      = runif(n_theor, 0.01, 0.99),
+  # S08 needs these additional columns from 08.3 output
+  adjusted_logn_mean = log(pmax(0.01, lsms_ml$farm_area_ha) / sqrt(1 + 0.5)),
+  adjusted_logn_sd   = sqrt(log(1 + 0.5)),
+  logn_mean          = log(pmax(0.01, lsms_ml$farm_area_ha)),
+  logn_sd            = 0.8
 )
 # theor_farms_application: 10.1 needs linear_farm_size_ha; 08.3 needs trunc_log
 theor_farms_application <- data.frame(
@@ -533,7 +542,7 @@ write.csv(var_imp_etr, file.path(output_path, "tables/etr_variable_importance.cs
 
 # lsms_oob.rds — S04 reads from scripts dir; needs x, y, country, farm_area_ha,
 #                oob_pred, in_sample_pred, gadm_1, gadm_2
-lsms_oob <- lsms_ml[, c("x","y","country","farm_area_ha","gadm_1","gadm_2")]
+lsms_oob <- lsms_ml[, c("x","y","country","farm_area_ha","gadm_0","gadm_1","gadm_2")]
 lsms_oob$oob_pred      <- pmax(0.01, lsms_oob$farm_area_ha * runif(nrow(lsms_oob), 0.6, 1.4))
 lsms_oob$in_sample_pred <- pmax(0.01, lsms_oob$farm_area_ha * runif(nrow(lsms_oob), 0.8, 1.2))
 saveRDS(lsms_oob, "lsms_oob.rds")  # S04 reads from scripts dir (no ../)
@@ -618,6 +627,33 @@ dir.create("../validation", showWarnings = FALSE)
     datatype = "INT1U", overwrite = TRUE)
   message("   AEZ stub written (6 classes, spatially structured).")
 }
+
+# SPAM cropland stubs (10.1, T02 read spam2017/*.tif and spam2010/*.tif)
+# Pattern expected: *_P_[A-Z]+_A.tif (production files, total area)
+for (spam_yr in c("spam2010", "spam2017")) {
+  spam_dir <- file.path(raw_spatial, "spam", spam_yr)
+  dir.create(spam_dir, recursive = TRUE, showWarnings = FALSE)
+  # Write a few crop TIFs matching the grep pattern _P_[A-Z]+_A.tif
+  for (crop in c("MAIZ", "SOYB", "RICE", "WHEA")) {
+    terra::writeRaster(
+      make_rast(paste0(crop, "_", spam_yr), 500, 300),
+      file.path(spam_dir, paste0("spam", spam_yr, "V2r0_SSA_P_", crop, "_A.tif")),
+      overwrite = TRUE
+    )
+  }
+}
+message("   SPAM stubs written (spam2010, spam2017).")
+
+# back_transf rasters — S08 reads these as outputs of 08.3
+terra::writeRaster(
+  make_rast("back_transf_mean", 2.0, 0.8),
+  file.path(processed_path, "back_transf_trunc_adj_mean.tif"), overwrite = TRUE
+)
+terra::writeRaster(
+  make_rast("back_transf_sd", 0.5, 0.2),
+  file.path(processed_path, "back_transf_trunc_adj_sd.tif"), overwrite = TRUE
+)
+message("   back_transf rasters written.")
 message("   Processed stubs done.")
 
 # ==============================================================================
@@ -741,11 +777,12 @@ for (nm in c("Python_SPAM2010_rf_predictions_africa",
 
 # Suppl.Fig06 — S07 div_table needs NAME_0/GID_0/divergence_nb columns
 div_table <- data.frame(
-  var          = pred_cols,
-  NAME_0       = sample(sixteen_countries,     length(pred_cols), TRUE),
-  GID_0        = sample(sixteen_country_codes, length(pred_cols), TRUE),
-  divergence   = runif(length(pred_cols)),
-  divergence_nb = runif(length(pred_cols))
+  var           = pred_cols,
+  NAME_0        = sample(sixteen_countries,     length(pred_cols), TRUE),
+  GID_0         = sample(sixteen_country_codes, length(pred_cols), TRUE),
+  divergence    = runif(length(pred_cols)),
+  divergence_nb = runif(length(pred_cols)),  # S07 comp_fsize_classes_nb
+  divergence_ha = runif(length(pred_cols))   # S07 comp_fsize_classes_ha
 )
 saveRDS(div_table, "Suppl.Fig06_divergence_table.rds")
 
