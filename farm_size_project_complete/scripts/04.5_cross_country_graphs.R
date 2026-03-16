@@ -151,30 +151,36 @@ summarize <- function() {
 	saveRDS(y, "output/leave_one_TPS.rds")
 
 	# compare TPS predictions (focal country data seen) with RF predictions (focal country data not seen)
-	ftp <- list.files("output/leave_one", "TPS_all", full.names=TRUE)
-	frf <- list.files("output/leave_one", "RF_all_test", full.names=TRUE)
+	ftp <- list.files("../output/leave_one", "TPS_all", full.names=TRUE)
+	frf <- list.files("../output/leave_one", "RF_all_test", full.names=TRUE)
 	out1 <- data.frame(code=country_codes, means=FALSE)
-	out1$cor <- sapply(country_codes, 
+	out1$cor <- sapply(country_codes,
 		function(code) {
-			tp <- readRDS(grep(code, ftp, value=TRUE))
-			rf <- readRDS(grep(code, frf, value=TRUE))
+			tp_f <- grep(code, ftp, value=TRUE)
+			rf_f <- grep(code, frf, value=TRUE)
+			if (!length(tp_f) || !length(rf_f)) return(NA)
+			tp <- readRDS(tp_f[1])
+			rf <- readRDS(rf_f[1])
 			cor(tp$prediction, rf$prediction, use="pairwise.complete.obs")
 		}
 	)
-	# using mean values
-	ftp <- list.files("oldout/leave_one", "TPS_means", full.names=TRUE)
-	frf <- list.files("oldout/leave_one", "RF_means_test", full.names=TRUE)
+	# using mean values — use ../output/leave_one (oldout does not exist in CI)
+	ftp <- list.files("../output/leave_one", "TPS_means", full.names=TRUE)
+	frf <- list.files("../output/leave_one", "RF_means_test", full.names=TRUE)
 	out2 <- data.frame(code=country_codes, means=TRUE)
-	out2$cor <- sapply(country_codes, 
+	out2$cor <- sapply(country_codes,
 		function(code) {
 			if (code == "TZA") return(NA)
-			tp <- readRDS(grep(code, ftp, value=TRUE))
-			rf <- readRDS(grep(code, frf, value=TRUE))
+			tp_f <- grep(code, ftp, value=TRUE)
+			rf_f <- grep(code, frf, value=TRUE)
+			if (!length(tp_f) || !length(rf_f)) return(NA)
+			tp <- readRDS(tp_f[1])
+			rf <- readRDS(rf_f[1])
 			cor(tp$prediction, rf$prediction, use="pairwise.complete.obs")
 		}
 	)
 	out <- rbind(out1, out2)
-	
+
 	saveRDS(out, "output/leave_one_cor.rds")
 }
 

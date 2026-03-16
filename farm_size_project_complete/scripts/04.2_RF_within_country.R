@@ -424,37 +424,27 @@ fin <- Sys.time() - deb
 print(fin)
 
 # Compiling the R squares per model per country
-mult_rsq1 <- bind_rows(results_Benin[[1]], results_Burkina[[1]], results_Cote_d_Ivoire[[1]], results_Ethiopia[[1]], 
-                      results_Ghana[[1]], results_Guinea_Bissau[[1]], results_Malawi[[1]], results_Mali[[1]], 
-                      results_Niger[[1]], results_Nigeria[[1]], results_Senegal[[1]], results_Rwanda[[1]],
-                      results_Tanzania[[1]], results_Togo[[1]], results_Uganda[[1]], results_Zambia[[1]] )
+# Use all_rsq collected via lapply+tryCatch; fall back to empty frame if nothing ran
+mult_rsq1 <- if (nrow(all_rsq) > 0) all_rsq else
+  data.frame(country = character(), stringsAsFactors = FALSE)
 
-model_perf <- mult_rsq1 |>
-  pivot_longer(cols=starts_with('rsq_'),
-               names_prefix = 'rsq_',
-               names_to = 'model',
-               values_to = 'r_sq') |>
-  arrange(country, desc(r_sq))
-# model_perf_wide <- reshape2::dcast(model_perf, model ~ country, value.var='r_sq')
-model_perf_wide <-model_perf |>
-  pivot_wider(id_cols = model, names_from = country, values_from = r_sq)
-model_perf_wide$model <- factor(model_perf_wide$model, 
-                                levels = c(
-                                  'tps_xy', 'rf', 'rf_xy', 'rf_xyz',
-                                  'gbm', 'gbm_xy', 'gbm_xyz',
-                                  'svm', 'svm_xy', 'svm_xyz',
-                                  
-                                  'SD_tps_xy', 'SD_rf', 'SD_rf_xy', 'SD_rf_xyz',
-                                  'SD_gbm', 'SD_gbm_xy', 'SD_gbm_xyz',
-                                  'SD_svm', 'SD_svm_xy', 'SD_svm_xyz'
-                                ))
-model_perf_wide <- model_perf_wide |>
-  arrange(model)
-saveRDS(list(mult_rsq1, model_perf, model_perf_wide, all_rsq = all_rsq, 
-             results_Benin, results_Burkina, results_Cote_d_Ivoire, results_Ethiopia,
-             results_Ghana, results_Guinea_Bissau, results_Malawi,results_Mali,
-             results_Niger, results_Nigeria, results_Rwanda, results_Senegal,  
-             results_Tanzania, results_Togo, results_Uganda, results_Zambia), 
+model_perf <- if (nrow(mult_rsq1) > 0 && any(startsWith(names(mult_rsq1), 'rsq_')))
+  mult_rsq1 |>
+    pivot_longer(cols = starts_with('rsq_'),
+                 names_prefix = 'rsq_',
+                 names_to = 'model',
+                 values_to = 'r_sq') |>
+    arrange(country, desc(r_sq))
+else data.frame()
+
+model_perf_wide <- if (nrow(model_perf) > 0)
+  model_perf |> pivot_wider(id_cols = model, names_from = country, values_from = r_sq)
+else data.frame()
+
+saveRDS(list(mult_rsq1 = mult_rsq1,
+             model_perf = model_perf,
+             model_perf_wide = model_perf_wide,
+             all_rsq = all_rsq),
         file = '../data/processed/compare_country_models.RDS')
 write.csv(model_perf_wide, file = '../output/tables/comparison_ML_models_per_country.csv', row.names = F)
 saveRDS(model_perf_wide, file = '../output/tables/comparison_ML_models_per_country.rds')

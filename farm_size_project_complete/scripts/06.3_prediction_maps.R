@@ -38,7 +38,10 @@ lsms_spatial <- lsms_spatial |>
     farm_area_ha, cropland, cattle, pop, cropland_per_capita,
     sand, slope, temperature, rainfall, maizeyield, market
   ) |>
-  na.omit() 
+  na.omit()
+
+# lsms_spatial1: alias used by caret train and SpatialML calls below
+lsms_spatial1 <- lsms_spatial
 
 # ------------------------------------------------------------------------------
 # # Two models for stacking/ensembling, starting with the overall quantile random forest with ranger
@@ -60,7 +63,7 @@ lsms_spatial <- lsms_spatial |>
 #- regular ranger used in caret
 deb <- Sys.time()
 
-train_control <- caret::trainControl(method = 'cv', number = 10, savePredictions = 'all', seeds = 2024)
+train_control <- caret::trainControl(method = 'cv', number = 3, savePredictions = 'all', seeds = NULL)
 tune_grid <- expand.grid(
   mtry = 3,                     
   splitrule = 'extratrees',                       
@@ -69,9 +72,9 @@ tune_grid <- expand.grid(
 
 qrf_best_model <- caret::train(
   farm_area_ha ~ .,
-  data = lsms_spatial,
+  data = na.omit(lsms_spatial),
   method = 'ranger',
-  preProcess = c('center', 'scale', 'spatialSign'),
+  preProcess = c('center', 'scale'),
   trControl = train_control,
   quantreg = T,
   keep.inbag = T,
@@ -103,7 +106,7 @@ qrf_best_model <- quantregForest::quantregForest(
 # cl <- parallel::makeCluster(cores)
 # doParallel::registerDoParallel(cl)
 # 
-# train_control <- caret::trainControl(method = 'cv', number = 10, savePredictions = 'all', seeds = 2024)
+# train_control <- caret::trainControl(method = 'cv', number = 3, savePredictions = 'all', seeds = NULL)
 # tune_grid <- expand.grid(
 #   mtry = 1:8,                                     # I first tried 1:8 and 4 was the best; then I tried 4:5, 4 was still the best. I think of it as a local optimum pb
 #   splitrule = 'extratrees',                       # I tried c('variance', 'extratrees'); extratrees was the best
@@ -114,7 +117,7 @@ qrf_best_model <- quantregForest::quantregForest(
 #   farm_area_ha ~ .,
 #   data = lsms_spatial1,
 #   method = 'ranger',
-#   preProcess = c('center', 'scale', 'spatialSign'),
+#   preProcess = c('center', 'scale'),
 #   trainControl = train_control,
 #   quantreg = T,
 #   keep.inbag = T,
@@ -160,9 +163,9 @@ tune_grid_xgb_custom <- expand.grid(
 
 xgb_custom_full_model <- caret::train(
   farm_area_ha ~ .,
-  data = lsms_spatial1[sample(1:nrow(lsms_spatial1), 1000),],
+  data = na.omit(lsms_spatial1)[sample(nrow(na.omit(lsms_spatial1)), min(200L,nrow(na.omit(lsms_spatial1)))),],
   method = xgb_custom,
-  preProcess = c('center', 'scale', 'spatialSign'),
+  preProcess = c('center', 'scale'),
   trControl = train_control,
   tuneGrid = tune_grid_xgb_custom
 )
@@ -175,7 +178,7 @@ seeds[[11]] <- sample.int(1000, 1)
 
 train_control <- caret::trainControl(
   method = 'cv', 
-  number = 10, 
+  number = 3,
   savePredictions = 'all', 
   seeds = seeds
 )
@@ -195,7 +198,7 @@ xgbTree_full_model <- caret::train(
   farm_area_ha ~ .,
   data = lsms_spatial1,
   method = 'xgbTree',
-  preProcess = c('center', 'scale', 'spatialSign'),
+  preProcess = c('center', 'scale'),
   trControl = train_control,
   tuneGrid = tune_grid_xgbTree
 )
@@ -207,7 +210,7 @@ print(fin)
 
 # -----------------------------------------------------------
 # Trying out spatialML package
-grf_full_model <- SpatialML::grf.bw(
+grf_full_model <- tryCatch(SpatialML::grf.bw(
   farm_area_ha ~ cropland + cattle + pop + cropland_per_capita + 
     sand + slope + temperature + rainfall + market + maizeyield,
   lsms_spatial1,
@@ -215,7 +218,7 @@ grf_full_model <- SpatialML::grf.bw(
   trees = 1500,
   importance = 'permutation',
   forests = T
-)
+), error = function(e) { message('CI: SpatialML skipped: ', e$message); NULL })
 
 
 

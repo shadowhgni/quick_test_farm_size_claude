@@ -399,44 +399,12 @@ patch_script <- function(lines) {
   )
 
   # 10.2: terra::rast() on empty cty_farm_pred_df (no x/y points inside country) 
-  lines <- gsub(
-    "cty_gadm1 <- terra::rast(",
-    "cty_gadm1 <- tryCatch(terra::rast(",
-    lines, fixed = TRUE
-  )
-  lines <- gsub(
-    "cty_gadm2 <- terra::rast(",
-    "cty_gadm2 <- tryCatch(terra::rast(",
-    lines, fixed = TRUE
-  )
-  lines <- gsub(
-    "cty_continuous <- terra::rast(",
-    "cty_continuous <- tryCatch(terra::rast(",
-    lines, fixed = TRUE
-  )
+  # 10.2: gadm1 open tryCatch already in source
+  # 10.2: gadm2 open tryCatch already in source
+  # 10.2: continuous open tryCatch already in source
   # Close the tryCatch — these calls end with select(x,y,...))
-  # Run twice: cty_gadm1 and cty_gadm2 both end with this same pattern
-  lines <- gsub(
-    "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)\n  )",
-    "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)), error=function(e) terra::rast(terra::ext(-18,52,-35,15),res=1))",
-    lines, fixed = TRUE
-  )
-  lines <- gsub(
-    "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)), error=function(e) terra::rast(terra::ext(-18,52,-35,15),res=1))\n  )",
-    "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)), error=function(e) terra::rast(terra::ext(-18,52,-35,15),res=1))",
-    lines, fixed = TRUE
-  )
-  # Second occurrence: also close cty_gadm2
-  lines <- gsub(
-    "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)\n  )",
-    "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)), error=function(e) terra::rast(terra::ext(-18,52,-35,15),res=1))",
-    lines, fixed = TRUE
-  )
-  lines <- gsub(
-    "select(x, y, pred_farm_area_ha))",
-    "select(x, y, pred_farm_area_ha)), error=function(e) terra::rast(terra::ext(-18,52,-35,15),res=1))",
-    lines, fixed = TRUE
-  )
+  # 10.2: cty_gadm1/gadm2 tryCatch already in source — no gsub needed
+  # 10.2: cty_continuous tryCatch already in source — no gsub needed
 
   # F02: fig1a is single-band stub — $spam_2017 and $pred_farm_area_ha don't exist
   lines <- gsub(

@@ -89,7 +89,8 @@ P00
 #--------------------
 # Plot B
 country_leave_one_out <- country_leave_one_out |>
-  mutate(model_name = gsub('pred. ', '' , gsub('\\~', 'vs.', model_name)),
+  mutate(model_name = as.character(model_name),
+         model_name = gsub('pred. ', '', gsub('\\~', 'vs.', model_name)),
          model_name = factor(model_name, levels = c('RF vs. obs.', 'TPS vs. obs.', 'RF vs. TPS')))
 
 P01 <- ggplot(country_leave_one_out) +

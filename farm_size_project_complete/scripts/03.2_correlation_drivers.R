@@ -191,7 +191,7 @@ lsms <- lsms |>
 message("After sample size filter: ", nrow(lsms))
 
 # Create unique farm IDs
-lsms$farm_id <- paste0(lsms$country, '_', lsms$year, '_', lsms$farm_id)
+lsms <- dplyr::mutate(lsms, farm_id = paste0(country, '_', year, '_', seq_len(dplyr::n())))
 
 # ------------------------------------------------------------------------------
 # 6. ASSIGN ADMINISTRATIVE DIVISIONS

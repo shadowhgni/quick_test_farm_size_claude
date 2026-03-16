@@ -91,13 +91,15 @@ grid(nx=8, ny=8, col='lightgrey')
 abline(a=0, b=1)
 colr <- viridis::viridis(5, alpha=0.7)
 i <- 1
-for(yr in sort(unique(fig1c$comp_nb_farms$year_class))){
-  sbt <- subset(fig1c$comp_nb_farms, year_class==yr)
-  points(log10(sbt$nb_farms/1000000), log10(sbt$estim_nb_farms/1000000), pch=21, cex=3, col='grey20', bg=colr[i])
+for(yr in sort(unique(na.omit(fig1c$comp_nb_farms$year_class)))){
+  sbt <- subset(fig1c$comp_nb_farms, !is.na(year_class) & year_class==yr)
+  if(nrow(sbt)==0) next
+  points(log10(pmax(sbt$nb_farms,1)/1000000), log10(pmax(sbt$estim_nb_farms,1)/1000000), pch=21, cex=3, col='grey20', bg=colr[i])
   i <- i+1
   }
 for(cty in c('Angola', 'Benin', 'Botswana', 'Ethiopia', 'Gabon', 'Liberia', 'Malawi', 'Niger', 'Nigeria', 'Rwanda', 'Sierra Leone' )){ 
   sbt <- subset(fig1c$comp_nb_farms, country==cty)
+  if(nrow(sbt)==0 || any(is.na(sbt$nb_farms)) || any(sbt$nb_farms<=0)) next
   text(log10(sbt$nb_farms/1000000), log10(sbt$estim_nb_farms/1000000)+0.05, labels = sbt$country, col='grey10', pos = 3, cex = 1.2)
   }
 legend('bottomright', bty='n', cex=1.3, title='Census\ndecade', legend=sort(unique(fig1c$comp_nb_farms$year_class)), pch=21, pt.cex=1.7, col='grey20', pt.bg=colr[1:5])

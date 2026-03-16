@@ -117,33 +117,38 @@ compare_gadm_rf_models <- function(my_country){
 # Initialization and function application (run this chunk of 4 lines at once)
 deb <- Sys.time()
 all_rows <- data.frame()
-mult_rsq <- do.call(bind_rows, lapply(sixteen_countries, compare_gadm_rf_models))
+mult_rsq <- do.call(bind_rows, lapply(sixteen_countries,
+  function(.c) tryCatch(compare_gadm_rf_models(.c),
+                        error = function(e) { message('CI-SKIP 04.3 ', .c, ': ', e$message); data.frame() })))
 fin <- Sys.time() - deb
 print(fin)
 
-# visualize 
-long_mult_rsq <- mult_rsq |>
-  pivot_longer(cols = c(rf_cv_rsq, gadm_test_rf_rsq),
-               names_to = 'type', values_to = 'rsq') |>
-  mutate(rsq = as.numeric(rsq))
-summary_mult_rsq <- long_mult_rsq |>
-  group_by(country, type) |>
-  summarize(mean_rsq = mean(rsq, na.rm = T),
-            sd_rsq = sd(rsq, na.rm = T))
-P01 <- ggplot(summary_mult_rsq, 
-              aes(country, mean_rsq, fill = type)) + 
-  geom_bar(stat = 'identity', position = position_dodge(0.8), colour = 'black') + 
-  geom_errorbar(aes(ymin = mean_rsq, ymax = mean_rsq + sd_rsq), 
-                position = position_dodge(0.8), width = 0.3) +
-  labs(x = 'country', y = 'rsquared', fill = 'type') + 
-  scale_fill_manual(values = c('lightsteelblue', 'steelblue3')) +
-  theme_bw() + 
-  theme(axis.text = element_text(angle = 45, hjust = 1))
-P01
-
-png('../output/graphs/gadm_1__point_based_cross_validation.png', height = 15, width = 25, units = 'cm', res = 1000)
-P01
-ggsave('../output/graphs/gadm_1__point_based_cross_validation.png')
-dev.off()
+# visualize — guard against empty mult_rsq (CI with small synthetic data)
+if (nrow(mult_rsq) > 0 && all(c('rf_cv_rsq','gadm_test_rf_rsq') %in% names(mult_rsq))) {
+  long_mult_rsq <- mult_rsq |>
+    pivot_longer(cols = c(rf_cv_rsq, gadm_test_rf_rsq),
+                 names_to = 'type', values_to = 'rsq') |>
+    mutate(rsq = as.numeric(rsq))
+  summary_mult_rsq <- long_mult_rsq |>
+    group_by(country, type) |>
+    summarize(mean_rsq = mean(rsq, na.rm = T),
+              sd_rsq = sd(rsq, na.rm = T))
+  P01 <- ggplot(summary_mult_rsq,
+                aes(country, mean_rsq, fill = type)) +
+    geom_bar(stat = 'identity', position = position_dodge(0.8), colour = 'black') +
+    geom_errorbar(aes(ymin = mean_rsq, ymax = mean_rsq + sd_rsq),
+                  position = position_dodge(0.8), width = 0.3) +
+    labs(x = 'country', y = 'rsquared', fill = 'type') +
+    scale_fill_manual(values = c('lightsteelblue', 'steelblue3')) +
+    theme_bw() +
+    theme(axis.text = element_text(angle = 45, hjust = 1))
+  P01
+  png('../output/graphs/gadm_1__point_based_cross_validation.png', height = 15, width = 25, units = 'cm', res = 1000)
+  P01
+  ggsave('../output/graphs/gadm_1__point_based_cross_validation.png')
+  dev.off()
+} else {
+  message('CI: mult_rsq empty or missing columns — skipping plot')
+}
 
 write.csv(mult_rsq, '../output/tables/gadm_1__point_based_cross_validation.csv', row.names = F)

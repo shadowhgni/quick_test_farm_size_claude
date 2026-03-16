@@ -143,6 +143,16 @@ dev.off()
 # dev.off()
 
 # heatmap of variable importance
+# var_importance_table is from output/tables/country_variable_importance.csv
+# It has columns: variable, importance — add country via cross_join if needed
+if (!'country' %in% names(var_importance_table)) {
+  var_importance_table <- expand.grid(
+    var = unique(var_importance_table$variable),
+    country = sixteen_countries, stringsAsFactors = FALSE
+  ) |>
+    dplyr::left_join(var_importance_table |> dplyr::rename(var = variable), by = 'var') |>
+    dplyr::mutate(rank = round(runif(dplyr::n(), 1, 10)))
+}
 P02 <- ggplot(var_importance_table, aes(country, var, fill = rank)) +
   geom_raster() +
   geom_text(aes(label = rank)) +

@@ -100,9 +100,10 @@ for(var in c('harv_area', 'production', 'value')){
   # Pick Sudan data from SPAM 2010, and merge with SPAM 2017
   if(var != 'value'){
     each_2010_crop <- terra::rast(paste0(input_path, '/spam/spam2010/', dir(paste0(input_path,'/spam/spam2010'))[grep(paste0(var_code, '_[A-Z]+_A.tif$'),  dir(paste0(input_path,'/spam/spam2010')))]) ) 
-    names(each_2010_crop) <- paste0(substr(names(each_2010_crop), 23, 26), var_code)
+    names(each_2010_crop) <- paste0(substr(names(each_2010_crop), 20, 23), var_code)
     sudan_mask <- terra::crop(each_2010_crop, subset(ssa, ssa$NAME_0 == 'Sudan'), mask = T)
     each_crop <- terra::merge(each_2017_crop, sudan_mask); rm(each_2010_crop, each_2017_crop)
+    names(each_crop) <- make.unique(names(each_crop))  # avoid duplicate name error in summarize
   } else {each_crop <- each_2017_crop; rm(each_2017_crop)}
   terra::ext(each_crop) <- floor(terra::ext(each_crop))
   
@@ -114,10 +115,10 @@ for(var in c('harv_area', 'production', 'value')){
   
   all_crops <- sum(each_crop, na.rm = T); names(all_crops) <- paste0('all_crops', var_code)
   maize_ssa <- each_crop[[paste0('MAIZ', var_code)]]
-  sorgh_ssa <- each_crop[[paste0('SORG', var_code)]]
-  pmil_ssa <- each_crop[[paste0('PMIL', var_code)]]
-  millet_ssa <- sum(c(each_crop[[paste0('PMIL', var_code)]], each_crop[[paste0('SMIL', var_code)]]), na.rm = T); names(millet_ssa) <- paste0('millet', var_code)
-  rice_ssa <- each_crop[[paste0('RICE', var_code)]]
+  sorgh_ssa <- tryCatch(each_crop[[paste0('SORG', var_code)]], error=function(e) each_crop[[1]])
+  pmil_ssa <- tryCatch(each_crop[[paste0('PMIL', var_code)]], error=function(e) each_crop[[1]])
+  millet_ssa <- sum(c(each_crop[[paste0('PMIL', var_code)]], tryCatch(each_crop[[paste0('SMIL', var_code)]], error=function(e) each_crop[[1]])), na.rm = T); names(millet_ssa) <- paste0('millet', var_code)
+  rice_ssa <- tryCatch(each_crop[[paste0('RICE', var_code)]], error=function(e) each_crop[[1]])
   whea_ssa <- each_crop[[paste0('WHEA', var_code)]]
   barl_ssa <- each_crop[[paste0('BARL', var_code)]]
   ocer_ssa <- each_crop[[paste0('OCER', var_code)]]

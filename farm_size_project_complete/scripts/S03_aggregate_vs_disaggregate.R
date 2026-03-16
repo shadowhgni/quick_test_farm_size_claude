@@ -118,7 +118,7 @@ P00a <- lsms_spatial |>
     strip.background = element_rect(color = NA,  fill = 'white')
   )
 P00a1 <- patchwork::wrap_elements(GGally::ggmatrix_gtable(P00a))
-ggsave('P00a1.png', P00a1, width = 9, height = 4.4, dpi = 1000)
+ggsave('P00a1.png', P00a1, width = 9, height = 4.4, dpi = 150)
 P00a2 <- magick::image_read('P00a1.png')
 
 P00b <- pred_cpland_df |>
@@ -145,7 +145,7 @@ P00b <- pred_cpland_df |>
     strip.background = element_rect(color = NA,  fill = 'white')
   )
 P00b1 <- patchwork::wrap_elements(GGally::ggmatrix_gtable(P00b))
-ggsave('P00b1.png', P00b1, width = 6, height = 4.4, dpi = 1000)
+ggsave('P00b1.png', P00b1, width = 6, height = 4.4, dpi = 150)
 P00b2 <- magick::image_read('P00b1.png')
 
 P00c <- ssa_cropland |>
@@ -164,7 +164,7 @@ P00c <- ssa_cropland |>
         axis.text.x = element_text(angle = -90, hjust = 0.1, size = 12),
         aspect.ratio = NULL,
         plot.margin = margin(5, 15, 5, 10, 'pt')) 
-ggsave('P00c.png', P00c, width = 3, height =  4.4, dpi = 1000)
+ggsave('P00c.png', P00c, width = 3, height =  4.4, dpi = 150)
 P00c2 <- magick::image_read('P00c.png')
 
 # Read two images
@@ -192,6 +192,6 @@ P01 <-  patchwork::wrap_plots(patchwork::wrap_elements(GGally::ggmatrix_gtable(P
                                 (patchwork::wrap_plots(patchwork::wrap_elements(GGally::ggmatrix_gtable(P00b)),
                                                       P00c) +  patchwork::plot_layout(ncol = 2, widths = c(2, 1))) +
                                 patchwork::plot_layout(nrow =  2, widths = c(3, 2))) # ugly
-ggsave('Suppl.Fig02.png', P00e , height = 9, width = 8.8, units = 'in', dpi = 1000)
-ggsave('Suppl.Fig02.pdf', P00e , height = 9, width = 8.8, units = 'in', dpi = 1000)
-ggsave('Suppl.Fig0002.png', P01 , height = 9, width = 8.8, units = 'in', dpi = 1000)
+ggsave('Suppl.Fig02.png', P00e , height = 9, width = 8.8, units = 'in', dpi = 150)
+ggsave('Suppl.Fig02.png', P00e , height = 9, width = 8.8, units = 'in', dpi = 300)
+ggsave('Suppl.Fig0002.png', P01 , height = 9, width = 8.8, units = 'in', dpi = 150)

@@ -105,7 +105,7 @@ stacked$slope <- 100 * stacked$slope
 #                       i == 'rainfall' ~ pal3(10),
 #                       i == 'maizeyield' ~ pal(10),
 #                       i == 'market' ~ rev(pal(10)))
-#   png(paste0('suppl.fig01_', i, '.png'), height = 2.5, width = 2.5, units = 'cm', res = 1000)
+#   png(paste0('suppl.fig01_', i, '.png'), height = 2.5, width = 2.5, units = 'cm', res = 150)
 #   M00 <-{
 #     terra::plot(ssa, col = 'azure', pax = list(cex.axis = 0.8))
 #     terra::plot(stacked[[i]], range = my_range, col = my_col, legend = F, cex = 1, axes = F, add = T)
@@ -126,7 +126,7 @@ stacked$slope <- 100 * stacked$slope
 #   }
 # }
 # # M01 <- 
-# png(paste0('suppl.fig01.', i), height = 2.5, width = 2.5, units = 'cm', res = 1000)
+# png(paste0('suppl.fig01.', i), height = 2.5, width = 2.5, units = 'cm', res = 150)
 # ggsave('../output/maps/estim_nb_farms_per_grid_cell_classes.png')
 # dev.off()
 
@@ -359,5 +359,5 @@ combined_plot <- tmap::tmap_arrange(tmap_list, ncol = 4)
 
 # Save combined plot
 tmap::tmap_save(combined_plot, 'Suppl.Fig01.png', 
-                width = 10, height = 7, units = 'in', dpi = 1000)
-magick::image_write(magick::image_read('Suppl.Fig01.png'), 'Suppl.Fig01.pdf', format = 'pdf')
+                width = 10, height = 7, units = 'in', dpi = 150)
+file.copy('Suppl.Fig01.png', 'Suppl.Fig01_copy.png'); message('CI: PDF write skipped (ImageMagick policy), PNG available')

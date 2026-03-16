@@ -50,9 +50,9 @@ lsms_spatial <-  readRDS('../data/processed/lsms_trimmed_95th_africa.rds') # thi
 
 
 # Load Sarah's data
-sarah_nb_farms <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc3.xlsx', skip = 1)
-sarah_farm_size_class <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc5.xlsx', skip = 2)
-sarah_historical_farm_size_demo <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc7.xlsx', skip = 1)
+sarah_nb_farms <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc3.xlsx', skip = 0)
+sarah_farm_size_class <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc5.xlsx', skip = 0)
+sarah_historical_farm_size_demo <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc7.xlsx', skip = 0)
 names(sarah_nb_farms) <- c('country', 'census_year', 'nb_farms', 'source', 'gadm_1', 'income_group')
 
 

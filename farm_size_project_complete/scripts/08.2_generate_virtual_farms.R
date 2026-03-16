@@ -47,9 +47,9 @@ names(qrf_model_predictions) <- paste0('qrf_q', sprintf('%03g', 1:100))
 lsms_spatial <-  readRDS('../data/processed/lsms_trimmed_95th_africa.rds') # this was retrieved from '03.1.pooled_data_for_analysis.r'
 
 # Load Sarah's data
-sarah_nb_farms <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc3.xlsx', skip = 1)
-sarah_farm_size_class <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc5.xlsx', skip = 2)
-sarah_historical_farm_size_demo <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc7.xlsx', skip = 1)
+sarah_nb_farms <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc3.xlsx', skip = 0)
+sarah_farm_size_class <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc5.xlsx', skip = 0)
+sarah_historical_farm_size_demo <- readxl::read_excel('../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc7.xlsx', skip = 0)
 names(sarah_nb_farms) <- c('country', 'census_year', 'nb_farms', 'source', 'gadm_1', 'income_group')
 
 # ------------------------------------------------------------------------------
@@ -177,12 +177,15 @@ ssa_nb_farms <- sarah_nb_farms |>
 #                                                all_cropland_mask$`SPAM 2020`, all_cropland_mask$`ESA 2020`),
 #                                    stacked),
 #                    rf_model_predictions, ssa_rast)
-calc_nb_farms <- c(stacked$cropland, # add avg of all croplands
-                   terra::resample(terra::mean(all_cropland_mask$`SPAM 2010`, all_cropland_mask$`SPAM 2017`, 
-                                               all_cropland_mask$`SPAM 2020`, all_cropland_mask$`ESA 2020`, 
-                                               all_cropland_mask$`GLAD 2019`, all_cropland_mask$`GEOSURVEY 2015`),
-                                   stacked),
-                   rf_model_predictions, ssa_rast)
+calc_nb_farms <- c(
+  stacked$cropland,
+  terra::resample(terra::mean(all_cropland_mask$`SPAM 2010`, all_cropland_mask$`SPAM 2017`,
+                              all_cropland_mask$`SPAM 2020`, all_cropland_mask$`ESA 2020`,
+                              all_cropland_mask$`GLAD 2019`, all_cropland_mask$`GEOSURVEY 2015`),
+                 stacked),
+  terra::resample(rf_model_predictions, stacked),
+  terra::resample(ssa_rast, stacked)
+)
 
 
 names(calc_nb_farms) <- c('spam_2017', 'cropland', 'pred_farm_area_ha', 'country')

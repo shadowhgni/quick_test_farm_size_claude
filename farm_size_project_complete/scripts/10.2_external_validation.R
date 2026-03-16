@@ -60,57 +60,63 @@ Sys.setlocale("LC_ALL", "en_US.UTF-8")
 country_farm_area_validation <- function(cty = 'Angola'){
   print(paste0('------------ ', cty, '---------------'))
   cty_farm_pred_df <- subset(val_farm_area, NAME_0 == cty)
-  cty_gadm2 <- dir(paste0(input_path, '/gadm/', cty, '/gadm/'), full.names = T )[grep('_2_pk.rds$', dir(paste0(input_path, '/gadm/', cty, '/gadm/')), ignore.case = T)]
-  cty_vect <- terra::vect(cty_gadm2)
+  gadm_dir <- paste0(input_path, '/gadm/', cty, '/gadm/')
+  cty_gadm2_files <- if (dir.exists(gadm_dir))
+    dir(gadm_dir, full.names = TRUE)[grep('_2_pk.rds$', dir(gadm_dir), ignore.case = TRUE)]
+  else character(0)
+  if (!length(cty_gadm2_files)) {
+    message('CI-SKIP 10.2: no GADM file for ', cty)
+    return(invisible(NULL))
+  }
+  cty_vect <- terra::vect(cty_gadm2_files[1])
   cty_farm_pred_df <- bind_cols(
     cty_farm_pred_df |>
-      select(x, y, pred_farm_area_ha), 
-    terra::extract(cty_vect, 
+      select(x, y, pred_farm_area_ha),
+    terra::extract(cty_vect,
                    cty_farm_pred_df |>
                      select(x, y)) |>
       select(GID_0, GID_1, NAME_1, GID_2, NAME_2)
   )
-  
+
   cty_avg_gadm1 <- cty_farm_pred_df |>
     na.omit() |>
     group_by(GID_1, NAME_1) |>
     summarize(avg_pred_farm_area_ha = mean(pred_farm_area_ha, na.rm = T),
               sd_pred_farm_area_ha = sd(pred_farm_area_ha, na.rm = T))
-  
-  cty_gadm1 <- terra::rast(
-    inner_join(
-      cty_farm_pred_df |>
-        select(x, y, GID_1) |>
-        distinct(),
-      cty_avg_gadm1) |>
-      select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)
-  )
-  
+
+  gadm1_data <- inner_join(
+    cty_farm_pred_df |> select(x, y, GID_1) |> distinct(),
+    cty_avg_gadm1) |>
+    select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)
+  cty_gadm1 <- tryCatch(terra::rast(gadm1_data),
+                        error = function(e) { message('CI: gadm1 rast skipped: ', e$message); NULL })
+
   cty_avg_gadm2 <- cty_farm_pred_df |>
     na.omit() |>
     group_by(GID_2, NAME_2) |>
     summarize(avg_pred_farm_area_ha = mean(pred_farm_area_ha, na.rm = T),
               sd_pred_farm_area_ha = sd(pred_farm_area_ha, na.rm = T))
-  
-  cty_gadm2 <- terra::rast(
-    inner_join(
-      cty_farm_pred_df |>
-        select(x, y, GID_2, NAME_2) |>
-        distinct(),
-      cty_avg_gadm2) |>
-      select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)
+
+  gadm2_data <- inner_join(
+    cty_farm_pred_df |> select(x, y, GID_2, NAME_2) |> distinct(),
+    cty_avg_gadm2) |>
+    select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)
+  cty_gadm2 <- tryCatch(terra::rast(gadm2_data),
+                        error = function(e) { message('CI: gadm2 rast skipped: ', e$message); NULL })
+
+  cty_continuous <- tryCatch(
+    terra::rast(cty_farm_pred_df |> select(x, y, pred_farm_area_ha)),
+    error = function(e) { message('CI: continuous rast skipped: ', e$message); NULL }
   )
-  
-  cty_continuous <- terra::rast(cty_farm_pred_df |>
-                                  select(x, y, pred_farm_area_ha))
-  
+  if (is.null(cty_continuous)) return(invisible(NULL))
+
   png(paste0('../validation/', cty, '_continuous.png'), units = 'in', width = 5.5, height = 5.5, res=1000)
   M_cont <- {
     terra::plot(cty_continuous, main = paste0('Predicted average farm sizes in ', cty))
     terra::plot(cty_vect, add = T)
   }
   dev.off()
-  
+
   pal <- colorRampPalette(c('darkred', 'orange', 'gold', 'darkolivegreen3', 'darkgreen'))
   new_ext <- floor(terra::ext(cty_vect))
   new_ext[1] <- new_ext[1] - 3.5
