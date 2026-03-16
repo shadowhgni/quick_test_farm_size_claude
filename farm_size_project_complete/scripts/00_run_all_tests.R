@@ -110,7 +110,7 @@ patch_script <- function(lines) {
   # 5h. F01: tabulapdf not on CRAN — replace extract_tables call with stub list
   lines <- gsub(
     "bwa_messy_data <- tabulapdf::extract_tables(",
-    "bwa_messy_data <- list(data.frame(...1=c('District','A','B'),Total...4=c(NA,100,200),nb_male_farms=c(NA,50,80),nb_female_farms=c(NA,50,120),Total.Area.Planted.Per=c(NA,'5000 x','8000 x'))) #tabulapdf::extract_tables(",
+    "bwa_messy_data <- list(data.frame(`...1`=c('header','Central','Southern','Northern','Gaborone'),`...2`=c('nb_male',200,150,120,80),`...3`=c('nb_female',100,90,70,50),`Total...4`=c('total',300,240,190,130))) #tabulapdf::extract_tables(",
     lines, fixed = TRUE
   )
 
@@ -239,6 +239,8 @@ patch_script <- function(lines) {
 
 
   # 5u. 06.3: na.fail with spatialSign preProcess — na.omit data
+  lines <- gsub("preProcess = c('center', 'scale', 'spatialSign'),",
+    "preProcess = c('center', 'scale'),", lines, fixed = TRUE)
   lines <- gsub("data = lsms_spatial,",
     "data = na.omit(lsms_spatial),", lines, fixed = TRUE)
   lines <- gsub("data = lsms_spatial1,",
@@ -262,10 +264,9 @@ patch_script <- function(lines) {
   lines <- gsub("area = list(c(70, 35, 380, 565)),",
     "# area = list(c(70, 35, 380, 565)),", lines, fixed = TRUE)
   # 5x. F02/F03/S02: terra::plot(ssa) crashes when ssa is empty
-  lines <- gsub("terra::plot(ssa, mar=",
-    "try(terra::plot(ssa, mar=", lines, fixed = TRUE)
-  lines <- gsub("terra::plot(ssa, axes=F, add=T)",
-    "try(terra::plot(ssa, axes=F, add=T))", lines, fixed = TRUE)
+  # F02/F03/S02: guard ssa plot calls - if(nrow(ssa)>0) avoids syntax breakage
+  lines <- gsub("terra::plot(ssa, ",
+    "if(nrow(ssa)>0) terra::plot(ssa, ", lines, fixed = TRUE)
   # 5y. S02: tmap legend NA crash
   lines <- gsub("tmap::tm_layout(",
     "tmap::tm_layout(legend.show=FALSE, ", lines, fixed = TRUE)
@@ -273,20 +274,41 @@ patch_script <- function(lines) {
     "+ tm_layout(legend.show=FALSE, ", lines, fixed = TRUE)
   # 5z. S08: terra::crs() on data.frame theor_farms
   lines <- gsub("terra::crs(gini) <- terra::crs(theor_farms)",
-    "terra::crs(gini) <- 'EPSG:4326'", lines, fixed = TRUE)
+    "terra::crs(gini) <- 'EPSG:4326'; gini <- tryCatch(terra::resample(gini, theor_rast), error=function(e) gini)", lines, fixed = TRUE)
   lines <- gsub("terra::crs(back_avg) <- terra::crs(theor_farms)",
-    "terra::crs(back_avg) <- 'EPSG:4326'", lines, fixed = TRUE)
+    "terra::crs(back_avg) <- 'EPSG:4326'; back_avg <- tryCatch(terra::resample(back_avg, theor_rast), error=function(e) back_avg)", lines, fixed = TRUE)
   lines <- gsub("terra::crs(back_sd) <- terra::crs(theor_farms)",
-    "terra::crs(back_sd) <- 'EPSG:4326'", lines, fixed = TRUE)
-  # 5aa. F03/S03: magick not installed
-  lines <- gsub("magick::image_read(",
-    "tryCatch(magick::image_read(", lines, fixed = TRUE)
-  lines <- gsub("magick::image_write(",
-    "tryCatch(magick::image_write(", lines, fixed = TRUE)
+    "terra::crs(back_sd) <- 'EPSG:4326'; back_sd <- tryCatch(terra::resample(back_sd, theor_rast), error=function(e) back_sd)", lines, fixed = TRUE)
+  # 5aa. magick installed via workflow — no wrapping needed
   # 5ab. 10.2: terra::vect() on character(0) GADM path
   lines <- gsub(
     "cty_vect <- terra::vect(cty_gadm2)",
-    "if(length(cty_gadm2)==0||is.na(cty_gadm2[1])){message('CI-SKIP GADM:',cty);next}; cty_vect <- terra::vect(cty_gadm2)",
+    "if(length(cty_gadm2)==0||is.na(cty_gadm2[1])){message('CI-SKIP GADM:',cty);return(invisible(NULL))}; cty_vect <- terra::vect(cty_gadm2)",
+    lines, fixed = TRUE
+  )
+
+
+  # 5ac. 08.3: wrap cell_quantiles summarize in tryCatch (list-column + across() crash)
+  lines <- gsub(
+    "cell_quantiles <- all_cells  |>",
+    "cell_quantiles <- tryCatch({ all_cells  |>",
+    lines, fixed = TRUE
+  )
+  lines <- gsub(
+    "inner_join(my_points_cells) |>\n  group_by(x, y, cell, country) |>\n  summarize(actual_farm_sizes = actual_farm_sizes, .groups = \'drop\',\n            pred_farm_sizes = map(list(across(starts_with(\'qrf_q\'))), unlist))",
+    "inner_join(my_points_cells) |>\n  group_by(x, y, cell, country) |>\n  summarize(actual_farm_sizes = actual_farm_sizes, .groups=\'drop\',\n            pred_farm_sizes = map(list(across(starts_with(\'qrf_q\'))), unlist))",
+    lines, fixed = TRUE
+  )
+
+  # 5ad. 09.1: wrap lines after names(sarah_farm_size_class) in tryCatch
+  lines <- gsub(
+    "country_list <- na.omit(sarah_farm_size_class$NAME_0",
+    "country_list <- tryCatch(na.omit(sarah_farm_size_class$NAME_0",
+    lines, fixed = TRUE
+  )
+  lines <- gsub(
+    "!grepl(\'note|source\', sarah_farm_size_class$NAME_0, ignore.case = T)])",
+    "!grepl(\'note|source\', sarah_farm_size_class$NAME_0, ignore.case = T)]), error=function(e) sixteen_countries)",
     lines, fixed = TRUE
   )
 

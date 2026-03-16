@@ -145,7 +145,7 @@ terra::writeRaster(dryland_mask,
 band_nms <- c("SPAM 2010","SPAM 2017","SPAM 2020","ESA 2020","GLAD 2019","GEOSURVEY 2015")
 all_cropland <- terra::rast(lapply(
   band_nms,
-  function(nm) make_rast(nm, 0.5, 0.3, clamp = c(0,1), r_res = res_pred)
+  function(nm) make_rast(nm, 0.5, 0.3, clamp = c(0,1), r_res = res)  # 0.5° = same as stacked
 ))
 names(all_cropland) <- band_nms
 terra::writeRaster(all_cropland,
@@ -543,6 +543,8 @@ write.csv(var_imp_etr, file.path(output_path, "tables/etr_variable_importance.cs
 # lsms_oob.rds — S04 reads from scripts dir; needs x, y, country, farm_area_ha,
 #                oob_pred, in_sample_pred, gadm_1, gadm_2
 lsms_oob <- lsms_ml[, c("x","y","country","farm_area_ha","gadm_0","gadm_1","gadm_2")]
+lsms_oob$gadm_3 <- NA_character_
+lsms_oob$gadm_4 <- NA_character_
 lsms_oob$oob_pred      <- pmax(0.01, lsms_oob$farm_area_ha * runif(nrow(lsms_oob), 0.6, 1.4))
 lsms_oob$in_sample_pred <- pmax(0.01, lsms_oob$farm_area_ha * runif(nrow(lsms_oob), 0.8, 1.2))
 saveRDS(lsms_oob, "lsms_oob.rds")  # S04 reads from scripts dir (no ../)
@@ -633,16 +635,19 @@ dir.create("../validation", showWarnings = FALSE)
 for (spam_yr in c("spam2010", "spam2017")) {
   spam_dir <- file.path(raw_spatial, "spam", spam_yr)
   dir.create(spam_dir, recursive = TRUE, showWarnings = FALSE)
-  # Write a few crop TIFs matching the grep pattern _P_[A-Z]+_A.tif
-  for (crop in c("MAIZ", "SOYB", "RICE", "WHEA")) {
-    terra::writeRaster(
-      make_rast(paste0(crop, "_", spam_yr), 500, 300),
-      file.path(spam_dir, paste0("spam", spam_yr, "V2r0_SSA_P_", crop, "_A.tif")),
-      overwrite = TRUE
-    )
+  # T02 uses var_code _H, _P, _V; crops MAIZ, SOYB, RICE, WHEA, SORG, PMIL, SMIL, CASS
+  # 10.1 uses the same pattern. Filename: spam{yr}V2r0_SSA_{code}_{CROP}_A.tif
+  for (vcode in c("H", "P", "V")) {
+    for (crop in c("MAIZ", "SOYB", "RICE", "WHEA", "SORG", "PMIL", "SMIL", "CASS")) {
+      terra::writeRaster(
+        make_rast(paste0(crop, vcode), 500, 300),
+        file.path(spam_dir, paste0("spam", spam_yr, "V2r0_SSA_", vcode, "_", crop, "_A.tif")),
+        overwrite = TRUE
+      )
+    }
   }
 }
-message("   SPAM stubs written (spam2010, spam2017).")
+message("   SPAM stubs written (spam2010, spam2017 × _H/_P/_V × 8 crops).")
 
 # back_transf rasters — S08 reads these as outputs of 08.3
 terra::writeRaster(
