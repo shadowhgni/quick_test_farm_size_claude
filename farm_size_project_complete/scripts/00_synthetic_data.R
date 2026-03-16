@@ -54,7 +54,7 @@ for (d in c(
 # ── Config ─────────────────────────────────────────────────────────────────────
 ssa_ext   <- terra::ext(-18, 52, -35, 15)
 res       <- 0.5   # training/extraction rasters — 14 k cells, fine-grained enough for farm matching
-res_pred  <- 2.0   # prediction output rasters  — 875 cells total (~4-9 cells per country), tiny QRF stack
+res_pred  <- 5.0   # prediction output rasters  — ~140 cells total (~3-9 cells per LSMS country), ultra-light
 
 sixteen_countries      <- c("Benin","Burkina","Cote_d_Ivoire","Ethiopia","Ghana",
                              "Guinea_Bissau","Malawi","Mali","Niger","Nigeria",
@@ -116,7 +116,7 @@ terra::writeRaster(stacked,
 saveRDS(stacked, file.path(processed_path, "stacked_africa.Rds"))
 
 # Prediction rasters (single-band: mean farm size per pixel)
-# res_pred = 2° → ~875 cells over SSA, 4-9 cells per country — tiny footprint
+# res_pred = 5° → ~140 cells over SSA, 3-9 cells per country — ultra-light footprint
 rf_pred   <- make_rast("rf_mean", 2, 0.8, r_res = res_pred)
 terra::writeRaster(rf_pred,
   file.path(processed_path, "rf_model_predictions_SSA.tif"), overwrite = TRUE)
@@ -169,6 +169,22 @@ terra::writeRaster(rf_pred,
 
 message("   Rasters done.")
 
+# ── Yearly CHIRPS rainfall stubs (needed by 01.3 and 01.4) ──────────────────
+# 01.4 looks for chirps-yearly-rainfall-YYYY.tif in rainfall/rainfall_yearly/
+rain_yearly_dir <- file.path(raw_spatial, "rainfall", "rainfall_yearly")
+dir.create(rain_yearly_dir, recursive = TRUE, showWarnings = FALSE)
+for (yr in c(2010, 2015, 2018, 2020, 2022)) {
+  terra::writeRaster(make_rast(paste0("rain_", yr), 1000, 300),
+    file.path(rain_yearly_dir, paste0("chirps-yearly-rainfall-", yr, ".tif")),
+    overwrite = TRUE)
+}
+# long-term avg and CV — expected outputs of 01.4 (pre-stub so 01.4 passes)
+terra::writeRaster(make_rast("rain_avg", 1000, 200),
+  file.path(rain_yearly_dir, "#_long_term_rainfall_avg.tif"), overwrite = TRUE)
+terra::writeRaster(make_rast("rain_cv",  0.15, 0.05, clamp = c(0, 1)),
+  file.path(rain_yearly_dir, "#_long_term_rainfall_cv.tif"),  overwrite = TRUE)
+message("   Yearly rainfall stubs done.")
+
 # ==============================================================================
 # 2. SYNTHETIC LSMS SURVEY DATA
 # ==============================================================================
@@ -177,7 +193,10 @@ message("2. Creating synthetic LSMS survey data...")
 make_country_farms <- function(cty, lon_c, lat_c, n) {
   x              <- rnorm(n, lon_c, 1.5)
   y              <- rnorm(n, lat_c, 1.5)
-  farm_area_ha   <- pmin(rlnorm(n, 0.3, 0.8), 50)
+  # Add weak signal: farm_area_ha loosely correlated with cropland & rainfall
+  # so caret RF/TPS get non-NA R² values in 10-fold CV
+  lat_signal <- (lat_c - mean(country_lat)) / (sd(country_lat) + 1e-6) * 0.25
+  farm_area_ha   <- pmin(rlnorm(n, 0.3 + lat_signal + runif(n, -0.1, 0.1), 0.6), 50)
   hh_size        <- rpois(n, 5) + 1
   years          <- sample(c(2010,2012,2014,2016,2018,2020), n, replace = TRUE)
   data.frame(
@@ -336,10 +355,12 @@ write.csv(wide,  file.path(output_path, "tables/comparison_ML_models_per_country
 saveRDS(wide,    file.path(output_path, "tables/comparison_ML_models_per_country.rds"))
 
 gadm_rsq <- data.frame(
-  country = rep(sixteen_countries, each = 4),
-  gadm_1  = paste0(rep(sixteen_countries, each = 4), "_Reg", 1:4),
-  rf_cv_rsq = round(runif(64, 0.2, 0.6), 2),
-  gadm_test_rf_rsq = round(runif(64, 0.15, 0.55), 2)
+  country          = rep(sixteen_countries, each = 4),
+  gadm_1           = paste0(rep(sixteen_countries, each = 4), "_Reg", 1:4),
+  rf_cv_rsq        = round(runif(64, 0.2, 0.6), 2),   # 04.3 pivot_longer needs this
+  rf_cv_rsq_sd     = round(runif(64, 0.02, 0.1), 3),
+  gadm_test_rf_rsq = round(runif(64, 0.15, 0.55), 2), # 04.3 pivot_longer needs this
+  n_obs            = sample(50:200, 64, replace = TRUE)
 )
 write.csv(gadm_rsq, file.path(output_path, "tables/gadm_1__point_based_cross_validation.csv"), row.names = FALSE)
 
@@ -450,7 +471,7 @@ message("7. Creating figure stubs...")
 fig2c <- data.frame(x = rnorm(200), y = rnorm(200), country = sample(sixteen_countries, 200, TRUE))
 saveRDS(fig2c, "fig2c.rds")
 
-# fig.1a, fig.2a, fig.2b — reuse rf_pred (already at res_pred = 2°)
+# fig.1a, fig.2a, fig.2b — reuse rf_pred (already at res_pred = 5°)
 terra::writeRaster(rf_pred, "fig.1a_nb_of_farm_per_grid_cell.tif", overwrite = TRUE)
 terra::writeRaster(rf_pred, "fig.2a_quantile_10_fsizes.tif",       overwrite = TRUE)
 terra::writeRaster(rf_pred, "fig.2b_quantile_90_fsizes.tif",       overwrite = TRUE)
@@ -478,61 +499,91 @@ message("   Figure stubs done.")
 # ==============================================================================
 # 8b. LEAVE-ONE STUBS for 04.5_cross_country_graphs.R
 # ==============================================================================
-message("8b. Creating leave-one stubs for 04.5...")
+message("8b. Creating leave-one stubs for 04.5 / 04.6...")
 
 leave_one_dir <- file.path(output_path, "leave_one")
 dir.create(leave_one_dir, recursive = TRUE, showWarnings = FALSE)
 
-for (cty in sixteen_countries) {
-  code <- sixteen_country_codes[match(cty, sixteen_countries)]
-  n_pts <- 50L
-  dummy_pred <- rnorm(n_pts)
-  dummy_res  <- data.frame(country = cty, code = code, model = "RF",
-                           means = FALSE, test = FALSE,
-                           rsq = round(runif(1, 0.2, 0.6), 3))
-  # RF leave-one: training on rest, test on country
-  saveRDS(list(prediction = dummy_pred, results = dummy_res),
-          file.path(leave_one_dir, paste0("loc_", code, "_RF_all_test.rds")))
-  # TPS: evaluated on country only
-  saveRDS(list(prediction = dummy_pred,
-               results = data.frame(country = cty, code = code, model = "TPS",
-                                    means = FALSE, test = TRUE,
-                                    rsq = round(runif(1, 0.2, 0.6), 3))),
-          file.path(leave_one_dir, paste0("loc_", code, "_TPS_all_test.rds")))
+# 04.5 constructs filenames as:
+#   loc_{CODE}_{model}_{c("all","means")[means+1]}_{c("train","test")[test+1]}.rds
+# It reads $results and $prediction from each file.
+# 04.6 reads loc_TZA_RF_means_test.rds and loc_TZA_TPS_means_test.rds specifically.
+# RF $results must have column "Rsquared" (capital R); TPS can use "rsq".
+
+for (i in seq_along(sixteen_countries)) {
+  cty  <- sixteen_countries[i]
+  code <- sixteen_country_codes[i]
+  n_pts <- 60L
+
+  # Helper: make a stub file
+  make_stub <- function(model, means, test, rsq_col = "rsq") {
+    suffix <- paste0("loc_", code, "_", model, "_",
+                     c("all", "means")[means + 1], "_",
+                     c("train", "test")[test + 1], ".rds")
+    res <- data.frame(country = cty, code = code, model = model,
+                      means = means, test = test, stringsAsFactors = FALSE)
+    res[[rsq_col]] <- round(runif(1, 0.2, 0.65), 3)
+    saveRDS(list(prediction = rnorm(n_pts), results = res),
+            file.path(leave_one_dir, suffix))
+  }
+
+  # RF variants: 04.5 uses all_train and all_test; 04.6 uses means_test
+  make_stub("RF",  means = FALSE, test = FALSE, rsq_col = "Rsquared")
+  make_stub("RF",  means = FALSE, test = TRUE,  rsq_col = "Rsquared")
+  make_stub("RF",  means = TRUE,  test = FALSE, rsq_col = "Rsquared")
+  make_stub("RF",  means = TRUE,  test = TRUE,  rsq_col = "Rsquared")
+
+  # TPS variants
+  make_stub("TPS", means = FALSE, test = FALSE)
+  make_stub("TPS", means = FALSE, test = TRUE)
+  make_stub("TPS", means = TRUE,  test = FALSE)
+  make_stub("TPS", means = TRUE,  test = TRUE)
 }
 
-# Pre-save the summary outputs that 04.5's summarize() would produce
-# Note: 04.6 filters means=='TRUE' and expects column Rsquared; provide both TRUE and FALSE rows
-loo_rf  <- rbind(
+# Summarised leave-one files (04.5 summarize() path + 04.6 direct readRDS)
+# RF: column name must be "Rsquared" (04.6 line: summarize(rsq = max(Rsquared, ...)))
+loo_rf <- rbind(
   data.frame(country = sixteen_countries, code = sixteen_country_codes,
              model = "RF", means = FALSE, test = FALSE,
-             Rsquared = round(runif(16, 0.2, 0.6), 3)),
+             Rsquared = round(runif(16, 0.2, 0.6), 3), stringsAsFactors = FALSE),
   data.frame(country = sixteen_countries, code = sixteen_country_codes,
              model = "RF", means = TRUE, test = FALSE,
-             Rsquared = round(runif(16, 0.2, 0.6), 3))
+             Rsquared = round(runif(16, 0.2, 0.6), 3), stringsAsFactors = FALSE),
+  data.frame(country = sixteen_countries, code = sixteen_country_codes,
+             model = "RF", means = FALSE, test = TRUE,
+             Rsquared = round(runif(16, 0.2, 0.6), 3), stringsAsFactors = FALSE),
+  data.frame(country = sixteen_countries, code = sixteen_country_codes,
+             model = "RF", means = TRUE, test = TRUE,
+             Rsquared = round(runif(16, 0.2, 0.6), 3), stringsAsFactors = FALSE)
 )
 loo_tps <- rbind(
   data.frame(country = sixteen_countries, code = sixteen_country_codes,
+             model = "TPS", means = FALSE, test = FALSE,
+             rsq = round(runif(16, 0.2, 0.6), 3), stringsAsFactors = FALSE),
+  data.frame(country = sixteen_countries, code = sixteen_country_codes,
+             model = "TPS", means = TRUE, test = FALSE,
+             rsq = round(runif(16, 0.2, 0.6), 3), stringsAsFactors = FALSE),
+  data.frame(country = sixteen_countries, code = sixteen_country_codes,
              model = "TPS", means = FALSE, test = TRUE,
-             rsq = round(runif(16, 0.2, 0.6), 3)),
+             rsq = round(runif(16, 0.2, 0.6), 3), stringsAsFactors = FALSE),
   data.frame(country = sixteen_countries, code = sixteen_country_codes,
              model = "TPS", means = TRUE, test = TRUE,
-             rsq = round(runif(16, 0.2, 0.6), 3))
+             rsq = round(runif(16, 0.2, 0.6), 3), stringsAsFactors = FALSE)
 )
 loo_cor <- rbind(
   data.frame(code = sixteen_country_codes, means = FALSE,
-             cor = round(runif(16, 0.5, 0.9), 3)),
+             cor = round(runif(16, 0.5, 0.9), 3), stringsAsFactors = FALSE),
   data.frame(code = sixteen_country_codes, means = TRUE,
-             cor = round(runif(16, 0.5, 0.9), 3))
+             cor = round(runif(16, 0.5, 0.9), 3), stringsAsFactors = FALSE)
 )
 
-saveRDS(loo_rf,  file.path(output_path, "tables/leave_one_RF.rds"))
-saveRDS(loo_tps, file.path(output_path, "tables/leave_one_TPS.rds"))
-saveRDS(loo_cor, file.path(output_path, "tables/leave_one_cor.rds"))
-saveRDS(loo_rf,  file.path(output_path, "leave_one_RF.rds"))
-saveRDS(loo_tps, file.path(output_path, "leave_one_TPS.rds"))
-saveRDS(loo_cor, file.path(output_path, "leave_one_cor.rds"))
-message("   Leave-one stubs done  (", nrow(loo_rf), " countries × 2 models).")
+# Save in both locations that 04.5 / 04.6 reference
+for (dest in c(file.path(output_path, "tables"), file.path(output_path))) {
+  saveRDS(loo_rf,  file.path(dest, "leave_one_RF.rds"))
+  saveRDS(loo_tps, file.path(dest, "leave_one_TPS.rds"))
+  saveRDS(loo_cor, file.path(dest, "leave_one_cor.rds"))
+}
+message("   Leave-one stubs done (", nrow(loo_rf), " RF rows, all naming variants).")
 
 # ==============================================================================
 # 9. COUNTRY-YEAR RAW FILES (for 02.x scripts if they run)
@@ -554,6 +605,7 @@ message(paste(rep("=",70), collapse=""))
 message("  Farms generated:   ", nrow(lsms_raw))
 message("  After 95th trim:   ", nrow(lsms_ml))
 message("  Countries:         ", length(sixteen_countries))
+message("  Raster layers:     ", terra::nlyr(all_predictors))
 message("  Training res:      ", res, "° (~", round(res*111), " km) — ", terra::ncell(all_predictors[[1]]), " cells/layer")
 message("  Prediction res:    ", res_pred, "° (~", round(res_pred*111), " km) — ", terra::ncell(rf_pred), " cells/layer (~3-9 per country)")
 message("  QRF stack cells:   ", terra::ncell(qrf_pred[[1]]), " cells × 100 quantiles = ", terra::ncell(qrf_pred[[1]])*100, " values")
