@@ -137,8 +137,11 @@ dryland_mask <- make_rast("dryland", 0.4, 0.3, clamp = c(0,1), r_res = res_pred)
 terra::writeRaster(dryland_mask,
   file.path(processed_path, "mask_drylands_ssa.tif"), overwrite = TRUE)
 
-# Cropland mask (all cropland sources combined)
-all_cropland <- make_rast("cropland_mask", 0.5, 0.3, clamp = c(0,1), r_res = res_pred)
+# Cropland mask — 07.2 does pivot_longer(cols = contains('20')) so bands must
+# have year-like names: 2010, 2017, 2020, 2021
+all_cropland <- terra::rast(lapply(c("2010","2017","2020","2021"), function(yr)
+  make_rast(yr, 0.5, 0.3, clamp = c(0,1), r_res = res_pred)))
+names(all_cropland) <- c("2010","2017","2020","2021")
 terra::writeRaster(all_cropland,
   file.path(raw_spatial, "landuse/landuse/all_cropland_mask.tif"), overwrite = TRUE)
 
@@ -368,8 +371,13 @@ cty_auto <- data.frame(country = sixteen_countries,
   rsq = round(runif(16, 0.2, 0.7), 2))
 write.csv(cty_auto, file.path(output_path, "tables/country_auto_evaluation_rsquares.csv"), row.names = FALSE)
 
-pairwise <- expand.grid(train = sixteen_countries, test = sixteen_countries, stringsAsFactors = FALSE)
-pairwise$rsq <- round(runif(nrow(pairwise), 0.1, 0.7), 2)
+pairwise <- expand.grid(
+  train_country = sixteen_countries, test_country = sixteen_countries,
+  stringsAsFactors = FALSE
+)
+pairwise$rf1_test_rsq <- round(runif(nrow(pairwise), 0.1, 0.7), 2)
+pairwise$rf2_test_rsq <- round(runif(nrow(pairwise), 0.1, 0.7), 2)
+pairwise$rsq           <- pairwise$rf1_test_rsq  # legacy column
 write.csv(pairwise, file.path(output_path, "tables/country_pairwise_point_based_cross_validation.csv"), row.names = FALSE)
 
 var_imp <- data.frame(
@@ -432,11 +440,22 @@ summary_classes <- data.frame(
 )
 saveRDS(summary_classes, file.path(processed_path, "summarized_farm_area_ha_per_class_vs_sarah.rds"))
 
-# cross_validation_graphs.rds (used by S06, T01)
+# cross_validation_graphs.rds — T01 needs $var_importance_table with
+# columns: var, country, rank  (after inner_join with country codes)
+var_imp_long <- expand.grid(
+  var     = pred_cols,
+  country = sixteen_countries,
+  stringsAsFactors = FALSE
+)
+var_imp_long$rank <- round(runif(nrow(var_imp_long), 1, length(pred_cols)), 1)
+var_imp_long$importance <- round(runif(nrow(var_imp_long), 0.01, 0.25), 3)
+
 cv_graphs <- list(
-  country_results = data.frame(country = sixteen_countries,
-    rsq = round(runif(16, 0.2, 0.7), 2)),
-  summary = data.frame(model = model_names, mean_rsq = round(runif(10, 0.3, 0.6), 2))
+  country_results      = data.frame(country = sixteen_countries,
+                                    rsq = round(runif(16, 0.2, 0.7), 2)),
+  summary              = data.frame(model = model_names,
+                                    mean_rsq = round(runif(10, 0.3, 0.6), 2)),
+  var_importance_table = var_imp_long   # needed by T01 and S01
 )
 saveRDS(cv_graphs, file.path(processed_path, "cross_validation_graphs.rds"))
 
@@ -454,13 +473,68 @@ if (requireNamespace("ranger", quietly = TRUE)) {
 }
 
 # point_and_unconsolidated_means file (used by 04.6)
-pairwise$target  <- pairwise$test
+pairwise$target  <- pairwise$test_country
 pairwise$rsq_tps <- round(runif(nrow(pairwise), 0.1, 0.6), 2)
 write.csv(pairwise,
   file.path(processed_path, "point_and_unconsolidated_means_models_TPS_RF_leave_one_out.csv"),
   row.names = FALSE)
 
 message("   Processed stubs done.")
+
+# ==============================================================================
+# 6b. SARAH LOWDER XLSX STUBS (needed by 08.2_generate_virtual_farms.R)
+# ==============================================================================
+message("6b. Creating Sarah Lowder xlsx stubs...")
+
+sarah_dir <- file.path(raw_path <- "../data/raw", "web_scrapped/sarah_lowder")
+dir.create(sarah_dir, recursive = TRUE, showWarnings = FALSE)
+
+if (requireNamespace("writexl", quietly = TRUE) || requireNamespace("openxlsx", quietly = TRUE)) {
+  mk_xlsx <- function(df, path) {
+    if (requireNamespace("writexl", quietly = TRUE)) {
+      writexl::write_xlsx(df, path)
+    } else {
+      wb <- openxlsx::createWorkbook()
+      openxlsx::addWorksheet(wb, "Sheet1")
+      openxlsx::writeData(wb, "Sheet1", df)
+      openxlsx::saveWorkbook(wb, path, overwrite = TRUE)
+    }
+  }
+  # mmc3: nb_farms by country/size-class
+  mmc3 <- data.frame(
+    Country = sixteen_countries, ISO3 = sixteen_country_codes,
+    total_farms = round(runif(16, 1e5, 5e6)),
+    small = round(runif(16, 0.4, 0.7), 2), medium = round(runif(16, 0.1, 0.3), 2),
+    large = round(runif(16, 0.01, 0.1), 2), stringsAsFactors = FALSE
+  )
+  mk_xlsx(mmc3, file.path(sarah_dir, "1-s2.0-S0305750X2100067X-mmc3.xlsx"))
+  # mmc5: farm size class boundaries
+  mmc5 <- data.frame(
+    size_class = c("<0.5ha","0.5-1ha","1-2ha","2-5ha","5-10ha",">10ha"),
+    lower = c(0, 0.5, 1, 2, 5, 10), upper = c(0.5, 1, 2, 5, 10, Inf),
+    stringsAsFactors = FALSE
+  )
+  mk_xlsx(mmc5, file.path(sarah_dir, "1-s2.0-S0305750X2100067X-mmc5.xlsx"))
+  # mmc7: historical farm size demographics
+  mmc7 <- data.frame(
+    Country = rep(sixteen_countries, each = 3),
+    Year = rep(c(1990, 2000, 2010), 16),
+    avg_farm_size_ha = round(runif(48, 0.5, 5), 2),
+    stringsAsFactors = FALSE
+  )
+  mk_xlsx(mmc7, file.path(sarah_dir, "1-s2.0-S0305750X2100067X-mmc7.xlsx"))
+  message("   Sarah Lowder xlsx stubs done.")
+} else {
+  # Fallback: write CSVs and trick readxl by copying as .xlsx with valid OOXML
+  # Actually just create minimal valid xlsx manually with zip trick
+  for (fn in c("1-s2.0-S0305750X2100067X-mmc3.xlsx",
+               "1-s2.0-S0305750X2100067X-mmc5.xlsx",
+               "1-s2.0-S0305750X2100067X-mmc7.xlsx")) {
+    write.csv(data.frame(x = 1:3, y = letters[1:3]),
+              sub(".xlsx", ".csv", file.path(sarah_dir, fn)), row.names = FALSE)
+  }
+  message("   Sarah Lowder stubs written as CSV (writexl/openxlsx not available).")
+}
 
 # ==============================================================================
 # 7. FIGURE-SCRIPT STUBS  (fig2c.rds, fig.1a, fig.2a/b)
@@ -486,9 +560,16 @@ for (nm in c("Python_SPAM2010_rf_predictions_africa",
   terra::writeRaster(rf_pred, file.path(processed_path, paste0(nm, ".tif")), overwrite = TRUE)
 }
 
-# S01_drivers specific file
-fig3_s01 <- list(data = data.frame(x = 1:10, y = runif(10)))
-saveRDS(fig3_s01, "2026-01-24.CHINA_croplands_per_crop_per_aez.rds")
+# China cropland RDS — S01 reads $df_rel_long with product/aez/pred_farm_area_ha/value
+aez_levels     <- c("tropical highlands", "humid", "sub-humid", "semi-arid", "all_aez")
+product_levels <- c("all_crops","cattle","maize","sorghum","millet","cassava","legumes","non_food")
+china_long <- expand.grid(
+  pred_farm_area_ha = seq(0.2, 8, by = 0.2),
+  aez = aez_levels, product = product_levels, stringsAsFactors = FALSE
+)
+china_long$value <- runif(nrow(china_long), 0, 1)
+saveRDS(list(df_rel_long = china_long),
+        "2026-01-24.CHINA_croplands_per_crop_per_aez.rds")
 
 # Supppl.Fig06 used by S07
 div_table <- data.frame(var = pred_cols, divergence = runif(length(pred_cols)))

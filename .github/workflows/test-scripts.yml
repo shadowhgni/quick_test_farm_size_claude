@@ -151,7 +151,8 @@ jobs:
             "viridis", "RColorBrewer", "plotrix", "ggExtra",
             "httr", "curl", "rvest", "R.utils",
             "zip", "XNomial",
-            "testthat", "rmarkdown", "knitr"
+            "testthat", "rmarkdown", "knitr",
+            "writexl", "openxlsx"
           ))
 
           # GitHub-only packages (non-fatal)
@@ -239,4 +240,6 @@ jobs:
           path: |
             **/output/reports/*.md
             **/output/tables/*.csv
+            **/output/maps/**
+            **/output/graphs/**
           retention-days: 30
