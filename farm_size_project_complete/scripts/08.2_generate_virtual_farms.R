@@ -131,7 +131,7 @@ P00 <- ggplot(summary_gadm_1, aes(farm_area_ha, mean_pred)) +
        colour = 'Country', size = 'Nb of observ.') +
   scale_x_continuous(expand = c(0, 0), limits = c(0, 8.5)) +
   scale_y_continuous(expand = c(0, 0), limits = c(0, 8.5)) +
-  annotate('text', x = 5, y = 6, label = bquote(R^2== .(r2_gadm_1)) ) + 
+  annotate('text', x = 5, y = 6, label = paste0('R2=', round(r2_gadm_1, 2)) ) + 
   annotate('text', x = 4, y = 4.5, label = 'y = x' ) + 
   annotate('text', x = 1.8, y = 4.5, label = 'y = 2 x' ) + 
   annotate('text', x = 4, y = 1.6, label = 'y = 0.5 x' ) + 
@@ -152,7 +152,7 @@ P01 <- ggplot(summary_sixteen_country, aes(farm_area_ha, mean_pred)) +
        colour = 'Country', size = 'Nb of observ.') +
   scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +
   scale_y_continuous(expand = c(0, 0), limits = c(0, 5)) +
-  annotate('text', x = 4.5, y = 4.8, label = bquote(R^2== .(r2_country)) ) + 
+  annotate('text', x = 4.5, y = 4.8, label = paste0('R2=', round(r2_country, 2)) ) + 
   annotate('text', x = 3.5, y = 4, label = 'y = x' ) + 
   annotate('text', x = 1.7, y = 4, label = 'y = 2 x' ) + 
   annotate('text', x = 3.5, y = 1.4, label = 'y = 0.5 x' ) + 
@@ -226,7 +226,7 @@ P02 <- ggplot(comp_nb_farms,
   scale_x_continuous(expand = c(0, 0), limits = c(0, 24)) +
   scale_y_continuous(expand = c(0, 0), limits = c(0, 24)) +
   labs(x = 'Number of farms based on census (x millions)', y = 'Estim. number of farms based on predicted farm sizes (x millions)', colour = 'Census year (end)') +
-  annotate('text', x = 15, y = 18, label = bquote(R^2== .(r2_sarah)) ) + 
+  annotate('text', x = 15, y = 18, label = paste0('R2=', round(r2_sarah, 2)) ) + 
   theme_test() +
   theme(legend.position = c(0.85, 0.55),
         legend.text = element_text(hjust = 1))
@@ -262,7 +262,7 @@ P03 <- ggplot(comp_nb_farms,
   scale_x_continuous(expand = c(0.1, 0.1), limits = c(0.1, 24), trans = 'log10') +
   scale_y_continuous(expand = c(0.1, 0.1), limits = c(0.1, 24), trans = 'log10') +
   labs(x = 'Number of farms based on census, million (log scale)', y = 'Estim. nb. of farms based on predictions, million (log scale)', colour = 'Census year (end)') +
-  annotate('text', x = 13, y = 24, label = bquote(R^2== .(r2_sarah)) ) + 
+  annotate('text', x = 13, y = 24, label = paste0('R2=', round(r2_sarah, 2)) ) + 
   theme_test() +
   theme(legend.position = c(0.8, 0.25),
         legend.text = element_text(hjust = 1))

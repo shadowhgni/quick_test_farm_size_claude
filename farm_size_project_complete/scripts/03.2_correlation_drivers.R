@@ -205,11 +205,18 @@ lsms$gadm_0 <- lsms$gadm_1 <- lsms$gadm_2 <- lsms$gadm_3 <- lsms$gadm_4 <- NA
 lsms <- terra::vect(lsms, geom = c('x', 'y'), crs = 'EPSG:4326')
 
 # Extract GADM info
-lsms$gadm_0 <- terra::extract(sixteen_count_distr[, 'GID_0'], lsms)$GID_0
-lsms$gadm_1 <- terra::extract(sixteen_count_distr[, 'NAME_1'], lsms)$NAME_1
-lsms$gadm_2 <- terra::extract(sixteen_count_distr[, 'NAME_2'], lsms)$NAME_2
-lsms$gadm_3 <- terra::extract(sixteen_count_distr[, 'NAME_3'], lsms)$NAME_3
-lsms$gadm_4 <- terra::extract(sixteen_count_distr[, 'NAME_4'], lsms)$NAME_4
+# terra::extract on polygons can return multiple rows if polygons overlap.
+# Use 'touches=FALSE' and take first match per point to ensure length matches.
+safe_extract <- function(vect_poly, points, field) {
+  ex <- terra::extract(vect_poly[, field], points, touches = FALSE)
+  # Keep only first match per point (ID column gives point index)
+  ex[!duplicated(ex[, 'ID']), field]
+}
+lsms$gadm_0 <- safe_extract(sixteen_count_distr, lsms, 'GID_0')
+lsms$gadm_1 <- safe_extract(sixteen_count_distr, lsms, 'NAME_1')
+lsms$gadm_2 <- safe_extract(sixteen_count_distr, lsms, 'NAME_2')
+lsms$gadm_3 <- safe_extract(sixteen_count_distr, lsms, 'NAME_3')
+lsms$gadm_4 <- safe_extract(sixteen_count_distr, lsms, 'NAME_4')
 
 lsms_01 <- lsms  # Backup
 terra::writeVector(lsms_01, file.path(processed_path, 'backup_untrimmed_lsms_01_africa.shp'), overwrite = TRUE)

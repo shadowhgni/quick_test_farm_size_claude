@@ -4,7 +4,7 @@
 # Purpose: Visualise QRF predictions and OOB fit — loads outputs produced by
 #          the two companion Python scripts:
 #            06.1_basic_RF_model.py   -> rf_best_model.pkl, lsms_oob.rds
-#            06.3_quantile_RF.py      -> qrf_100quantiles_predictions_africa.tif
+#            06.2_quantile_RF.py      -> qrf_100quantiles_predictions_africa.tif
 #
 # NOTE: All R-based model training (caret, quantregForest, xgbTree, SpatialML)
 #       has been moved to the Python scripts above. Code is kept as comments
@@ -65,7 +65,7 @@ r2_sq3  <- safe_r2(lsms_spatial$farm_area_ha, lsms_spatial$pred_oob_sq3^3)
 message('OOB R2 (linear): ', r2)
 
 # ------------------------------------------------------------------------------
-# 3. 100-quantile raster from Python script 06.3_quantile_RF.py
+# 3. 100-quantile raster from Python script 06.2_quantile_RF.py
 # ------------------------------------------------------------------------------
 qrf_tif <- '../data/processed/qrf_100quantiles_predictions_africa.tif'
 if (file.exists(qrf_tif)) {
@@ -73,7 +73,7 @@ if (file.exists(qrf_tif)) {
   names(qrf_model_predictions) <- paste0('qrf_q', sprintf('%03d', 1:100))
   message('Loaded 100-quantile raster (', terra::nlyr(qrf_model_predictions), ' bands)')
 } else {
-  message('qrf_100quantiles_predictions_africa.tif not found - run 06.3_quantile_RF.py first.')
+  message('qrf_100quantiles_predictions_africa.tif not found - run 06.2_quantile_RF.py first.')
   message('Using synthetic stub for CI.')
   qrf_model_predictions <- terra::rast(
     replicate(100, terra::setValues(stacked[[1]], runif(terra::ncell(stacked[[1]]), 0.5, 5))))
@@ -83,7 +83,7 @@ if (file.exists(qrf_tif)) {
 
 # ==============================================================================
 ## R-TRAIN## All model training below is COMMENTED OUT.
-## R-TRAIN## Replaced by 06.1_basic_RF_model.py and 06.3_quantile_RF.py
+## R-TRAIN## Replaced by 06.1_basic_RF_model.py and 06.2_quantile_RF.py
 # ==============================================================================
 
 ##R-TRAIN## train_control <- caret::trainControl(method='cv', number=10, savePredictions='all', seeds=2024)

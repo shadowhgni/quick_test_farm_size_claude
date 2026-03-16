@@ -219,15 +219,17 @@ terra::writeRaster(theor_farms_application_rast, filename = '../data/processed/v
 # ------------------------------------------------------------------------------
 gc()
 
-# define a threshold to see percentage farms below it (here 0.5, 1,  and 2ha)
-map_at_threshold <- function(thres){
+# define a threshold to see percentage farms below it (here 0.5, 1, and 2ha)
+map_at_threshold <- function(thres) {
   share_farms_below_threshold <- theor_farms_application |>
-    filter(linear_farm_size_ha < thres) |>   
     group_by(x, y) |>
-    summarize(nb_farms_below = n() / nb_farms)
-  map_at_threshold <- terra::rast(share_farms_below_threshold) 
+    summarize(nb_farms_below = sum(linear_farm_size_ha < thres, na.rm = TRUE) / n(),
+              .groups = 'drop')
+  thr_rast <- tryCatch(terra::rast(share_farms_below_threshold),
+                       error = function(e) { message('CI: rast failed for thres=', thres); NULL })
   assign(paste0('share_farms_below_', thres), share_farms_below_threshold, envir = .GlobalEnv)
-  terra::writeRaster(map_at_threshold, file = paste0('../data/processed/prop_farms_below_', thres,'.tif'), overwrite = T)
+  if (!is.null(thr_rast))
+    terra::writeRaster(thr_rast, file = paste0('../data/processed/prop_farms_below_', thres, '.tif'), overwrite = TRUE)
 }
 sapply(c(0.5, 1, 2), map_at_threshold)
 # e.g. %tage of farms below 0.5, 1, and 2 ha across SSA

@@ -101,7 +101,9 @@ for(var in c('harv_area', 'production', 'value')){
   if(var != 'value'){
     each_2010_crop <- terra::rast(paste0(input_path, '/spam/spam2010/', dir(paste0(input_path,'/spam/spam2010'))[grep(paste0(var_code, '_[A-Z]+_A.tif$'),  dir(paste0(input_path,'/spam/spam2010')))]) ) 
     names(each_2010_crop) <- paste0(substr(names(each_2010_crop), 20, 23), var_code)
-    sudan_mask <- terra::crop(each_2010_crop, subset(ssa, ssa$NAME_0 == 'Sudan'), mask = T)
+    sudan_rows <- which(terra::values(ssa)[['NAME_0']] == 'Sudan')
+    if (length(sudan_rows) == 0) sudan_rows <- 1L
+    sudan_mask <- terra::crop(each_2010_crop, ssa[sudan_rows, ], mask = TRUE)
     each_crop <- terra::merge(each_2017_crop, sudan_mask); rm(each_2010_crop, each_2017_crop)
     names(each_crop) <- make.unique(names(each_crop))  # avoid duplicate name error in summarize
   } else {each_crop <- each_2017_crop; rm(each_2017_crop)}
@@ -109,7 +111,7 @@ for(var in c('harv_area', 'production', 'value')){
   
   crop_rel_importance <- each_crop |> 
     terra::as.data.frame() |> 
-    summarize(across(everything(), sum, na.rm = T)) |>
+    summarize(across(everything(), \(x) sum(x, na.rm = TRUE))) |>
     unlist() |>
     sort(decreasing = T)
   
@@ -195,7 +197,7 @@ for(var in c('harv_area', 'production', 'value')){
 all_df_absolute <- all_df |> 
   select(!c(x, y, id.y)) |>
   group_by(variable, aez, region, NAME_0, GID_0, pred_farm_area_ha) |>
-  summarize_all(sum, na.rm = T) |>
+  summarize(across(everything(), \(x) sum(x, na.rm = TRUE))) |>
   arrange(aez, pred_farm_area_ha)
 
 all_df_abs_long <- all_df_absolute |>
@@ -209,7 +211,7 @@ all_df_rel_per_aez <- all_df_absolute |>
 all_df_rel_all_aez <- all_df |> 
   select(!c(x, y, id.y)) |>
   group_by(variable, aez, region, NAME_0, GID_0, pred_farm_area_ha) |>
-  summarize_all(sum, na.rm = T) |>
+  summarize(across(everything(), \(x) sum(x, na.rm = TRUE))) |>
   ungroup() |>
   arrange(pred_farm_area_ha) |>
   mutate(across( where(is.numeric) & !any_of('pred_farm_area_ha'), ~ cumsum(.)/sum(.)),

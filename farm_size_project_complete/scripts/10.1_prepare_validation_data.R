@@ -211,12 +211,18 @@ major_aez <-simpl_aez |>
                filter(rel > 0.05) |> # exclude AEZ contributing to less than 5% of total cropland
                select(aez))
 
-df <- c(cattle, all_crops, maize_ssa, sorgh_ssa, pmil_ssa, cassa_ssa, grou_ssa, rice_ssa, beans_ssa, 
-        millet_ssa, legm_ssa, non_food_ssa )
+df <- c(cattle, all_crops, maize_ssa, sorgh_ssa, pmil_ssa, cassa_ssa, grou_ssa, rice_ssa, beans_ssa,
+        millet_ssa, legm_ssa, non_food_ssa)
 df <- c(rf_model_predictions, terra::resample(df, rf_model_predictions))
-df <- inner_join(major_aez, na.omit(terra::as.data.frame(df, xy = T))) |>
-  rename(maize = MAIZ, sorghum = SORG, pearl_millet = PMIL,
-         cassava = CASS, groundnuts = GROU, rice = RICE, beans = BEAN,)
+df_frame <- na.omit(terra::as.data.frame(df, xy = T))
+df_frame  <- inner_join(major_aez, df_frame)
+
+# Rename only columns that actually exist (tryCatch fallbacks may use generic band names)
+rename_map <- c(maize='MAIZ', sorghum='SORG', pearl_millet='PMIL',
+                cassava='CASS', groundnuts='GROU', rice='RICE', beans='BEAN')
+rename_map <- rename_map[rename_map %in% names(df_frame)]
+if (length(rename_map)) df_frame <- dplyr::rename(df_frame, !!!setNames(rename_map, names(rename_map)))
+df <- df_frame
 
 # df$fsize <- round(df$fsize, 1)
 # df_agg <- aggregate(df[2], by=list('fsize'=df$fsize), FUN=sum)

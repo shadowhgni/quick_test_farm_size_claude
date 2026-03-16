@@ -72,7 +72,7 @@ kenya_aggregated <- tibble::tibble(
   nb_farms = round(runif(47, 5000, 150000))
 )
 names(kenya_aggregated) <- c('NAME_1', 'nb_farms',
-                        paste0('acres_', c(sprintf('%04g', c(1, 2, 5, 10, 20, 50, 100, 500, 1000)), 'plus', 'unknown')))
+                        paste0('acres_', c(sprintf('%04d', c(1, 2, 5, 10, 20, 50, 100, 500, 1000)), 'plus', 'unknown')))
 kenya_aggregated[, 3:ncol(kenya_aggregated)] <- lapply(3:ncol(kenya_aggregated), function(i)
   round(kenya_aggregated$nb_farms * runif(nrow(kenya_aggregated), 0.02, 0.25)))
 ken_gadm1 <- kenya_aggregated |>
@@ -252,7 +252,7 @@ P01 <- ggplot(compare_pred_measured_gadm1, aes(avg_farm_area_ha, avg_pred_farm_a
   scale_x_continuous(expand = c(0, 0), limits = c(0, 7.5)) +
   scale_y_continuous(expand = c(0, 0), limits = c(0, 7.5)) +
   labs(x = 'Average farm size from national sources, ha', y = 'Predicted average farm size, ha', colour = 'Country') +
-  annotate('text', x = 6, y = 6.5, label = bquote(R^2 == .(r2_gadm1_validation))) +
+  annotate('text', x = 6, y = 6.5, label = paste0('R2=', round(r2_gadm1_validation, 2))) +
   scale_colour_brewer(palette = 'Set1') +
   theme_test() 
 P01

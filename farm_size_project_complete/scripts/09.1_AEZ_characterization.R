@@ -63,13 +63,20 @@ names(sarah_nb_farms) <- c('country', 'census_year', 'nb_farms', 'source', 'gadm
 # quick wrangling of Sarah's excel sheet
 names(sarah_farm_size_class) <- c('NAME_0', 'year', 'nb_farms_or_area', 'total', 'fsize0_1ha', 'fsize1_2ha', 'fsize2_5ha', 'fsize5_10ha', 'fsize10_20ha', 'fsize20_50ha',
                                   'fsize50_100ha', 'fsize100_200ha', 'fsize200_500ha', 'fsize500_1000ha', 'fsize1000ha_above', 'source_code', 'income_group')
-country_list <- na.omit(sarah_farm_size_class$NAME_0[!grepl('note|source', sarah_farm_size_class$NAME_0, ignore.case = T)])
-year_list <- na.omit(sarah_farm_size_class$year)
 sarah_farm_size_class <- sarah_farm_size_class |>
   filter(!grepl('source|note', NAME_0, ignore.case = T),
-         !if_all(everything(), is.na)) |>
-  mutate(NAME_0 = rep(country_list, each = 2),
-         year = rep(year_list, each = 2))
+         !if_all(everything(), is.na))
+
+# country_list: unique countries in order of appearance (handles both real data where
+# NAME_0 appears only in the first of each F/A pair, and our stub where it appears in both)
+country_list <- unique(na.omit(sarah_farm_size_class$NAME_0[
+  !grepl('note|source', sarah_farm_size_class$NAME_0, ignore.case = T)]))
+year_list    <- unique(na.omit(sarah_farm_size_class$year))
+
+# Rebuild NAME_0 and year cleanly: 2 rows per country (F then A)
+sarah_farm_size_class <- sarah_farm_size_class |>
+  mutate(NAME_0 = rep(country_list, each = 2)[seq_len(n())],
+         year   = rep(year_list,    each = 2)[seq_len(n())])
 sarah_ssa_fsize_class <- sarah_farm_size_class |>
   mutate(certitude =ifelse(grepl('\\*', NAME_0), 'missing_info', 'complete_info'),
          NAME_0 = gsub('\\*', '', NAME_0)) |> 

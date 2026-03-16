@@ -110,44 +110,57 @@ country_farm_area_validation <- function(cty = 'Angola'){
   )
   if (is.null(cty_continuous)) return(invisible(NULL))
 
-  png(paste0('../validation/', cty, '_continuous.png'), units = 'in', width = 5.5, height = 5.5, res=1000)
-  M_cont <- {
-    terra::plot(cty_continuous, main = paste0('Predicted average farm sizes in ', cty))
-    terra::plot(cty_vect, add = T)
-  }
-  dev.off()
+  # Only plot if the raster has finite values (all-NA rasters crash plot.window)
+  has_data <- function(r) !is.null(r) && terra::nlyr(r) > 0 && any(is.finite(terra::values(r)), na.rm = TRUE)
 
-  pal <- colorRampPalette(c('darkred', 'orange', 'gold', 'darkolivegreen3', 'darkgreen'))
-  new_ext <- floor(terra::ext(cty_vect))
-  new_ext[1] <- new_ext[1] - 3.5
-  leg_x <- unname(terra::ext(cty_vect)[1] - 3)
-  leg_y <- unname(terra::ext(cty_vect)[3] + 5.5)
-  png(paste0('../validation/', cty, '_catego.png'), units = 'in', width = 5.5, height = 5.5, res=1000)
-  M_catego <- {
-    terra::plot(new_ext, main = paste0('Predicted average farm sizes in ', cty), axes = F)
-    terra::plot(cty_continuous,
-                breaks = c(0, 0.5, 1, 1.5, 2, 5, Inf), col = pal(6), legend = F, cex = 1, axes = F, add = T)
-    legend(leg_x, leg_y, bty='y', cex=0.7, ncol=1, box.col="white",
-           title = "Farm size", legend = c('< 0.5 ha', '0.5 - 1 ha', '1 - 1.5 ha', '1.5 - 2 ha', '2 - 5 ha', '> 5 ha'),
-           fill = pal(6), horiz = F)
-    terra::plot(cty_vect, axes = F, add = T)
+  if (has_data(cty_continuous)) {
+    png(paste0('../validation/', cty, '_continuous.png'), units = 'in', width = 5.5, height = 5.5, res = 150)
+    tryCatch({
+      terra::plot(cty_continuous, main = paste0('Predicted average farm sizes in ', cty))
+      terra::plot(cty_vect, add = T)
+    }, error = function(e) message('CI: continuous plot skipped: ', e$message))
+    dev.off()
+
+    pal     <- colorRampPalette(c('darkred', 'orange', 'gold', 'darkolivegreen3', 'darkgreen'))
+    new_ext <- floor(terra::ext(cty_vect))
+    new_ext[1] <- new_ext[1] - 3.5
+    leg_x   <- unname(terra::ext(cty_vect)[1] - 3)
+    leg_y   <- unname(terra::ext(cty_vect)[3] + 5.5)
+    png(paste0('../validation/', cty, '_catego.png'), units = 'in', width = 5.5, height = 5.5, res = 150)
+    tryCatch({
+      terra::plot(new_ext, main = paste0('Predicted average farm sizes in ', cty), axes = F)
+      terra::plot(cty_continuous, breaks = c(0, 0.5, 1, 1.5, 2, 5, Inf), col = pal(6),
+                  legend = F, cex = 1, axes = F, add = T)
+      legend(leg_x, leg_y, bty = 'y', cex = 0.7, ncol = 1, box.col = 'white',
+             title = 'Farm size', legend = c('< 0.5 ha','0.5 - 1 ha','1 - 1.5 ha','1.5 - 2 ha','2 - 5 ha','> 5 ha'),
+             fill = pal(6), horiz = F)
+      terra::plot(cty_vect, axes = F, add = T)
+    }, error = function(e) message('CI: catego plot skipped: ', e$message))
+    dev.off()
+  } else {
+    message('CI: ', cty, ' continuous raster has no finite values — skipping plots')
   }
-  dev.off()
-  
-  png(paste0('../validation/', cty, '_gadm1_avg.png'), units = 'in', width = 5.5, height = 5.5, res=1000)
-  M_gadm1 <-{
-    terra::plot(cty_gadm1$avg_pred_farm_area_ha, main = paste0('Pred. avg. farm sizes - admin level 1 in ', cty))
-    terra::plot(cty_vect, add = T)
+
+  if (has_data(cty_gadm1)) {
+    png(paste0('../validation/', cty, '_gadm1_avg.png'), units = 'in', width = 5.5, height = 5.5, res = 150)
+    tryCatch({
+      terra::plot(cty_gadm1$avg_pred_farm_area_ha,
+                  main = paste0('Pred. avg. farm sizes - admin level 1 in ', cty))
+      terra::plot(cty_vect, add = T)
+    }, error = function(e) message('CI: gadm1 plot skipped: ', e$message))
+    dev.off()
   }
-  dev.off()
-  
-  png(paste0('../validation/', cty, '_gadm2_avg.png'), units = 'in', width = 5.5, height = 5.5, res=1000)
-  M_gadm2 <-{
-    terra::plot(cty_gadm2$avg_pred_farm_area_ha, main = paste0('Pred. avg. farm sizes - admin level 2 in ', cty))
-    terra::plot(cty_vect, add = T)
+
+  if (has_data(cty_gadm2)) {
+    png(paste0('../validation/', cty, '_gadm2_avg.png'), units = 'in', width = 5.5, height = 5.5, res = 150)
+    tryCatch({
+      terra::plot(cty_gadm2$avg_pred_farm_area_ha,
+                  main = paste0('Pred. avg. farm sizes - admin level 2 in ', cty))
+      terra::plot(cty_vect, add = T)
+    }, error = function(e) message('CI: gadm2 plot skipped: ', e$message))
+    dev.off()
   }
-  dev.off()
-  
+
   write_csv(cty_avg_gadm1, file = paste0('../validation/', cty, '_gadm1.csv'))
   write_csv(cty_avg_gadm2, file = paste0('../validation/', cty, '_gadm2.csv'))
   if(file.exists(paste0('../validation/', cty, '.zip'))) unlink(paste0('../validation/', cty, '.zip'))
