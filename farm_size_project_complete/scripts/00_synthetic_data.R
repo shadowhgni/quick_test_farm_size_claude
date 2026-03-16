@@ -63,7 +63,7 @@ sixteen_country_codes  <- c("BEN","BFA","CIV","ETH","GHA","GNB","MWI","MLI",
                              "NER","NGA","RWA","SEN","TZA","TGO","UGA","ZMB")
 country_lon  <- c(2,  -1.5, -5,  38,  -1,  -15,  34,  -4,   8,   8,   30, -14, 35,  1,  32,  28)
 country_lat  <- c(9,  12,    7,   9,   8,   12, -13,  17,  17,   9,  -2,  14,  -6,  8,   1, -15)
-n_per_country <- 100L   # 100 training obs per country; enough for all downstream ML steps
+n_per_country <- 200L   # 200 training obs per country; gives caret enough rows for 3–10 fold CV
 
 # ==============================================================================
 # 1. SYNTHETIC RASTERS
