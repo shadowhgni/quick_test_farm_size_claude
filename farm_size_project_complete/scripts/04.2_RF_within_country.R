@@ -428,18 +428,18 @@ print(fin)
 mult_rsq1 <- if (nrow(all_rsq) > 0) all_rsq else
   data.frame(country = character(), stringsAsFactors = FALSE)
 
-model_perf <- if (nrow(mult_rsq1) > 0 && any(startsWith(names(mult_rsq1), 'rsq_')))
+model_perf <- if (nrow(mult_rsq1) > 0 && any(startsWith(names(mult_rsq1), 'rsq_'))) {
   mult_rsq1 |>
     pivot_longer(cols = starts_with('rsq_'),
                  names_prefix = 'rsq_',
                  names_to = 'model',
                  values_to = 'r_sq') |>
     arrange(country, desc(r_sq))
-else data.frame()
+} else data.frame()
 
-model_perf_wide <- if (nrow(model_perf) > 0)
+model_perf_wide <- if (nrow(model_perf) > 0) {
   model_perf |> pivot_wider(id_cols = model, names_from = country, values_from = r_sq)
-else data.frame()
+} else data.frame()
 
 saveRDS(list(mult_rsq1 = mult_rsq1,
              model_perf = model_perf,

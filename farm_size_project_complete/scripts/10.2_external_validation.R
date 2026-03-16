@@ -61,9 +61,9 @@ country_farm_area_validation <- function(cty = 'Angola'){
   print(paste0('------------ ', cty, '---------------'))
   cty_farm_pred_df <- subset(val_farm_area, NAME_0 == cty)
   gadm_dir <- paste0(input_path, '/gadm/', cty, '/gadm/')
-  cty_gadm2_files <- if (dir.exists(gadm_dir))
+  cty_gadm2_files <- if (dir.exists(gadm_dir)) {
     dir(gadm_dir, full.names = TRUE)[grep('_2_pk.rds$', dir(gadm_dir), ignore.case = TRUE)]
-  else character(0)
+  } else character(0)
   if (!length(cty_gadm2_files)) {
     message('CI-SKIP 10.2: no GADM file for ', cty)
     return(invisible(NULL))
