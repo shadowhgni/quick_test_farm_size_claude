@@ -53,7 +53,8 @@ for (d in c(
 
 # ── Config ─────────────────────────────────────────────────────────────────────
 ssa_ext   <- terra::ext(-18, 52, -35, 15)
-res       <- 0.5
+res       <- 0.5   # training/extraction rasters — 14 k cells, fine-grained enough for farm matching
+res_pred  <- 2.0   # prediction output rasters  — 875 cells total (~4-9 cells per country), tiny QRF stack
 
 sixteen_countries      <- c("Benin","Burkina","Cote_d_Ivoire","Ethiopia","Ghana",
                              "Guinea_Bissau","Malawi","Mali","Niger","Nigeria",
@@ -62,15 +63,15 @@ sixteen_country_codes  <- c("BEN","BFA","CIV","ETH","GHA","GNB","MWI","MLI",
                              "NER","NGA","RWA","SEN","TZA","TGO","UGA","ZMB")
 country_lon  <- c(2,  -1.5, -5,  38,  -1,  -15,  34,  -4,   8,   8,   30, -14, 35,  1,  32,  28)
 country_lat  <- c(9,  12,    7,   9,   8,   12, -13,  17,  17,   9,  -2,  14,  -6,  8,   1, -15)
-n_per_country <- 1000   # ≥700 to pass the small-wave filter
+n_per_country <- 100L   # 100 training obs per country; enough for all downstream ML steps
 
 # ==============================================================================
 # 1. SYNTHETIC RASTERS
 # ==============================================================================
 message("1. Creating synthetic rasters...")
 
-make_rast <- function(name, mn, sd, positive = TRUE, clamp = NULL) {
-  r      <- terra::rast(ssa_ext, res = res, crs = "EPSG:4326")
+make_rast <- function(name, mn, sd, positive = TRUE, clamp = NULL, r_res = res) {
+  r      <- terra::rast(ssa_ext, res = r_res, crs = "EPSG:4326")
   nc     <- terra::ncell(r)
   xy     <- terra::xyFromCell(r, seq_len(nc))
   z_lat  <- (xy[,2] - mean(xy[,2])) / sd(xy[,2])
@@ -115,33 +116,34 @@ terra::writeRaster(stacked,
 saveRDS(stacked, file.path(processed_path, "stacked_africa.Rds"))
 
 # Prediction rasters (single-band: mean farm size per pixel)
-rf_pred   <- make_rast("rf_mean", 2, 0.8)
+# res_pred = 2° → ~875 cells over SSA, 4-9 cells per country — tiny footprint
+rf_pred   <- make_rast("rf_mean", 2, 0.8, r_res = res_pred)
 terra::writeRaster(rf_pred,
   file.path(processed_path, "rf_model_predictions_SSA.tif"), overwrite = TRUE)
 terra::writeRaster(rf_pred,
   file.path(processed_path, "rf_predictions_africa.tif"),     overwrite = TRUE)
 
-# QRF: 100-quantile prediction stack
-qrf_pred  <- terra::rast(replicate(100, make_rast("q", 2, 1.5)))
+# QRF: 100-quantile prediction stack at coarse res — 875 × 100 = 87,500 values (~0.7 MB)
+qrf_pred  <- terra::rast(replicate(100, make_rast("q", 2, 1.5, r_res = res_pred)))
 names(qrf_pred) <- paste0("q", 1:100)
 terra::writeRaster(qrf_pred,
   file.path(processed_path, "qrf_100quantiles_predictions_africa.tif"), overwrite = TRUE)
 
-# Forest / dryland masks (binary)
-forest_mask <- make_rast("forest", 0.3, 0.3, clamp = c(0,1))
+# Forest / dryland masks (binary) — coarse res, prediction use only
+forest_mask <- make_rast("forest", 0.3, 0.3, clamp = c(0,1), r_res = res_pred)
 terra::writeRaster(forest_mask,
   file.path(processed_path, "mask_forest_ssa.tif"), overwrite = TRUE)
-dryland_mask <- make_rast("dryland", 0.4, 0.3, clamp = c(0,1))
+dryland_mask <- make_rast("dryland", 0.4, 0.3, clamp = c(0,1), r_res = res_pred)
 terra::writeRaster(dryland_mask,
   file.path(processed_path, "mask_drylands_ssa.tif"), overwrite = TRUE)
 
 # Cropland mask (all cropland sources combined)
-all_cropland <- make_rast("cropland_mask", 0.5, 0.3, clamp = c(0,1))
+all_cropland <- make_rast("cropland_mask", 0.5, 0.3, clamp = c(0,1), r_res = res_pred)
 terra::writeRaster(all_cropland,
   file.path(raw_spatial, "landuse/landuse/all_cropland_mask.tif"), overwrite = TRUE)
 
-# Farm-count rasters
-nb_farms_grid <- make_rast("nb_farms", 500, 300)
+# Farm-count rasters — coarse res
+nb_farms_grid <- make_rast("nb_farms", 500, 300, r_res = res_pred)
 terra::writeRaster(nb_farms_grid,
   file.path(processed_path, "nb_farms_per_grid_cell.tif"), overwrite = TRUE)
 terra::writeRaster(nb_farms_grid,
@@ -151,8 +153,8 @@ terra::writeRaster(nb_farms_grid,
 terra::writeRaster(qrf_pred,
   file.path(processed_path, "hundred_quantiles_rasters.tif"), overwrite = TRUE)
 
-# Distribution parameter rasters
-farm_dist_parms <- terra::rast(replicate(3, make_rast("p", 1, 0.5)))
+# Distribution parameter rasters — coarse res
+farm_dist_parms <- terra::rast(replicate(3, make_rast("p", 1, 0.5, r_res = res_pred)))
 names(farm_dist_parms) <- c("mu", "sigma", "xi")
 terra::writeRaster(farm_dist_parms,
   file.path(processed_path, "farm_size_distribution_parms.tif"), overwrite = TRUE)
@@ -448,12 +450,12 @@ message("7. Creating figure stubs...")
 fig2c <- data.frame(x = rnorm(200), y = rnorm(200), country = sample(sixteen_countries, 200, TRUE))
 saveRDS(fig2c, "fig2c.rds")
 
-# fig.1a, fig.2a, fig.2b (terra rasters used by F02, F03)
+# fig.1a, fig.2a, fig.2b — reuse rf_pred (already at res_pred = 2°)
 terra::writeRaster(rf_pred, "fig.1a_nb_of_farm_per_grid_cell.tif", overwrite = TRUE)
 terra::writeRaster(rf_pred, "fig.2a_quantile_10_fsizes.tif",       overwrite = TRUE)
 terra::writeRaster(rf_pred, "fig.2b_quantile_90_fsizes.tif",       overwrite = TRUE)
 
-# Python prediction stubs (used by 07.2)
+# Python prediction stubs — coarse res, same as rf_pred
 for (nm in c("Python_SPAM2010_rf_predictions_africa",
              "Python_SPAM2017_rf_predictions_africa",
              "Python_SPAM2020_rf_predictions_africa",
@@ -552,7 +554,9 @@ message(paste(rep("=",70), collapse=""))
 message("  Farms generated:   ", nrow(lsms_raw))
 message("  After 95th trim:   ", nrow(lsms_ml))
 message("  Countries:         ", length(sixteen_countries))
-message("  Raster layers:     ", terra::nlyr(all_predictors))
+message("  Training res:      ", res, "° (~", round(res*111), " km) — ", terra::ncell(all_predictors[[1]]), " cells/layer")
+message("  Prediction res:    ", res_pred, "° (~", round(res_pred*111), " km) — ", terra::ncell(rf_pred), " cells/layer (~3-9 per country)")
+message("  QRF stack cells:   ", terra::ncell(qrf_pred[[1]]), " cells × 100 quantiles = ", terra::ncell(qrf_pred[[1]])*100, " values")
 message("  Prediction stubs:  6 Python + RF + QRF rasters")
 message("  Output stubs:      ", length(list.files(file.path(output_path,"tables"))))
 message("  Processed files:   ", length(list.files(processed_path)))
