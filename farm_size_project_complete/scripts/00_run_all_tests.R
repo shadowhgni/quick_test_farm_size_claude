@@ -311,8 +311,7 @@ message("PHASE 1: Install/Download Scripts (skipped in CI)")
 message(paste(rep("-", 70), collapse = ""))
 for (s in c("00_install_packages.R", "00_download_spatial_data.R",
                "01.2_chirps_summarize.R", "02.1_compile_LSMS.R",
-               "05.2_RF_optimization_summary.R",   # 620s timeout — SLURM array job
-               "T02_heterogeneity_drivers.R"))       # needs real IFPRI AEZ raster
+               "05.2_RF_optimization_summary.R"))   # 620s timeout — SLURM array job
   record(s, TRUE, 0, "SKIPPED (download/SLURM/data-only script)")
 
 # ==============================================================================
