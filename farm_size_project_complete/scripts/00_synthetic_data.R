@@ -637,8 +637,12 @@ for (spam_yr in c("spam2010", "spam2017")) {
   dir.create(spam_dir, recursive = TRUE, showWarnings = FALSE)
   # T02 uses var_code _H, _P, _V; crops MAIZ, SOYB, RICE, WHEA, SORG, PMIL, SMIL, CASS
   # 10.1 uses the same pattern. Filename: spam{yr}V2r0_SSA_{code}_{CROP}_A.tif
+  # All crops referenced in 10.1/T02: MAIZ, SOYB, RICE, WHEA, SORG, PMIL, SMIL,
+  # CASS, GROU, BEAN, CHIC, COWP, PIGE, LENT, OPUL (T02 reads every _P_[A-Z]+_A.tif)
+  all_crops_spam <- c("MAIZ","SOYB","RICE","WHEA","SORG","PMIL","SMIL","CASS",
+                      "GROU","BEAN","CHIC","COWP","PIGE","LENT","OPUL")
   for (vcode in c("H", "P", "V")) {
-    for (crop in c("MAIZ", "SOYB", "RICE", "WHEA", "SORG", "PMIL", "SMIL", "CASS")) {
+    for (crop in all_crops_spam) {
       terra::writeRaster(
         make_rast(paste0(crop, vcode), 500, 300),
         file.path(spam_dir, paste0("spam", spam_yr, "V2r0_SSA_", vcode, "_", crop, "_A.tif")),
@@ -845,7 +849,10 @@ saveRDS(list(
 ), "fig.2d_mean_fsize_gini_coefs.rds")
 
 # F02 reads files one level up (../fig.*)
-terra::writeRaster(rf_pred,    "../fig.1a_nb_of_farm_per_grid_cell.tif", overwrite = TRUE)
+# F02 uses fig1a$spam_2017 (nb of farms from SPAM) and fig1a$pred_farm_area_ha
+fig1a_stack <- c(rf_pred, rf_pred * runif(terra::ncell(rf_pred), 0.8, 1.2))
+names(fig1a_stack) <- c("spam_2017", "pred_farm_area_ha")
+terra::writeRaster(fig1a_stack, "../fig.1a_nb_of_farm_per_grid_cell.tif", overwrite = TRUE)
 terra::writeRaster(qrf_q010_r, "../fig.2a_quantile_10_fsizes.tif",       overwrite = TRUE)
 terra::writeRaster(qrf_q090_r, "../fig.2b_quantile_90_fsizes.tif",       overwrite = TRUE)
 
