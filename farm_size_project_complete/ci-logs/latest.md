@@ -1,5 +1,5 @@
 # CI Run Log
-Run: 23139259735  Commit: 440a0d38feefc6525a6f893ec7a8e22015d69de0  Time: Mon Mar 16 10:48:43 UTC 2026
+Run: 23140653527  Commit: 5b4db60e255e971935f9c2201cd4223d6436082b  Time: Mon Mar 16 11:18:24 UTC 2026
 
 ## Raw Output
 ```
@@ -7,7 +7,7 @@ Run: 23139259735  Commit: 440a0d38feefc6525a6f893ec7a8e22015d69de0  Time: Mon Ma
 ======================================================================
 FARM SIZE PREDICTION - FULL SEQUENTIAL PIPELINE TEST
 ======================================================================
-Started: 2026-03-16 10:33:36.243818
+Started: 2026-03-16 11:10:44.377495
 
 Scripts dir: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/farm_size_project_complete/scripts
 
@@ -22,9 +22,9 @@ PHASE 0: Synthetic Data Generation
 [00_synthetic_data.R]    Rasters done.
 [00_synthetic_data.R]    Yearly rainfall stubs done.
 [00_synthetic_data.R] 2. Creating synthetic LSMS survey data...
-[00_synthetic_data.R]    LSMS CSV + RDS done  (2770 farms).
+[00_synthetic_data.R]    LSMS CSV + RDS done  (2766 farms).
 [00_synthetic_data.R] 3. Extracting predictors at farm locations...
-[00_synthetic_data.R]    Analysis datasets done  (1652 farms in 95th trim).
+[00_synthetic_data.R]    Analysis datasets done  (1639 farms in 95th trim).
 [00_synthetic_data.R] 4. Creating synthetic GADM boundaries...
 [00_synthetic_data.R]    GADM boundaries done.
 [00_synthetic_data.R] 5. Creating output table stubs...
@@ -32,6 +32,8 @@ PHASE 0: Synthetic Data Generation
 [00_synthetic_data.R] 6. Creating processed data stubs...
 [00_synthetic_data.R]    RF model stub done.
 [00_synthetic_data.R]    Processed stubs done.
+[00_synthetic_data.R] 6b. Creating Sarah Lowder xlsx stubs...
+[00_synthetic_data.R]    Sarah Lowder xlsx stubs done.
 [00_synthetic_data.R] 7. Creating figure stubs...
 [00_synthetic_data.R]    Figure stubs done.
 [00_synthetic_data.R] 8b. Creating leave-one stubs for 04.5 / 04.6...
@@ -41,8 +43,8 @@ PHASE 0: Synthetic Data Generation
 [00_synthetic_data.R] ======================================================================
 [00_synthetic_data.R] SYNTHETIC DATA GENERATION COMPLETE
 [00_synthetic_data.R] ======================================================================
-[00_synthetic_data.R]   Farms generated:   2770
-[00_synthetic_data.R]   After 95th trim:   1652
+[00_synthetic_data.R]   Farms generated:   2766
+[00_synthetic_data.R]   After 95th trim:   1639
 [00_synthetic_data.R]   Countries:         16
 [00_synthetic_data.R]   Raster layers:     11
 [00_synthetic_data.R]   Training res:      0.5° (~56 km) — 14000 cells/layer
@@ -51,14 +53,15 @@ PHASE 0: Synthetic Data Generation
 [00_synthetic_data.R]   Prediction stubs:  6 Python + RF + QRF rasters
 [00_synthetic_data.R]   Output stubs:      15
 [00_synthetic_data.R]   Processed files:   134
-  ✓ PASS  00_synthetic_data                              (  6.2s)  
+  ✓ PASS  00_synthetic_data                              (  6.4s)  
 ----------------------------------------------------------------------
 PHASE 1: Install/Download Scripts (skipped in CI)
 ----------------------------------------------------------------------
-  ✓ PASS  00_install_packages.R                          (  0.0s)  SKIPPED (download-only script)
-  ✓ PASS  00_download_spatial_data.R                     (  0.0s)  SKIPPED (download-only script)
-  ✓ PASS  01.2_chirps_summarize.R                        (  0.0s)  SKIPPED (download-only script)
-  ✓ PASS  02.1_compile_LSMS.R                            (  0.0s)  SKIPPED (download-only script)
+  ✓ PASS  00_install_packages.R                          (  0.0s)  SKIPPED (download/SLURM-only script)
+  ✓ PASS  00_download_spatial_data.R                     (  0.0s)  SKIPPED (download/SLURM-only script)
+  ✓ PASS  01.2_chirps_summarize.R                        (  0.0s)  SKIPPED (download/SLURM-only script)
+  ✓ PASS  02.1_compile_LSMS.R                            (  0.0s)  SKIPPED (download/SLURM-only script)
+  ✓ PASS  05.2_RF_optimization_summary.R                 (  0.0s)  SKIPPED (download/SLURM-only script)
 ----------------------------------------------------------------------
 PHASE 2: Raw Data Compilation (01.x – 02.x)
 ----------------------------------------------------------------------
@@ -100,7 +103,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [01.1_chirps_download.R]   Farm size range:0.1-21.18ha
 [01.1_chirps_download.R]   Median farm:    1.33ha
 [01.1_chirps_download.R] 
-[01.1_chirps_download.R] Finished: 2026-03-16 10:33:44.359479
+[01.1_chirps_download.R] Finished: 2026-03-16 11:10:52.838723
 [01.1_chirps_download.R] ======================================================================
   ✓ PASS  01.1_chirps_download.R                         (  1.9s)  
 [01.3_chirps_trends.R] Loading required package: terra
@@ -123,7 +126,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [01.3_chirps_trends.R]   Missing: chirps-v2.0.1981.01.3.tif
 [01.3_chirps_trends.R] Error: [writeRaster] there are no cell values
 [01.3_chirps_trends.R] Execution halted
-  ✗ FAIL  01.3_chirps_trends.R                           (  4.4s)  Exit code: 1
+  ✗ FAIL  01.3_chirps_trends.R                           (  4.5s)  Exit code: 1
 [01.4_prepare_spatial_layers.R] Loading required package: terra
 [01.4_prepare_spatial_layers.R] terra 1.8.93
 [01.4_prepare_spatial_layers.R] === Loading yearly rainfall data ===
@@ -144,17 +147,17 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [01.4_prepare_spatial_layers.R] 
 [01.4_prepare_spatial_layers.R] === Summary Statistics ===
 [01.4_prepare_spatial_layers.R] Mean Annual Rainfall (mm):
-[01.4_prepare_spatial_layers.R]   Min:    390
-[01.4_prepare_spatial_layers.R]   Median: 1002.9
-[01.4_prepare_spatial_layers.R]   Max:    1565.5
+[01.4_prepare_spatial_layers.R]   Min:    397.5
+[01.4_prepare_spatial_layers.R]   Median: 1002.5
+[01.4_prepare_spatial_layers.R]   Max:    1574.9
 [01.4_prepare_spatial_layers.R] 
 [01.4_prepare_spatial_layers.R] Rainfall CV:
 [01.4_prepare_spatial_layers.R]   Min:    0.028
 [01.4_prepare_spatial_layers.R]   Median: 0.276
-[01.4_prepare_spatial_layers.R]   Max:    1.136
+[01.4_prepare_spatial_layers.R]   Max:    1.131
 [01.4_prepare_spatial_layers.R] 
-[01.4_prepare_spatial_layers.R]   % area with high variability (CV > 0.3): 42.1%
-  ✓ PASS  01.4_prepare_spatial_layers.R                  (  3.3s)  
+[01.4_prepare_spatial_layers.R]   % area with high variability (CV > 0.3): 42%
+  ✓ PASS  01.4_prepare_spatial_layers.R                  (  3.4s)  
 [02.2_harmonize_farm_area.R] Loading required package: tidyverse
 [02.2_harmonize_farm_area.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [02.2_harmonize_farm_area.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -177,7 +180,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [02.2_harmonize_farm_area.R] ======================================================================
 [02.2_harmonize_farm_area.R] LSMS COMPILATION COMPLETE
 [02.2_harmonize_farm_area.R] ======================================================================
-  ✓ PASS  02.2_harmonize_farm_area.R                     (  3.9s)  
+  ✓ PASS  02.2_harmonize_farm_area.R                     (  4.1s)  
 [02.3_measured_vs_reported.R] 
 [02.3_measured_vs_reported.R] === Calculating harmonized plot area ===
 [02.3_measured_vs_reported.R] 
@@ -218,7 +221,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [02.3_measured_vs_reported.R] Saved: lsms_and_zambia.rds
 [02.3_measured_vs_reported.R] 
 [02.3_measured_vs_reported.R] === Processing Complete ===
-  ✓ PASS  02.3_measured_vs_reported.R                    (  2.2s)  
+  ✓ PASS  02.3_measured_vs_reported.R                    (  2.3s)  
 ----------------------------------------------------------------------
 PHASE 3: Analysis Preparation (03.x)
 ----------------------------------------------------------------------
@@ -262,7 +265,7 @@ PHASE 3: Analysis Preparation (03.x)
 [03.1_pooled_data.R] • Correlation between reported and measured: r = 0.986
 [03.1_pooled_data.R] • Median reporting ratio: 1 (underreporting)
 [03.1_pooled_data.R] • SD of reporting ratio: 0.12 (higher = more variable reporting)
-  ✓ PASS  03.1_pooled_data.R                             (  1.2s)  
+  ✓ PASS  03.1_pooled_data.R                             (  1.3s)  
 [03.2_correlation_drivers.R] 
 [03.2_correlation_drivers.R] === Loading predictor layers ===
 [03.2_correlation_drivers.R] Predictor layers: cropland, cattle, pop, cropland_per_capita, sand, elevation, slope, temperature, rainfall, market, maizeyield
@@ -303,7 +306,7 @@ PHASE 3: Analysis Preparation (03.x)
 [03.2_correlation_drivers.R] 
 [03.2_correlation_drivers.R] === Processing Complete ===
 [03.2_correlation_drivers.R] Final dataset: 3130 farms with complete predictor data
-  ✓ PASS  03.2_correlation_drivers.R                     ( 63.7s)  
+  ✓ PASS  03.2_correlation_drivers.R                     ( 63.5s)  
 [03.3_descriptive_stats.R] Loading required package: tidyverse
 [03.3_descriptive_stats.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [03.3_descriptive_stats.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -340,7 +343,7 @@ PHASE 3: Analysis Preparation (03.x)
 [03.3_descriptive_stats.R]   temperature: r = -0.018
 [03.3_descriptive_stats.R] 
 [03.3_descriptive_stats.R] === Analysis Complete ===
-  ✓ PASS  03.3_descriptive_stats.R                       ( 18.9s)  
+  ✓ PASS  03.3_descriptive_stats.R                       ( 18.6s)  
 ----------------------------------------------------------------------
 PHASE 4: ML Model Training (04.x)
 ----------------------------------------------------------------------
@@ -384,7 +387,7 @@ PHASE 4: ML Model Training (04.x)
 [04.1_comparing_ML_algorithms.R] Small farms:
 [04.1_comparing_ML_algorithms.R]   < 0.5 ha: 10.67%
 [04.1_comparing_ML_algorithms.R]   < 1.0 ha: 35.89%
-  ✓ PASS  04.1_comparing_ML_algorithms.R                 (  1.4s)  
+  ✓ PASS  04.1_comparing_ML_algorithms.R                 (  1.5s)  
 [04.2_RF_within_country.R] fields::Tps(x = with(my_lsms_cty, cbind(x, y)), Y = my_lsms_cty[, 
 [04.2_RF_within_country.R]     "farm_area_ha"], lon.lat = T, Z = as.matrix(my_lsms_cty[, 
 [04.2_RF_within_country.R]     c("cropland", "cattle", "pop", "cropland_per_capita", "sand", 
@@ -413,7 +416,7 @@ PHASE 4: ML Model Training (04.x)
 [04.2_RF_within_country.R] [1] "CV_r2 = NA"
 [04.2_RF_within_country.R] [1] "TPS_rsq_with_covariate = NA"
 [04.2_RF_within_country.R] [1] NA
-[04.2_RF_within_country.R] Something is wrong; all the Rsquared metric values are missing:
+[04.2_RF_within_country.R] Something is wrong; all the RMSE metric values are missing:
 [04.2_RF_within_country.R]       RMSE        Rsquared        MAE     
 [04.2_RF_within_country.R]  Min.   : NA   Min.   : NA   Min.   : NA  
 [04.2_RF_within_country.R]  1st Qu.: NA   1st Qu.: NA   1st Qu.: NA  
@@ -425,48 +428,48 @@ PHASE 4: ML Model Training (04.x)
 [04.2_RF_within_country.R] Error: Stopping
 [04.2_RF_within_country.R] In addition: There were 50 or more warnings (use warnings() to see the first 50)
 [04.2_RF_within_country.R] Execution halted
-  ✗ FAIL  04.2_RF_within_country.R                       ( 10.2s)  Exit code: 1
-[04.3_RF_between_countries.R] 11  Malawi   Phalombe      0.01            0             <NA>
-[04.3_RF_between_countries.R] 12  Malawi       Dowa      0.03         0.01             <NA>
-[04.3_RF_between_countries.R] 13  Malawi    Ntchisi      0.11         0.02             <NA>
-[04.3_RF_between_countries.R] 14  Malawi    Karonga      0.05         0.01                1
-[04.3_RF_between_countries.R] [1] "--------------------Mali---------------------------"
-[04.3_RF_between_countries.R] [1] "Mopti"
-[04.3_RF_between_countries.R] [1] "Ségou"
-[04.3_RF_between_countries.R] [1] "Koulikoro"
-[04.3_RF_between_countries.R] [1] "Sikasso"
-[04.3_RF_between_countries.R]   country    gadm_1 rf_cv_rsq rf_cv_rsq_sd gadm_test_rf_rsq
-[04.3_RF_between_countries.R] 1    Mali     Mopti      0.98         0.02             0.03
-[04.3_RF_between_countries.R] 2    Mali     Ségou      0.15          0.1             0.15
-[04.3_RF_between_countries.R] 3    Mali Koulikoro      0.17          0.1             <NA>
-[04.3_RF_between_countries.R] 4    Mali   Sikasso      0.09         0.07             <NA>
-[04.3_RF_between_countries.R] [1] "--------------------Niger---------------------------"
-[04.3_RF_between_countries.R] [1] "Zinder"
-[04.3_RF_between_countries.R] Something is wrong; all the Rsquared metric values are missing:
-[04.3_RF_between_countries.R]       RMSE           Rsquared        MAE        
-[04.3_RF_between_countries.R]  Min.   :0.5697   Min.   : NA   Min.   :0.5288  
-[04.3_RF_between_countries.R]  1st Qu.:0.5721   1st Qu.: NA   1st Qu.:0.5327  
-[04.3_RF_between_countries.R]  Median :0.5768   Median : NA   Median :0.5372  
-[04.3_RF_between_countries.R]  Mean   :0.5760   Mean   :NaN   Mean   :0.5363  
-[04.3_RF_between_countries.R]  3rd Qu.:0.5796   3rd Qu.: NA   3rd Qu.:0.5406  
-[04.3_RF_between_countries.R]  Max.   :0.5814   Max.   : NA   Max.   :0.5418  
-[04.3_RF_between_countries.R]                   NA's   :6                     
-[04.3_RF_between_countries.R] Error: Stopping
-[04.3_RF_between_countries.R] In addition: Warning messages:
-[04.3_RF_between_countries.R] 1: In cor(test_set$farm_area_ha, test_set$pred1_gadm) :
-[04.3_RF_between_countries.R]   the standard deviation is zero
-[04.3_RF_between_countries.R] 2: In cor(test_set$farm_area_ha, test_set$pred1_gadm) :
-[04.3_RF_between_countries.R]   the standard deviation is zero
-[04.3_RF_between_countries.R] 3: In cor(test_set$farm_area_ha, test_set$pred1_gadm) :
-[04.3_RF_between_countries.R]   the standard deviation is zero
-[04.3_RF_between_countries.R] 4: In cor(test_set$farm_area_ha, test_set$pred1_gadm) :
-[04.3_RF_between_countries.R]   the standard deviation is zero
-[04.3_RF_between_countries.R] 5: In nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,  :
-[04.3_RF_between_countries.R]   There were missing values in resampled performance measures.
-[04.3_RF_between_countries.R] 6: In nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,  :
-[04.3_RF_between_countries.R]   There were missing values in resampled performance measures.
-[04.3_RF_between_countries.R] Execution halted
-  ✗ FAIL  04.3_RF_between_countries.R                    ( 62.6s)  Exit code: 1
+  ✗ FAIL  04.2_RF_within_country.R                       ( 11.1s)  Exit code: 1
+[04.3_RF_between_countries.R] 28  Uganda       Pallisa      0.03            0             <NA>
+[04.3_RF_between_countries.R] 29  Uganda        Soroti      0.03         0.01             <NA>
+[04.3_RF_between_countries.R] 30  Uganda         Hoima      0.03            0             <NA>
+[04.3_RF_between_countries.R] 31  Uganda        Bugiri      0.03         0.01             <NA>
+[04.3_RF_between_countries.R] 32  Uganda        Kabale      0.04         0.01             <NA>
+[04.3_RF_between_countries.R] 33  Uganda Nakapiripirit      0.05         0.01             <NA>
+[04.3_RF_between_countries.R] 34  Uganda         Nebbi      0.03         0.01             <NA>
+[04.3_RF_between_countries.R] 35  Uganda        Mayuge      0.02            0             <NA>
+[04.3_RF_between_countries.R] 36  Uganda         Busia      0.02            0             <NA>
+[04.3_RF_between_countries.R] [1] "--------------------Zambia---------------------------"
+[04.3_RF_between_countries.R] [1] "Central"
+[04.3_RF_between_countries.R] [1] "Southern"
+[04.3_RF_between_countries.R] [1] "Western"
+[04.3_RF_between_countries.R] [1] "North-Western"
+[04.3_RF_between_countries.R] [1] "Lusaka"
+[04.3_RF_between_countries.R] [1] "Copperbelt"
+[04.3_RF_between_countries.R] [1] "Muchinga"
+[04.3_RF_between_countries.R] [1] "Luapula"
+[04.3_RF_between_countries.R] [1] "Northern"
+[04.3_RF_between_countries.R]   country        gadm_1 rf_cv_rsq rf_cv_rsq_sd gadm_test_rf_rsq
+[04.3_RF_between_countries.R] 1  Zambia       Central      0.02         0.01                0
+[04.3_RF_between_countries.R] 2  Zambia      Southern      0.01            0             0.01
+[04.3_RF_between_countries.R] 3  Zambia       Western      0.01            0             0.02
+[04.3_RF_between_countries.R] 4  Zambia North-Western      0.02            0             0.02
+[04.3_RF_between_countries.R] 5  Zambia        Lusaka      0.02         0.01             0.15
+[04.3_RF_between_countries.R] 6  Zambia    Copperbelt      0.02            0                0
+[04.3_RF_between_countries.R] 7  Zambia      Muchinga      0.04            0             <NA>
+[04.3_RF_between_countries.R] 8  Zambia       Luapula         0            0             <NA>
+[04.3_RF_between_countries.R] 9  Zambia      Northern      0.01            0              0.5
+[04.3_RF_between_countries.R] There were 17 warnings (use warnings() to see them)
+[04.3_RF_between_countries.R] Time difference of 2.655933 mins
+[04.3_RF_between_countries.R] `summarise()` has regrouped the output.
+[04.3_RF_between_countries.R] ℹ Summaries were computed grouped by country and type.
+[04.3_RF_between_countries.R] ℹ Output is grouped by country.
+[04.3_RF_between_countries.R] ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+[04.3_RF_between_countries.R] ℹ Use `summarise(.by = c(country, type))` for per-operation grouping
+[04.3_RF_between_countries.R]   (`?dplyr::dplyr_by`) instead.
+[04.3_RF_between_countries.R] Saving 9.84 x 5.91 in image
+[04.3_RF_between_countries.R] pdf 
+[04.3_RF_between_countries.R]   2 
+  ✓ PASS  04.3_RF_between_countries.R                    (167.1s)  
 [04.4_RF_model_evaluation.R] Loading required package: tidyverse
 [04.4_RF_model_evaluation.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [04.4_RF_model_evaluation.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -496,26 +499,26 @@ PHASE 4: ML Model Training (04.x)
 [04.4_RF_model_evaluation.R] 
 [04.4_RF_model_evaluation.R] Error: Every row has at least one missing value were found
 [04.4_RF_model_evaluation.R] Execution halted
-  ✗ FAIL  04.4_RF_model_evaluation.R                     (  6.6s)  Exit code: 1
+  ✗ FAIL  04.4_RF_model_evaluation.R                     (  6.8s)  Exit code: 1
 [04.5_cross_country_graphs.R] Error in gzfile(file, "rb") : invalid 'description' argument
 [04.5_cross_country_graphs.R] Calls: summarize -> sapply -> lapply -> FUN -> readRDS -> gzfile
 [04.5_cross_country_graphs.R] Execution halted
   ✗ FAIL  04.5_cross_country_graphs.R                    (  0.3s)  Exit code: 1
-[04.6_discrepancy_analysis.R] ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-[04.6_discrepancy_analysis.R] ✖ dplyr::filter() masks stats::filter()
-[04.6_discrepancy_analysis.R] ✖ dplyr::lag()    masks stats::lag()
-[04.6_discrepancy_analysis.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[04.6_discrepancy_analysis.R] `summarise()` has regrouped the output.
-[04.6_discrepancy_analysis.R] ℹ Summaries were computed grouped by country, code, and model.
 [04.6_discrepancy_analysis.R] ℹ Output is grouped by country and code.
 [04.6_discrepancy_analysis.R] ℹ Use `summarise(.groups = "drop_last")` to silence this message.
 [04.6_discrepancy_analysis.R] ℹ Use `summarise(.by = c(country, code, model))` for per-operation grouping
 [04.6_discrepancy_analysis.R]   (`?dplyr::dplyr_by`) instead.
+[04.6_discrepancy_analysis.R] Saving 15 x 7.5 in image
+[04.6_discrepancy_analysis.R] pdf 
+[04.6_discrepancy_analysis.R]   2 
+[04.6_discrepancy_analysis.R] Saving 15 x 7.5 in image
+[04.6_discrepancy_analysis.R] pdf 
+[04.6_discrepancy_analysis.R]   2 
 [04.6_discrepancy_analysis.R] Error in `geom_raster()`:
 [04.6_discrepancy_analysis.R] ! Problem while computing aesthetics.
 [04.6_discrepancy_analysis.R] ℹ Error occurred in the 1st layer.
 [04.6_discrepancy_analysis.R] Caused by error:
-[04.6_discrepancy_analysis.R] ! object 'train_country' not found
+[04.6_discrepancy_analysis.R] ! object 'country' not found
 [04.6_discrepancy_analysis.R] Backtrace:
 [04.6_discrepancy_analysis.R]      ▆
 [04.6_discrepancy_analysis.R]   1. ├─base (local) `<fn>`(x)
@@ -541,7 +544,7 @@ PHASE 4: ML Model Training (04.x)
 [04.6_discrepancy_analysis.R]  21.       └─cli::cli_abort(...)
 [04.6_discrepancy_analysis.R]  22.         └─rlang::abort(...)
 [04.6_discrepancy_analysis.R] Execution halted
-  ✗ FAIL  04.6_discrepancy_analysis.R                    (  1.6s)  Exit code: 1
+  ✗ FAIL  04.6_discrepancy_analysis.R                    ( 11.8s)  Exit code: 1
 ----------------------------------------------------------------------
 PHASE 5: RF Optimisation (05.x)
 ----------------------------------------------------------------------
@@ -585,34 +588,9 @@ PHASE 5: RF Optimisation (05.x)
 [05.1_RF_optimization.R] `geom_smooth()` using formula = 'y ~ x'
 [05.1_RF_optimization.R] `geom_smooth()` using formula = 'y ~ x'
 [05.1_RF_optimization.R] `geom_smooth()` using formula = 'y ~ x'
-  ✓ PASS  05.1_RF_optimization.R                         (  3.9s)  
-[05.2_RF_optimization_summary.R] Loading required package: tidyverse
-[05.2_RF_optimization_summary.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-[05.2_RF_optimization_summary.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
-[05.2_RF_optimization_summary.R] ✔ forcats   1.0.1     ✔ stringr   1.6.0
-[05.2_RF_optimization_summary.R] ✔ ggplot2   4.0.2     ✔ tibble    3.3.1
-[05.2_RF_optimization_summary.R] ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
-[05.2_RF_optimization_summary.R] ✔ purrr     1.2.1     
-[05.2_RF_optimization_summary.R] ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-[05.2_RF_optimization_summary.R] ✖ dplyr::filter() masks stats::filter()
-[05.2_RF_optimization_summary.R] ✖ dplyr::lag()    masks stats::lag()
-[05.2_RF_optimization_summary.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[05.2_RF_optimization_summary.R] Loading required package: lattice
-[05.2_RF_optimization_summary.R] 
-[05.2_RF_optimization_summary.R] Attaching package: ‘caret’
-[05.2_RF_optimization_summary.R] 
-[05.2_RF_optimization_summary.R] The following object is masked from ‘package:purrr’:
-[05.2_RF_optimization_summary.R] 
-[05.2_RF_optimization_summary.R]     lift
-[05.2_RF_optimization_summary.R] 
-[05.2_RF_optimization_summary.R] 
-[05.2_RF_optimization_summary.R] There were 50 or more warnings (use warnings() to see the first 50)
-  ✗ FAIL  05.2_RF_optimization_summary.R                 (620.0s)  Exit code: 124
+  ✓ PASS  05.1_RF_optimization.R                         (  4.0s)  
 [05.3_RF_robustness.R] No RFoptim files - skipping (needs 05.1 outputs)
   ✓ PASS  05.3_RF_robustness.R                           (  0.2s)  
-Warning message:
-In system2("Rscript", c("--vanilla", shQuote(tmp)), stdout = log_file,  :
-  command ''Rscript' --vanilla '/tmp/RtmpmnuqL5/file1c273a5151d1.R' > '/tmp/RtmpmnuqL5/file1c273a5d6c0f.log' 2>&1' timed out after 600s
 ----------------------------------------------------------------------
 PHASE 6: Quantile RF & Prediction Maps (06.x)
 ----------------------------------------------------------------------
@@ -642,7 +620,7 @@ PHASE 6: Quantile RF & Prediction Maps (06.x)
 [06.1_quantile_RF.R] ℹ Do you need to adjust the group aesthetic?
 [06.1_quantile_RF.R] pdf 
 [06.1_quantile_RF.R]   2 
-  ✓ PASS  06.1_quantile_RF.R                             (  3.2s)  
+  ✓ PASS  06.1_quantile_RF.R                             (  3.4s)  
 [06.3_prediction_maps.R] Loading required package: tidyverse
 [06.3_prediction_maps.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [06.3_prediction_maps.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -654,9 +632,19 @@ PHASE 6: Quantile RF & Prediction Maps (06.x)
 [06.3_prediction_maps.R] ✖ dplyr::filter() masks stats::filter()
 [06.3_prediction_maps.R] ✖ dplyr::lag()    masks stats::lag()
 [06.3_prediction_maps.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[06.3_prediction_maps.R] Error: Bad seeds: the seed object should be a list of length 4 with 3 integer vectors of size 1 and the last list element having at least a single integer
+[06.3_prediction_maps.R] Loading required package: lattice
+[06.3_prediction_maps.R] 
+[06.3_prediction_maps.R] Attaching package: ‘caret’
+[06.3_prediction_maps.R] 
+[06.3_prediction_maps.R] The following object is masked from ‘package:purrr’:
+[06.3_prediction_maps.R] 
+[06.3_prediction_maps.R]     lift
+[06.3_prediction_maps.R] 
+[06.3_prediction_maps.R] Time difference of 10.48345 secs
+[06.3_prediction_maps.R] Error in eval(expr, p) : object 'lsms_spatial1' not found
+[06.3_prediction_maps.R] Calls: <Anonymous> -> train.formula -> eval.parent -> eval -> eval
 [06.3_prediction_maps.R] Execution halted
-  ✗ FAIL  06.3_prediction_maps.R                         (  4.9s)  Exit code: 1
+  ✗ FAIL  06.3_prediction_maps.R                         ( 48.7s)  Exit code: 1
 [06.4_cropland_sensitivity.R] Loading required package: tidyverse
 [06.4_cropland_sensitivity.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [06.4_cropland_sensitivity.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -680,11 +668,9 @@ PHASE 6: Quantile RF & Prediction Maps (06.x)
 [06.4_cropland_sensitivity.R] Moran I statistic       Expectation          Variance 
 [06.4_cropland_sensitivity.R]       0.088371184      -0.007194245       0.003332755 
 [06.4_cropland_sensitivity.R] 
-[06.4_cropland_sensitivity.R] Error in h(simpleError(msg, call)) : 
-[06.4_cropland_sensitivity.R]   error in evaluating the argument 'x' in selecting a method for function 'rast': no file found
-[06.4_cropland_sensitivity.R] Calls: <Anonymous> -> system.file
+[06.4_cropland_sensitivity.R] Error: [rast] filename is empty. Provide a valid filename
 [06.4_cropland_sensitivity.R] Execution halted
-  ✗ FAIL  06.4_cropland_sensitivity.R                    (  4.3s)  Exit code: 1
+  ✗ FAIL  06.4_cropland_sensitivity.R                    (  4.6s)  Exit code: 1
 ----------------------------------------------------------------------
 PHASE 7: Predictions & Validation (07.x – 10.x)
 ----------------------------------------------------------------------
@@ -699,17 +685,30 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [07.2_QRF_distribution_eval.R] ✖ dplyr::filter() masks stats::filter()
 [07.2_QRF_distribution_eval.R] ✖ dplyr::lag()    masks stats::lag()
 [07.2_QRF_distribution_eval.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[07.2_QRF_distribution_eval.R] Error in `pivot_longer()`:
-[07.2_QRF_distribution_eval.R] ! `cols` must select at least one column.
+[07.2_QRF_distribution_eval.R] Error in `summarize()`:
+[07.2_QRF_distribution_eval.R] ℹ In argument: `rank = rev(rank(cropland))`.
+[07.2_QRF_distribution_eval.R] ℹ In group 1: `source = "2010"`.
+[07.2_QRF_distribution_eval.R] Caused by error:
+[07.2_QRF_distribution_eval.R] ! `rank` must be size 1, not 29.
+[07.2_QRF_distribution_eval.R] ℹ To return more or less than 1 row per group, use `reframe()`.
 [07.2_QRF_distribution_eval.R] Backtrace:
-[07.2_QRF_distribution_eval.R]     ▆
-[07.2_QRF_distribution_eval.R]  1. ├─tidyr::pivot_longer(...)
-[07.2_QRF_distribution_eval.R]  2. └─tidyr:::pivot_longer.data.frame(...)
-[07.2_QRF_distribution_eval.R]  3.   └─tidyr::build_longer_spec(...)
-[07.2_QRF_distribution_eval.R]  4.     └─cli::cli_abort(...)
-[07.2_QRF_distribution_eval.R]  5.       └─rlang::abort(...)
+[07.2_QRF_distribution_eval.R]      ▆
+[07.2_QRF_distribution_eval.R]   1. ├─dplyr::arrange(...)
+[07.2_QRF_distribution_eval.R]   2. ├─dplyr::filter(...)
+[07.2_QRF_distribution_eval.R]   3. ├─dplyr::inner_join(...)
+[07.2_QRF_distribution_eval.R]   4. ├─dplyr::summarize(...)
+[07.2_QRF_distribution_eval.R]   5. ├─dplyr:::summarise.grouped_df(...)
+[07.2_QRF_distribution_eval.R]   6. │ └─dplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+[07.2_QRF_distribution_eval.R]   7. │   └─base::withCallingHandlers(...)
+[07.2_QRF_distribution_eval.R]   8. ├─dplyr:::dplyr_internal_error(...)
+[07.2_QRF_distribution_eval.R]   9. │ └─rlang::abort(class = c(class, "dplyr:::internal_error"), dplyr_error_data = data)
+[07.2_QRF_distribution_eval.R]  10. │   └─rlang:::signal_abort(cnd, .file)
+[07.2_QRF_distribution_eval.R]  11. │     └─base::signalCondition(cnd)
+[07.2_QRF_distribution_eval.R]  12. └─dplyr (local) `<fn>`(`<dpl:::__>`)
+[07.2_QRF_distribution_eval.R]  13.   └─dplyr (local) handler(cnd)
+[07.2_QRF_distribution_eval.R]  14.     └─rlang::abort(message, class = error_class, parent = parent, call = error_call)
 [07.2_QRF_distribution_eval.R] Execution halted
-  ✗ FAIL  07.2_QRF_distribution_eval.R                   (  4.0s)  Exit code: 1
+  ✗ FAIL  07.2_QRF_distribution_eval.R                   (  4.4s)  Exit code: 1
 [08.1_predictions_by_country.R] `summarise()` has regrouped the output.
 [08.1_predictions_by_country.R] ℹ Summaries were computed grouped by x, y, and country.
 [08.1_predictions_by_country.R] ℹ Output is grouped by x and y.
@@ -750,7 +749,7 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [08.1_predictions_by_country.R]  23.     └─vctrs:::stop_subscript(...)
 [08.1_predictions_by_country.R]  24.       └─rlang::abort(...)
 [08.1_predictions_by_country.R] Execution halted
-  ✗ FAIL  08.1_predictions_by_country.R                  (  4.3s)  Exit code: 1
+  ✗ FAIL  08.1_predictions_by_country.R                  (  4.6s)  Exit code: 1
 [08.2_generate_virtual_farms.R] Loading required package: tidyverse
 [08.2_generate_virtual_farms.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [08.2_generate_virtual_farms.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -762,9 +761,9 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [08.2_generate_virtual_farms.R] ✖ dplyr::filter() masks stats::filter()
 [08.2_generate_virtual_farms.R] ✖ dplyr::lag()    masks stats::lag()
 [08.2_generate_virtual_farms.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[08.2_generate_virtual_farms.R] Error: `path` does not exist: ‘../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc3.xlsx’
+[08.2_generate_virtual_farms.R] Error: [rast] number of rows and/or columns do not match
 [08.2_generate_virtual_farms.R] Execution halted
-  ✗ FAIL  08.2_generate_virtual_farms.R                  (  3.8s)  Exit code: 1
+  ✗ FAIL  08.2_generate_virtual_farms.R                  (  8.7s)  Exit code: 1
 [08.3_farm_size_classes.R] 14 Togo              100
 [08.3_farm_size_classes.R] 15 Uganda            100
 [08.3_farm_size_classes.R] 16 Zambia            100
@@ -805,7 +804,7 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [08.3_farm_size_classes.R]  18.     └─cli::cli_abort(...)
 [08.3_farm_size_classes.R]  19.       └─rlang::abort(...)
 [08.3_farm_size_classes.R] Execution halted
-  ✗ FAIL  08.3_farm_size_classes.R                       (  4.9s)  Exit code: 1
+  ✗ FAIL  08.3_farm_size_classes.R                       (  5.4s)  Exit code: 1
 [09.1_AEZ_characterization.R] Loading required package: tidyverse
 [09.1_AEZ_characterization.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [09.1_AEZ_characterization.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -817,9 +816,30 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [09.1_AEZ_characterization.R] ✖ dplyr::filter() masks stats::filter()
 [09.1_AEZ_characterization.R] ✖ dplyr::lag()    masks stats::lag()
 [09.1_AEZ_characterization.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[09.1_AEZ_characterization.R] Error: `path` does not exist: ‘../data/raw/web_scrapped/sarah_lowder/1-s2.0-S0305750X2100067X-mmc3.xlsx’
+[09.1_AEZ_characterization.R] Warning message:
+[09.1_AEZ_characterization.R] The `value` argument of `names<-()` must have the same length as `x` as of
+[09.1_AEZ_characterization.R] tibble 3.0.0. 
+[09.1_AEZ_characterization.R] Error in `mutate()`:
+[09.1_AEZ_characterization.R] ℹ In argument: `NAME_0 = rep(country_list, each = 2)`.
+[09.1_AEZ_characterization.R] Caused by error:
+[09.1_AEZ_characterization.R] ! `NAME_0` must be size 4 or 1, not 8.
+[09.1_AEZ_characterization.R] Backtrace:
+[09.1_AEZ_characterization.R]      ▆
+[09.1_AEZ_characterization.R]   1. ├─dplyr::mutate(...)
+[09.1_AEZ_characterization.R]   2. ├─dplyr:::mutate.data.frame(...)
+[09.1_AEZ_characterization.R]   3. │ └─dplyr:::mutate_cols(.data, dplyr_quosures(...), by)
+[09.1_AEZ_characterization.R]   4. │   ├─base::withCallingHandlers(...)
+[09.1_AEZ_characterization.R]   5. │   └─dplyr:::mutate_col(dots[[i]], data, mask, new_columns)
+[09.1_AEZ_characterization.R]   6. │     └─mask$eval_all_mutate(quo)
+[09.1_AEZ_characterization.R]   7. │       └─dplyr (local) eval()
+[09.1_AEZ_characterization.R]   8. ├─dplyr:::dplyr_internal_error(...)
+[09.1_AEZ_characterization.R]   9. │ └─rlang::abort(class = c(class, "dplyr:::internal_error"), dplyr_error_data = data)
+[09.1_AEZ_characterization.R]  10. │   └─rlang:::signal_abort(cnd, .file)
+[09.1_AEZ_characterization.R]  11. │     └─base::signalCondition(cnd)
+[09.1_AEZ_characterization.R]  12. └─dplyr (local) `<fn>`(`<dpl:::__>`)
+[09.1_AEZ_characterization.R]  13.   └─rlang::abort(message, class = error_class, parent = parent, call = error_call)
 [09.1_AEZ_characterization.R] Execution halted
-  ✗ FAIL  09.1_AEZ_characterization.R                    (  3.9s)  Exit code: 1
+  ✗ FAIL  09.1_AEZ_characterization.R                    (  4.2s)  Exit code: 1
 [10.1_prepare_validation_data.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [10.1_prepare_validation_data.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
 [10.1_prepare_validation_data.R] ✔ forcats   1.0.1     ✔ stringr   1.6.0
@@ -831,8 +851,8 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [10.1_prepare_validation_data.R] ✖ dplyr::lag()    masks stats::lag()
 [10.1_prepare_validation_data.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 [10.1_prepare_validation_data.R]           used (Mb) gc trigger  (Mb) max used  (Mb)
-[10.1_prepare_validation_data.R] Ncells 1781308 95.2    2846530 152.1  2846530 152.1
-[10.1_prepare_validation_data.R] Vcells 2496400 19.1    8388608  64.0  4243639  32.4
+[10.1_prepare_validation_data.R] Ncells 1781308 95.2    2846527 152.1  2846527 152.1
+[10.1_prepare_validation_data.R] Vcells 2496400 19.1    8388608  64.0  4243638  32.4
 [10.1_prepare_validation_data.R] Error in `select()`:
 [10.1_prepare_validation_data.R] ! Can't select columns that don't exist.
 [10.1_prepare_validation_data.R] ✖ Column `linear_farm_size_ha` doesn't exist.
@@ -860,7 +880,7 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [10.1_prepare_validation_data.R]  20.     └─vctrs:::stop_subscript(...)
 [10.1_prepare_validation_data.R]  21.       └─rlang::abort(...)
 [10.1_prepare_validation_data.R] Execution halted
-  ✗ FAIL  10.1_prepare_validation_data.R                 (  4.0s)  Exit code: 1
+  ✗ FAIL  10.1_prepare_validation_data.R                 (  4.3s)  Exit code: 1
 [10.2_external_validation.R] Loading required package: tidyverse
 [10.2_external_validation.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [10.2_external_validation.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -882,7 +902,7 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [10.2_external_validation.R] [1] "------------ Angola---------------"
 [10.2_external_validation.R] Error: [vect] file does not exist: NA
 [10.2_external_validation.R] Execution halted
-  ✗ FAIL  10.2_external_validation.R                     (  3.9s)  Exit code: 1
+  ✗ FAIL  10.2_external_validation.R                     (  4.3s)  Exit code: 1
 ----------------------------------------------------------------------
 PHASE 8: Figures & Supplementary (F/S/T)
 ----------------------------------------------------------------------
@@ -897,10 +917,9 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [F01_main_figure1.R] ✖ dplyr::filter() masks stats::filter()
 [F01_main_figure1.R] ✖ dplyr::lag()    masks stats::lag()
 [F01_main_figure1.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[F01_main_figure1.R] Error in loadNamespace(x) : there is no package called ‘tabulapdf’
-[F01_main_figure1.R] Calls: loadNamespace -> withRestarts -> withOneRestart -> doWithOneRestart
+[F01_main_figure1.R] Error: tabulapdf skipped in CI
 [F01_main_figure1.R] Execution halted
-  ✗ FAIL  F01_main_figure1.R                             (  3.8s)  Exit code: 1
+  ✗ FAIL  F01_main_figure1.R                             (  4.1s)  Exit code: 1
 [F02_main_figure2.R] Loading required package: tidyverse
 [F02_main_figure2.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [F02_main_figure2.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -914,13 +933,13 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [F02_main_figure2.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 [F02_main_figure2.R] Loading required package: patchwork
 [F02_main_figure2.R]           used (Mb) gc trigger  (Mb) max used  (Mb)
-[F02_main_figure2.R] Ncells 1787577 95.5    2818547 150.6  2818547 150.6
+[F02_main_figure2.R] Ncells 1787577 95.5    2818544 150.6  2818544 150.6
 [F02_main_figure2.R] Vcells 2518877 19.3    8388608  64.0  4311848  32.9
 [F02_main_figure2.R] Error: [rast] file does not exist: ../fig.1a_nb_of_farm_per_grid_cell.tif
 [F02_main_figure2.R] In addition: Warning message:
 [F02_main_figure2.R] ../fig.1a_nb_of_farm_per_grid_cell.tif: No such file or directory (GDAL error 4) 
 [F02_main_figure2.R] Execution halted
-  ✗ FAIL  F02_main_figure2.R                             (  3.9s)  Exit code: 1
+  ✗ FAIL  F02_main_figure2.R                             (  4.2s)  Exit code: 1
 [F03_main_figure3.R] Loading required package: tidyverse
 [F03_main_figure3.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [F03_main_figure3.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -940,7 +959,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [F03_main_figure3.R]   error in evaluating the argument 'x' in selecting a method for function 'plot': [subset] invalid name(s)
 [F03_main_figure3.R] Calls: <Anonymous> -> $ -> subset -> subset -> .local -> error
 [F03_main_figure3.R] Execution halted
-  ✗ FAIL  F03_main_figure3.R                             (  5.8s)  Exit code: 1
+  ✗ FAIL  F03_main_figure3.R                             (  6.1s)  Exit code: 1
 [S01_drivers.R] Loading required package: tidyverse
 [S01_drivers.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [S01_drivers.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -952,11 +971,16 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S01_drivers.R] ✖ dplyr::filter() masks stats::filter()
 [S01_drivers.R] ✖ dplyr::lag()    masks stats::lag()
 [S01_drivers.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[S01_drivers.R] Error in UseMethod("filter") : 
-[S01_drivers.R]   no applicable method for 'filter' applied to an object of class "NULL"
-[S01_drivers.R] Calls: filter
-[S01_drivers.R] Execution halted
-  ✗ FAIL  S01_drivers.R                                  (  1.1s)  Exit code: 1
+[S01_drivers.R] Warning messages:
+[S01_drivers.R] 1: In strheight(title, cex = title.cex, font = title.font, units = "user") :
+[S01_drivers.R]   font metrics unknown for character 0xa
+[S01_drivers.R] 2: In strwidth(title, units = "user", cex = title.cex, font = title.font) :
+[S01_drivers.R]   font metrics unknown for character 0xa
+[S01_drivers.R] 3: In text.default(x, y, ...) : font metrics unknown for character 0xa
+[S01_drivers.R] 4: In text.default(x, y, ...) : font metrics unknown for character 0xa
+[S01_drivers.R] null device 
+[S01_drivers.R]           1 
+  ✓ PASS  S01_drivers.R                                  (  1.4s)  
 [S02_cropland_uncertainty.R] Loading required package: tidyverse
 [S02_cropland_uncertainty.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [S02_cropland_uncertainty.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -997,7 +1021,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S02_cropland_uncertainty.R]   ``` 
 [S02_cropland_uncertainty.R] Error: [subset] invalid name(s)
 [S02_cropland_uncertainty.R] Execution halted
-  ✗ FAIL  S02_cropland_uncertainty.R                     (  6.6s)  Exit code: 1
+  ✗ FAIL  S02_cropland_uncertainty.R                     (  7.2s)  Exit code: 1
 [S03_aggregate_vs_disaggregate.R] Loading required package: tidyverse
 [S03_aggregate_vs_disaggregate.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [S03_aggregate_vs_disaggregate.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1019,7 +1043,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S03_aggregate_vs_disaggregate.R] In gzfile(file, "rb") :
 [S03_aggregate_vs_disaggregate.R]   cannot open compressed file '../output/plot_data/plot_suppl_01_effect_of_source_of_cropland_masks.rds', probable reason 'No such file or directory'
 [S03_aggregate_vs_disaggregate.R] Execution halted
-  ✗ FAIL  S03_aggregate_vs_disaggregate.R                (  4.0s)  Exit code: 1
+  ✗ FAIL  S03_aggregate_vs_disaggregate.R                (  4.2s)  Exit code: 1
 [S04_RF_hyperparameters.R] Loading required package: tidyverse
 [S04_RF_hyperparameters.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [S04_RF_hyperparameters.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1041,7 +1065,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S04_RF_hyperparameters.R] In gzfile(file, "rb") :
 [S04_RF_hyperparameters.R]   cannot open compressed file 'lsms_oob.rds', probable reason 'No such file or directory'
 [S04_RF_hyperparameters.R] Execution halted
-  ✗ FAIL  S04_RF_hyperparameters.R                       (  3.9s)  Exit code: 1
+  ✗ FAIL  S04_RF_hyperparameters.R                       (  4.2s)  Exit code: 1
 [S05_RF_unseen_performance.R] ✔ ggplot2   4.0.2     ✔ tibble    3.3.1
 [S05_RF_unseen_performance.R] ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
 [S05_RF_unseen_performance.R] ✔ purrr     1.2.1     
@@ -1082,7 +1106,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S05_RF_unseen_performance.R] (`geom_line()`). 
 [S05_RF_unseen_performance.R] 6: Removed 2 rows containing missing values or values outside the scale range
 [S05_RF_unseen_performance.R] (`geom_point()`). 
-  ✓ PASS  S05_RF_unseen_performance.R                    (  5.0s)  
+  ✓ PASS  S05_RF_unseen_performance.R                    (  5.5s)  
 [S06_size_class_comparison.R] Loading required package: tidyverse
 [S06_size_class_comparison.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [S06_size_class_comparison.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1102,7 +1126,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S06_size_class_comparison.R]   no applicable method for 'inner_join' applied to an object of class "NULL"
 [S06_size_class_comparison.R] Calls: inner_join -> inner_join
 [S06_size_class_comparison.R] Execution halted
-  ✗ FAIL  S06_size_class_comparison.R                    (  3.9s)  Exit code: 1
+  ✗ FAIL  S06_size_class_comparison.R                    (  4.2s)  Exit code: 1
 [S07_distribution_parameters.R] Loading required package: tidyverse
 [S07_distribution_parameters.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [S07_distribution_parameters.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1122,7 +1146,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S07_distribution_parameters.R]   no applicable method for 'inner_join' applied to an object of class "NULL"
 [S07_distribution_parameters.R] Calls: inner_join
 [S07_distribution_parameters.R] Execution halted
-  ✗ FAIL  S07_distribution_parameters.R                  (  3.9s)  Exit code: 1
+  ✗ FAIL  S07_distribution_parameters.R                  (  4.2s)  Exit code: 1
 [S08_variable_importance.R] Loading required package: tidyverse
 [S08_variable_importance.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [S08_variable_importance.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1143,7 +1167,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S08_variable_importance.R] ✖ Column `skew` doesn't exist.
 [S08_variable_importance.R] Calls: <Anonymous> ... cnd_signal -> signal_abort -> signalCondition -> <Anonymous>
 [S08_variable_importance.R] Execution halted
-  ✗ FAIL  S08_variable_importance.R                      (  4.0s)  Exit code: 1
+  ✗ FAIL  S08_variable_importance.R                      (  4.2s)  Exit code: 1
 [T01_area_production_tables.R] Loading required package: tidyverse
 [T01_area_production_tables.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [T01_area_production_tables.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1157,13 +1181,34 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [T01_area_production_tables.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 [T01_area_production_tables.R] Loading required package: patchwork
 [T01_area_production_tables.R]           used (Mb) gc trigger  (Mb) max used  (Mb)
-[T01_area_production_tables.R] Ncells 1787580 95.5    2818544 150.6  2818544 150.6
+[T01_area_production_tables.R] Ncells 1787580 95.5    2818550 150.6  2818550 150.6
 [T01_area_production_tables.R] Vcells 2518878 19.3    8388608  64.0  4311848  32.9
-[T01_area_production_tables.R] Error in UseMethod("mutate") : 
-[T01_area_production_tables.R]   no applicable method for 'mutate' applied to an object of class "NULL"
-[T01_area_production_tables.R] Calls: inner_join -> mutate
+[T01_area_production_tables.R] Joining with `by = join_by(country)`
+[T01_area_production_tables.R] Error in `mutate()`:
+[T01_area_production_tables.R] ℹ In argument: `Variable = case_when(...)`.
+[T01_area_production_tables.R] Caused by error in `case_when()`:
+[T01_area_production_tables.R] ! Failed to evaluate the left-hand side of formula 1.
+[T01_area_production_tables.R] Caused by error:
+[T01_area_production_tables.R] ! object 'Variable' not found
+[T01_area_production_tables.R] Backtrace:
+[T01_area_production_tables.R]      ▆
+[T01_area_production_tables.R]   1. ├─dplyr::arrange(...)
+[T01_area_production_tables.R]   2. ├─dplyr::mutate(...)
+[T01_area_production_tables.R]   3. ├─dplyr:::mutate.data.frame(...)
+[T01_area_production_tables.R]   4. │ └─dplyr:::mutate_cols(.data, dplyr_quosures(...), by)
+[T01_area_production_tables.R]   5. │   ├─base::withCallingHandlers(...)
+[T01_area_production_tables.R]   6. │   └─dplyr:::mutate_col(dots[[i]], data, mask, new_columns)
+[T01_area_production_tables.R]   7. │     └─mask$eval_all_mutate(quo)
+[T01_area_production_tables.R]   8. │       └─dplyr (local) eval()
+[T01_area_production_tables.R]   9. ├─dplyr::case_when(...)
+[T01_area_production_tables.R]  10. │ └─dplyr:::eval_formulas(..., allow_empty_dots = FALSE)
+[T01_area_production_tables.R]  11. │   ├─base::withCallingHandlers(...)
+[T01_area_production_tables.R]  12. │   └─rlang::eval_tidy(pair$lhs, env = user_env)
+[T01_area_production_tables.R]  13. └─base::.handleSimpleError(...)
+[T01_area_production_tables.R]  14.   └─dplyr (local) h(simpleError(msg, call))
+[T01_area_production_tables.R]  15.     └─rlang::abort(message, parent = cnd, call = error_call)
 [T01_area_production_tables.R] Execution halted
-  ✗ FAIL  T01_area_production_tables.R                   (  3.9s)  Exit code: 1
+  ✗ FAIL  T01_area_production_tables.R                   (  4.4s)  Exit code: 1
 [T02_heterogeneity_drivers.R] Loading required package: tidyverse
 [T02_heterogeneity_drivers.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [T02_heterogeneity_drivers.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1179,7 +1224,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [T02_heterogeneity_drivers.R] In addition: Warning message:
 [T02_heterogeneity_drivers.R] ../data/raw/spatial/AEZ_SSA_IFPRI/AEZ5_CLAS--SSA.tif: No such file or directory (GDAL error 4) 
 [T02_heterogeneity_drivers.R] Execution halted
-  ✗ FAIL  T02_heterogeneity_drivers.R                    (  3.9s)  Exit code: 1
+  ✗ FAIL  T02_heterogeneity_drivers.R                    (  4.2s)  Exit code: 1
 
 ======================================================================
 TEST SUMMARY
@@ -1187,64 +1232,64 @@ TEST SUMMARY
 
   Stat   Script                                          Time(s)  Note
   ------------------------------------------------------------------------
-  ✓ PASS  00_synthetic_data                                 6.2    
-  ✓ PASS  00_install_packages.R                             0.0    SKIPPED (download-only script)
-  ✓ PASS  00_download_spatial_data.R                        0.0    SKIPPED (download-only script)
-  ✓ PASS  01.2_chirps_summarize.R                           0.0    SKIPPED (download-only script)
-  ✓ PASS  02.1_compile_LSMS.R                               0.0    SKIPPED (download-only script)
+  ✓ PASS  00_synthetic_data                                 6.4    
+  ✓ PASS  00_install_packages.R                             0.0    SKIPPED (download/SLURM-only script)
+  ✓ PASS  00_download_spatial_data.R                        0.0    SKIPPED (download/SLURM-only script)
+  ✓ PASS  01.2_chirps_summarize.R                           0.0    SKIPPED (download/SLURM-only script)
+  ✓ PASS  02.1_compile_LSMS.R                               0.0    SKIPPED (download/SLURM-only script)
+  ✓ PASS  05.2_RF_optimization_summary.R                    0.0    SKIPPED (download/SLURM-only script)
   ✓ PASS  01.1_chirps_download.R                            1.9    
-  ✗ FAIL  01.3_chirps_trends.R                              4.4    Exit code: 1
-  ✓ PASS  01.4_prepare_spatial_layers.R                     3.3    
-  ✓ PASS  02.2_harmonize_farm_area.R                        3.9    
-  ✓ PASS  02.3_measured_vs_reported.R                       2.2    
-  ✓ PASS  03.1_pooled_data.R                                1.2    
-  ✓ PASS  03.2_correlation_drivers.R                       63.7    
-  ✓ PASS  03.3_descriptive_stats.R                         18.9    
-  ✓ PASS  04.1_comparing_ML_algorithms.R                    1.4    
-  ✗ FAIL  04.2_RF_within_country.R                         10.2    Exit code: 1
-  ✗ FAIL  04.3_RF_between_countries.R                      62.6    Exit code: 1
-  ✗ FAIL  04.4_RF_model_evaluation.R                        6.6    Exit code: 1
+  ✗ FAIL  01.3_chirps_trends.R                              4.5    Exit code: 1
+  ✓ PASS  01.4_prepare_spatial_layers.R                     3.4    
+  ✓ PASS  02.2_harmonize_farm_area.R                        4.1    
+  ✓ PASS  02.3_measured_vs_reported.R                       2.3    
+  ✓ PASS  03.1_pooled_data.R                                1.3    
+  ✓ PASS  03.2_correlation_drivers.R                       63.5    
+  ✓ PASS  03.3_descriptive_stats.R                         18.6    
+  ✓ PASS  04.1_comparing_ML_algorithms.R                    1.5    
+  ✗ FAIL  04.2_RF_within_country.R                         11.1    Exit code: 1
+  ✓ PASS  04.3_RF_between_countries.R                     167.1    
+  ✗ FAIL  04.4_RF_model_evaluation.R                        6.8    Exit code: 1
   ✗ FAIL  04.5_cross_country_graphs.R                       0.3    Exit code: 1
-  ✗ FAIL  04.6_discrepancy_analysis.R                       1.6    Exit code: 1
-  ✓ PASS  05.1_RF_optimization.R                            3.9    
-  ✗ FAIL  05.2_RF_optimization_summary.R                  620.0    Exit code: 124
+  ✗ FAIL  04.6_discrepancy_analysis.R                      11.8    Exit code: 1
+  ✓ PASS  05.1_RF_optimization.R                            4.0    
   ✓ PASS  05.3_RF_robustness.R                              0.2    
-  ✓ PASS  06.1_quantile_RF.R                                3.2    
-  ✗ FAIL  06.3_prediction_maps.R                            4.9    Exit code: 1
-  ✗ FAIL  06.4_cropland_sensitivity.R                       4.3    Exit code: 1
-  ✗ FAIL  07.2_QRF_distribution_eval.R                      4.0    Exit code: 1
-  ✗ FAIL  08.1_predictions_by_country.R                     4.3    Exit code: 1
-  ✗ FAIL  08.2_generate_virtual_farms.R                     3.8    Exit code: 1
-  ✗ FAIL  08.3_farm_size_classes.R                          4.9    Exit code: 1
-  ✗ FAIL  09.1_AEZ_characterization.R                       3.9    Exit code: 1
-  ✗ FAIL  10.1_prepare_validation_data.R                    4.0    Exit code: 1
-  ✗ FAIL  10.2_external_validation.R                        3.9    Exit code: 1
-  ✗ FAIL  F01_main_figure1.R                                3.8    Exit code: 1
-  ✗ FAIL  F02_main_figure2.R                                3.9    Exit code: 1
-  ✗ FAIL  F03_main_figure3.R                                5.8    Exit code: 1
-  ✗ FAIL  S01_drivers.R                                     1.1    Exit code: 1
-  ✗ FAIL  S02_cropland_uncertainty.R                        6.6    Exit code: 1
-  ✗ FAIL  S03_aggregate_vs_disaggregate.R                   4.0    Exit code: 1
-  ✗ FAIL  S04_RF_hyperparameters.R                          3.9    Exit code: 1
-  ✓ PASS  S05_RF_unseen_performance.R                       5.0    
-  ✗ FAIL  S06_size_class_comparison.R                       3.9    Exit code: 1
-  ✗ FAIL  S07_distribution_parameters.R                     3.9    Exit code: 1
-  ✗ FAIL  S08_variable_importance.R                         4.0    Exit code: 1
-  ✗ FAIL  T01_area_production_tables.R                      3.9    Exit code: 1
-  ✗ FAIL  T02_heterogeneity_drivers.R                       3.9    Exit code: 1
+  ✓ PASS  06.1_quantile_RF.R                                3.4    
+  ✗ FAIL  06.3_prediction_maps.R                           48.7    Exit code: 1
+  ✗ FAIL  06.4_cropland_sensitivity.R                       4.6    Exit code: 1
+  ✗ FAIL  07.2_QRF_distribution_eval.R                      4.4    Exit code: 1
+  ✗ FAIL  08.1_predictions_by_country.R                     4.6    Exit code: 1
+  ✗ FAIL  08.2_generate_virtual_farms.R                     8.7    Exit code: 1
+  ✗ FAIL  08.3_farm_size_classes.R                          5.4    Exit code: 1
+  ✗ FAIL  09.1_AEZ_characterization.R                       4.2    Exit code: 1
+  ✗ FAIL  10.1_prepare_validation_data.R                    4.3    Exit code: 1
+  ✗ FAIL  10.2_external_validation.R                        4.3    Exit code: 1
+  ✗ FAIL  F01_main_figure1.R                                4.1    Exit code: 1
+  ✗ FAIL  F02_main_figure2.R                                4.2    Exit code: 1
+  ✗ FAIL  F03_main_figure3.R                                6.1    Exit code: 1
+  ✓ PASS  S01_drivers.R                                     1.4    
+  ✗ FAIL  S02_cropland_uncertainty.R                        7.2    Exit code: 1
+  ✗ FAIL  S03_aggregate_vs_disaggregate.R                   4.2    Exit code: 1
+  ✗ FAIL  S04_RF_hyperparameters.R                          4.2    Exit code: 1
+  ✓ PASS  S05_RF_unseen_performance.R                       5.5    
+  ✗ FAIL  S06_size_class_comparison.R                       4.2    Exit code: 1
+  ✗ FAIL  S07_distribution_parameters.R                     4.2    Exit code: 1
+  ✗ FAIL  S08_variable_importance.R                         4.2    Exit code: 1
+  ✗ FAIL  T01_area_production_tables.R                      4.4    Exit code: 1
+  ✗ FAIL  T02_heterogeneity_drivers.R                       4.2    Exit code: 1
 
 ======================================================================
-Total: 45   Passed: 17   Failed: 28   Time: 908s
+Total: 45   Passed: 20   Failed: 25   Time: 460s
 
 Report: ../output/reports/full_pipeline_test_report.md
 
-❌ CORE PIPELINE FAILING (7/22 core scripts passed)
+❌ CORE PIPELINE FAILING (9/22 core scripts passed)
 ```
 
 ## Pipeline Report
 # Farm Size Prediction — Full Pipeline CI Report
 
-**Generated:** 2026-03-16 10:48:43 UTC
+**Generated:** 2026-03-16 11:18:24 UTC
 **R Version:** R version 4.3.3 (2024-02-29)
 
 ## Summary
@@ -1252,56 +1297,56 @@ Report: ../output/reports/full_pipeline_test_report.md
 | Metric | Value |
 |--------|-------|
 | Total Scripts  | 45 |
-| Passed         | 17 |
-| Failed         | 28 |
-| Total Time     | 907.6s |
+| Passed         | 20 |
+| Failed         | 25 |
+| Total Time     | 460s |
 
 ## Per-Script Results
 
 | Phase | Script | Status | Time | Note |
 |-------|--------|--------|------|------|
-| 00 | `00_synthetic_data` | ✅ PASS | 6.2s |  |
-| 00 | `00_install_packages.R` | ✅ PASS | 0s | SKIPPED (download-only script) |
-| 00 | `00_download_spatial_data.R` | ✅ PASS | 0s | SKIPPED (download-only script) |
-| 01.2 | `01.2_chirps_summarize.R` | ✅ PASS | 0s | SKIPPED (download-only script) |
-| 02.1 | `02.1_compile_LSMS.R` | ✅ PASS | 0s | SKIPPED (download-only script) |
+| 00 | `00_synthetic_data` | ✅ PASS | 6.4s |  |
+| 00 | `00_install_packages.R` | ✅ PASS | 0s | SKIPPED (download/SLURM-only script) |
+| 00 | `00_download_spatial_data.R` | ✅ PASS | 0s | SKIPPED (download/SLURM-only script) |
+| 01.2 | `01.2_chirps_summarize.R` | ✅ PASS | 0s | SKIPPED (download/SLURM-only script) |
+| 02.1 | `02.1_compile_LSMS.R` | ✅ PASS | 0s | SKIPPED (download/SLURM-only script) |
+| 05.2 | `05.2_RF_optimization_summary.R` | ✅ PASS | 0s | SKIPPED (download/SLURM-only script) |
 | 01.1 | `01.1_chirps_download.R` | ✅ PASS | 1.9s |  |
-| 01.3 | `01.3_chirps_trends.R` | ❌ FAIL | 4.4s | Exit code: 1 |
-| 01.4 | `01.4_prepare_spatial_layers.R` | ✅ PASS | 3.3s |  |
-| 02.2 | `02.2_harmonize_farm_area.R` | ✅ PASS | 3.9s |  |
-| 02.3 | `02.3_measured_vs_reported.R` | ✅ PASS | 2.2s |  |
-| 03.1 | `03.1_pooled_data.R` | ✅ PASS | 1.2s |  |
-| 03.2 | `03.2_correlation_drivers.R` | ✅ PASS | 63.7s |  |
-| 03.3 | `03.3_descriptive_stats.R` | ✅ PASS | 18.9s |  |
-| 04.1 | `04.1_comparing_ML_algorithms.R` | ✅ PASS | 1.4s |  |
-| 04.2 | `04.2_RF_within_country.R` | ❌ FAIL | 10.2s | Exit code: 1 |
-| 04.3 | `04.3_RF_between_countries.R` | ❌ FAIL | 62.6s | Exit code: 1 |
-| 04.4 | `04.4_RF_model_evaluation.R` | ❌ FAIL | 6.6s | Exit code: 1 |
+| 01.3 | `01.3_chirps_trends.R` | ❌ FAIL | 4.5s | Exit code: 1 |
+| 01.4 | `01.4_prepare_spatial_layers.R` | ✅ PASS | 3.4s |  |
+| 02.2 | `02.2_harmonize_farm_area.R` | ✅ PASS | 4.1s |  |
+| 02.3 | `02.3_measured_vs_reported.R` | ✅ PASS | 2.3s |  |
+| 03.1 | `03.1_pooled_data.R` | ✅ PASS | 1.3s |  |
+| 03.2 | `03.2_correlation_drivers.R` | ✅ PASS | 63.5s |  |
+| 03.3 | `03.3_descriptive_stats.R` | ✅ PASS | 18.6s |  |
+| 04.1 | `04.1_comparing_ML_algorithms.R` | ✅ PASS | 1.5s |  |
+| 04.2 | `04.2_RF_within_country.R` | ❌ FAIL | 11.1s | Exit code: 1 |
+| 04.3 | `04.3_RF_between_countries.R` | ✅ PASS | 167.1s |  |
+| 04.4 | `04.4_RF_model_evaluation.R` | ❌ FAIL | 6.8s | Exit code: 1 |
 | 04.5 | `04.5_cross_country_graphs.R` | ❌ FAIL | 0.3s | Exit code: 1 |
-| 04.6 | `04.6_discrepancy_analysis.R` | ❌ FAIL | 1.6s | Exit code: 1 |
-| 05.1 | `05.1_RF_optimization.R` | ✅ PASS | 3.9s |  |
-| 05.2 | `05.2_RF_optimization_summary.R` | ❌ FAIL | 620s | Exit code: 124 |
+| 04.6 | `04.6_discrepancy_analysis.R` | ❌ FAIL | 11.8s | Exit code: 1 |
+| 05.1 | `05.1_RF_optimization.R` | ✅ PASS | 4s |  |
 | 05.3 | `05.3_RF_robustness.R` | ✅ PASS | 0.2s |  |
-| 06.1 | `06.1_quantile_RF.R` | ✅ PASS | 3.2s |  |
-| 06.3 | `06.3_prediction_maps.R` | ❌ FAIL | 4.9s | Exit code: 1 |
-| 06.4 | `06.4_cropland_sensitivity.R` | ❌ FAIL | 4.3s | Exit code: 1 |
-| 07.2 | `07.2_QRF_distribution_eval.R` | ❌ FAIL | 4s | Exit code: 1 |
-| 08.1 | `08.1_predictions_by_country.R` | ❌ FAIL | 4.3s | Exit code: 1 |
-| 08.2 | `08.2_generate_virtual_farms.R` | ❌ FAIL | 3.8s | Exit code: 1 |
-| 08.3 | `08.3_farm_size_classes.R` | ❌ FAIL | 4.9s | Exit code: 1 |
-| 09.1 | `09.1_AEZ_characterization.R` | ❌ FAIL | 3.9s | Exit code: 1 |
-| 10.1 | `10.1_prepare_validation_data.R` | ❌ FAIL | 4s | Exit code: 1 |
-| 10.2 | `10.2_external_validation.R` | ❌ FAIL | 3.9s | Exit code: 1 |
-| F01 | `F01_main_figure1.R` | ❌ FAIL | 3.8s | Exit code: 1 |
-| F02 | `F02_main_figure2.R` | ❌ FAIL | 3.9s | Exit code: 1 |
-| F03 | `F03_main_figure3.R` | ❌ FAIL | 5.8s | Exit code: 1 |
-| S01 | `S01_drivers.R` | ❌ FAIL | 1.1s | Exit code: 1 |
-| S02 | `S02_cropland_uncertainty.R` | ❌ FAIL | 6.6s | Exit code: 1 |
-| S03 | `S03_aggregate_vs_disaggregate.R` | ❌ FAIL | 4s | Exit code: 1 |
-| S04 | `S04_RF_hyperparameters.R` | ❌ FAIL | 3.9s | Exit code: 1 |
-| S05 | `S05_RF_unseen_performance.R` | ✅ PASS | 5s |  |
-| S06 | `S06_size_class_comparison.R` | ❌ FAIL | 3.9s | Exit code: 1 |
-| S07 | `S07_distribution_parameters.R` | ❌ FAIL | 3.9s | Exit code: 1 |
-| S08 | `S08_variable_importance.R` | ❌ FAIL | 4s | Exit code: 1 |
-| T01 | `T01_area_production_tables.R` | ❌ FAIL | 3.9s | Exit code: 1 |
-| T02 | `T02_heterogeneity_drivers.R` | ❌ FAIL | 3.9s | Exit code: 1 |
+| 06.1 | `06.1_quantile_RF.R` | ✅ PASS | 3.4s |  |
+| 06.3 | `06.3_prediction_maps.R` | ❌ FAIL | 48.7s | Exit code: 1 |
+| 06.4 | `06.4_cropland_sensitivity.R` | ❌ FAIL | 4.6s | Exit code: 1 |
+| 07.2 | `07.2_QRF_distribution_eval.R` | ❌ FAIL | 4.4s | Exit code: 1 |
+| 08.1 | `08.1_predictions_by_country.R` | ❌ FAIL | 4.6s | Exit code: 1 |
+| 08.2 | `08.2_generate_virtual_farms.R` | ❌ FAIL | 8.7s | Exit code: 1 |
+| 08.3 | `08.3_farm_size_classes.R` | ❌ FAIL | 5.4s | Exit code: 1 |
+| 09.1 | `09.1_AEZ_characterization.R` | ❌ FAIL | 4.2s | Exit code: 1 |
+| 10.1 | `10.1_prepare_validation_data.R` | ❌ FAIL | 4.3s | Exit code: 1 |
+| 10.2 | `10.2_external_validation.R` | ❌ FAIL | 4.3s | Exit code: 1 |
+| F01 | `F01_main_figure1.R` | ❌ FAIL | 4.1s | Exit code: 1 |
+| F02 | `F02_main_figure2.R` | ❌ FAIL | 4.2s | Exit code: 1 |
+| F03 | `F03_main_figure3.R` | ❌ FAIL | 6.1s | Exit code: 1 |
+| S01 | `S01_drivers.R` | ✅ PASS | 1.4s |  |
+| S02 | `S02_cropland_uncertainty.R` | ❌ FAIL | 7.2s | Exit code: 1 |
+| S03 | `S03_aggregate_vs_disaggregate.R` | ❌ FAIL | 4.2s | Exit code: 1 |
+| S04 | `S04_RF_hyperparameters.R` | ❌ FAIL | 4.2s | Exit code: 1 |
+| S05 | `S05_RF_unseen_performance.R` | ✅ PASS | 5.5s |  |
+| S06 | `S06_size_class_comparison.R` | ❌ FAIL | 4.2s | Exit code: 1 |
+| S07 | `S07_distribution_parameters.R` | ❌ FAIL | 4.2s | Exit code: 1 |
+| S08 | `S08_variable_importance.R` | ❌ FAIL | 4.2s | Exit code: 1 |
+| T01 | `T01_area_production_tables.R` | ❌ FAIL | 4.4s | Exit code: 1 |
+| T02 | `T02_heterogeneity_drivers.R` | ❌ FAIL | 4.2s | Exit code: 1 |
