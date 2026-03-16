@@ -850,8 +850,10 @@ saveRDS(list(
 
 # F02 reads files one level up (../fig.*)
 # F02 uses fig1a$spam_2017 (nb of farms from SPAM) and fig1a$pred_farm_area_ha
-fig1a_stack <- c(rf_pred, rf_pred * runif(terra::ncell(rf_pred), 0.8, 1.2))
-names(fig1a_stack) <- c("spam_2017", "pred_farm_area_ha")
+# Use separate rasters to avoid terra ncell-length vector multiplication issue
+fig1a_spam    <- make_rast("spam_2017",          50000, 20000, r_res = res_pred)
+fig1a_predfarm <- make_rast("pred_farm_area_ha", 2.0,   0.8,   r_res = res_pred)
+fig1a_stack <- c(fig1a_spam, fig1a_predfarm)
 terra::writeRaster(fig1a_stack, "../fig.1a_nb_of_farm_per_grid_cell.tif", overwrite = TRUE)
 terra::writeRaster(qrf_q010_r, "../fig.2a_quantile_10_fsizes.tif",       overwrite = TRUE)
 terra::writeRaster(qrf_q090_r, "../fig.2b_quantile_90_fsizes.tif",       overwrite = TRUE)

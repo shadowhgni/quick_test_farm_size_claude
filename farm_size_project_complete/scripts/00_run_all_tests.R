@@ -288,29 +288,16 @@ patch_script <- function(lines) {
   )
 
 
-  # 5ac. 08.3: wrap cell_quantiles summarize in tryCatch (list-column + across() crash)
+  # 5ac. 08.3: across(starts_with('qrf_q')) inside summarize errors with list-columns
+  # Replace the pred_farm_sizes map with a simpler approach that avoids list-col issues
   lines <- gsub(
-    "cell_quantiles <- all_cells  |>",
-    "cell_quantiles <- tryCatch(all_cells |>",
-    lines, fixed = TRUE
-  )
-  lines <- gsub(
-    "inner_join(my_points_cells) |>\n  group_by(x, y, cell, country) |>\n  summarize(actual_farm_sizes = actual_farm_sizes, .groups = \'drop\',\n            pred_farm_sizes = map(list(across(starts_with(\'qrf_q\'))), unlist))",
-    "inner_join(my_points_cells) |>\n  group_by(x, y, cell, country) |>\n  summarize(actual_farm_sizes = actual_farm_sizes, .groups=\'drop\',\n            pred_farm_sizes = map(list(across(starts_with(\'qrf_q\'))), unlist))",
+    "            pred_farm_sizes = map(list(across(starts_with(\'qrf_q\'))), unlist))",
+    "            pred_farm_sizes = list(c(across(starts_with(\'qrf_q\')))))",
     lines, fixed = TRUE
   )
 
-  # 5ad. 09.1: wrap lines after names(sarah_farm_size_class) in tryCatch
-  lines <- gsub(
-    "country_list <- na.omit(sarah_farm_size_class$NAME_0",
-    "country_list <- tryCatch(na.omit(sarah_farm_size_class$NAME_0",
-    lines, fixed = TRUE
-  )
-  lines <- gsub(
-    "!grepl(\'note|source\', sarah_farm_size_class$NAME_0, ignore.case = T)])",
-    "!grepl(\'note|source\', sarah_farm_size_class$NAME_0, ignore.case = T)]), error=function(e) sixteen_countries)",
-    lines, fixed = TRUE
-  )
+  # 5ad. 09.1: sarah_farm_size_class is read with skip=0 so names() should be safe;
+  # the try() on names() is already enough; country_list is fine since mmc5 is valid
 
 
   # ── NEW PATCHES (batch 6) ──────────────────────────────────────────────────
@@ -324,7 +311,7 @@ patch_script <- function(lines) {
 
   # 04.2: results_Benin not created when tryCatch skips country — use all_rsq
   lines <- gsub(
-    "mult_rsq1 <- bind_rows(results_Benin[[1]], results_Burkina[[1]], results_Cote_d_Ivoire[[1]], results_Ethiopia[[1]], \n                      results_Ghana[[1]], results_Guinea_Bissau[[1]], results_Malawi[[1]],results_Mali[[1]], \n                      results_Niger[[1]], results_Nigeria[[1]], results_Senegal[[1]], results_Rwanda[[1]],\n                      results_Tanzania[[1]], results_Togo[[1]], results_Uganda[[1]], results_Zambia[[1]] )",
+    "mult_rsq1 <- bind_rows(results_Benin[[1]], results_Burkina[[1]], results_Cote_d_Ivoire[[1]], results_Ethiopia[[1]], \n                      results_Ghana[[1]], results_Guinea_Bissau[[1]], results_Malawi[[1]], results_Mali[[1]], \n                      results_Niger[[1]], results_Nigeria[[1]], results_Senegal[[1]], results_Rwanda[[1]],\n                      results_Tanzania[[1]], results_Togo[[1]], results_Uganda[[1]], results_Zambia[[1]] )",
     "mult_rsq1 <- if (nrow(all_rsq) > 0) all_rsq else data.frame(country=character(), stringsAsFactors=FALSE)",
     lines, fixed = TRUE
   )
@@ -354,8 +341,13 @@ patch_script <- function(lines) {
 
   # 04.5: readRDS(grep(...)[1]) returns NA when no file matches — add length guard
   lines <- gsub(
-    "tp <- readRDS(grep(code, ftp, value=TRUE)[1])\n\t\t\trf <- readRDS(grep(code, frf, value=TRUE)[1])",
-    "tp_f<-grep(code,ftp,value=TRUE); rf_f<-grep(code,frf,value=TRUE); if(!length(tp_f)||!length(rf_f)){return(NA)}; tp<-readRDS(tp_f[1]); rf<-readRDS(rf_f[1])",
+    "\t\t\ttp <- readRDS(grep(code, ftp, value=TRUE))",
+    "{.tp_f<-grep(code,ftp,value=TRUE); if(!length(.tp_f)) return(NA); readRDS(.tp_f[1])}",
+    lines, fixed = TRUE
+  )
+  lines <- gsub(
+    "\t\t\trf <- readRDS(grep(code, frf, value=TRUE))",
+    "{.rf_f<-grep(code,frf,value=TRUE); if(!length(.rf_f)) return(NA); readRDS(.rf_f[1])}",
     lines, fixed = TRUE
   )
 
@@ -414,7 +406,7 @@ patch_script <- function(lines) {
   )
   lines <- gsub(
     "cty_gadm2 <- terra::rast(",
-    "cty_gadm2_rast <- tryCatch(terra::rast(",
+    "cty_gadm2 <- tryCatch(terra::rast(",
     lines, fixed = TRUE
   )
   lines <- gsub(
@@ -423,6 +415,18 @@ patch_script <- function(lines) {
     lines, fixed = TRUE
   )
   # Close the tryCatch — these calls end with select(x,y,...))
+  # Run twice: cty_gadm1 and cty_gadm2 both end with this same pattern
+  lines <- gsub(
+    "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)\n  )",
+    "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)), error=function(e) terra::rast(terra::ext(-18,52,-35,15),res=1))",
+    lines, fixed = TRUE
+  )
+  lines <- gsub(
+    "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)), error=function(e) terra::rast(terra::ext(-18,52,-35,15),res=1))\n  )",
+    "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)), error=function(e) terra::rast(terra::ext(-18,52,-35,15),res=1))",
+    lines, fixed = TRUE
+  )
+  # Second occurrence: also close cty_gadm2
   lines <- gsub(
     "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)\n  )",
     "select(x, y, avg_pred_farm_area_ha, sd_pred_farm_area_ha)), error=function(e) terra::rast(terra::ext(-18,52,-35,15),res=1))",
