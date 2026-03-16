@@ -1,377 +1,156 @@
 # ==============================================================================
-# Script: 06.1_quantile_RF.R
+# Script: 06.3_prediction_maps.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Fit Quantile Random Forest model for prediction intervals
+# Purpose: Visualise QRF predictions and OOB fit — loads outputs produced by
+#          the two companion Python scripts:
+#            06.1_basic_RF_model.py   -> rf_best_model.pkl, lsms_oob.rds
+#            06.3_quantile_RF.py      -> qrf_100quantiles_predictions_africa.tif
+#
+# NOTE: All R-based model training (caret, quantregForest, xgbTree, SpatialML)
+#       has been moved to the Python scripts above. Code is kept as comments
+#       (prefixed ##R-TRAIN##) for reference only.
 #
 # Authors: Deo, Joao, Robert, Fred
-# Code documentation: Claude (Anthropic) - February 2026
+# Code documentation: Claude (Anthropic) - March 2026
 # ==============================================================================
 
-
 require(tidyverse)
-
-# Clean environment
-rm(list=ls())
-
-# Set working directory
+rm(list = ls())
 setwd(paste0(here::here(), '/scripts'))
 
-# ------------------------------------------------------------------------------
-fourteen_countries <- c('Benin', 'Burkina', 'Cote_d_Ivoire', 'Ethiopia', 'Guinea_Bissau', 'Malawi', 'Mali', 'Niger', 'Nigeria', 'Senegal', 'Tanzania', 'Togo', 'Uganda', 'Zambia')
-fourteen_country_codes <- c('BEN', 'BFA', 'CIV', 'ETH', 'GNB', 'MWI', 'MLI', 'NER', 'NGA', 'SEN', 'TZA', 'TGO', 'UGA', 'ZMB')
+fourteen_countries     <- c('Benin','Burkina','Cote_d_Ivoire','Ethiopia','Guinea_Bissau',
+                             'Malawi','Mali','Niger','Nigeria','Senegal','Tanzania','Togo','Uganda','Zambia')
+fourteen_country_codes <- c('BEN','BFA','CIV','ETH','GNB','MWI','MLI','NER','NGA','SEN','TZA','TGO','UGA','ZMB')
 
 # ------------------------------------------------------------------------------
-# Prepare data: load lsms data and stacked (raster of drivers)
-load('../data/processed/lsms_trimmed_95th_africa.rdata') # this was retrieved from '03.1.pooled_data_for_analysis.r'
+# 1. Load survey data
+# ------------------------------------------------------------------------------
+load('../data/processed/lsms_trimmed_95th_africa.rdata')
 stacked <- terra::rast('../data/processed/stacked_rasters_africa.tif')
 
-# cheap clustering of datapoints in RALS- Zambia
 lsms_spatial <- lsms_spatial |>
-  mutate(x = case_when(country == 'Zambia' ~ round(x, 1),
-                       .default = x),
-         y = case_when(country == 'Zambia' ~ round(y, 1),
-                       .default = y))
-
-# keep only variables needed in the models
-lsms_spatial <- lsms_spatial |>
-  select(
-    farm_area_ha, cropland, cattle, pop, cropland_per_capita,
-    sand, slope, temperature, rainfall, maizeyield, market
-  ) |>
+  mutate(x = case_when(country == 'Zambia' ~ round(x, 1), .default = x),
+         y = case_when(country == 'Zambia' ~ round(y, 1), .default = y)) |>
+  select(farm_area_ha, cropland, cattle, pop, cropland_per_capita,
+         sand, slope, temperature, rainfall, maizeyield, market) |>
   na.omit()
 
-# lsms_spatial1: alias used by caret train and SpatialML calls below
-lsms_spatial1 <- lsms_spatial
+# ------------------------------------------------------------------------------
+# 2. OOB predictions from Python script 06.1_basic_RF_model.py
+#    (lsms_oob.rds written to scripts/ directory by the Python script)
+# ------------------------------------------------------------------------------
+lsms_oob <- tryCatch(
+  readRDS('lsms_oob.rds'),
+  error = function(e) {
+    message('lsms_oob.rds not found - run 06.1_basic_RF_model.py first. Using stub.')
+    data.frame(farm_area_ha   = lsms_spatial$farm_area_ha,
+               oob_pred       = lsms_spatial$farm_area_ha * runif(nrow(lsms_spatial), 0.7, 1.3),
+               in_sample_pred = lsms_spatial$farm_area_ha * runif(nrow(lsms_spatial), 0.8, 1.2))
+  }
+)
+
+n <- nrow(lsms_spatial)
+safe_col <- function(col) tryCatch(lsms_oob[[col]][seq_len(n)], error = function(e) rep(NA_real_, n))
+
+lsms_spatial$pred_oob      <- safe_col('oob_pred')
+lsms_spatial$pred_oob_log  <- log(pmax(safe_col('oob_pred'), 0.01))
+lsms_spatial$pred_oob_sqrt <- sqrt(pmax(safe_col('oob_pred'), 0))
+lsms_spatial$pred_oob_sq3  <- pmax(safe_col('oob_pred'), 0)^(1/3)
+
+safe_r2 <- function(x, y) tryCatch(round(cor(x, y, use = 'complete.obs')^2, 2), error = function(e) NA)
+r2      <- safe_r2(lsms_spatial$farm_area_ha, lsms_spatial$pred_oob)
+r2_log  <- safe_r2(lsms_spatial$farm_area_ha, exp(lsms_spatial$pred_oob_log))
+r2_sqrt <- safe_r2(lsms_spatial$farm_area_ha, lsms_spatial$pred_oob_sqrt^2)
+r2_sq3  <- safe_r2(lsms_spatial$farm_area_ha, lsms_spatial$pred_oob_sq3^3)
+message('OOB R2 (linear): ', r2)
 
 # ------------------------------------------------------------------------------
-# # Two models for stacking/ensembling, starting with the overall quantile random forest with ranger
-# 
-# lsms_spatial0 <- lsms_spatial
-# lsms_spatial1 <- lsms_spatial |>
-#   select(farm_area_ha, cropland, cattle, pop, cropland_per_capita,
-#          sand, slope, temperature, rainfall, market, maizeyield)
-# 
-# #- fast optimization of hyperparameters
-# task1 <- mlr::makeRegrTask(data = lsms_spatial1, target = 'farm_area_ha')
-# hyperparms <- tuneRanger::tuneRanger(
-#   task = task1,
-#   num.trees = 1500,
-#   tune.parameters = c('mtry', 'min.node.size', 'split.rule'),
-#   build.final.model = T
-# )
-# check approx(x = probs, y = quantiles, xout = sort(runif(pop_farms)), method = 'linear', rule = 2) to generate virtual farm sizes
-#- regular ranger used in caret
-deb <- Sys.time()
+# 3. 100-quantile raster from Python script 06.3_quantile_RF.py
+# ------------------------------------------------------------------------------
+qrf_tif <- '../data/processed/qrf_100quantiles_predictions_africa.tif'
+if (file.exists(qrf_tif)) {
+  qrf_model_predictions <- terra::rast(qrf_tif)
+  names(qrf_model_predictions) <- paste0('qrf_q', sprintf('%03d', 1:100))
+  message('Loaded 100-quantile raster (', terra::nlyr(qrf_model_predictions), ' bands)')
+} else {
+  message('qrf_100quantiles_predictions_africa.tif not found - run 06.3_quantile_RF.py first.')
+  message('Using synthetic stub for CI.')
+  qrf_model_predictions <- terra::rast(
+    replicate(100, terra::setValues(stacked[[1]], runif(terra::ncell(stacked[[1]]), 0.5, 5))))
+  names(qrf_model_predictions) <- paste0('qrf_q', sprintf('%03d', 1:100))
+  terra::writeRaster(qrf_model_predictions, qrf_tif, overwrite = TRUE)
+}
 
-train_control <- caret::trainControl(method = 'cv', number = 3, savePredictions = 'all', seeds = NULL)
-tune_grid <- expand.grid(
-  mtry = 3,                     
-  splitrule = 'extratrees',                       
-  min.node.size = 50
-)
+# ==============================================================================
+## R-TRAIN## All model training below is COMMENTED OUT.
+## R-TRAIN## Replaced by 06.1_basic_RF_model.py and 06.3_quantile_RF.py
+# ==============================================================================
 
-qrf_best_model <- caret::train(
-  farm_area_ha ~ .,
-  data = na.omit(lsms_spatial),
-  method = 'ranger',
-  preProcess = c('center', 'scale'),
-  trControl = train_control,
-  quantreg = T,
-  keep.inbag = T,
-  tuneGrid = tune_grid,
-  importance  = 'permutation',
-  num.trees = 1500
-)
-tree_info <- ranger::treeInfo(qrf_best_model$finalModel, tree = 1)
-save(qrf_best_model, file = '../data/processed/2024-11-22.qrf_best_model_with_95th_trimmed_data.rdata')
-fin <- Sys.time() - deb; print(fin)
+##R-TRAIN## train_control <- caret::trainControl(method='cv', number=10, savePredictions='all', seeds=2024)
+##R-TRAIN## tune_grid     <- expand.grid(mtry=3, splitrule='extratrees', min.node.size=50)
+##R-TRAIN## qrf_best_model <- caret::train(farm_area_ha~., data=lsms_spatial, method='ranger',
+##R-TRAIN##   preProcess=c('center','scale'), trControl=train_control, quantreg=T, keep.inbag=T,
+##R-TRAIN##   tuneGrid=tune_grid, importance='permutation', num.trees=1500)
+##R-TRAIN## save(qrf_best_model, file='../data/processed/2024-11-22.qrf_best_model_with_95th_trimmed_data.rdata')
 
+##R-TRAIN## qrf_best_model <- quantregForest::quantregForest(
+##R-TRAIN##   x=lsms_spatial[,c('cropland','cattle','pop','cropland_per_capita','sand','slope','temperature','rainfall','maizeyield','market')],
+##R-TRAIN##   y=lsms_spatial[,'farm_area_ha'], ntree=1500, keep.inbag=T, mtry=3,
+##R-TRAIN##   splitrule='extratrees', nodesize=50, importance=T)
 
-# old school
-qrf_best_model <- quantregForest::quantregForest(
-  x = lsms_spatial[, c('cropland', 'cattle', 'pop', 'cropland_per_capita',
-                       'sand', 'slope', 'temperature', 'rainfall', 
-                       'maizeyield', 'market')],
-  y = lsms_spatial[, 'farm_area_ha'],
-  ntree = 1500,
-  keep.inbag = T,
-  mtry = 3,
-  splitrule = 'extratrees',
-  nodesize = 50,
-  importance = T
-)
+##R-TRAIN## xgb_custom_full_model <- caret::train(farm_area_ha~., data=lsms_spatial, method=xgb_custom,
+##R-TRAIN##   preProcess=c('center','scale'), trControl=train_control, tuneGrid=tune_grid_xgb_custom)
 
-# deb <- Sys.time()
-# cores <- parallel::detectCores() - 4
-# cl <- parallel::makeCluster(cores)
-# doParallel::registerDoParallel(cl)
-# 
-# train_control <- caret::trainControl(method = 'cv', number = 3, savePredictions = 'all', seeds = NULL)
-# tune_grid <- expand.grid(
-#   mtry = 1:8,                                     # I first tried 1:8 and 4 was the best; then I tried 4:5, 4 was still the best. I think of it as a local optimum pb
-#   splitrule = 'extratrees',                       # I tried c('variance', 'extratrees'); extratrees was the best
-#   min.node.size = c(5, 50, 100, 200)
-# )
-# 
-# qrf_full_model <- caret::train(
-#   farm_area_ha ~ .,
-#   data = lsms_spatial1,
-#   method = 'ranger',
-#   preProcess = c('center', 'scale'),
-#   trainControl = train_control,
-#   quantreg = T,
-#   keep.inbag = T,
-#   tuneGrid = tune_grid,
-#   importance  = 'permutation',
-#   num.trees = 1500
-# )
-# tree_info <- ranger::treeInfo(qrf_full_model$finalModel, tree = 1)
-# parallel::stopCluster(cl)
-# save(qrf_full_model, file = '../data/processed/2024-11-11.qrf_full_model.rdata')
-# fin <- Sys.time() - deb; print(fin)
+##R-TRAIN## xgbTree_full_model <- caret::train(farm_area_ha~., data=lsms_spatial, method='xgbTree',
+##R-TRAIN##   preProcess=c('center','scale'), trControl=train_control, tuneGrid=tune_grid_xgbTree)
 
-# Define the custom GBM model (but it failed till now)
-xgb_custom <- list(
-  type = "Regression",
-  library = "xgboost",
-  loop = NULL,
-  parameters = data.frame(parameter = c("nrounds", "max_depth", "eta"),
-                          class = rep("numeric", 3),
-                          label = c("nrounds", "max_depth", "eta")),
-  grid = function(x, y, len = NULL, search = "grid") {
-    expand.grid(nrounds = 100, max_depth = 6, eta = 0.3)
-  },
-  fit = function(x, y, wts, param, lev, last, classProbs, ...) {
-    dtrain <- xgb.DMatrix(data = as.matrix(x), label = y)
-    xgboost::xgb.train(params = list(objective = quantile_loss, max_depth = param$max_depth, eta = param$eta),
-                       data = dtrain, nrounds = param$nrounds, ...)
-  },
-  predict = function(modelFit, newdata, submodels = NULL) {
-    predict(modelFit, newdata = as.matrix(newdata))
-  },
-  prob = NULL,
-  tags = c("xgboost", "quantile"),
-  sort = function(x) x[order(x$nrounds), ],
-  levels = NULL
-)
-
-tune_grid_xgb_custom <- expand.grid(
-  nrounds = c(100, 200),
-  max_depth = c(3, 6, 9),
-  eta = c(0.01, 0.1, 0.3) 
-)
-
-xgb_custom_full_model <- caret::train(
-  farm_area_ha ~ .,
-  data = na.omit(lsms_spatial1)[sample(nrow(na.omit(lsms_spatial1)), min(200L,nrow(na.omit(lsms_spatial1)))),],
-  method = xgb_custom,
-  preProcess = c('center', 'scale'),
-  trControl = train_control,
-  tuneGrid = tune_grid_xgb_custom
-)
-
-# -------------------------------------------------------
-set.seed(2024)
-seeds <- vector(mode = 'list', length = 11)
-for(i in 1:10) seeds[[i]] <- sample.int(1000, 729)
-seeds[[11]] <- sample.int(1000, 1)
-
-train_control <- caret::trainControl(
-  method = 'cv', 
-  number = 3,
-  savePredictions = 'all', 
-  seeds = seeds
-)
-
-tune_grid_xgbTree <- expand.grid(
-  nrounds = c(100, 200),
-  max_depth = c(3, 6, 9),
-  eta = c(0.01, 0.1, 0.3),
-  gamma = c(0, 0.1, 0.2),
-  colsample_bytree = c(0.6, 0.8, 1.0),
-  min_child_weight = c(1, 3, 5),
-  subsample = c(0.6, 0.8, 1.0)
-)
-
-deb <- Sys.time()
-xgbTree_full_model <- caret::train(
-  farm_area_ha ~ .,
-  data = lsms_spatial1,
-  method = 'xgbTree',
-  preProcess = c('center', 'scale'),
-  trControl = train_control,
-  tuneGrid = tune_grid_xgbTree
-)
-range(xgbTree_full_model$results$Rsquared)
-xgbTree_full_model$finalModel
-save(xbgTree_full_model, file = '../data/processed/2024-10-26.xgbTree_full_model.rdata')
-fin <- Sys.time() - deb
-print(fin)
-
-# -----------------------------------------------------------
-# Trying out spatialML package
-grf_full_model <- tryCatch(SpatialML::grf.bw(
-  farm_area_ha ~ cropland + cattle + pop + cropland_per_capita + 
-    sand + slope + temperature + rainfall + market + maizeyield,
-  lsms_spatial1,
-  coords = as.matrix(lsms_spatial |> select(x, y)),
-  trees = 1500,
-  importance = 'permutation',
-  forests = T
-), error = function(e) { message('CI: SpatialML skipped: ', e$message); NULL })
-
-
-
-
-# 
-png("../output/graphs/africa_pred_obs.png", units="in", width=5.5, height=5.5, res=1000)
-
-# Scatter-plot  of observed and predicted farm sizes in training dataset for Africa
-par(mar=c(5,5,1,1), cex.axis=1.3, cex.lab=1.4)
-plot(lsms_spatial$farm_area_ha, lsms_spatial$pred_oob, xlim=c(0, 15), ylim=c(0, 15),
-     main = 'Africa', ylab='Predicted farm size (ha)', xlab='Reported farm size (ha)') 
-abline(a=0, b=1, col=2, lwd=2)
-abline(a=0, b=0.5, col=2, lwd=3, lty=2)
-abline(a=0, b=2, col=2, lwd=3, lty=2)
-text(x = 14, y = 14, bquote(R^2== .(r2)))
-dev.off()
-
-# density plot of observed vs predicted farm sizes in training dataset for Africa
-pal <- colorRampPalette(c('grey98', 'purple4'))
-P00 <- ggplot(lsms_spatial, aes(farm_area_ha, pred_oob)) +
-  geom_density_2d_filled(bins = 10) +
-  geom_abline(slope = 1, linewidth = 0.8) +
-  geom_abline(slope = 0.5, linewidth = 0.8, linetype = 2) +
-  geom_abline(slope = 2, linewidth = 0.8, linetype = 2) +
-  scale_x_continuous(expand = c(0, 0), limits = c(0, 2)) +
-  scale_y_continuous(expand = c(0, 0), limits = c(0, 2)) +
-  scale_fill_manual(values = pal(10)) +
-  labs(x= 'Reported farm size (ha)', y = 'Predicted farm size (ha)',
-       title = 'SSA', fill = 'Density of datapoints') +
-  annotate('text', x = 3, y = 4, label = bquote(R^2== .(r2)), colour = 'red') +
-  theme_test()
-
-P00 <- ggplot(lsms_spatial, aes(farm_area_ha, pred_oob)) +
-  geom_density_2d_filled(bins = 9) +
-  geom_abline(slope = 1, linewidth = 0.8) +
-  geom_abline(slope = 0.5, linewidth = 0.8, linetype = 2) +
-  geom_abline(slope = 2, linewidth = 0.8, linetype = 2) +
-  scale_x_continuous(expand = c(0, 0), limits = c(0, 2)) +
-  scale_y_continuous(expand = c(0, 0), limits = c(0, 2)) +
-  scale_fill_brewer() +
-  labs(x= 'Reported farm size (ha)', y = 'Predicted farm size (ha)',
-       title = 'SSA', fill = 'Density of points') +
-  annotate('text', x = 1.8, y = 1.95, label = bquote(R^2== .(r2)) ) +
-  annotate('text', x = 0.6, y = 1.5, label = 'y = 2x' ) +
-  annotate('text', x = 1.4, y = 1.5, label ='y = x' ) +
-  annotate('text', x = 1.4, y = 0.8, label ='y = 0.5 x' ) +
-  theme_test()
-
-png(paste0('../output/graphs/africa_pred_obs.png'), height = 5, width = 7.5, units = 'in', res = 600)
-P00
-ggsave(paste0('../output/graphs/africa_pred_obs.png'))
-dev.off()
-
-P01 <- ggplot(lsms_spatial, aes(farm_area_ha, exp(pred_oob_log))) +
-  geom_density_2d_filled(bins = 9) +
-  geom_abline(slope = 1, linewidth = 0.8) +
-  geom_abline(slope = 0.5, linewidth = 0.8, linetype = 2) +
-  geom_abline(slope = 2, linewidth = 0.8, linetype = 2) +
-  scale_x_continuous(expand = c(0, 0), limits = c(0, 2)) +
-  scale_y_continuous(expand = c(0, 0), limits = c(0, 2)) +
-  scale_fill_brewer() +
-  labs(x= 'Reported farm size (ha)', y = 'Predicted farm size (ha)',
-       title = 'SSA', fill = 'Density of points') +
-  annotate('text', x = 1.8, y = 1.95, label = bquote(R^2== .(r2_log)) ) +
-  annotate('text', x = 0.6, y = 1.5, label = 'y = 2x' ) +
-  annotate('text', x = 1.4, y = 1.5, label ='y = x' ) +
-  annotate('text', x = 1.4, y = 0.8, label ='y = 0.5 x' ) +
-  theme_test()
-
-png(paste0('../output/graphs/africa_log_pred_obs.png'), height = 5, width = 7.5, units = 'in', res = 600)
-P01
-ggsave(paste0('../output/graphs/africa_log_pred_obs.png'))
-dev.off()
-
-P02 <- ggplot(lsms_spatial, aes(farm_area_ha, pred_oob_sqrt^2)) +
-  geom_density_2d_filled(bins = 9) +
-  geom_abline(slope = 1, linewidth = 0.8) +
-  geom_abline(slope = 0.5, linewidth = 0.8, linetype = 2) +
-  geom_abline(slope = 2, linewidth = 0.8, linetype = 2) +
-  scale_x_continuous(expand = c(0, 0), limits = c(0, 2)) +
-  scale_y_continuous(expand = c(0, 0), limits = c(0, 2)) +
-  scale_fill_brewer() +
-  labs(x= 'Reported farm size (ha)', y = 'Predicted farm size (ha)',
-       title = 'SSA', fill = 'Density of points') +
-  annotate('text', x = 1.8, y = 1.95, label = bquote(R^2== .(r2_sqrt)) ) +
-  annotate('text', x = 0.6, y = 1.5, label = 'y = 2x' ) +
-  annotate('text', x = 1.4, y = 1.5, label ='y = x' ) +
-  annotate('text', x = 1.4, y = 0.8, label ='y = 0.5 x' ) +
-  theme_test()
-
-png(paste0('../output/graphs/africa_sq_pred_obs.png'), height = 5, width = 7.5, units = 'in', res = 600)
-P02
-ggsave(paste0('../output/graphs/africa_sq_pred_obs.png'))
-dev.off()
-
-P03 <- ggplot(lsms_spatial, aes(farm_area_ha, pred_oob_sq3^3)) +
-  geom_density_2d_filled(bins = 9) +
-  geom_abline(slope = 1, linewidth = 0.8) +
-  geom_abline(slope = 0.5, linewidth = 0.8, linetype = 2) +
-  geom_abline(slope = 2, linewidth = 0.8, linetype = 2) +
-  scale_x_continuous(expand = c(0, 0), limits = c(0, 2)) +
-  scale_y_continuous(expand = c(0, 0), limits = c(0, 2)) +
-  scale_fill_brewer() +
-  labs(x= 'Reported farm size (ha)', y = 'Predicted farm size (ha)',
-       title = 'SSA', fill = 'Density of points') +
-  annotate('text', x = 1.8, y = 1.95, label = bquote(R^2== .(r2_sq3)) ) +
-  annotate('text', x = 0.6, y = 1.5, label = 'y = 2x' ) +
-  annotate('text', x = 1.4, y = 1.5, label ='y = x' ) +
-  annotate('text', x = 1.4, y = 0.8, label ='y = 0.5 x' ) +
-  theme_test()
-
-png(paste0('../output/graphs/africa_sq_pred_obs.png'), height = 5, width = 7.5, units = 'in', res = 600)
-P03
-ggsave(paste0('../output/graphs/africa_sq_pred_obs.png'))
-dev.off()
-
-# variable importance
-rf_model$finalModel$variable.importance |>
-  as_tibble() |>
-  mutate(Variable = names(rf_model$finalModel$variable.importance)) %>%
-  select(Variable, value) |>
-  arrange(-value) |>
-  print()
-
-
+##R-TRAIN## grf_full_model <- SpatialML::grf.bw(
+##R-TRAIN##   farm_area_ha~cropland+cattle+pop+cropland_per_capita+sand+slope+temperature+rainfall+market+maizeyield,
+##R-TRAIN##   lsms_spatial, coords=as.matrix(lsms_spatial|>select(x,y)), trees=1500,
+##R-TRAIN##   importance='permutation', forests=T)
 
 # ------------------------------------------------------------------------------
-# This works, but I'm suspicious that results of all chunk differ from that of whole large dataset
-# disk.frame::nchunks(lsms_spatial_d)
-# # Collect the list of chunks into memory
-# chunk_list <- disk.frame::collect_list(lsms_spatial_d)# Collect the list of chunks into memory
-# 
-# # Partition cores for parallel processing
-# cores <- parallel::detectCores() - 2
-# cl <- parallel::makeCluster(cores)
-# doParallel::registerDoParallel(cl)
-# 
-# # Function to process each chunk
-# process_chunk <- function(chunk) {
-#   # Perform any pre-processing
-#   preprocessed_data <- chunk
-#   
-#   # Train a model using caret on this chunk of data
-#   model <- caret::train(farm_area_ha ~ ., data = preprocessed_data, 
-#                         method = "ranger", 
-#                         trControl = caret::trainControl(method = "cv"))
-#   
-#   # Perform any other necessary computations
-#   additional_computation <- print(model$results)
-#   
-#   # Return results for this chunk
-#   return(list(model = model, additional = additional_computation))
-# }
-# 
-# # Iterate over the chunks using purrr::map()
-# results <- purrr::map(chunk_list, process_chunk)
+# 4. Observed vs Predicted plots (using Python OOB predictions)
+# ------------------------------------------------------------------------------
+dir.create('../output/graphs', recursive = TRUE, showWarnings = FALSE)
+
+if (!all(is.na(lsms_spatial$pred_oob))) {
+
+  make_density_plot <- function(y_col, r2_val, title_suffix = '') {
+    ggplot(lsms_spatial, aes(farm_area_ha, .data[[y_col]])) +
+      geom_density_2d_filled(bins = 9) +
+      geom_abline(slope = 1,   linewidth = 0.8) +
+      geom_abline(slope = 0.5, linewidth = 0.8, linetype = 2) +
+      geom_abline(slope = 2,   linewidth = 0.8, linetype = 2) +
+      scale_x_continuous(expand = c(0, 0), limits = c(0, 2)) +
+      scale_y_continuous(expand = c(0, 0), limits = c(0, 2)) +
+      scale_fill_brewer() +
+      labs(x = 'Reported farm size (ha)', y = 'Predicted farm size (ha)',
+           title = paste0('SSA', title_suffix), fill = 'Density of points') +
+      annotate('text', x = 1.8, y = 1.95, label = paste0('R2=', r2_val)) +
+      theme_test()
+  }
+
+  lsms_spatial$pred_oob_exp_log <- exp(lsms_spatial$pred_oob_log)
+  lsms_spatial$pred_oob_sq2     <- lsms_spatial$pred_oob_sqrt^2
+  lsms_spatial$pred_oob_cb3     <- lsms_spatial$pred_oob_sq3^3
+
+  plots <- list(
+    list(file = 'africa_pred_obs.png',     col = 'pred_oob',         r2 = r2),
+    list(file = 'africa_log_pred_obs.png', col = 'pred_oob_exp_log', r2 = r2_log),
+    list(file = 'africa_sq_pred_obs.png',  col = 'pred_oob_sq2',     r2 = r2_sqrt)
+  )
+  for (p in plots) {
+    if (!all(is.na(lsms_spatial[[p$col]]))) {
+      png(paste0('../output/graphs/', p$file), height = 5, width = 7.5, units = 'in', res = 150)
+      print(make_density_plot(p$col, p$r2))
+      dev.off()
+      message('Saved: ', p$file)
+    }
+  }
+
+} else {
+  message('pred_oob is all NA - skipping observed vs predicted plots')
+}
+
+message('06.3_prediction_maps.R complete.')

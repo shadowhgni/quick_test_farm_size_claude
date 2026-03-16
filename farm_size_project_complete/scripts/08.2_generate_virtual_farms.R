@@ -78,7 +78,7 @@ sixteen_count_distr <- rbind(ben_distr, bfa_distr, civ_distr, eth_distr, gha_dis
 
 # Getting rasters from the polygons vectors
 sixteen_count_grid <- terra::rast(sixteen_count_distr, nrow = 2000, ncol = 2000)
-sixteen_count_rast1 <- terra::rasterize(sixteen_count_distr, sixteen_count_grid, field = c('COUNTRY') )
+sixteen_count_rast1 <- terra::rasterize(sixteen_count_distr, sixteen_count_grid, field = 'NAME_0')
 sixteen_count_rast1 <- terra::resample(sixteen_count_rast1, stacked)
 names(sixteen_count_rast1) <- 'NAME_0'
 sixteen_count_rast2 <- terra::rasterize(sixteen_count_distr, sixteen_count_grid, field = c('NAME_1') )
@@ -90,7 +90,7 @@ ssa_rast <- terra::rasterize(ssa, ssa_grid, field = 'NAME_0')
 ssa_rast <- terra::resample(ssa_rast, stacked)
 
 # correct rf_predicted with the mask of cropland based on SPAM, not geosurvey # Not needed, since cropland started with spam
-rf_pred <- c(sixteen_count_rast2, ssa_rast, rf_model_predictions)
+rf_pred <- c(sixteen_count_rast2, ssa_rast, terra::resample(rf_model_predictions, stacked))
 country_predicted <- terra::as.data.frame(rf_pred) |>
   rename(country = NAME_0, region = NAME_1)
   

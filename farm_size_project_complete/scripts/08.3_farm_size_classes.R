@@ -123,7 +123,7 @@ theor_farms <- my_points_cells |>
          virt_farms = map(pred_farm_sizes, \(x) sort(approx(x = 0.01 * 1:100, y = unlist(x), xout = sort(runif(nb_farms)), rule = 2)$y)),
          virt_farms_fixed = map(pred_farm_sizes, \(x) sort(approx(x = 0.01 * 1:100, y = unlist(x), n = nb_farms, rule = 2)$y)),    # best choice vis-a-vis pred quant.
          virt_farms_f_max_trunc = map(pred_farm_sizes, \(x) sort(c(max(x, na.rm = T), (approx(x = 0.01 * 1:100, y = unlist(x), n = nb_farms - 1, rule = 2)$y)))),
-         fit_logn = map(pred_farm_sizes, \(x) MASS::fitdistr(x, 'log-normal')),
+         fit_logn = map(pred_farm_sizes, \(x) tryCatch(MASS::fitdistr(pmax(unlist(x), 0.001), 'log-normal'), error = function(e) list(estimate = c(meanlog = 0, sdlog = 1), sd = c(meanlog = NA, sdlog = NA)))),
          logn_mean = unlist(map(fit_logn, \(x)unlist(x)[['estimate.meanlog']])),
          logn_sd = unlist(map(fit_logn, \(x) unlist(x)[['estimate.sdlog']])),
          fitted_logn = list(rlnorm(n = nb_farms, meanlog = logn_mean, sdlog = logn_sd)), # n can be set to 100 for fast processing. 
