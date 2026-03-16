@@ -662,59 +662,156 @@ message("   back_transf rasters written.")
 message("   Processed stubs done.")
 
 # ==============================================================================
-# 6b. SARAH LOWDER XLSX STUBS (needed by 08.2_generate_virtual_farms.R)
+# 6b. SARAH LOWDER XLSX STUBS  (Lowder et al. 2021, World Development)
+# Source: https://doi.org/10.1016/j.worlddev.2021.105455
+#
+# mmc3 — Total number of farms + census metadata per country
+#         read with skip=1 then renamed to:
+#         country | census_year | nb_farms | source | gadm_1 | income_group
+#
+# mmc5 — Farm count (F) and area (A) by size class per country
+#         read with skip=2 then renamed to:
+#         NAME_0 | year | nb_farms_or_area | total |
+#         fsize0_1ha...fsize1000ha_above | source_code | income_group
+#         Script pivots F rows (nb_farms) and A rows (cropland ha) separately.
+#
+# mmc7 — Historical avg farm size per country (loaded but not used downstream)
 # ==============================================================================
 message("6b. Creating Sarah Lowder xlsx stubs...")
 
-sarah_dir <- file.path(raw_path <- "../data/raw", "web_scrapped/sarah_lowder")
+sarah_dir <- file.path("../data/raw", "web_scrapped/sarah_lowder")
 dir.create(sarah_dir, recursive = TRUE, showWarnings = FALSE)
 
-if (requireNamespace("writexl", quietly = TRUE) || requireNamespace("openxlsx", quietly = TRUE)) {
-  mk_xlsx <- function(df, path) {
-    if (requireNamespace("writexl", quietly = TRUE)) {
-      writexl::write_xlsx(df, path)
-    } else {
-      wb <- openxlsx::createWorkbook()
-      openxlsx::addWorksheet(wb, "Sheet1")
-      openxlsx::writeData(wb, "Sheet1", df)
-      openxlsx::saveWorkbook(wb, path, overwrite = TRUE)
-    }
+# 22 SSA countries present in Lowder et al. (our 16 + 6 extra for filter headroom)
+# GADM NAME_0 names (must match ssa$NAME_0 from geodata::world())
+lowder_countries <- c(
+  "Benin", "Burkina Faso", "Côte d'Ivoire", "Ethiopia", "Ghana",
+  "Guinea-Bissau", "Malawi", "Mali", "Niger", "Nigeria", "Rwanda",
+  "Senegal", "Tanzania", "Togo", "Uganda", "Zambia",
+  "Kenya", "Mozambique", "Madagascar", "Zimbabwe", "Cameroon", "Sudan"
+)
+n_cty <- length(lowder_countries)
+
+# Realistic total farm counts for SSA (order of magnitude from FAO/census data)
+# Smallholder-dominated countries: Nigeria ~14M, Ethiopia ~13M, Tanzania ~5M etc.
+set.seed(42)
+total_farms_M <- c(3.0, 2.5, 2.0, 13.0, 2.3, 0.2, 1.8, 2.1, 2.4, 14.0, 2.0,
+                   0.7, 5.0, 0.8, 3.8, 1.3, 6.0, 3.5, 3.0, 1.2, 2.8, 5.5)
+total_farms <- round(total_farms_M * 1e6)
+
+# Census years (mix of 2000s and 2010s as in the paper)
+census_years <- c("2015/16","2018/19","2014","2013/14","2015/16",
+                  "2015","2018/19","2016/17","2012","2015",
+                  "2015","2013/14","2017/18","2015/16","2019/20",
+                  "2020","2018/19","2014/15","2010/11","2012",
+                  "2015/16","2014/15")
+
+mk_xlsx <- function(df, path) {
+  if (requireNamespace("writexl", quietly = TRUE)) {
+    writexl::write_xlsx(df, path)
+  } else if (requireNamespace("openxlsx", quietly = TRUE)) {
+    wb <- openxlsx::createWorkbook()
+    openxlsx::addWorksheet(wb, "Sheet1")
+    openxlsx::writeData(wb, "Sheet1", df)
+    openxlsx::saveWorkbook(wb, path, overwrite = TRUE)
+  } else {
+    stop("Need writexl or openxlsx to write xlsx files")
   }
-  # mmc3: nb_farms by country/size-class
-  mmc3 <- data.frame(
-    Country = sixteen_countries, ISO3 = sixteen_country_codes,
-    total_farms = round(runif(16, 1e5, 5e6)),
-    small = round(runif(16, 0.4, 0.7), 2), medium = round(runif(16, 0.1, 0.3), 2),
-    large = round(runif(16, 0.01, 0.1), 2), stringsAsFactors = FALSE
-  )
-  mk_xlsx(mmc3, file.path(sarah_dir, "1-s2.0-S0305750X2100067X-mmc3.xlsx"))
-  # mmc5: farm size class boundaries
-  mmc5 <- data.frame(
-    size_class = c("<0.5ha","0.5-1ha","1-2ha","2-5ha","5-10ha",">10ha"),
-    lower = c(0, 0.5, 1, 2, 5, 10), upper = c(0.5, 1, 2, 5, 10, Inf),
-    stringsAsFactors = FALSE
-  )
-  mk_xlsx(mmc5, file.path(sarah_dir, "1-s2.0-S0305750X2100067X-mmc5.xlsx"))
-  # mmc7: historical farm size demographics
-  mmc7 <- data.frame(
-    Country = rep(sixteen_countries, each = 3),
-    Year = rep(c(1990, 2000, 2010), 16),
-    avg_farm_size_ha = round(runif(48, 0.5, 5), 2),
-    stringsAsFactors = FALSE
-  )
-  mk_xlsx(mmc7, file.path(sarah_dir, "1-s2.0-S0305750X2100067X-mmc7.xlsx"))
-  message("   Sarah Lowder xlsx stubs done.")
-} else {
-  # Fallback: write CSVs and trick readxl by copying as .xlsx with valid OOXML
-  # Actually just create minimal valid xlsx manually with zip trick
-  for (fn in c("1-s2.0-S0305750X2100067X-mmc3.xlsx",
-               "1-s2.0-S0305750X2100067X-mmc5.xlsx",
-               "1-s2.0-S0305750X2100067X-mmc7.xlsx")) {
-    write.csv(data.frame(x = 1:3, y = letters[1:3]),
-              sub(".xlsx", ".csv", file.path(sarah_dir, fn)), row.names = FALSE)
-  }
-  message("   Sarah Lowder stubs written as CSV (writexl/openxlsx not available).")
 }
+
+# ── mmc3: total farm numbers ───────────────────────────────────────────────────
+# After skip=1 + rename: country | census_year | nb_farms | source | gadm_1 | income_group
+# The paper has one row per country-census combination.
+mmc3 <- data.frame(
+  country      = lowder_countries,
+  census_year  = census_years,
+  nb_farms     = total_farms,
+  source       = "Agricultural Census",
+  gadm_1       = lowder_countries,       # country-level (no sub-national breakout)
+  income_group = "Low income",
+  stringsAsFactors = FALSE
+)
+mk_xlsx(mmc3, file.path(sarah_dir, "1-s2.0-S0305750X2100067X-mmc3.xlsx"))
+message("   mmc3 done (", nrow(mmc3), " countries, total farms range ",
+        format(min(mmc3$nb_farms), big.mark=","), "–",
+        format(max(mmc3$nb_farms), big.mark=","), ")")
+
+# ── mmc5: farm size class distribution ────────────────────────────────────────
+# Structure: two rows per country — one for nb of farms (F), one for area (A)
+# Columns (after skip=2 + rename):
+#   NAME_0 | year | nb_farms_or_area | total |
+#   fsize0_1ha | fsize1_2ha | fsize2_5ha | fsize5_10ha | fsize10_20ha | fsize20_50ha |
+#   fsize50_100ha | fsize100_200ha | fsize200_500ha | fsize500_1000ha | fsize1000ha_above |
+#   source_code | income_group
+#
+# Proportions calibrated to SSA smallholder reality:
+#   ~40-55% farms < 1 ha; ~25-35% between 1-5 ha; rest larger
+size_classes <- c("fsize0_1ha","fsize1_2ha","fsize2_5ha","fsize5_10ha",
+                  "fsize10_20ha","fsize20_50ha","fsize50_100ha",
+                  "fsize100_200ha","fsize200_500ha","fsize500_1000ha","fsize1000ha_above")
+
+# Farm NUMBER proportions (must sum to ~total, realistic SSA distribution)
+prop_nb_mean <- c(0.45, 0.22, 0.16, 0.08, 0.04, 0.03, 0.01, 0.004, 0.002, 0.001, 0.001)
+
+# Farm AREA proportions (larger farms hold disproportionate area)
+prop_ha_mean <- c(0.10, 0.12, 0.18, 0.15, 0.12, 0.13, 0.08, 0.05, 0.04, 0.02, 0.01)
+
+make_row <- function(cty, yr, tf, row_type) {
+  if (row_type == "F") {
+    # Number of farms per class
+    props <- prop_nb_mean + runif(11, -0.03, 0.03)
+    props <- pmax(props, 0.001); props <- props / sum(props)
+    vals  <- round(tf * props)
+  } else {
+    # Cropland area (ha) per class; total cropland ~ 0.8–1.5 ha * nb_farms
+    avg_ha <- runif(1, 0.9, 1.4)
+    total_ha <- tf * avg_ha
+    props <- prop_ha_mean + runif(11, -0.02, 0.02)
+    props <- pmax(props, 0.001); props <- props / sum(props)
+    vals  <- round(total_ha * props)
+  }
+  row <- as.data.frame(t(vals))
+  names(row) <- size_classes
+  cbind(data.frame(
+    NAME_0           = cty,
+    year             = yr,
+    nb_farms_or_area = row_type,
+    total            = if (row_type == "F") tf else sum(vals),
+    stringsAsFactors = FALSE
+  ), row, data.frame(source_code = "AC", income_group = "Low income",
+                     stringsAsFactors = FALSE))
+}
+
+mmc5_rows <- vector("list", n_cty * 2)
+for (i in seq_len(n_cty)) {
+  yr  <- as.integer(substr(census_years[i], nchar(census_years[i])-3, nchar(census_years[i])))
+  tf  <- total_farms[i]
+  cty <- lowder_countries[i]
+  mmc5_rows[[2*i-1]] <- make_row(cty, yr, tf, "F")
+  mmc5_rows[[2*i]]   <- make_row(cty, yr, tf, "A")
+}
+mmc5 <- do.call(rbind, mmc5_rows)
+mk_xlsx(mmc5, file.path(sarah_dir, "1-s2.0-S0305750X2100067X-mmc5.xlsx"))
+message("   mmc5 done (", nrow(mmc5), " rows = ", n_cty, " countries × F+A)")
+
+# ── mmc7: historical farm size demographics ────────────────────────────────────
+# Loaded by scripts but not used downstream — provide plausible historical data
+# Format: country | census_year | avg_farm_size_ha | nb_farms_total
+hist_years <- c(1990, 2000, 2010, 2020)
+mmc7 <- do.call(rbind, lapply(seq_len(n_cty), function(i) {
+  # Farm sizes gradually declining over time in SSA (land pressure)
+  base_size <- runif(1, 1.2, 3.5)
+  trend     <- runif(1, -0.05, -0.01)  # ha/decade
+  data.frame(
+    country          = lowder_countries[i],
+    census_year      = hist_years,
+    avg_farm_size_ha = round(pmax(0.3, base_size + trend * (hist_years - 1990) / 10), 2),
+    nb_farms_total   = round(total_farms[i] * c(0.60, 0.75, 0.90, 1.00)),
+    stringsAsFactors = FALSE
+  )
+}))
+mk_xlsx(mmc7, file.path(sarah_dir, "1-s2.0-S0305750X2100067X-mmc7.xlsx"))
+message("   mmc7 done (", nrow(mmc7), " rows = ", n_cty, " countries × 4 decades)")
 
 # ==============================================================================
 # 7. FIGURE-SCRIPT STUBS
