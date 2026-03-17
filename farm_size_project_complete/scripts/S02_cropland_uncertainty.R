@@ -16,6 +16,7 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
 dir.create('../output/suppl_fig', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------

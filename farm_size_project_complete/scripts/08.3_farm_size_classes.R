@@ -15,6 +15,7 @@ rm(list=ls())
 
 # Set working directory
 setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
 dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
@@ -126,10 +127,9 @@ theor_farms <- my_points_cells |>
          virt_farms_f_max_trunc = map(pred_farm_sizes, \(x) sort(c(max(x, na.rm = T), (approx(x = 0.01 * 1:100, y = unlist(x), n = nb_farms - 1, rule = 2)$y)))),
          fit_logn = map(pred_farm_sizes, \(x) tryCatch(MASS::fitdistr(pmax(unlist(x), 0.001), 'log-normal'), error = function(e) list(estimate = c(meanlog = 0, sdlog = 1), sd = c(meanlog = NA, sdlog = NA)))),
          logn_mean = unlist(map(fit_logn, \(x)unlist(x)[['estimate.meanlog']])),
-         logn_sd = unlist(map(fit_logn, \(x) unlist(x)[['estimate.sdlog']]))) |>
-  # Split mutate: logn_mean/logn_sd must exist before mapply can reference them
-  mutate(
-         fitted_logn = mapply(function(n,m,s) tryCatch(list(rlnorm(n=n, meanlog=m, sdlog=s)), error=function(e) list(rep(NA_real_,n))), nb_farms, logn_mean, logn_sd, SIMPLIFY=FALSE),
+         logn_sd = unlist(map(fit_logn, \(x) unlist(x)[['estimate.sdlog']])),
+         # Use .data pronoun so mapply can access the within-mutate columns
+         fitted_logn = mapply(function(n,m,s) tryCatch(list(rlnorm(n=n, meanlog=m, sdlog=s)), error=function(e) list(rep(NA_real_,n))), .data[['nb_farms']], .data[['logn_mean']], .data[['logn_sd']], SIMPLIFY=FALSE),
          fitted_trunc_logn = mapply(function(n, px) {
            px <- unlist(px)
            tryCatch(list(sort(EnvStats::rlnormTrunc(n=n,

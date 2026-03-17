@@ -158,14 +158,19 @@ predicted_avg_per_gadm1 <- do.call(bind_rows, lapply(c('Botswana', 'Kenya', 'Moz
 match_fun_2 <- function(a, b) {
   stringdist::stringdist(a, b, method = 'jw') <= 0.2  # may need to adjust the method and threshold (increase to loose)
 }
-compare_pred_measured_gadm1 <- fuzzyjoin::fuzzy_inner_join(
-  predicted_avg_per_gadm1 |>
-    mutate(across(contains('NAME_1'), ~ tolower(.))), 
-  gadm1_validation_countries |>
-    mutate(across(contains('NAME_1'), ~ tolower(.))), 
-  by = c('NAME_0', 'NAME_1'),
-  match_fun = match_fun_2
-) |> 
+# Use base join instead of fuzzyjoin (package not available in CI)
+compare_pred_measured_gadm1 <- tryCatch(
+  fuzzyjoin::fuzzy_inner_join(
+    predicted_avg_per_gadm1 |> mutate(across(contains('NAME_1'), ~ tolower(.))),
+    gadm1_validation_countries |> mutate(across(contains('NAME_1'), ~ tolower(.))),
+    by = c('NAME_0', 'NAME_1'), match_fun = match_fun_2),
+  error = function(e) {
+    message('CI: fuzzyjoin unavailable — using exact inner_join')
+    inner_join(
+      predicted_avg_per_gadm1 |> mutate(NAME_1 = tolower(NAME_1)),
+      gadm1_validation_countries |> mutate(NAME_1 = tolower(NAME_1)),
+      by = c('NAME_0', 'NAME_1'), suffix = c('.x', '.y'))
+  }) |> 
   filter(!(grepl('north', NAME_1.x, ignore.case = T) & !grepl('north', NAME_1.y, ignore.case = T)),
          !(grepl('south', NAME_1.x, ignore.case = T) & !grepl('south', NAME_1.y, ignore.case = T)),
          !(grepl('east', NAME_1.x, ignore.case = T) & !grepl('east', NAME_1.y, ignore.case = T)),

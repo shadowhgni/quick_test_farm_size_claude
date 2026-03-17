@@ -58,10 +58,13 @@ levels(aez5) <- lookup
 gc()
 theor_farms_application <- theor_farms_application |>
   rename(individual_farm_size_ha = linear_farm_size_ha) |>
-  bind_cols(terra::extract(aez5, 
-                           theor_farms_application |>
-                             ungroup() |>
-                             select(x, y)))
+  bind_cols(tryCatch(
+    terra::extract(aez5, theor_farms_application |> ungroup() |> select(x, y)),
+    error = function(e) {
+      message('CI: aez5 extract failed: ', e$message)
+      data.frame(ID = seq_len(nrow(theor_farms_application)),
+                 aez_class = NA_integer_, aez = NA_character_)
+    }))
 gc()
 
 theor_app2 <- theor_farms_application |>

@@ -55,6 +55,7 @@
 # ------------------------------------------------------------------------------
 # Set working directory
 setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
 
 # Clean environment
 rm(list = ls())
@@ -209,8 +210,10 @@ lsms <- terra::vect(lsms, geom = c('x', 'y'), crs = 'EPSG:4326')
 # Use 'touches=FALSE' and take first match per point to ensure length matches.
 safe_extract <- function(vect_poly, points, field) {
   ex <- terra::extract(vect_poly[, field], points)
+  ex <- as.data.frame(ex)
   # Keep only first match per point (ID column gives point index)
-  ex[!duplicated(ex[, 'ID']), field]
+  if ('ID' %in% names(ex)) ex <- ex[!duplicated(ex[['ID']]), ]
+  if (field %in% names(ex)) ex[[field]] else ex[, ncol(ex)]
 }
 lsms$gadm_0 <- safe_extract(sixteen_count_distr, lsms, 'GID_0')
 lsms$gadm_1 <- safe_extract(sixteen_count_distr, lsms, 'NAME_1')
