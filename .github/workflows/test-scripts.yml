@@ -241,14 +241,10 @@ jobs:
           path: |
             **/output/reports/*.md
             **/output/tables/*.csv
-            **/output/maps/**
             **/output/main_fig/**
             **/output/suppl_fig/**
             **/output/other_illustr/graphs/**
             **/output/other_illustr/maps/**
             **/output/other_illustr/tables/**
-            **/output/maps/**
-            **/output/tables/**
-            **/output/tables/**
             **/output/reports/**
           retention-days: 30

@@ -26,8 +26,8 @@ fig3b <- fig3$df_rel_long |>
   mutate(product = if_else(product == 'non_food', 'cash crops', product))
 fig3c <- fig3$df_rel_long |> filter(product %in% c('maize', 'sorghum', 'millet', 'cassava'), aez != 'all_aez')
 
-dir.create("../output/suppl_fig", recursive = TRUE, showWarnings = FALSE)
-if (!tryCatch({pdf("../output/suppl_fig/figure-3.pdf", width = 9, height = 8.8); TRUE}, error = function(e){message("CI: pdf open failed: ", e$message); FALSE})) pdf(file=NULL)
+dir.create("../output/main_fig", recursive = TRUE, showWarnings = FALSE)
+if (!tryCatch({pdf("../output/main_fig/Fig.03.pdf", width = 9, height = 8.8); TRUE}, error = function(e){message("CI: pdf open failed: ", e$message); FALSE})) pdf(file=NULL)
 layout(matrix(c(1,1,2,2,3,4,5,6), nrow=2, byrow=TRUE))
 par(mar=c(3.5,3.5,1,1), xaxs='i', yaxs='i')
 
