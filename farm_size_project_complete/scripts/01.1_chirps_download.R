@@ -36,8 +36,6 @@ dirs <- c(
   "../data/raw/web_scrapped/survey_data",
   "../data/raw/web_scrapped/faostat",
   "../data/processed",
-dir.create('../output/other_illustr/maps', recursive = TRUE, showWarnings = FALSE); # moved
-  dir.create('../output/maps', recursive=TRUE, showWarnings=FALSE)
   "../output/maps",
   "../output/graphs",
   "../output/other_illustr/tables/main",

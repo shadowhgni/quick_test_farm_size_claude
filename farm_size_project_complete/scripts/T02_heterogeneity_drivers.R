@@ -15,8 +15,8 @@ rm(list=ls())
 
 # Set working directory
 setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/other_illustr/tables', recursive = TRUE, showWarnings = FALSE)
 dir.create('../output/main_fig', recursive = TRUE, showWarnings = FALSE)
-dir.create('../output/other_illustr/tables', recursive = TRUE, showWarnings = FALSE); # moved
   dir.create('../output/tables', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
