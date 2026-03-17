@@ -16,9 +16,11 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -173,6 +175,6 @@ for(i in names(selected_rast)){
 combined_plot <- tmap::tmap_arrange(tmap_list, ncol = 2)
 
 # Save combined plot
-tmap::tmap_save(combined_plot, 'Suppl.Fig07.png', 
+tmap::tmap_save(combined_plot, '../output/graphs/Suppl.Fig07.png', 
                 width = 7, height = 10, units = 'in', dpi = 150)
-file.copy('Suppl.Fig07.png', 'Suppl.Fig07_copy.png'); message('CI: PDF write skipped (ImageMagick policy), PNG available')
+file.copy('../output/graphs/Suppl.Fig07.png', '../output/graphs/Suppl.Fig07_copy.png'); message('CI: PDF write skipped (ImageMagick policy), PNG available')

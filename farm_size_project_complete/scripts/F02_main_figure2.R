@@ -16,6 +16,7 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -53,7 +54,7 @@ gc()
 # mask_drylands_ssa <- terra::rast('../../../data/processed/mask_drylands_ssa.tif')
 # ------------------------------------------------------------------------------
 # from JOAO
-pdf("figure-1.pdf", width = 9, height = 8.8)
+pdf("../output/graphs/figure-1.pdf", width = 9, height = 8.8)
 par(mfrow=c(2,2), mar=c(3.5,3.5,1,1), xaxs='i', yaxs='i')
 
 # plot 1

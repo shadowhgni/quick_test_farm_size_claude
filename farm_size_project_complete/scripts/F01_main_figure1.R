@@ -61,20 +61,24 @@ bwa_gadm1 <- tibble::tibble(
 ) |>
   dplyr::mutate(avg_farm_area_ha = planted_all_farms / nb_all_farms)
 
-kenya_aggregated <- tibble::tibble(
-  NAME_1   = c('Baringo','Bomet','Bungoma','Busia','Elgeyo/Marakwet','Embu','Garissa',
-               'Homa Bay','Isiolo','Kajiado','Kakamega','Kericho','Kiambu','Kilifi',
-               'Kirinyaga','Kisii','Kisumu','Kitui','Kwale','Laikipia','Lamu','Machakos',
-               'Makueni','Mandera','Marsabit','Meru','Migori','Mombasa','Murang\'a',
-               'Nairobi','Nakuru','Nandi','Narok','Nyamira','Nyandarua','Nyeri',
-               'Samburu','Siaya','Taita/Taveta','Tana River','Tharaka-Nithi','Trans Nzoia',
-               'Turkana','Uasin Gishu','Vihiga','Wajir','West Pokot'),
-  nb_farms = round(runif(47, 5000, 150000))
+# Build kenya_aggregated with all 13 columns up front
+.ken_counties <- c('Baringo','Bomet','Bungoma','Busia','Elgeyo/Marakwet','Embu','Garissa',
+                   'Homa Bay','Isiolo','Kajiado','Kakamega','Kericho','Kiambu','Kilifi',
+                   'Kirinyaga','Kisii','Kisumu','Kitui','Kwale','Laikipia','Lamu','Machakos',
+                   'Makueni','Mandera','Marsabit','Meru','Migori','Mombasa',"Murang'a",
+                   'Nairobi','Nakuru','Nandi','Narok','Nyamira','Nyandarua','Nyeri',
+                   'Samburu','Siaya','Taita/Taveta','Tana River','Tharaka-Nithi','Trans Nzoia',
+                   'Turkana','Uasin Gishu','Vihiga','Wajir','West Pokot')
+.ken_nb <- round(runif(47, 5000, 150000))
+.ken_acre_cols <- paste0('acres_', c(sprintf('%04d', c(1, 2, 5, 10, 20, 50, 100, 500, 1000)), 'plus', 'unknown'))
+kenya_aggregated <- as.data.frame(
+  setNames(
+    c(list(NAME_1 = .ken_counties, nb_farms = .ken_nb),
+      setNames(lapply(.ken_acre_cols, function(nm)
+        round(.ken_nb * runif(47, 0.02, 0.25))), .ken_acre_cols)),
+    c('NAME_1', 'nb_farms', .ken_acre_cols)
+  )
 )
-names(kenya_aggregated) <- c('NAME_1', 'nb_farms',
-                        paste0('acres_', c(sprintf('%04d', c(1, 2, 5, 10, 20, 50, 100, 500, 1000)), 'plus', 'unknown')))
-kenya_aggregated[, 3:ncol(kenya_aggregated)] <- lapply(3:ncol(kenya_aggregated), function(i)
-  round(kenya_aggregated$nb_farms * runif(nrow(kenya_aggregated), 0.02, 0.25)))
 ken_gadm1 <- kenya_aggregated |>
   slice(-1) |>
   mutate(across(matches('_\\w{2,}'), ~ as.numeric(gsub('\\-', 0, gsub(',', '', .)))), # I interpret NA as 0 (farms of this size are unavailable)

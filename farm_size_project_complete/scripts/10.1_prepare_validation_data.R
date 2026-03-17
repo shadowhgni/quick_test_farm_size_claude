@@ -264,7 +264,7 @@ exple_50perc_selected_crops <- df_rel_long |>
          value > 0.4999, value <0.501) |>
   select(product, aez, value, pred_farm_area_ha) |>
   arrange(product, aez, value) 
-View(exple_50perc_selected_crops)
+message("CI: skipped View(\1)")
 
 # percentage of cropland of a give AEZ found in areas where the average farm size is less than...
 # 0.5 ha

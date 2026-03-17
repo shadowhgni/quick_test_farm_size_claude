@@ -102,7 +102,7 @@ sarah_ssa_fsize_class_nb <- sarah_ssa_fsize_class |>
 
 sarah_ssa_fsize_cum_class_ha <- sarah_ssa_fsize_class_ha |>
   group_by(NAME_0, certitude) |>
-  summarize(cum_cropland_ha = cumsum(cropland_ha)) |>
+  reframe(cum_cropland_ha = cumsum(cropland_ha)) |>
   mutate(farm_class = rep(c(1, 2, 5, 10, 20, 50), length(unique(NAME_0)))) |>
   na.omit() |>
   inner_join(sarah_ssa_fsize_class_ha |>
@@ -111,7 +111,7 @@ sarah_ssa_fsize_cum_class_ha <- sarah_ssa_fsize_class_ha |>
 
 sarah_ssa_fsize_cum_class_nb <- sarah_ssa_fsize_class_nb |>
   group_by(NAME_0, certitude) |>
-  summarize(cum_nb_farms= cumsum(nb_farms)) |>
+  reframe(cum_nb_farms= cumsum(nb_farms)) |>
   mutate(farm_class = rep(c(1, 2, 5, 10, 20, 50), length(unique(NAME_0)))) |>
   na.omit() |>
   inner_join(sarah_ssa_fsize_class_nb |>

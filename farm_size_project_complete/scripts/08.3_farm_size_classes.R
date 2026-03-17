@@ -126,12 +126,14 @@ theor_farms <- my_points_cells |>
          fit_logn = map(pred_farm_sizes, \(x) tryCatch(MASS::fitdistr(pmax(unlist(x), 0.001), 'log-normal'), error = function(e) list(estimate = c(meanlog = 0, sdlog = 1), sd = c(meanlog = NA, sdlog = NA)))),
          logn_mean = unlist(map(fit_logn, \(x)unlist(x)[['estimate.meanlog']])),
          logn_sd = unlist(map(fit_logn, \(x) unlist(x)[['estimate.sdlog']])),
-         fitted_logn = list(rlnorm(n = nb_farms, meanlog = logn_mean, sdlog = logn_sd)), # n can be set to 100 for fast processing. 
-         fitted_trunc_logn = list(sort(EnvStats::rlnormTrunc(n = nb_farms, 
-                                                             meanlog = unlist(map(pred_farm_sizes, function(x) mean(log(unlist(x)), na.rm = T))), 
-                                                             sdlog = unlist(map(pred_farm_sizes, function(x) sd(log(unlist(x)), na.rm = T))), 
-                                                             min = unlist(map(pred_farm_sizes, function(x) min(unlist(x), na.rm = T))),
-                                                             max = unlist(map(pred_farm_sizes, function(x) max(unlist(x), na.rm = T))) ))),
+         fitted_logn = pmap(list(nb_farms, logn_mean, logn_sd), \(n,m,s) tryCatch(rlnorm(n=n, meanlog=m, sdlog=s), error=function(e) rep(NA_real_,n))), 
+         fitted_trunc_logn = pmap(list(nb_farms, pred_farm_sizes), \(n, px) {
+           px <- unlist(px)
+           tryCatch(sort(EnvStats::rlnormTrunc(n=n,
+             meanlog=mean(log(pmax(px,0.001)),na.rm=T),
+             sdlog=sd(log(pmax(px,0.001)),na.rm=T),
+             min=min(px,na.rm=T), max=max(px,na.rm=T))),
+             error=function(e) rep(NA_real_,n))}),
          sample_mean = unlist(map(fitted_trunc_logn, \(x) mean(unlist(x), na.rm = T))),
          sample_sd = unlist(map(fitted_trunc_logn, \(x) sd(unlist(x), na.rm = T))),
          adjusted_logn_mean = log(sample_mean^2 / sqrt(sample_mean^2 + sample_sd^2)),
