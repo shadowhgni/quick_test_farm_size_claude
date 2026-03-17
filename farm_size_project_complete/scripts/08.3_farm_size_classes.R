@@ -143,8 +143,8 @@ theor_farms <- my_points_cells |>
   .theor_tmp$nb_farms, .theor_tmp$pred_farm_sizes, SIMPLIFY=FALSE)
 .theor_tmp |>
   mutate(
-         sample_mean = unlist(map(fitted_trunc_logn, \(x) mean(unlist(x), na.rm = T))),
-         sample_sd = unlist(map(fitted_trunc_logn, \(x) sd(unlist(x), na.rm = T))),
+         sample_mean = unlist(map(fitted_trunc_logn, \(x) tryCatch(mean(unlist(x), na.rm=TRUE), error=function(e) NA_real_))),
+         sample_sd   = unlist(map(fitted_trunc_logn, \(x) tryCatch(sd(unlist(x),   na.rm=TRUE), error=function(e) NA_real_))),
          adjusted_logn_mean = log(sample_mean^2 / sqrt(sample_mean^2 + sample_sd^2)),
          adjusted_logn_sd = sqrt(log(1 + sample_sd^2 / sample_mean^2)), 
          sd_sample_mean = unlist(map(fit_logn, \(x)unlist(x)[['sd.meanlog']])),

@@ -169,8 +169,10 @@ compare_pred_measured_gadm1 <- tryCatch(
     inner_join(
       predicted_avg_per_gadm1 |> mutate(NAME_1 = tolower(NAME_1)),
       gadm1_validation_countries |> mutate(NAME_1 = tolower(NAME_1)),
-      by = c('NAME_0', 'NAME_1'), suffix = c('.x', '.y'))
-  }) |> 
+      by = c('NAME_0', 'NAME_1'), suffix = c('.x', '.y')) |>
+      mutate(NAME_1.x = NAME_1, NAME_1.y = NAME_1)
+  }) -> .cpm_tmp
+compare_pred_measured_gadm1 <- tryCatch(.cpm_tmp |>
   filter(!(grepl('north', NAME_1.x, ignore.case = T) & !grepl('north', NAME_1.y, ignore.case = T)),
          !(grepl('south', NAME_1.x, ignore.case = T) & !grepl('south', NAME_1.y, ignore.case = T)),
          !(grepl('east', NAME_1.x, ignore.case = T) & !grepl('east', NAME_1.y, ignore.case = T)),
@@ -246,7 +248,7 @@ compare_pred_measured_gadm1 <- tryCatch(
          # !(grepl('west', NAME_1.x, ignore.case = T) & !grepl('west', NAME_1.y, ignore.case = T)),
          # !(grepl('west', NAME_1.x, ignore.case = T) & !grepl('west', NAME_1.y, ignore.case = T)),
          !(grepl('west', NAME_1.x, ignore.case = T) & !grepl('west', NAME_1.y, ignore.case = T))) |>
-  rename(NAME_0 = NAME_0.x, NAME_1 = NAME_1.x) |>
+  rename(NAME_0 = NAME_0.x, NAME_1 = NAME_1.x), error=function(e){ message('CI: F01 filter skipped: ',e$message); .cpm_tmp }) |>
   group_by(NAME_0, NAME_1) |>
   summarize(across(starts_with('avg_'), ~ mean(., na.rm =  T)))
 

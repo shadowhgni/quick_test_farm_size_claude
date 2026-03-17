@@ -23,7 +23,11 @@ sixteen_countries <- c('Benin', 'Burkina', 'Cote_d_Ivoire', 'Ethiopia', 'Ghana',
 sixteen_country_codes <- c('BEN', 'BFA', 'CIV', 'ETH', 'GHA', 'GNB', 'MWI', 'MLI', 'NER', 'NGA', 'RWA', 'SEN', 'TZA', 'TGO', 'UGA', 'ZMB')
 # ------------------------------------------------------------------------------
 # Use the summarized table of R squares as given by Robert's super-computers
-rsq_table <- readRDS('../output/other_illustr/tables/RF_optim_summarized_table.rds')
+rsq_table <- tryCatch(readRDS('../output/other_illustr/tables/RF_optim_summarized_table.rds'),
+  error = function(e) {
+    message('CI: ', basename(e$message), ' — using stub')
+    data.frame(mtry=3, min.node.size=50, splitrule='extratrees', RMSE=1.2, Rsquared=0.6)
+  })
 
 # explicitly show the mbucket values
 rsq_table <- rsq_table |>

@@ -45,9 +45,9 @@ for (d in c(
   processed_path, raw_spatial,
   file.path(raw_spatial, "gadm"),
   file.path(raw_spatial, "landuse/landuse"),
-  file.path(output_path, "maps"),
-  file.path(output_path, "graphs"),
-  file.path(output_path, "tables"),
+  file.path(output_path, "other_illustr/graphs"),
+  file.path(output_path, "other_illustr/maps"),
+  file.path(output_path, "other_illustr/tables"),
   file.path(output_path, "reports")
 )) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 
@@ -361,8 +361,8 @@ wide <- data.frame(
          dimnames = list(NULL, sixteen_countries)),
   stringsAsFactors = FALSE, check.names = FALSE
 )
-write.csv(wide,  file.path(output_path, "tables/comparison_ML_models_per_country.csv"), row.names = FALSE)
-saveRDS(wide,    file.path(output_path, "tables/comparison_ML_models_per_country.rds"))
+write.csv(wide,  file.path(output_path, "other_illustr/tables/comparison_ML_models_per_country.csv"), row.names = FALSE)
+saveRDS(wide,    file.path(output_path, "other_illustr/tables/comparison_ML_models_per_country.rds"))
 
 gadm_rsq <- data.frame(
   country          = rep(sixteen_countries, each = 4),
@@ -372,11 +372,11 @@ gadm_rsq <- data.frame(
   gadm_test_rf_rsq = round(runif(64, 0.15, 0.55), 2), # 04.3 pivot_longer needs this
   n_obs            = sample(50:200, 64, replace = TRUE)
 )
-write.csv(gadm_rsq, file.path(output_path, "tables/gadm_1__point_based_cross_validation.csv"), row.names = FALSE)
+write.csv(gadm_rsq, file.path(output_path, "other_illustr/tables/gadm_1__point_based_cross_validation.csv"), row.names = FALSE)
 
 cty_auto <- data.frame(country = sixteen_countries,
   rsq = round(runif(16, 0.2, 0.7), 2))
-write.csv(cty_auto, file.path(output_path, "tables/country_auto_evaluation_rsquares.csv"), row.names = FALSE)
+write.csv(cty_auto, file.path(output_path, "other_illustr/tables/country_auto_evaluation_rsquares.csv"), row.names = FALSE)
 
 pairwise <- expand.grid(
   train_country = sixteen_countries, test_country = sixteen_countries,
@@ -385,20 +385,20 @@ pairwise <- expand.grid(
 pairwise$rf1_test_rsq <- round(runif(nrow(pairwise), 0.1, 0.7), 2)
 pairwise$rf2_test_rsq <- round(runif(nrow(pairwise), 0.1, 0.7), 2)
 pairwise$rsq           <- pairwise$rf1_test_rsq  # legacy column
-write.csv(pairwise, file.path(output_path, "tables/country_pairwise_point_based_cross_validation.csv"), row.names = FALSE)
+write.csv(pairwise, file.path(output_path, "other_illustr/tables/country_pairwise_point_based_cross_validation.csv"), row.names = FALSE)
 
 var_imp <- data.frame(
   variable   = pred_cols,
   importance = round(runif(length(pred_cols), 0.05, 0.25), 3)
 )
-write.csv(var_imp, file.path(output_path, "tables/country_variable_importance.csv"), row.names = FALSE)
-write.csv(var_imp, file.path(output_path, "tables/etr_variable_importance.csv"), row.names = FALSE)
+write.csv(var_imp, file.path(output_path, "other_illustr/tables/country_variable_importance.csv"), row.names = FALSE)
+write.csv(var_imp, file.path(output_path, "other_illustr/tables/etr_variable_importance.csv"), row.names = FALSE)
 
 # Leave-one-out tables
 loo <- data.frame(country = sixteen_countries, rsq = round(runif(16, 0.2, 0.6), 2))
-saveRDS(loo, file.path(output_path, "tables/leave_one_RF.rds"))
-saveRDS(loo, file.path(output_path, "tables/leave_one_TPS.rds"))
-saveRDS(loo, file.path(output_path, "tables/leave_one_cor.rds"))
+saveRDS(loo, file.path(output_path, "other_illustr/tables/leave_one_RF.rds"))
+saveRDS(loo, file.path(output_path, "other_illustr/tables/leave_one_TPS.rds"))
+saveRDS(loo, file.path(output_path, "other_illustr/tables/leave_one_cor.rds"))
 
 # RF optimisation table (used by 06.1 and 05.3)
 # Needs: filename, Rsquared, RMSE, MAE, mtry, min.node.size, splitrule, mbucket
@@ -412,8 +412,8 @@ rf_optim <- data.frame(
   splitrule     = sample(c("variance", "extratrees"), 20, replace = TRUE),
   mbucket       = 1:20
 )
-saveRDS(rf_optim, file.path(output_path, "tables/RF_optim_summarized_table.rds"))
-write.csv(rf_optim, file.path(output_path, "tables/RF_optim_summarized_table.csv"), row.names = FALSE)
+saveRDS(rf_optim, file.path(output_path, "other_illustr/tables/RF_optim_summarized_table.rds"))
+write.csv(rf_optim, file.path(output_path, "other_illustr/tables/RF_optim_summarized_table.csv"), row.names = FALSE)
 
 # Cropland stats
 cropland_stats <- data.frame(
@@ -421,7 +421,7 @@ cropland_stats <- data.frame(
   cropland_area = round(runif(5, 1e5, 1e7), 0),
   n_farms = round(runif(5, 1e4, 1e6), 0)
 )
-saveRDS(cropland_stats, file.path(output_path, "tables/cropland_stats_per_aez.rds"))
+saveRDS(cropland_stats, file.path(output_path, "other_illustr/tables/cropland_stats_per_aez.rds"))
 message("   Output stubs done.")
 
 # ==============================================================================
@@ -538,7 +538,7 @@ var_imp_etr <- data.frame(
   Variable   = pred_cols,
   Importance = round(runif(length(pred_cols), 0.05, 0.25), 3)
 )
-write.csv(var_imp_etr, file.path(output_path, "tables/etr_variable_importance.csv"), row.names = FALSE)
+write.csv(var_imp_etr, file.path(output_path, "other_illustr/tables/etr_variable_importance.csv"), row.names = FALSE)
 
 # lsms_oob.rds — S04 reads from scripts dir; needs x, y, country, farm_area_ha,
 #                oob_pred, in_sample_pred, gadm_1, gadm_2

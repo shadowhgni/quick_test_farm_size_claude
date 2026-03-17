@@ -56,7 +56,7 @@ pal9 <- viridis::mako(10)
 # lsms_spatial <- readRDS('../../data/processed/lsms_trimmed_95th_africa.rds') 
 
 # load results from Robert's optim work on HPC
-hpc <- readRDS('../../output/tables/RF_optim_summarized_table.rds')
+hpc <- readRDS('../output/other_illustr/tables/RF_optim_summarized_table.rds')
 
 # quick wrangling
 long_hpc <- hpc |>

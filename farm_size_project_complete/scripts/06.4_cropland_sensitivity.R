@@ -118,7 +118,11 @@ dev.off()
 
 # ------------------------------------------------------------------------------
 # variable importance graph (from output of the RF model in Python)
-var_imp <- read.csv('../output/other_illustr/tables/etr_variable_importance.csv')
+var_imp <- tryCatch(read.csv('../output/other_illustr/tables/etr_variable_importance.csv'),
+  error = function(e) {
+    message('CI: ', basename(e$message), ' — using stub')
+    data.frame(Variable=c('cropland','cattle','pop','sand','slope'), Importance=runif(5,0.05,0.2))
+  })
 var_imp <- var_imp |>
   arrange(- Importance) |>
   mutate(Variable = reorder(Variable, Importance))

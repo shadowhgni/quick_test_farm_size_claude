@@ -14,7 +14,8 @@ res <- lapply(ff, \(f) readRDS(f)$results)
 
 res <- data.frame(filename=basename(ff), do.call(rbind, res))
 res <- res[order(-res$Rsquared, res$RMSE, res$MAE), ]
-saveRDS(res, "output/tables/RF_optim_summarized_table.rds")
+dir.create("../output/other_illustr/tables", recursive=TRUE, showWarnings=FALSE)
+saveRDS(res, "../output/other_illustr/tables/RF_optim_summarized_table.rds")
 
 
 # # Compile results of RF optimization

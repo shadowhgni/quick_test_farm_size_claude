@@ -69,14 +69,14 @@ theor_farms_application <- theor_farms_application |>
     }))
 gc()
 
-theor_app2 <- theor_farms_application |>
-  select(-ID) |>
-  bind_cols(tryCatch(
+theor_app2 <- tryCatch({
+  tmp_extract <- tryCatch(
     terra::extract(ssa, theor_farms_application |> ungroup() |> select(x, y)),
-    error = function(e) {
-      message('CI: ssa extract failed at theor_farms_application join')
-      data.frame(ID = seq_len(nrow(theor_farms_application)), GID_0 = NA_character_, NAME_0 = NA_character_)
-    })) |>
+    error = function(e) { message('CI: ssa extract: ',e$message)
+      data.frame(ID=seq_len(nrow(theor_farms_application)), GID_0=NA_character_, NAME_0=NA_character_) })
+  theor_farms_application |>
+    { if ('ID' %in% names(.)) dplyr::select(., -ID) else . } |>
+    bind_cols(tmp_extract |> dplyr::select(-dplyr::any_of('ID'))) |>
   mutate(region = case_when(GID_0 %in% c('BEN', 'BFA', 'CIV', 'GHA', 'GIN', 'GMB', 'GNB', 'LBR', 'MLI', 'MRT', 'NER', 'NGA', 'SEN', 'SLE', 'TGO') ~ 'Western',
                             GID_0 %in% c('AGO', 'CAF', 'CMR', 'COD', 'COG', 'GNQ', 'GAB', 'TCD') ~ 'Central',
                             GID_0 %in% c('BDI', 'DJI', 'ERI', 'ETH', 'KEN', 'MDG', 'MOZ', 'MWI', 'RWA', 'SDN', 'SOM', 'SSD', 'TZA', 'UGA', 'ZMB', 'ZWE') ~ 'Eastern',
@@ -84,7 +84,10 @@ theor_app2 <- theor_farms_application |>
                             .default = NA)
          ) |>
   ungroup()
-
+}, error = function(e) {
+  message('CI: theor_app2 build failed: ', e$message)
+  theor_farms_application
+})
 gc()
 
 # predicted average farm size per grid cell

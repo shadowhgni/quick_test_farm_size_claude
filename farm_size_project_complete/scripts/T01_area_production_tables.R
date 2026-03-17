@@ -61,7 +61,7 @@ var_importance_table <- var_importance_table |>
                               var == 'maizeyield' ~ 'Water-limited maize yield',
                               var == 'market' ~ 'Distance to nearest town')) |>inner_join(bind_cols(country = sixteen_countries, GID_0 = sixteen_country_codes))
 
-var_imp <- read.csv('../../output/tables/etr_variable_importance.csv') |>
+var_imp <- read.csv('../output/other_illustr/tables/etr_variable_importance.csv') |>
   mutate(Variable = case_when(Variable == 'cropland' ~ 'Cropland',
                               Variable == 'cattle' ~ 'Cattle density',
                               Variable == 'pop' ~ 'Population density',
