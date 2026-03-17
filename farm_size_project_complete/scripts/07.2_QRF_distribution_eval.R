@@ -9,6 +9,7 @@
 
 
 setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # Clean environment
 rm(list=ls())

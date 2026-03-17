@@ -15,6 +15,7 @@ rm(list=ls())
 
 # Set working directory
 setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -485,9 +486,9 @@ P00 <- ggplot(summary_mult_rsq,
   theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 P00
-png('../output/graphs/point_and_mean_based_cross_validation.png', height = 15, width = 30, units = 'cm', res = 1000)
+png('../output/other_illustr/point_and_mean_based_cross_validation.png', height = 15, width = 30, units = 'cm', res = 1000)
 P00
-ggsave('../output/graphs/point_and_mean_based_cross_validation.png')
+ggsave('../output/other_illustr/point_and_mean_based_cross_validation.png')
 dev.off()
 
 
@@ -503,7 +504,7 @@ P01 <- ggplot(summary_mult_rsq |>
   theme(axis.text = element_text(angle = 45, hjust = 1))
 P01
 
-png('../output/graphs/mean_based_cross_validation.png', height = 15, width = 25, units = 'cm', res = 1000)
+png('../output/other_illustr/mean_based_cross_validation.png', height = 15, width = 25, units = 'cm', res = 1000)
 P01
-ggsave('../output/graphs/mean_based_cross_validation.png')
+ggsave('../output/other_illustr/mean_based_cross_validation.png')
 dev.off()

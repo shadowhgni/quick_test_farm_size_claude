@@ -244,7 +244,9 @@ jobs:
             **/output/maps/**
             **/output/main_fig/**
             **/output/suppl_fig/**
-            **/output/other_illustr/**
+            **/output/other_illustr/graphs/**
+            **/output/other_illustr/maps/**
+            **/output/other_illustr/tables/**
             **/output/tables/**
             **/output/reports/**
           retention-days: 30

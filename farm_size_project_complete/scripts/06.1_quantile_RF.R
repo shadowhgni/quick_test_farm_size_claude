@@ -15,6 +15,7 @@ rm(list=ls())
 
 # Set working directory
 setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 #define the countries for which LSMS data are available
@@ -49,7 +50,7 @@ P01 <- ggplot(rsq_long |>
   scale_colour_manual(values = c('blue', 'red')) +
   theme_test()
 P01
-png(paste0('../output/graphs/hyper_parms_robustness.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/hyper_parms_robustness.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01
-ggsave(paste0('../output/graphs/hyper_parms_robustness.png'))
+ggsave(paste0('../output/other_illustr/hyper_parms_robustness.png'))
 dev.off()

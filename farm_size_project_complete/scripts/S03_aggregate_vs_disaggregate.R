@@ -16,6 +16,7 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 dir.create('../output/suppl_fig', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
@@ -119,8 +120,8 @@ P00a <- lsms_spatial |>
     strip.background = element_rect(color = NA,  fill = 'white')
   )
 P00a1 <- patchwork::wrap_elements(GGally::ggmatrix_gtable(P00a))
-ggsave('../output/suppl_fig/P00a1.png', P00a1, width = 9, height = 4.4, dpi = 150)
-P00a2 <- magick::image_read('../output/suppl_fig/P00a1.png')
+ggsave('../output/other_illustr/graphs/S03_panel_a1.png', P00a1, width = 9, height = 4.4, dpi = 150)
+P00a2 <- magick::image_read('../output/other_illustr/graphs/S03_panel_a1.png')
 
 P00b <- pred_cpland_df |>
   rename_all(toupper) |>
@@ -146,8 +147,8 @@ P00b <- pred_cpland_df |>
     strip.background = element_rect(color = NA,  fill = 'white')
   )
 P00b1 <- patchwork::wrap_elements(GGally::ggmatrix_gtable(P00b))
-ggsave('../output/suppl_fig/P00b1.png', P00b1, width = 6, height = 4.4, dpi = 150)
-P00b2 <- magick::image_read('../output/suppl_fig/P00b1.png')
+ggsave('../output/other_illustr/graphs/S03_panel_b1.png', P00b1, width = 6, height = 4.4, dpi = 150)
+P00b2 <- magick::image_read('../output/other_illustr/graphs/S03_panel_b1.png')
 
 P00c <- ssa_cropland |>
   inner_join(ssa_nb_farms) |>
@@ -165,13 +166,13 @@ P00c <- ssa_cropland |>
         axis.text.x = element_text(angle = -90, hjust = 0.1, size = 12),
         aspect.ratio = NULL,
         plot.margin = margin(5, 15, 5, 10, 'pt')) 
-ggsave('../output/suppl_fig/P00c.png', P00c, width = 3, height =  4.4, dpi = 150)
-P00c2 <- magick::image_read('../output/suppl_fig/P00c.png')
+ggsave('../output/other_illustr/graphs/S03_panel_c.png', P00c, width = 3, height =  4.4, dpi = 150)
+P00c2 <- magick::image_read('../output/other_illustr/graphs/S03_panel_c.png')
 
 # Read two images
-img1 <- magick::image_read('../output/suppl_fig/P00a1.png')
-img2 <- magick::image_read('../output/suppl_fig/P00b1.png')
-img3 <- magick::image_read('../output/suppl_fig/P00c.png')
+img1 <- magick::image_read('../output/other_illustr/graphs/S03_panel_a1.png')
+img2 <- magick::image_read('../output/other_illustr/graphs/S03_panel_b1.png')
+img3 <- magick::image_read('../output/other_illustr/graphs/S03_panel_c.png')
 
 # Convert to raster grobs
 grob1 <- grid::rasterGrob(as.raster(img1), interpolate = TRUE)

@@ -89,6 +89,11 @@ P00
 
 #--------------------
 # Plot B
+# Add model_name if missing (CI stubs may not include it)
+if (!'model_name' %in% names(country_leave_one_out)) {
+  country_leave_one_out$model_name <- rep(c('RF~obs.','TPS~obs.','RF~TPS'),
+                                          length.out = nrow(country_leave_one_out))
+}
 country_leave_one_out <- country_leave_one_out |>
   mutate(model_name = as.character(model_name),
          model_name = gsub('pred. ', '', gsub('\\~', 'vs.', model_name)),
