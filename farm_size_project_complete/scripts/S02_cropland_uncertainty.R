@@ -16,7 +16,7 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/graphs', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/suppl_fig', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -359,6 +359,6 @@ for(i in names(six_crop_masks)[c(3, 4, 6)]){
 combined_plot <- tmap::tmap_arrange(tmap_list, ncol = 4)
 
 # Save combined plot
-tmap::tmap_save(combined_plot, '../output/graphs/Suppl.Fig01.png', 
+tmap::tmap_save(combined_plot, '../output/suppl_fig/Suppl.Fig01.png', 
                 width = 10, height = 7, units = 'in', dpi = 150)
-file.copy('../output/graphs/Suppl.Fig01.png', '../output/graphs/Suppl.Fig01_copy.png'); message('CI: PDF write skipped (ImageMagick policy), PNG available')
+# No PDF conversion (ImageMagick policy blocked) — PNG is the final output; message('CI: PDF write skipped (ImageMagick policy), PNG available')

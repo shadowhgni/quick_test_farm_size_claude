@@ -109,9 +109,9 @@ P00 <- ggplot(lsms_spatial, aes(farm_area_ha, pred_oob)) +
   theme_test() + 
   theme(legend.position = 'none')
 P00
-png(paste0('../output/graphs/africa_pred_obs.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_pred_obs.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P00
-ggsave(paste0('../output/graphs/africa_pred_obs.png'))
+ggsave(paste0('../output/other_illustr/africa_pred_obs.png'))
 dev.off()
 
 # ------------------------------------------------------------------------------
@@ -128,9 +128,9 @@ P01 <- ggplot(var_imp , aes(Variable, Importance)) +
   theme_test() + 
   theme(axis.ticks.y = element_blank())
 P01
-png(paste0('../output/graphs/variable_importance_africa.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/variable_importance_africa.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01
-ggsave(paste0('../output/graphs/variable_importance_africa.png'))
+ggsave(paste0('../output/other_illustr/variable_importance_africa.png'))
 dev.off()
 
 

@@ -81,9 +81,9 @@ P00 <- ggplot(country_pairs,
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.ticks = element_blank())
 P00
-png('../output/graphs/country_heatmap_cross_validation_point_based.png', height = 7.5, width = 15, units = 'in', res = 1000)
+png('../output/other_illustr/country_heatmap_cross_validation_point_based.png', height = 7.5, width = 15, units = 'in', res = 1000)
 P00
-ggsave('../output/graphs/country_heatmap_cross_validation_point_based.png')
+ggsave('../output/other_illustr/country_heatmap_cross_validation_point_based.png')
 dev.off()
 
 P00 <- ggplot(country_pairs,
@@ -100,9 +100,9 @@ P00 <- ggplot(country_pairs,
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.ticks = element_blank())
 P00
-png('../output/graphs/country_heatmap_cross_validation_consolidated_avg.png', height = 7.5, width = 15, units = 'in', res = 1000)
+png('../output/other_illustr/country_heatmap_cross_validation_consolidated_avg.png', height = 7.5, width = 15, units = 'in', res = 1000)
 P00
-ggsave('../output/graphs/country_heatmap_cross_validation_consolidated_avg.png')
+ggsave('../output/other_illustr/country_heatmap_cross_validation_consolidated_avg.png')
 dev.off()
 
 
@@ -137,9 +137,9 @@ dev.off()
 #     axis.ticks.x = element_blank(),
 #     axis.text.x = element_text(angle = 45, hjust = 1)
 #   )
-# png('../output/graphs/country_barplot_cross_validation.png', height = 7.5, width = 15, units = 'in', res = 1000)
+# png('../output/other_illustr/country_barplot_cross_validation.png', height = 7.5, width = 15, units = 'in', res = 1000)
 # P01
-# ggsave('../output/graphs/country_barplot_cross_validation.png')
+# ggsave('../output/other_illustr/country_barplot_cross_validation.png')
 # dev.off()
 
 # heatmap of variable importance
@@ -166,9 +166,9 @@ P02 <- ggplot(var_importance_table, aes(country, var, fill = rank)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.ticks = element_blank())
 P02
-png('../output/graphs/country_variable_importance.png', height = 5, width = 7.5, units = 'in', res = 1000)
+png('../output/other_illustr/country_variable_importance.png', height = 5, width = 7.5, units = 'in', res = 1000)
 P02
-ggsave('../output/graphs/country_variable_importance.png')
+ggsave('../output/other_illustr/country_variable_importance.png')
 dev.off()
 
 # the three most important variables (1- maizeyield, 2- pop, 3- cattle)
@@ -208,9 +208,9 @@ P03 <- ggplot(country_leave_one_out) +
         axis.ticks.x = element_blank())
 P03
 
-png('../output/graphs/leave_one_out_country_TPS_mean_only.png', height = 7.5, width = 15, units = 'cm', res = 1000)
+png('../output/other_illustr/leave_one_out_country_TPS_mean_only.png', height = 7.5, width = 15, units = 'cm', res = 1000)
 P03
-ggsave('../output/graphs/leave_one_out_country_TPS_mean_only.png')
+ggsave('../output/other_illustr/leave_one_out_country_TPS_mean_only.png')
 dev.off()
 
 saveRDS(list(country_pairs = country_pairs, 

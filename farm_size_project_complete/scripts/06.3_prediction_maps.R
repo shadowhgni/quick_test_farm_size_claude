@@ -112,7 +112,7 @@ if (file.exists(qrf_tif)) {
 # ------------------------------------------------------------------------------
 # 4. Observed vs Predicted plots (using Python OOB predictions)
 # ------------------------------------------------------------------------------
-dir.create('../output/graphs', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/other_illustr', recursive = TRUE, showWarnings = FALSE)
 
 if (!all(is.na(lsms_spatial$pred_oob))) {
 
@@ -142,7 +142,7 @@ if (!all(is.na(lsms_spatial$pred_oob))) {
   )
   for (p in plots) {
     if (!all(is.na(lsms_spatial[[p$col]]))) {
-      png(paste0('../output/graphs/', p$file), height = 5, width = 7.5, units = 'in', res = 150)
+      png(paste0('../output/other_illustr/', p$file), height = 5, width = 7.5, units = 'in', res = 150)
       print(make_density_plot(p$col, p$r2))
       dev.off()
       message('Saved: ', p$file)

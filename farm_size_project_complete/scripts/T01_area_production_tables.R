@@ -16,7 +16,7 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/graphs', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/main_fig', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -119,4 +119,4 @@ P01
 
 P02 <- P00 / P01 + patchwork::plot_layout(ncol = 1, heights = c(1, 2))
 
-ggsave('../output/graphs/Suppl.Fig08.pdf', P02, width = 9, height = 9, units = 'in', dpi = 1000)
+ggsave('../output/main_fig/Suppl.Fig08.pdf', P02, width = 9, height = 9, units = 'in', dpi = 1000)

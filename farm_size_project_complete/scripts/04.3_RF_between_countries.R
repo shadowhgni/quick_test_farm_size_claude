@@ -143,9 +143,9 @@ if (nrow(mult_rsq) > 0 && all(c('rf_cv_rsq','gadm_test_rf_rsq') %in% names(mult_
     theme_bw() +
     theme(axis.text = element_text(angle = 45, hjust = 1))
   P01
-  png('../output/graphs/gadm_1__point_based_cross_validation.png', height = 15, width = 25, units = 'cm', res = 1000)
+  png('../output/other_illustr/gadm_1__point_based_cross_validation.png', height = 15, width = 25, units = 'cm', res = 1000)
   P01
-  ggsave('../output/graphs/gadm_1__point_based_cross_validation.png')
+  ggsave('../output/other_illustr/gadm_1__point_based_cross_validation.png')
   dev.off()
 } else {
   message('CI: mult_rsq empty or missing columns — skipping plot')

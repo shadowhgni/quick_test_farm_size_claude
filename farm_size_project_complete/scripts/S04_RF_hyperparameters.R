@@ -16,7 +16,7 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/graphs', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/suppl_fig', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -211,7 +211,7 @@ yy <- xx |>
   ) |>
   as.data.frame()
 #-------------------------------------------------------------------------------
-pdf('../output/graphs/Suppl.Fig.03.pdf', width = 9, height = 4.5)
+pdf('../output/suppl_fig/Suppl.Fig.03.pdf', width = 9, height = 4.5)
 # par(mfrow=c(1, 2), mar = c(3.5, 3.5, 1, 1), xaxs='i', yaxs='i')
 layout(matrix(c(1, 2, 3), nrow = 1, ncol = 3), widths = c(1, 1, 0.85))
 

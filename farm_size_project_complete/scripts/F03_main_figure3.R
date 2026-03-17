@@ -16,7 +16,7 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/graphs', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/main_fig', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -43,7 +43,7 @@ gc()
 # ------------------------------------------------------------------------------
 # modified from JOAO
 
-png("../output/graphs/Fig.02.png", width = 9, height = 8.8, units = 'in', res = 1000)
+png("../output/main_fig/Fig.02.png", width = 9, height = 8.8, units = 'in', res = 1000)
 par(mfrow=c(2,2), mar=c(3.5,3.5,1,1), xaxs='i', yaxs='i')
 
 # plot 1
@@ -161,4 +161,4 @@ box()
 
 dev.off()
 
-magick::image_write(magick::image_read('../output/graphs/Fig.02.png'), 'Fig.02.pdf', format = 'pdf')
+message('Figure saved as PNG: ../output/main_fig/Fig.02.png')

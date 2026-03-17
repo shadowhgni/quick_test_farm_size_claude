@@ -16,7 +16,7 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/graphs', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/suppl_fig', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -104,4 +104,4 @@ P00 <- ggplot(summ_hpc, aes(val)) +
   guides(fill = 'none')
 P00
 
-ggsave('../output/graphs/Suppl.Fig.04.pdf', P00, width = 9, height = 5, dpi = 1000)
+ggsave('../output/suppl_fig/Suppl.Fig.04.pdf', P00, width = 9, height = 5, dpi = 1000)

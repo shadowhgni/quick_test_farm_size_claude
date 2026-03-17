@@ -180,9 +180,9 @@ P04 <- ggplot(comp_fsize_classes_nb) +
   theme(axis.text.x = element_text(angle = -90, vjust = 0.5, hjust = 0.1),
         axis.ticks.x = element_blank())
 P04
-png('../output/graphs/country_compare_sarah_cum_nb_farms_classes.png', height = 5, width = 7.5, units = 'in', res = 600)
+png('../output/other_illustr/country_compare_sarah_cum_nb_farms_classes.png', height = 5, width = 7.5, units = 'in', res = 600)
 P04
-ggsave('../output/graphs/country_compare_sarah_cum_nb_farms_classes.png')
+ggsave('../output/other_illustr/country_compare_sarah_cum_nb_farms_classes.png')
 dev.off()
 
 P05 <- ggplot(comp_fsize_classes_nb, aes(NAME_0, nb_farms / 1000000, group = farm_class)) +
@@ -198,9 +198,9 @@ P05 <- ggplot(comp_fsize_classes_nb, aes(NAME_0, nb_farms / 1000000, group = far
   theme(axis.text.x = element_text(angle = -90, vjust = 0.5, hjust = 0.1),
         axis.ticks.x = element_blank())
 P05
-png('../output/graphs/country_compare_sarah_nb_farms_classes.png', height = 5, width = 7.5, units = 'in', res = 600)
+png('../output/other_illustr/country_compare_sarah_nb_farms_classes.png', height = 5, width = 7.5, units = 'in', res = 600)
 P05
-ggsave('../output/graphs/country_compare_sarah_nb_farms_classes.png')
+ggsave('../output/other_illustr/country_compare_sarah_nb_farms_classes.png')
 dev.off()
 
 P06 <- ggplot(comp_fsize_classes_ha) +
@@ -214,9 +214,9 @@ P06 <- ggplot(comp_fsize_classes_ha) +
   theme(axis.text.x = element_text(angle = -90, vjust = 0.5, hjust = 0.1),
         axis.ticks.x = element_blank())
 P06
-png('../output/graphs/country_compare_sarah_cum_farm_size_cropland_classes.png', height = 5, width = 7.5, units = 'in', res = 600)
+png('../output/other_illustr/country_compare_sarah_cum_farm_size_cropland_classes.png', height = 5, width = 7.5, units = 'in', res = 600)
 P06
-ggsave('../output/graphs/country_compare_sarah_cum_farm_size_cropland_classes.png')
+ggsave('../output/other_illustr/country_compare_sarah_cum_farm_size_cropland_classes.png')
 dev.off()
 
 P07 <- ggplot(comp_fsize_classes_ha, aes(NAME_0, cropland_ha / 1000000, group = farm_class)) +
@@ -232,9 +232,9 @@ P07 <- ggplot(comp_fsize_classes_ha, aes(NAME_0, cropland_ha / 1000000, group = 
   theme(axis.text.x = element_text(angle = -90, vjust = 0.5, hjust = 0.1),
         axis.ticks.x = element_blank())
 P07
-png('../output/graphs/country_compare_sarah_farm_size_cropland_classes.png', height = 5, width = 7.5, units = 'in', res = 600)
+png('../output/other_illustr/country_compare_sarah_farm_size_cropland_classes.png', height = 5, width = 7.5, units = 'in', res = 600)
 P07
-ggsave('../output/graphs/country_compare_sarah_farm_size_cropland_classes.png')
+ggsave('../output/other_illustr/country_compare_sarah_farm_size_cropland_classes.png')
 dev.off()
 
 saveRDS(list(six_classes_croplands = six_classes_croplands, 

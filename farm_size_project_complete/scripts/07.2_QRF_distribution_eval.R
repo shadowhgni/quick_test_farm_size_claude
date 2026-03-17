@@ -94,9 +94,9 @@ P00 <- pred_cpland_df |>
     axis.text = element_text(size = 4)  
   )
 P00
-png('../output/graphs/sensitivity_to_cropland_correlation_matrix.png', height = 15, width = 20, units = 'cm', res = 600)
+png('../output/other_illustr/sensitivity_to_cropland_correlation_matrix.png', height = 15, width = 20, units = 'cm', res = 600)
 P00
-ggsave('../output/graphs/sensitivity_to_cropland_correlation_matrix.png')
+ggsave('../output/other_illustr/sensitivity_to_cropland_correlation_matrix.png')
 dev.off()
 
 # Compare total croplands from different sources
@@ -106,9 +106,9 @@ P01 <- ggplot(ssa_cropland, aes(source, total / 1000000)) +
   theme_test() + 
   theme(axis.ticks.x = element_blank())
 P01
-png('../output/graphs/comparison_total_croplands_per_source.png', height = 15, width = 20, units = 'cm', res = 600)
+png('../output/other_illustr/comparison_total_croplands_per_source.png', height = 15, width = 20, units = 'cm', res = 600)
 P01
-ggsave('../output/graphs/comparison_total_croplands_per_source.png')
+ggsave('../output/other_illustr/comparison_total_croplands_per_source.png')
 dev.off()
 
 
@@ -132,9 +132,9 @@ P02 <- ggplot(nb_farms_summarized, aes(source, nb_farms / 1000000)) +
   theme_test() + 
   theme(axis.ticks.x = element_blank())
 P02
-png('../output/graphs/comparison_nb_farms_per_source.png', height = 15, width = 20, units = 'cm', res = 600)
+png('../output/other_illustr/comparison_nb_farms_per_source.png', height = 15, width = 20, units = 'cm', res = 600)
 P02
-ggsave('../output/graphs/comparison_nb_farms_per_source.png')
+ggsave('../output/other_illustr/comparison_nb_farms_per_source.png')
 dev.off()
 
 saveRDS(list(cropland_divergence = cropland_divergence,

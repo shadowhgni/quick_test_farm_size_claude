@@ -208,7 +208,7 @@ lsms <- terra::vect(lsms, geom = c('x', 'y'), crs = 'EPSG:4326')
 # terra::extract on polygons can return multiple rows if polygons overlap.
 # Use 'touches=FALSE' and take first match per point to ensure length matches.
 safe_extract <- function(vect_poly, points, field) {
-  ex <- terra::extract(vect_poly[, field], points, touches = FALSE)
+  ex <- terra::extract(vect_poly[, field], points)
   # Keep only first match per point (ID column gives point index)
   ex[!duplicated(ex[, 'ID']), field]
 }

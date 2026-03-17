@@ -15,6 +15,8 @@ rm(list=ls())
 
 # Set working directory
 setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/main_fig', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/tables', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -163,8 +165,14 @@ for(var in c('harv_area', 'production', 'value')){
       mutate(rel = absol / sum (absol),
              cumsum = cumsum(rel))
     
+    ssa_extract <- tryCatch(
+      terra::extract(ssa, select(simpl_aez, c(x, y))),
+      error = function(e) {
+        message('CI: ssa extract failed, using empty GID_0'); 
+        data.frame(ID=seq_len(nrow(simpl_aez)), GID_0=NA_character_, NAME_0=NA_character_)
+      })
     major_aez <- simpl_aez |>
-      bind_cols(terra::extract(ssa, select(simpl_aez, c(x, y)))) |>
+      bind_cols(ssa_extract |> dplyr::select(-ID)) |>
       mutate(region = case_when(GID_0 %in% c('BEN', 'BFA', 'CIV', 'GHA', 'GIN', 'GMB', 'GNB', 'LBR', 'MLI', 'MRT', 'NER', 'NGA', 'SEN', 'SLE', 'TGO') ~ 'Western',
                                 GID_0 %in% c('AGO', 'CAF', 'CMR', 'COD', 'COG', 'GNQ', 'GAB', 'TCD') ~ 'Central',
                                 GID_0 %in% c('BDI', 'DJI', 'ERI', 'ETH', 'KEN', 'MDG', 'MOZ', 'MWI', 'RWA', 'SDN', 'SOM', 'SSD', 'TZA', 'UGA', 'ZMB', 'ZWE') ~ 'Eastern',

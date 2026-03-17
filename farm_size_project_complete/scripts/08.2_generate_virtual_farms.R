@@ -138,9 +138,9 @@ P00 <- ggplot(summary_gadm_1, aes(farm_area_ha, mean_pred)) +
   theme_test()
 P00 
 
-png('../output/graphs/gadm_1al_pred_obs.png', height = 5, width = 5, units = 'in', res = 600)
+png('../output/other_illustr/gadm_1al_pred_obs.png', height = 5, width = 5, units = 'in', res = 600)
 P00
-ggsave('../output/graphs/gadm_1al_pred_obs.png')
+ggsave('../output/other_illustr/gadm_1al_pred_obs.png')
 dev.off()
 
 P01 <- ggplot(summary_sixteen_country, aes(farm_area_ha, mean_pred)) +
@@ -159,9 +159,9 @@ P01 <- ggplot(summary_sixteen_country, aes(farm_area_ha, mean_pred)) +
   theme_test()
 P01 
 
-png('../output/graphs/country_pred_obs.png', height = 5, width = 5, units = 'in', res = 600)
+png('../output/other_illustr/country_pred_obs.png', height = 5, width = 5, units = 'in', res = 600)
 P01
-ggsave('../output/graphs/country_pred_obs.png')
+ggsave('../output/other_illustr/country_pred_obs.png')
 dev.off()
 
 # ------------------------------------------------------------------------------
@@ -248,9 +248,9 @@ P02_zoom <- ggplot(comp_nb_farms,
 P02_final <- P02 +
   patchwork::inset_element(P02_zoom, left = 0.5, bottom = 0.01, right = 0.99, top = 0.4)
 
-png('../output/graphs/country_compare_sarah.png', height = 5, width = 5, units = 'in', res = 600)
+png('../output/other_illustr/country_compare_sarah.png', height = 5, width = 5, units = 'in', res = 600)
 P02_final
-ggsave('../output/graphs/country_compare_sarah.png')
+ggsave('../output/other_illustr/country_compare_sarah.png')
 dev.off()
 
 P03 <- ggplot(comp_nb_farms, 
@@ -267,9 +267,9 @@ P03 <- ggplot(comp_nb_farms,
   theme(legend.position = c(0.8, 0.25),
         legend.text = element_text(hjust = 1))
 P03
-png('../output/graphs/country_compare_sarah_log_scale.png', height = 5, width = 5, units = 'in', res = 600)
+png('../output/other_illustr/country_compare_sarah_log_scale.png', height = 5, width = 5, units = 'in', res = 600)
 P03
-ggsave('../output/graphs/country_compare_sarah_log_scale.png')
+ggsave('../output/other_illustr/country_compare_sarah_log_scale.png')
 dev.off()
 
 ssa_nb_farms <- ssa_rast

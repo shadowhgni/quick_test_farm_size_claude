@@ -126,14 +126,15 @@ theor_farms <- my_points_cells |>
          fit_logn = map(pred_farm_sizes, \(x) tryCatch(MASS::fitdistr(pmax(unlist(x), 0.001), 'log-normal'), error = function(e) list(estimate = c(meanlog = 0, sdlog = 1), sd = c(meanlog = NA, sdlog = NA)))),
          logn_mean = unlist(map(fit_logn, \(x)unlist(x)[['estimate.meanlog']])),
          logn_sd = unlist(map(fit_logn, \(x) unlist(x)[['estimate.sdlog']])),
-         fitted_logn = pmap(list(nb_farms, logn_mean, logn_sd), \(n,m,s) tryCatch(rlnorm(n=n, meanlog=m, sdlog=s), error=function(e) rep(NA_real_,n))), 
-         fitted_trunc_logn = pmap(list(nb_farms, pred_farm_sizes), \(n, px) {
+         fitted_logn = mapply(function(n,m,s) tryCatch(list(rlnorm(n=n, meanlog=m, sdlog=s)), error=function(e) list(rep(NA_real_,n))), nb_farms, logn_mean, logn_sd, SIMPLIFY=FALSE), 
+         fitted_trunc_logn = mapply(function(n, px) {
            px <- unlist(px)
-           tryCatch(sort(EnvStats::rlnormTrunc(n=n,
-             meanlog=mean(log(pmax(px,0.001)),na.rm=T),
-             sdlog=sd(log(pmax(px,0.001)),na.rm=T),
-             min=min(px,na.rm=T), max=max(px,na.rm=T))),
-             error=function(e) rep(NA_real_,n))}),
+           tryCatch(list(sort(EnvStats::rlnormTrunc(n=n,
+             meanlog=mean(log(pmax(px,0.001)),na.rm=TRUE),
+             sdlog=sd(log(pmax(px,0.001)),na.rm=TRUE),
+             min=min(px,na.rm=TRUE), max=max(px,na.rm=TRUE)))),
+             error=function(e) list(rep(NA_real_,n)))},
+           nb_farms, pred_farm_sizes, SIMPLIFY=FALSE),
          sample_mean = unlist(map(fitted_trunc_logn, \(x) mean(unlist(x), na.rm = T))),
          sample_sd = unlist(map(fitted_trunc_logn, \(x) sd(unlist(x), na.rm = T))),
          adjusted_logn_mean = log(sample_mean^2 / sqrt(sample_mean^2 + sample_sd^2)),
@@ -253,9 +254,9 @@ P00 <- ggplot(theor_farms_application, aes(linear_farm_size_ha)) +
        title = 'SSA') +
   theme_test()
 P00
-png(paste0('../output/graphs/africa_ECDF_farm_sizes.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_ECDF_farm_sizes.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P00
-ggsave(paste0('../output/graphs/africa_ECDF_farm_sizes.png'))
+ggsave(paste0('../output/other_illustr/africa_ECDF_farm_sizes.png'))
 dev.off()
 
 # ------------------------------------------------------------------------------
@@ -290,9 +291,9 @@ P01 <- ggplot(selected_theor_app, aes(virt_farms_fixed, colour = paste0(x, ', ',
   theme_test() +
   theme(legend.position = c(0.8, 0.35))
 P01
-png(paste0('../output/graphs/africa_ECDF_reg_sampl10_farm_sizes.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_ECDF_reg_sampl10_farm_sizes.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01
-ggsave(paste0('../output/graphs/africa_ECDF_reg_sampl10_farm_sizes.png'))
+ggsave(paste0('../output/other_illustr/africa_ECDF_reg_sampl10_farm_sizes.png'))
 dev.off()
 
 # ------------------------------------------------------------------------------
@@ -335,9 +336,9 @@ P02 <- ggplot() +
   theme_test() +
   theme(legend.position = c(0.8, 0.35))
 P02
-png(paste0('../output/graphs/africa_ECDF_3selected_groups_ugly.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_ECDF_3selected_groups_ugly.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P02
-ggsave(paste0('../output/graphs/africa_ECDF_3selected_groups_ugly.png'))
+ggsave(paste0('../output/other_illustr/africa_ECDF_3selected_groups_ugly.png'))
 dev.off()
 
 P02_data <- ggplot_build(P02)$data
@@ -377,9 +378,9 @@ P02_failed <- ggplot() +
   theme_test() +
   theme(legend.position = c(0.8, 0.35))
 P02_failed
-png(paste0('../output/graphs/africa_ECDF_3selected_groups_of_farm_sizes.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_ECDF_3selected_groups_of_farm_sizes.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P02_failed
-ggsave(paste0('../output/graphs/africa_ECDF_3selected_groups_of_farm_sizes.png'))
+ggsave(paste0('../output/other_illustr/africa_ECDF_3selected_groups_of_farm_sizes.png'))
 dev.off()
 
 saveRDS(list(grouped_theor_app = grouped_theor_app, grp_avg_theor_app = grp_avg_theor_app, P02 = P02),
@@ -536,9 +537,9 @@ P00 <- ggplot(theor_farms, aes(exp(adjusted_logn_mean + (adjusted_logn_sd^2 / 2)
   labs(x= 'Predicted average farm size, ha', y = 'Predicted standard deviation of farm size, ha',
        title = 'SSA') +
   theme_test()
-png(paste0('../output/graphs/africa_predicted_mean_sd_pts.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_predicted_mean_sd_pts.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P00
-ggsave(paste0('../output/graphs/africa_predicted_mean_sd_pts.png'))
+ggsave(paste0('../output/other_illustr/africa_predicted_mean_sd_pts.png'))
 dev.off()
 
 P01 <- ggplot(theor_farms, aes(exp(adjusted_logn_mean + (adjusted_logn_sd^2 / 2)),
@@ -550,9 +551,9 @@ P01 <- ggplot(theor_farms, aes(exp(adjusted_logn_mean + (adjusted_logn_sd^2 / 2)
   labs(x= 'Predicted average farm size, ha', y = 'Predicted standard deviation of farm size, ha',
        title = 'SSA', fill = 'Density of datapoints') +
   theme_test()
-png(paste0('../output/graphs/africa_predicted_mean_sd.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_predicted_mean_sd.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01
-ggsave(paste0('../output/graphs/africa_predicted_mean_sd.png'))
+ggsave(paste0('../output/other_illustr/africa_predicted_mean_sd.png'))
 dev.off()
 
 P02 <- ggplot(theor_farms, aes(exp(adjusted_logn_mean + (adjusted_logn_sd^2 / 2)),
@@ -564,9 +565,9 @@ P02 <- ggplot(theor_farms, aes(exp(adjusted_logn_mean + (adjusted_logn_sd^2 / 2)
   labs(x= 'Predicted average farm size, ha', y = 'Predicted CV of farm sizes, ha',
        title = 'SSA', fill = 'Density of datapoints') +
   theme_test()
-png(paste0('../output/graphs/africa_predicted_mean_cv.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_predicted_mean_cv.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P02
-ggsave(paste0('../output/graphs/africa_predicted_mean_cv.png'))
+ggsave(paste0('../output/other_illustr/africa_predicted_mean_cv.png'))
 dev.off() 
 
 P03 <- ggplot(theor_farms |>
@@ -579,9 +580,9 @@ P03 <- ggplot(theor_farms |>
   labs(x= 'Predicted average farm size per grid cell, ha', y = 'Gini coefficient of predicted farm sizes per grid cell',
        title = 'SSA', fill = 'Density of datapoints') +
   theme_test()
-png(paste0('../output/graphs/africa_predicted_mean_gini.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_predicted_mean_gini.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P03
-ggsave(paste0('../output/graphs/africa_predicted_mean_gini.png'))
+ggsave(paste0('../output/other_illustr/africa_predicted_mean_gini.png'))
 dev.off()
 
 # Actual mean and SD truncated to the next 0.1 deg (which is about 10 by 10 km at the eq), with at least 10 datapoints
@@ -623,9 +624,9 @@ P02a <- ggplot(lsms_mean_sd ,
   labs(x = 'Average farm size, ha', y = 'Standard deviation of farm sizes, ha') +
   theme_test()
 P02a
-png(paste0('../output/graphs/africa_log_vs_trunc_mean_sd.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_log_vs_trunc_mean_sd.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P02a
-ggsave(paste0('../output/graphs/africa_log_vs_trunc_mean_sd.png'))
+ggsave(paste0('../output/other_illustr/africa_log_vs_trunc_mean_sd.png'))
 dev.off()
 
 P02b <- ggplot(lsms_mean_sd ,
@@ -639,9 +640,9 @@ P02b <- ggplot(lsms_mean_sd ,
   scale_y_continuous(expand = c(0, 0), limits = c(0, 10)) +
   labs(x = 'Average farm size, ha', y = 'Standard deviation of farm sizes, ha') +
   theme_test()
-png(paste0('../output/graphs/africa_actual_vs_predicted_mean_sd.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_actual_vs_predicted_mean_sd.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P02b
-ggsave(paste0('../output/graphs/africa_actual_vs_predicted_mean_sd.png'))
+ggsave(paste0('../output/other_illustr/africa_actual_vs_predicted_mean_sd.png'))
 dev.off()
 
 P02c <- ggplot(lsms_mean_sd ,
@@ -655,9 +656,9 @@ P02c <- ggplot(lsms_mean_sd ,
   scale_y_continuous(expand = c(0, 0), limits = c(0, 1000)) +
   labs(x = 'Average farm size, ha', y = 'Coefficient of variation of farm sizes (%)') +
   theme_test()
-png(paste0('../output/graphs/africa_actual_vs_predicted_mean_cv.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_actual_vs_predicted_mean_cv.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P02c
-ggsave(paste0('../output/graphs/africa_actual_vs_predicted_mean_cv.png'))
+ggsave(paste0('../output/other_illustr/africa_actual_vs_predicted_mean_cv.png'))
 dev.off()
 
 P02d <- ggplot(lsms_mean_sd, aes(mean, gini)) +
@@ -687,9 +688,9 @@ P02d <- ggplot(lsms_mean_sd, aes(mean, gini)) +
   labs(x = 'Average farm size per grid cell, ha', y = 'Gini coefficient for farm sizes per grid cell') +
   theme_test()
 P02d
-png(paste0('../output/graphs/africa_actual_vs_predicted_mean_gini_to_improve.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_actual_vs_predicted_mean_gini_to_improve.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P02d
-ggsave(paste0('../output/graphs/africa_actual_vs_predicted_mean_gini_to_improve.png'))
+ggsave(paste0('../output/other_illustr/africa_actual_vs_predicted_mean_gini_to_improve.png'))
 dev.off()
 
 P02e <- P02d +
@@ -733,9 +734,9 @@ P02f <- ggplot(theor_bound_line, aes(avg, gini)) +
   theme_test() + 
   theme(legend.position = 'none')
 P02f
-png(paste0('../output/graphs/africa_actual_vs_predicted_mean_gini_with_bound_line.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_actual_vs_predicted_mean_gini_with_bound_line.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P02f
-ggsave(paste0('../output/graphs/africa_actual_vs_predicted_mean_gini_with_bound_line.png'))
+ggsave(paste0('../output/other_illustr/africa_actual_vs_predicted_mean_gini_with_bound_line.png'))
 dev.off()
 
 P02g <- ggplot(theor_bound_line, aes(avg, gini)) +
@@ -750,9 +751,9 @@ P02g <- ggplot(theor_bound_line, aes(avg, gini)) +
   labs(x = 'Average farm size per grid cell, ha', y = 'Gini coefficient for farm sizes per grid cell') +
   theme_test()
 P02g
-png(paste0('../output/graphs/africa_actual_vs_predicted_mean_gini_with_boundline_pts.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_actual_vs_predicted_mean_gini_with_boundline_pts.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P02g
-ggsave(paste0('../output/graphs/africa_actual_vs_predicted_mean_gini_with_boundline_pts.png'))
+ggsave(paste0('../output/other_illustr/africa_actual_vs_predicted_mean_gini_with_boundline_pts.png'))
 dev.off()
 
 saveRDS(list(theor_bound_line = theor_bound_line, lsms_mean_sd = lsms_mean_sd, 
@@ -831,9 +832,9 @@ saveRDS(list(theor_bound_line = theor_bound_line, lsms_mean_sd = lsms_mean_sd,
 # newtable_a <- ggplot_gtable(newtable_a)
 # P03 <- ggpubr::as_ggplot(newtable_a)
 # P03
-# png(paste0('../output/graphs/africa_selected_ecdf.png'), height = 5, width = 7.5, units = 'in', res = 600)
+# png(paste0('../output/other_illustr/africa_selected_ecdf.png'), height = 5, width = 7.5, units = 'in', res = 600)
 # P03
-# ggsave(paste0('../output/graphs/africa_selected_ecdf.png'))
+# ggsave(paste0('../output/other_illustr/africa_selected_ecdf.png'))
 # dev.off()
 
 

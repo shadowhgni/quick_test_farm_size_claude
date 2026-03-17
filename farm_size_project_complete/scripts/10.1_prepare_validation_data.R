@@ -374,9 +374,9 @@ P00 <- ggplot(df_rel_long |>
   theme_test() +
   theme(legend.position = c(0.9, 0.25))
 P00
-png(paste0('../output/graphs/africa_avg_farm_size_cattle_all_crops_all_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_avg_farm_size_cattle_all_crops_all_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P00
-ggsave(paste0('../output/graphs/africa_avg_farm_size_cattle_all_crops_all_AEZ.png'))
+ggsave(paste0('../output/other_illustr/africa_avg_farm_size_cattle_all_crops_all_AEZ.png'))
 dev.off()
 
 P00 <- ggplot(df_rel_long |>
@@ -390,9 +390,9 @@ P00 <- ggplot(df_rel_long |>
   theme_test() +
   theme(legend.position = c(0.85, 0.35))
 P00
-png(paste0('../output/graphs/africa_avg_farm_size_cattle_all_crops_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_avg_farm_size_cattle_all_crops_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P00
-ggsave(paste0('../output/graphs/africa_avg_farm_size_cattle_all_crops_per_AEZ.png'))
+ggsave(paste0('../output/other_illustr/africa_avg_farm_size_cattle_all_crops_per_AEZ.png'))
 dev.off()
 
 P01a <- ggplot(df_rel_long |>
@@ -407,9 +407,9 @@ P01a <- ggplot(df_rel_long |>
   theme_test() +
   theme(legend.position = c(0.94, 0.2))
 P01a
-png(paste0('../output/graphs/africa_avg_farm_size_5crops_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_avg_farm_size_5crops_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01a
-ggsave(paste0('../output/graphs/africa_avg_farm_size_5crops_per_AEZ.png'))
+ggsave(paste0('../output/other_illustr/africa_avg_farm_size_5crops_per_AEZ.png'))
 dev.off()
 
 P01a <- ggplot(df_rel_long |>
@@ -424,9 +424,9 @@ P01a <- ggplot(df_rel_long |>
   theme_test() +
   theme(legend.position = c(0.94, 0.2))
 P01a
-png(paste0('../output/graphs/africa_avg_farm_size_4crops_and_leg_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_avg_farm_size_4crops_and_leg_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01a
-ggsave(paste0('../output/graphs/africa_avg_farm_size_4crops_and_leg_per_AEZ.png'))
+ggsave(paste0('../output/other_illustr/africa_avg_farm_size_4crops_and_leg_per_AEZ.png'))
 dev.off()
 
 P01a <- ggplot(df_rel_long |>
@@ -441,9 +441,9 @@ P01a <- ggplot(df_rel_long |>
   theme_test() +
   theme(legend.position = c(0.15, 0.2))
 P01a
-png(paste0('../output/graphs/africa_avg_farm_size_4crops_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_avg_farm_size_4crops_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01a
-ggsave(paste0('../output/graphs/africa_avg_farm_size_4crops_per_AEZ.png'))
+ggsave(paste0('../output/other_illustr/africa_avg_farm_size_4crops_per_AEZ.png'))
 dev.off()
 
 P01b <- ggplot(df_rel_long |>
@@ -457,9 +457,9 @@ P01b <- ggplot(df_rel_long |>
   theme_test() +
   theme(legend.position = c(0.92, 0.2))
 P01b
-png(paste0('../output/graphs/africa_avg_farm_size_5crops_all_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_avg_farm_size_5crops_all_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01b
-ggsave(paste0('../output/graphs/africa_avg_farm_size_5crops_all_AEZ.png'))
+ggsave(paste0('../output/other_illustr/africa_avg_farm_size_5crops_all_AEZ.png'))
 dev.off()
 
 P01c <- ggplot(df_rel_long |>
@@ -489,9 +489,9 @@ P01c <- ggplot(df_rel_long |>
   theme_test() +
   theme(legend.position = c(0.9, 0.3))
 P01c
-png(paste0('../output/graphs/africa_avg_farm_size_crop_groups_all_AEZ_6crops_no_rice.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_avg_farm_size_crop_groups_all_AEZ_6crops_no_rice.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01c
-ggsave(paste0('../output/graphs/africa_avg_farm_size_crop_groups_all_AEZ_6crops_no_rice.png'))
+ggsave(paste0('../output/other_illustr/africa_avg_farm_size_crop_groups_all_AEZ_6crops_no_rice.png'))
 dev.off()
 
 
@@ -508,9 +508,9 @@ P01d <- ggplot(df_rel_long |>
   theme_test() +
   theme(legend.position = c(0.15, 0.3))
 P01d
-png(paste0('../output/graphs/africa_avg_farm_size_6_sel_crops_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_avg_farm_size_6_sel_crops_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01d
-ggsave(paste0('../output/graphs/africa_avg_farm_size_6_sel_crops_per_AEZ.png'))
+ggsave(paste0('../output/other_illustr/africa_avg_farm_size_6_sel_crops_per_AEZ.png'))
 dev.off()
 
 P01d <- ggplot(df_rel_long |>
@@ -527,9 +527,9 @@ P01d <- ggplot(df_rel_long |>
   theme_test() +
   theme(legend.position = c(0.9, 0.3))
 P01d
-png(paste0('../output/graphs/africa_avg_farm_size_7_sel_crops_all_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_avg_farm_size_7_sel_crops_all_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01d
-ggsave(paste0('../output/graphs/africa_avg_farm_size_7_sel_crops_all_AEZ.png'))
+ggsave(paste0('../output/other_illustr/africa_avg_farm_size_7_sel_crops_all_AEZ.png'))
 dev.off()
 
 
@@ -548,9 +548,9 @@ P01d <- ggplot(df_rel_long |>
   theme_test() +
   theme(legend.position = c(0.15, 0.3))
 P01d
-png(paste0('../output/graphs/africa_avg_farm_size_7_sel_crops_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/africa_avg_farm_size_7_sel_crops_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01d
-ggsave(paste0('../output/graphs/africa_avg_farm_size_7_sel_crops_per_AEZ.png'))
+ggsave(paste0('../output/other_illustr/africa_avg_farm_size_7_sel_crops_per_AEZ.png'))
 dev.off()
 
 
@@ -569,9 +569,9 @@ dev.off()
 #   labs(x = 'Predicted average farm size (ha)', y = 'Cumulative distribution function') + 
 #   facet_grid( ~ aez, scales = 'free_x') +
 #   theme_bw()
-# png(paste0('../output/graphs/africa_avg_farm_size_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
+# png(paste0('../output/other_illustr/africa_avg_farm_size_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
 # P00
-# ggsave(paste0('../output/graphs/africa_avg_farm_size_per_AEZ.png'))
+# ggsave(paste0('../output/other_illustr/africa_avg_farm_size_per_AEZ.png'))
 # dev.off()
 
 # dist_per_aez <-  theor_farms |>
@@ -586,7 +586,7 @@ dev.off()
 #   stat_ecdf(geom = 'line', alpha = 0.05, colour = 'lightskyblue1') +
 #   facet_grid( ~ aez, scales = 'free_x') + 
 #   theme_test()
-# png(paste0('../output/graphs/africa_farm_size_dist_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
+# png(paste0('../output/other_illustr/africa_farm_size_dist_per_AEZ.png'), height = 5, width = 7.5, units = 'in', res = 600)
 # P01
-# ggsave(paste0('../output/graphs/africa_farm_size_dist_per_AEZ.png'))
+# ggsave(paste0('../output/other_illustr/africa_farm_size_dist_per_AEZ.png'))
 # dev.off()
