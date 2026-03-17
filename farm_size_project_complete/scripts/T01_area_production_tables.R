@@ -120,4 +120,7 @@ P01
 
 P02 <- P00 / P01 + patchwork::plot_layout(ncol = 1, heights = c(1, 2))
 
+# Save T01 summary CSV to main_fig/
+tryCatch(write.csv(P02$data, '../output/main_fig/T01_summary_descriptive_stats_survey.csv', row.names = FALSE),
+         error = function(e) message('CI: T01 CSV save skipped: ', e$message))
 ggsave('../output/suppl_fig/Suppl.Fig08.pdf', P02, width = 9, height = 9, units = 'in', dpi = 1000)

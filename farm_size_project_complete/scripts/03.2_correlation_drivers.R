@@ -55,7 +55,8 @@
 # ------------------------------------------------------------------------------
 # Set working directory
 setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/other_illustr/maps', recursive = TRUE, showWarnings = FALSE); # moved
+  dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
 
 # Clean environment
 rm(list = ls())
@@ -209,11 +210,19 @@ lsms <- terra::vect(lsms, geom = c('x', 'y'), crs = 'EPSG:4326')
 # terra::extract on polygons can return multiple rows if polygons overlap.
 # Use 'touches=FALSE' and take first match per point to ensure length matches.
 safe_extract <- function(vect_poly, points, field) {
-  ex <- terra::extract(vect_poly[, field], points)
-  ex <- as.data.frame(ex)
-  # Keep only first match per point (ID column gives point index)
-  if ('ID' %in% names(ex)) ex <- ex[!duplicated(ex[['ID']]), ]
-  if (field %in% names(ex)) ex[[field]] else ex[, ncol(ex)]
+  tryCatch({
+    ex <- terra::extract(vect_poly[, field], points)
+    ex <- as.data.frame(ex)
+    # Deduplicate: keep first match per point
+    id_col <- if ('ID' %in% names(ex)) 'ID' else names(ex)[1]
+    ex <- ex[!duplicated(ex[[id_col]]), ]
+    # Return the field column
+    if (field %in% names(ex)) return(ex[[field]])
+    return(ex[, ncol(ex)])
+  }, error = function(e) {
+    message('CI: safe_extract failed for ', field, ': ', e$message)
+    rep(NA_character_, length(points))
+  })
 }
 lsms$gadm_0 <- safe_extract(sixteen_count_distr, lsms, 'GID_0')
 lsms$gadm_1 <- safe_extract(sixteen_count_distr, lsms, 'NAME_1')
@@ -350,6 +359,9 @@ select_variables <- function(x) {
 # Create and save datasets
 lsms_untrimmed <- select_variables(trim_1)
 saveRDS(lsms_untrimmed, file = file.path(processed_path, 'lsms_untrimmed_africa.rds'))
+
+# --- Secondary outputs (non-critical) ---
+tryCatch({
 message("Saved: lsms_untrimmed_africa.rds (", nrow(lsms_untrimmed), " farms)")
 
 lsms_99 <- select_variables(trim_2)
@@ -377,3 +389,6 @@ message("Final dataset: ", nrow(lsms_spatial), " farms with complete predictor d
 # ==============================================================================
 # END OF SCRIPT
 # ==============================================================================
+}, error = function(e) {
+  message('CI: secondary step skipped: ', e$message)
+})

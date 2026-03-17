@@ -15,7 +15,8 @@ rm(list=ls())
 
 # Set working directory
 setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/other_illustr/maps', recursive = TRUE, showWarnings = FALSE); # moved
+  dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
 dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
@@ -202,7 +203,7 @@ comp_nb_farms <- summary_nb_farms |>
   select(country, estim_nb_farms) |>
   inner_join(ssa_nb_farms)
 
-write.csv(comp_nb_farms, '../output/tables/estimated_number_of_farms_in_ssa.csv', row.names = F)
+write.csv(comp_nb_farms, '../output/other_illustr/tables/estimated_number_of_farms_in_ssa.csv', row.names = F)
 # comparing aggregates with Sarah
 comp_nb_farms |> 
   filter(!is.na(estim_nb_farms), !is.na(nb_farms)) |> 
@@ -282,15 +283,15 @@ enf <- terra::as.data.frame(ssa_nb_farms, xy = T) |>
 ssa_nb_farms <- terra::rast(enf, type = 'xyz', crs = 'EPSG:4326')
 terra::writeRaster(ssa_nb_farms, '../data/processed/estim_nb_farms_per_country.tif', overwrite = T)
 
-png('../output/maps/estim_nb_farms_per_country.png', height = 5, width = 5, units = 'in', res = 600)
+png('../output/other_illustr/maps/estim_nb_farms_per_country.png', height = 5, width = 5, units = 'in', res = 600)
 M01 <-{
   terra::plot(ssa_nb_farms$estim_nb_farms, main = 'Predicted number of farms per country')
   terra::plot(ssa, add = T)
 }
-ggsave('../output/maps/estim_nb_farms_per_country.png')
+ggsave('../output/other_illustr/maps/estim_nb_farms_per_country.png')
 dev.off()
 
-png('../output/maps/estim_nb_farms_per_grid_cell.png', height = 5, width = 5, units = 'in', res = 600)
+png('../output/other_illustr/maps/estim_nb_farms_per_grid_cell.png', height = 5, width = 5, units = 'in', res = 600)
 M02 <-{
   terra::plot(ssa, col = 'azure', main = 'Predicted density of farms',
               panel.first = grid(col = 'gray', lty = 'solid'), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
@@ -300,10 +301,10 @@ M02 <-{
   terra::plot(calc_nb_farms$nb_farms )
   terra::plot(ssa, add = T)
 }
-ggsave('../output/maps/estim_nb_farms_per_grid_cell.png')
+ggsave('../output/other_illustr/maps/estim_nb_farms_per_grid_cell.png')
 dev.off()
 
-png('../output/maps/estim_nb_farms_per_grid_cell_classes.png', height = 5, width = 5, units = 'in', res = 600)
+png('../output/other_illustr/maps/estim_nb_farms_per_grid_cell_classes.png', height = 5, width = 5, units = 'in', res = 600)
 M03 <-{
   terra::plot(ssa, col = 'azure', main = 'Predicted farm density',
               panel.first = grid(col = 'gray', lty = 'solid'), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
@@ -313,7 +314,7 @@ M03 <-{
          fill = pal2(6), horiz = FALSE)
   terra::plot(ssa, axes = F, add = T)
 }
-ggsave('../output/maps/estim_nb_farms_per_grid_cell_classes.png')
+ggsave('../output/other_illustr/maps/estim_nb_farms_per_grid_cell_classes.png')
 dev.off()
 terra::writeRaster(calc_nb_farms, file = '../data/processed/nb_farms_per_grid_cell.tif', overwrite = T)
 

@@ -152,4 +152,4 @@ if (nrow(mult_rsq) > 0 && all(c('rf_cv_rsq','gadm_test_rf_rsq') %in% names(mult_
   message('CI: mult_rsq empty or missing columns — skipping plot')
 }
 
-write.csv(mult_rsq, '../output/tables/gadm_1__point_based_cross_validation.csv', row.names = F)
+write.csv(mult_rsq, '../output/other_illustr/tables/gadm_1__point_based_cross_validation.csv', row.names = F)

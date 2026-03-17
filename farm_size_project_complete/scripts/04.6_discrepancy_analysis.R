@@ -25,22 +25,22 @@ sixteen_country_codes <- c('BEN', 'BFA', 'CIV', 'ETH', 'GHA', 'GNB', 'MWI', 'MLI
 # ------------------------------------------------------------------------------
 
 # get the table of country_autoevaluation
-country_auto_evaluation <- read.csv('../output/tables/country_auto_evaluation_rsquares.csv')
+country_auto_evaluation <- read.csv('../output/other_illustr/tables/country_auto_evaluation_rsquares.csv')
 # get the table of one-on-one cross-country evaluation
-country_pairs <- read.csv('../output/tables/country_pairwise_point_based_cross_validation.csv')
+country_pairs <- read.csv('../output/other_illustr/tables/country_pairwise_point_based_cross_validation.csv')
 # get the table from Robert's output (available at 'https://geodata.ucdavis.edu/fsa/')
-country_leave_one_out <- readRDS('../output/tables/leave_one_RF.rds') |>
+country_leave_one_out <- readRDS('../output/other_illustr/tables/leave_one_RF.rds') |>
   filter(means == 'TRUE', test == 'FALSE') |>
   select(!c(means, test)) |>
   group_by(country, code, model) |>
   summarize(rsq = max(Rsquared, na.rm = T)) |>
   bind_rows(
-    readRDS('../output/tables/leave_one_TPS.rds') |>
+    readRDS('../output/other_illustr/tables/leave_one_TPS.rds') |>
       filter(means == 'TRUE') |>
       select(!c(means, test))
   ) |>
   bind_rows(
-    readRDS('../output/tables/leave_one_cor.rds') |>
+    readRDS('../output/other_illustr/tables/leave_one_cor.rds') |>
       filter(means == 'TRUE') |>
       mutate(
         country = sixteen_countries[sixteen_country_codes == code],
@@ -64,7 +64,7 @@ cor_TZA <- cor(
 ) 
 country_leave_one_out$rsq[country_leave_one_out$code == 'TZA' &  country_leave_one_out$model == 'RF_vs_TPS'] <- cor_TZA^2
 # get the variable importance table
-var_importance_table <- read.csv('../output/tables/country_variable_importance.csv')
+var_importance_table <- read.csv('../output/other_illustr/tables/country_variable_importance.csv')
 
 # heatmap for pairwise comparison of countries, replace OOB r2 with CV r2 (if OOB, comment the lines below)
 

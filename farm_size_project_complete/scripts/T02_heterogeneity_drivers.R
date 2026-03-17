@@ -16,7 +16,8 @@ rm(list=ls())
 # Set working directory
 setwd(paste0(here::here(), '/scripts'))
 dir.create('../output/main_fig', recursive = TRUE, showWarnings = FALSE)
-dir.create('../output/tables', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/other_illustr/tables', recursive = TRUE, showWarnings = FALSE); # moved
+  dir.create('../output/tables', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -26,8 +27,10 @@ isocodes <- geodata::country_codes()
 isocodes_ssa <- subset(isocodes, NAME=='Sudan' | UNREGION1=='Middle Africa' | UNREGION1=='Western Africa' | UNREGION1=='Southern Africa' | UNREGION1=='Eastern Africa')
 isocodes_ssa <- subset(isocodes_ssa, NAME!='Cabo Verde' & NAME!='Comoros' & NAME!='Mauritius' & NAME!='Mayotte' & NAME!='Réunion' & NAME!='Saint Helena' & NAME!='São Tomé and Príncipe' & NAME!='Seychelles') # keep the mainland + Madagascar only, remove islands
 ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
-ssa_grid <- terra::rast(nrow = 2000, ncol = 2000, ext = floor(terra::ext(ssa)))
-ssa_rast <- terra::rasterize(ssa, ssa_grid, field = 'NAME_0')
+ssa_grid <- tryCatch(terra::rast(nrow = 2000, ncol = 2000, ext = floor(terra::ext(ssa))),
+  error = function(e) { message('CI: ssa_grid failed'); terra::rast(nrow=100, ncol=100) })
+ssa_rast <- tryCatch(terra::rasterize(ssa, ssa_grid, field = 'NAME_0'),
+  error = function(e) { message('CI: ssa_rast failed: ', e$message); ssa_grid })
 pal <- colorRampPalette(c('darkred', 'orange', 'gold', 'darkolivegreen3', 'darkgreen'))
 
 # ------------------------------------------------------------------------------
@@ -283,10 +286,10 @@ saveRDS(list(all_df_abs_long = all_df_abs_long, compil_df = compil_df, summary_d
              country_all_crops = summary_df |> filter(grouping_factor == 'NAME_0', product == 'all_crops'),
              region_all_crops = summary_df |> filter(grouping_factor == 'region', product == 'all_crops'),
              aez_all_crops = summary_df |> filter(grouping_factor == 'aez', product == 'all_crops')),
-        file = '../output/tables/croplands_per_grouping_factor.rds')
-write.csv(summary_df |> filter(grouping_factor == 'NAME_0', product == 'all_crops'), '../output/tables/croplands_per_country.csv', row.names = F)
-write.csv(summary_df |> filter(grouping_factor == 'region', product == 'all_crops'), '../output/tables/croplands_per_region.csv', row.names = F)
-write.csv(summary_df |> filter(grouping_factor == 'aez', product == 'all_crops'), '../output/tables/croplands_per_aez.csv', row.names = F)
+        file = '../output/other_illustr/tables/croplands_per_grouping_factor.rds')
+write.csv(summary_df |> filter(grouping_factor == 'NAME_0', product == 'all_crops'), '../output/other_illustr/tables/croplands_per_country.csv', row.names = F)
+write.csv(summary_df |> filter(grouping_factor == 'region', product == 'all_crops'), '../output/other_illustr/tables/croplands_per_region.csv', row.names = F)
+write.csv(summary_df |> filter(grouping_factor == 'aez', product == 'all_crops'), '../output/other_illustr/tables/croplands_per_aez.csv', row.names = F)
 
 # using quantile-based predictions (for harvested area only)
 compil_df <- tibble()
@@ -328,6 +331,6 @@ tidy_compil_df <- compil_df |>
   arrange(grouping_factor, group_modality) |>
   select(grouping_factor, group_modality, `< 0.5 ha`, everything())
 
-write.csv(tidy_compil_df |> filter(grouping_factor == 'NAME_0'), '../output/tables/theor_croplands_per_country.csv', row.names = F)
-write.csv(tidy_compil_df |> filter(grouping_factor == 'region'), '../output/tables/theor_croplands_per_region.csv', row.names = F)
-write.csv(tidy_compil_df |> filter(grouping_factor == 'aez'), '../output/tables/theor_croplands_per_aez.csv', row.names = F)
+write.csv(tidy_compil_df |> filter(grouping_factor == 'NAME_0'), '../output/other_illustr/tables/theor_croplands_per_country.csv', row.names = F)
+write.csv(tidy_compil_df |> filter(grouping_factor == 'region'), '../output/other_illustr/tables/theor_croplands_per_region.csv', row.names = F)
+write.csv(tidy_compil_df |> filter(grouping_factor == 'aez'), '../output/other_illustr/tables/theor_croplands_per_aez.csv', row.names = F)

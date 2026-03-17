@@ -56,8 +56,8 @@ saveRDS(res, "output/tables/RF_optim_summarized_table.rds")
 # all_rf_result_table <- do.call(rbind, lapply(model_output, summarize_rfoptim))
 # all_rf_result_table <- all_rf_result_table |>
 #   arrange(-Rsquared, RMSE, MAE)
-# saveRDS(all_rf_result_table, '../output/tables/RF_optim_summarized_table.rds')
-# write.csv(all_rf_result_table, file = '../output/tables/RF_optim_summarized_table.csv', row.names = F)
+# saveRDS(all_rf_result_table, '../output/other_illustr/tables/RF_optim_summarized_table.rds')
+# write.csv(all_rf_result_table, file = '../output/other_illustr/tables/RF_optim_summarized_table.csv', row.names = F)
 # 
 # # ------------------------------------------------------------------------------
 # # Send an email 

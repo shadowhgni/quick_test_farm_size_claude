@@ -16,7 +16,8 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/other_illustr/maps', recursive = TRUE, showWarnings = FALSE); # moved
+  dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
 dir.create('../output/suppl_fig', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
@@ -129,12 +130,12 @@ stacked$slope <- 100 * stacked$slope
 # }
 # # M01 <- 
 # png(paste0('suppl.fig01.', i), height = 2.5, width = 2.5, units = 'cm', res = 150)
-# ggsave('../output/maps/estim_nb_farms_per_grid_cell_classes.png')
+# ggsave('../output/other_illustr/maps/estim_nb_farms_per_grid_cell_classes.png')
 # dev.off()
 
 
 
-# png('../output/maps/estim_nb_farms_per_grid_cell_classes.png', height = 5, width = 5, units = 'in', res = 600)
+# png('../output/other_illustr/maps/estim_nb_farms_per_grid_cell_classes.png', height = 5, width = 5, units = 'in', res = 600)
 # M03 <-{
 #   terra::plot(ssa, col = 'azure', main = 'Predicted farm density',
 #               panel.first = grid(col = 'gray', lty = 'solid'), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
@@ -144,7 +145,7 @@ stacked$slope <- 100 * stacked$slope
 #          fill = pal2(6), horiz = FALSE)
 #   terra::plot(ssa, axes = F, add = T)
 # }
-# ggsave('../output/maps/estim_nb_farms_per_grid_cell_classes.png')
+# ggsave('../output/other_illustr/maps/estim_nb_farms_per_grid_cell_classes.png')
 # dev.off()
 
 # tm <- tmap::tm_shape(ssa) +

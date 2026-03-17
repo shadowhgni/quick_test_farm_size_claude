@@ -163,7 +163,7 @@ mult_rsq <- do.call(bind_rows, lapply(sixteen_countries, compare_countries_in_pa
 fin <- Sys.time() - deb
 print(fin)
 
-write.csv(mult_rsq, '../output/tables/country_pairwise_point_based_cross_validation.csv')
+write.csv(mult_rsq, '../output/other_illustr/tables/country_pairwise_point_based_cross_validation.csv')
 #-----------------------------------------------------------------
 # Cross-validation R squares for the country itself
 country_autoevaluation_rsq <- function(my_country){
@@ -261,8 +261,8 @@ variable_importance_table <- data.frame()
 for(i in sixteen_countries){
   variable_importance_table <-bind_rows(variable_importance_table, get(ls(pattern = paste0('var_importance_', i))[1]))
 }
-write.csv(mult_rsq, '../output/tables/country_auto_evaluation_rsquares.csv', row.names = F)
-write.csv(variable_importance_table, '../output/tables/country_variable_importance.csv', row.names = F)
+write.csv(mult_rsq, '../output/other_illustr/tables/country_auto_evaluation_rsquares.csv', row.names = F)
+write.csv(variable_importance_table, '../output/other_illustr/tables/country_variable_importance.csv', row.names = F)
 
 # ------------------------------------------------------------------------
 # Using a training set and a test set to evaluate model performance: one country left out

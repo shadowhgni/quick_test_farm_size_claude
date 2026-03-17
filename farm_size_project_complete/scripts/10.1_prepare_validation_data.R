@@ -117,8 +117,8 @@ aez_farm_stat <- aez_farm_stat |>
   inner_join(cropland_under_1) |>
   inner_join(cropland_under_2)
 
-saveRDS(aez_farm_stat, file = '../output/tables/cropland_stats_per_aez.rds')
-write_csv(aez_farm_stat, file = '../output/tables/cropland_stats_per_aez.csv')
+saveRDS(aez_farm_stat, file = '../output/other_illustr/tables/cropland_stats_per_aez.rds')
+write_csv(aez_farm_stat, file = '../output/other_illustr/tables/cropland_stats_per_aez.csv')
 
 # predicted average farm size per grid cell
 simpl_aez <- rf_model_predictions |>

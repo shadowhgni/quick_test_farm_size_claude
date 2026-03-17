@@ -446,5 +446,5 @@ saveRDS(list(mult_rsq1 = mult_rsq1,
              model_perf_wide = model_perf_wide,
              all_rsq = all_rsq),
         file = '../data/processed/compare_country_models.RDS')
-write.csv(model_perf_wide, file = '../output/tables/comparison_ML_models_per_country.csv', row.names = F)
-saveRDS(model_perf_wide, file = '../output/tables/comparison_ML_models_per_country.rds')
+write.csv(model_perf_wide, file = '../output/other_illustr/tables/comparison_ML_models_per_country.csv', row.names = F)
+saveRDS(model_perf_wide, file = '../output/other_illustr/tables/comparison_ML_models_per_country.rds')

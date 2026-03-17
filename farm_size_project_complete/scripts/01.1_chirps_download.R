@@ -36,11 +36,12 @@ dirs <- c(
   "../data/raw/web_scrapped/survey_data",
   "../data/raw/web_scrapped/faostat",
   "../data/processed",
-dir.create('../output/maps', recursive=TRUE, showWarnings=FALSE)
+dir.create('../output/other_illustr/maps', recursive = TRUE, showWarnings = FALSE); # moved
+  dir.create('../output/maps', recursive=TRUE, showWarnings=FALSE)
   "../output/maps",
   "../output/graphs",
-  "../output/tables/main",
-  "../output/tables/supplementary",
+  "../output/other_illustr/tables/main",
+  "../output/other_illustr/tables/supplementary",
   "../output/figures/main",
   "../output/figures/supplementary",
   "../output/reports"
@@ -357,13 +358,13 @@ total_row <- data.frame(
 )
 country_stats <- rbind(country_stats, total_row)
 
-write.csv(country_stats, "../output/tables/summary_descriptive_stats_survey.csv", row.names = FALSE)
+write.csv(country_stats, "../output/other_illustr/tables/summary_descriptive_stats_survey.csv", row.names = FALSE)
 
 # Correlation matrix (simple)
 cor_vars <- c("farm_area_ha", "cropland", "cattle", "pop", "temperature", "rainfall", "market")
 cor_data <- lsms_ml[, cor_vars[cor_vars %in% names(lsms_ml)]]
 cor_matrix <- cor(cor_data, use = "complete.obs")
-write.csv(round(cor_matrix, 3), "../output/tables/correlation_matrix.csv")
+write.csv(round(cor_matrix, 3), "../output/other_illustr/tables/correlation_matrix.csv")
 
 # ------------------------------------------------------------------------------
 # SUMMARY

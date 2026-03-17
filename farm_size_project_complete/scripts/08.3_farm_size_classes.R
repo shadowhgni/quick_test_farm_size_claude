@@ -15,7 +15,8 @@ rm(list=ls())
 
 # Set working directory
 setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/other_illustr/maps', recursive = TRUE, showWarnings = FALSE); # moved
+  dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
 dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
@@ -123,21 +124,26 @@ theor_farms <- my_points_cells |>
   mutate(skew = unlist(map(pred_farm_sizes, \(x) moments::skewness(unlist(x)))),
          kurt = unlist(map(pred_farm_sizes, \(x) moments::kurtosis(unlist(x)))),
          virt_farms = map(pred_farm_sizes, \(x) sort(approx(x = 0.01 * 1:100, y = unlist(x), xout = sort(runif(nb_farms)), rule = 2)$y)),
-         virt_farms_fixed = map(pred_farm_sizes, \(x) sort(approx(x = 0.01 * 1:100, y = unlist(x), n = nb_farms, rule = 2)$y)),    # best choice vis-a-vis pred quant.
+         virt_farms_fixed = map(pred_farm_sizes, \(x) sort(approx(x = 0.01 * 1:100, y = unlist(x), n = nb_farms, rule = 2)$y)),
          virt_farms_f_max_trunc = map(pred_farm_sizes, \(x) sort(c(max(x, na.rm = T), (approx(x = 0.01 * 1:100, y = unlist(x), n = nb_farms - 1, rule = 2)$y)))),
          fit_logn = map(pred_farm_sizes, \(x) tryCatch(MASS::fitdistr(pmax(unlist(x), 0.001), 'log-normal'), error = function(e) list(estimate = c(meanlog = 0, sdlog = 1), sd = c(meanlog = NA, sdlog = NA)))),
          logn_mean = unlist(map(fit_logn, \(x)unlist(x)[['estimate.meanlog']])),
-         logn_sd = unlist(map(fit_logn, \(x) unlist(x)[['estimate.sdlog']])),
-         # Use .data pronoun so mapply can access the within-mutate columns
-         fitted_logn = mapply(function(n,m,s) tryCatch(list(rlnorm(n=n, meanlog=m, sdlog=s)), error=function(e) list(rep(NA_real_,n))), .data[['nb_farms']], .data[['logn_mean']], .data[['logn_sd']], SIMPLIFY=FALSE),
-         fitted_trunc_logn = mapply(function(n, px) {
-           px <- unlist(px)
-           tryCatch(list(sort(EnvStats::rlnormTrunc(n=n,
-             meanlog=mean(log(pmax(px,0.001)),na.rm=TRUE),
-             sdlog=sd(log(pmax(px,0.001)),na.rm=TRUE),
-             min=min(px,na.rm=TRUE), max=max(px,na.rm=TRUE)))),
-             error=function(e) list(rep(NA_real_,n)))},
-           nb_farms, pred_farm_sizes, SIMPLIFY=FALSE),
+         logn_sd   = unlist(map(fit_logn, \(x) unlist(x)[['estimate.sdlog']]))) |>
+  ungroup() -> .theor_tmp
+# mapply sees .theor_tmp$ columns reliably outside the dplyr pipe environment
+.theor_tmp$fitted_logn <- mapply(
+  function(n, m, s) tryCatch(list(rlnorm(n=n, meanlog=m, sdlog=s)), error=function(e) list(rep(NA_real_,n))),
+  .theor_tmp$nb_farms, .theor_tmp$logn_mean, .theor_tmp$logn_sd, SIMPLIFY=FALSE)
+.theor_tmp$fitted_trunc_logn <- mapply(
+  function(n, px) { px <- unlist(px)
+    tryCatch(list(sort(EnvStats::rlnormTrunc(
+      n=n, meanlog=mean(log(pmax(px,0.001)),na.rm=TRUE),
+      sdlog=sd(log(pmax(px,0.001)),na.rm=TRUE),
+      min=min(px,na.rm=TRUE), max=max(px,na.rm=TRUE)))),
+      error=function(e) list(rep(NA_real_,n)))},
+  .theor_tmp$nb_farms, .theor_tmp$pred_farm_sizes, SIMPLIFY=FALSE)
+.theor_tmp |>
+  mutate(
          sample_mean = unlist(map(fitted_trunc_logn, \(x) mean(unlist(x), na.rm = T))),
          sample_sd = unlist(map(fitted_trunc_logn, \(x) sd(unlist(x), na.rm = T))),
          adjusted_logn_mean = log(sample_mean^2 / sqrt(sample_mean^2 + sample_sd^2)),
@@ -391,21 +397,21 @@ saveRDS(list(grouped_theor_app = grouped_theor_app, grp_avg_theor_app = grp_avg_
 
 # --------------------------------------------------------------------------
 # maps
-png('../output/maps/predicted_lognormal_mean_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_lognormal_mean_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Location parameter (μ) of log-normal distribution \nfitted to farm sizes  across SSA',
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(theor_farms_rast$adjusted_logn_mean, col = terrain.colors(100), cex = 1, axes  =  F, add = T)
 terra::plot(ssa, axes = F, add = T)
 dev.off()
 
-png('../output/maps/predicted_lognormal_sd_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_lognormal_sd_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Dispersion parameter (σ) of log-normal distribution \nfitted to farm sizes across SSA',
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(theor_farms_rast$adjusted_logn_sd, col = terrain.colors(100), cex = 1, axes  =  F, add = T)
 terra::plot(ssa, axes = F, add = T)
 dev.off()
 
-png('../output/maps/predicted_lognormal_goodness_of_fit_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_lognormal_goodness_of_fit_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = "Kolmogorov's D for a log-normal distribution \nfitted to farm sizes across SSA",
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(theor_farms_rast$ks_trunc_D, col = terrain.colors(100), cex = 1, axes  =  F, add = T)
@@ -419,14 +425,14 @@ back_transformed_trunc_adj_mean <- back_transformed_trunc_adj_mean * terra::resa
 back_transformed_trunc_adj_mean <- back_transformed_trunc_adj_mean * terra::resample(mask_drylands_ssa, back_transformed_trunc_adj_mean)
 terra::writeRaster(back_transformed_trunc_adj_mean, file = '../data/processed/back_transf_trunc_adj_mean.tif', overwrite = T)
 
-png('../output/maps/predicted_back_transf_trunc_lognormal_mean_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_back_transf_trunc_lognormal_mean_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Back-transformed mean of truncated log-normal \ndistribution fitted to farm sizes  across SSA',
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(back_transformed_trunc_adj_mean,  col = rev(terrain.colors(100)), cex = 1, axes  =  F, add = T)
 terra::plot(ssa, axes = F, add = T)
 dev.off()
 
-png('../output/maps/predicted_back_transf_trunc_lognormal_mean_farm_size_class_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_back_transf_trunc_lognormal_mean_farm_size_class_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Back-transformed predicted average farm sizes  across SSA',
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(back_transformed_trunc_adj_mean,  breaks = c(0, 0.5, 1, 1.5, 2, 5, Inf), col = rev(pal(6)), legend = F, cex = 1, axes = F, add = T)
@@ -440,14 +446,14 @@ back_transformed_trunc_adj_sd <- sqrt((exp(theor_farms_rast$adjusted_logn_sd^2) 
 back_transformed_trunc_adj_sd <- back_transformed_trunc_adj_sd * terra::resample(mask_forest_ssa, back_transformed_trunc_adj_sd)
 back_transformed_trunc_adj_sd <- back_transformed_trunc_adj_sd * terra::resample(mask_drylands_ssa, back_transformed_trunc_adj_sd)
 terra::writeRaster(back_transformed_trunc_adj_sd, file = '../data/processed/back_transf_trunc_adj_sd.tif', overwrite = T)
-png('../output/maps/predicted_back_transf_trunc_lognormal_sd_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_back_transf_trunc_lognormal_sd_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Back-transformed standard deviation of log-normal \ndistribution fitted to farm sizes across SSA',
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(back_transformed_trunc_adj_sd, col = terrain.colors(100), cex = 1, axes  =  F, add = T)
 terra::plot(ssa, axes = F, add = T)
 dev.off()
 
-png('../output/maps/predicted_back_transf_trunc_lognormal_sd_farm_size_class_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_back_transf_trunc_lognormal_sd_farm_size_class_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Back-transformed standard deviation \nof farm sizes across SSA',
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(back_transformed_trunc_adj_sd, breaks = c(0, 0.5, 1, 2, 5, 10, Inf), col = pal(6), legend = F, cex = 1, axes  =  F, add = T)
@@ -460,14 +466,14 @@ dev.off()
 
 sk <- terra::rast(theor_farms |> ungroup() |> select(x, y, skew))
 terra::writeRaster(sk, file = '../data/processed/skewness.tif', overwrite = T)
-png('../output/maps/predicted_skeweness_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_skeweness_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = "Skewness of the local farm size distribution \nacross sub-Saharan Africa",
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(sk, col = terrain.colors(100), cex = 1, axes  =  F, add = T)
 terra::plot(ssa, axes = F, add = T)
 dev.off()
 
-png('../output/maps/predicted_skeweness_farm_size_class_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_skeweness_farm_size_class_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Skewness of the local farm size distribution \nacross sub-Saharan Africa',
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(sk, breaks = c(0, 0.5, 1, 2, 5, 10, Inf), col = pal(6), legend = F, cex = 1, axes  =  F, add = T)
@@ -482,7 +488,7 @@ share_farms_below_0.5_ha <- 100 * terra::rast('../data/processed/prop_farms_belo
 share_farms_below_0.5_ha <- share_farms_below_0.5_ha * terra::resample(mask_forest_ssa, share_farms_below_0.5_ha)
 share_farms_below_0.5_ha <- share_farms_below_0.5_ha * terra::resample(mask_drylands_ssa, share_farms_below_0.5_ha)
 
-png('../output/maps/share_farms_below_0.5_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/share_farms_below_0.5_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Percentage of farms below 0.5 ha across SSA',
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(100 * terra::rast('../data/processed/prop_farms_below_0.5.tif'), 
@@ -490,7 +496,7 @@ terra::plot(100 * terra::rast('../data/processed/prop_farms_below_0.5.tif'),
 terra::plot(ssa, axes = F, add = T)
 dev.off()
 
-png('../output/maps/share_farms_below_0.5_classes_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/share_farms_below_0.5_classes_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Percentage of farms below 0.5 ha across SSA',
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(share_farms_below_0.5_ha, breaks=c(0, 20, 40, 60, 80, Inf), col = pal(5), legend = F, cex = 1, axes =  F, add = T)
@@ -505,7 +511,7 @@ share_farms_below_1_ha <- 100 * terra::rast('../data/processed/prop_farms_below_
 share_farms_below_1_ha <- share_farms_below_1_ha * terra::resample(mask_forest_ssa, share_farms_below_1_ha)
 share_farms_below_1_ha <- share_farms_below_1_ha * terra::resample(mask_drylands_ssa, share_farms_below_1_ha)
 
-png('../output/maps/share_farms_below_1_classes_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/share_farms_below_1_classes_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Percentage of farms below 1 ha across SSA',
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(share_farms_below_1_ha, breaks=c(0, 20, 40, 60, 80, Inf), col = pal(5), legend = F, cex = 1, axes =  F, add = T)
@@ -520,7 +526,7 @@ share_farms_below_2_ha <- 100 * terra::rast('../data/processed/prop_farms_below_
 share_farms_below_2_ha <- share_farms_below_2_ha * terra::resample(mask_forest_ssa, share_farms_below_2_ha)
 share_farms_below_2_ha <- share_farms_below_2_ha * terra::resample(mask_drylands_ssa, share_farms_below_2_ha)
 
-png('../output/maps/share_farms_below_2_classes_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/share_farms_below_2_classes_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Percentage of farms below 2 ha across SSA',
             panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(share_farms_below_2_ha, breaks=c(0, 20, 40, 60, 80, Inf), col = pal(5), legend = F, cex = 1, axes =  F, add = T)

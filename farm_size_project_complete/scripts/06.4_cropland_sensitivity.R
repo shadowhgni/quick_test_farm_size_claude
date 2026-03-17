@@ -15,7 +15,8 @@ rm(list=ls())
 
 # Set working directory
 setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/other_illustr/maps', recursive = TRUE, showWarnings = FALSE); # moved
+  dir.create('../output/maps', recursive = TRUE, showWarnings = FALSE)
 dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
@@ -73,14 +74,14 @@ rf_model_predictions |>
 
 # ------------------------------------------------------------------------------
 # Map predicted average farm sizes
-png('../output/maps/predicted_RF_farm_size_africa.png', units = 'in', width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_RF_farm_size_africa.png', units = 'in', width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Predicted average farm sizes',
             panel.first = grid(col = 'gray', lty = 'solid'), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(rf_model_predictions, col  =  rev(terrain.colors(100)), axes = F, add = T)
 terra::plot(ssa, axes = F, add = T)
 dev.off()
 
-png('../output/maps/predicted_RF_farm_size_class_africa.png', units = 'in', width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_RF_farm_size_class_africa.png', units = 'in', width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Predicted average farm sizes',
             panel.first = grid(col = 'gray', lty = 'solid'), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(rf_model_predictions, breaks = c(0, 0.5, 1, 1.5, 2, 5, Inf), col = pal(6), legend = F, cex = 1, axes = F, add = T)
@@ -118,7 +119,7 @@ dev.off()
 
 # ------------------------------------------------------------------------------
 # variable importance graph (from output of the RF model in Python)
-var_imp <- read.csv('../output/tables/etr_variable_importance.csv')
+var_imp <- read.csv('../output/other_illustr/tables/etr_variable_importance.csv')
 var_imp <- var_imp |>
   arrange(- Importance) |>
   mutate(Variable = reorder(Variable, Importance))
@@ -154,7 +155,7 @@ terra::writeRaster(drylands, file = '../data/processed/mask_drylands_ssa.tif', o
 terra::writeRaster(my_q10, '../data/processed/QRF_q10_africa.tif', overwrite = T)
 terra::writeRaster(my_q90, '../data/processed/QRF_q90_africa.tif', overwrite = T)
 
-png('../output/maps/predicted_q10_QF_class_africa.png', units = 'in', width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_q10_QF_class_africa.png', units = 'in', width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Max. size of the 10% smallest smallholder farms',
             panel.first = grid(col = 'gray', lty = 'solid'), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(my_q10,  breaks = c(0, 0.1, 0.2, 0.5, 1, 2, Inf), col = pal(6), legend = F, cex = 1, axes  =  F, add = T)
@@ -165,7 +166,7 @@ legend(-18, -10, bty = 'y', cex = 0.7, ncol = 1, box.col = 'white',
 terra::plot(ssa, axes = F, add = T)
 dev.off()
 
-png('../output/maps/predicted_q90_QF_class_africa.png', units = 'in', width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_q90_QF_class_africa.png', units = 'in', width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Min. size of the 10% largest smallholder farms',
             panel.first = grid(col = 'gray', lty = 'solid'), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(my_q90,  breaks = c(0, 1, 2, 5, 10, 15, Inf), col = pal(6), legend = F, cex = 1, axes  =  F, add = T)
@@ -176,7 +177,7 @@ legend(-18, -10, bty = 'y', cex = 0.7, ncol = 1, box.col = 'white',
 terra::plot(ssa, axes = F, add = T)
 dev.off()
 
-png('../output/maps/predicted_mangnitude_q10_q90_QF_class_africa.png', units = 'in', width = 5.5, height = 5.5, res = 1000)
+png('../output/other_illustr/maps/predicted_mangnitude_q10_q90_QF_class_africa.png', units = 'in', width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = 'Magnitude of farm size difference (10-90th centiles)',
             panel.first = grid(col = 'gray', lty = 'solid'), pax = list(cex.axis = 1.4), mar  =  c(5, 4, 4, 3.5))
 terra::plot(my_q90,  breaks = c(0, 1, 2, 5, 10, 15, Inf), col = pal(6), legend = F, cex = 1, axes  =  F, add = T)
