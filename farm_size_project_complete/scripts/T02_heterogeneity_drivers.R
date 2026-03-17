@@ -101,11 +101,10 @@ for(var in c('harv_area', 'production', 'value')){
   if(var != 'value'){
     each_2010_crop <- terra::rast(paste0(input_path, '/spam/spam2010/', dir(paste0(input_path,'/spam/spam2010'))[grep(paste0(var_code, '_[A-Z]+_A.tif$'),  dir(paste0(input_path,'/spam/spam2010')))]) ) 
     names(each_2010_crop) <- paste0(substr(names(each_2010_crop), 20, 23), var_code)
-    sudan_rows <- which(terra::values(ssa)[['NAME_0']] == 'Sudan')
-    if (length(sudan_rows) == 0) sudan_rows <- 1L
-    sudan_mask <- terra::crop(each_2010_crop, ssa[sudan_rows, ], mask = TRUE)
+    sudan_rows <- which(terra::values(ssa)[['NAME_0']] == 'Sudan'); if(!length(sudan_rows)) sudan_rows <- 1L
+    sudan_mask <- terra::crop(each_2010_crop, ssa[sudan_rows,], mask=TRUE)
     each_crop <- terra::merge(each_2017_crop, sudan_mask); rm(each_2010_crop, each_2017_crop)
-    names(each_crop) <- make.unique(names(each_crop))  # avoid duplicate name error in summarize
+    names(each_crop) <- make.unique(names(each_crop))
   } else {each_crop <- each_2017_crop; rm(each_2017_crop)}
   terra::ext(each_crop) <- floor(terra::ext(each_crop))
   
@@ -116,171 +115,24 @@ for(var in c('harv_area', 'production', 'value')){
     sort(decreasing = T)
   
   all_crops <- sum(each_crop, na.rm = T); names(all_crops) <- paste0('all_crops', var_code)
-  maize_ssa <- tryCatch(each_crop[['MAIZ', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  sorgh_ssa <- tryCatch(each_crop[[paste0('SORG', var_code)]], error=function(e) each_crop[[1]])
-  pmil_ssa <- tryCatch(each_crop[[paste0('PMIL', var_code)]], error=function(e) each_crop[[1]])
-  millet_ssa <- sum(c(each_crop[[paste0('PMIL', var_code)]], tryCatch(each_crop[[paste0('SMIL', var_code)]], error=function(e) each_crop[[1]])), na.rm = T); names(millet_ssa) <- paste0('millet', var_code)
-  rice_ssa <- tryCatch(each_crop[[paste0('RICE', var_code)]], error=function(e) each_crop[[1]])
-  whea_ssa <- tryCatch(each_crop[['WHEA', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  barl_ssa <- tryCatch(each_crop[['BARL', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  ocer_ssa <- tryCatch(each_crop[['OCER', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
+  maize_ssa <- tryCatch(each_crop[[paste0('MAIZ', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('MAIZ',var_code);r})
+  sorgh_ssa <- tryCatch(each_crop[[paste0('SORG', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('SORG',var_code);r})
+  pmil_ssa <- tryCatch(each_crop[[paste0('PMIL', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('PMIL',var_code);r})
+  millet_ssa <- sum(c(each_crop[[paste0('PMIL', var_code)]], each_crop[[paste0('SMIL', var_code)]]), na.rm = T); names(millet_ssa) <- paste0('millet', var_code)
+  rice_ssa <- tryCatch(each_crop[[paste0('RICE', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('RICE',var_code);r})
+  whea_ssa <- tryCatch(each_crop[[paste0('WHEA', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('WHEA',var_code);r})
+  barl_ssa <- tryCatch(each_crop[[paste0('BARL', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('BARL',var_code);r})
+  ocer_ssa <- tryCatch(each_crop[[paste0('OCER', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('OCER',var_code);r})
   cere_ssa <- sum(c(maize_ssa, sorgh_ssa, millet_ssa, rice_ssa, whea_ssa, barl_ssa, ocer_ssa), na.rm = T); names(cere_ssa) <- paste0('cere', var_code)
   
-  cassa_ssa <- tryCatch(each_crop[['CASS', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r}) 
-  yams_ssa <- tryCatch(each_crop[['YAMS', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  pota_ssa <- tryCatch(each_crop[['POTA', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  swpo_ssa <- tryCatch(each_crop[['SWPO', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
+  cassa_ssa <- tryCatch(each_crop[[paste0('CASS', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('CASS',var_code);r})
+  yams_ssa <- tryCatch(each_crop[[paste0('YAMS', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('YAMS',var_code);r})
+  pota_ssa <- tryCatch(each_crop[[paste0('POTA', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('POTA',var_code);r})
+  swpo_ssa <- tryCatch(each_crop[[paste0('SWPO', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('SWPO',var_code);r})
   root_ssa <- sum(c(cassa_ssa, yams_ssa, pota_ssa, swpo_ssa), na.rm = T); names(root_ssa) <- paste0('root', var_code)
   
-  grou_ssa <- tryCatch(each_crop[['GROU', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  beans_ssa <- tryCatch(each_crop[['BEAN', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  
-  legm_bands <- c('BEAN','CHIC','COWP','PIGE','LENT','OPUL','SOYB','GROU')
-  legm_layers <- lapply(legm_bands, function(b) tryCatch(each_crop[[paste0(b, var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r}))
-  legm_ssa <- Reduce(function(a,b) sum(c(a,b), na.rm=TRUE), legm_layers); names(legm_ssa) <- paste0('legumes', var_code)
-  
-  nf_bands <- c('SUGC','SUGB','COTT','OFIB','ACOF','RCOF','COCO','TEAS','TOBA')
-  nf_layers <- lapply(nf_bands, function(b) tryCatch(each_crop[[paste0(b, var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r}))
-  non_food_ssa <- Reduce(function(a,b) sum(c(a,b), na.rm=TRUE), nf_layers); names(non_food_ssa) <- paste0('non_food', var_code)
-=======================================================================
-# Script: T01_area_production_tables.R
-# Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Generate area and production share tables
-#
-# Authors: Deo, Joao, Robert, Fred
-# Code documentation: Claude (Anthropic) - February 2026
-# ==============================================================================
-
-
-require(tidyverse)
-
-# Clean environment
-rm(list=ls())
-
-# Set working directory
-setwd(paste0(here::here(), '/scripts'))
-
-# ------------------------------------------------------------------------------
-# Preparation for functions and mapping
-input_path <- '../data/raw/spatial'
-country <- geodata::world(path=input_path, resolution=5, level=0)
-isocodes <- geodata::country_codes()
-isocodes_ssa <- subset(isocodes, NAME=='Sudan' | UNREGION1=='Middle Africa' | UNREGION1=='Western Africa' | UNREGION1=='Southern Africa' | UNREGION1=='Eastern Africa')
-isocodes_ssa <- subset(isocodes_ssa, NAME!='Cabo Verde' & NAME!='Comoros' & NAME!='Mauritius' & NAME!='Mayotte' & NAME!='Réunion' & NAME!='Saint Helena' & NAME!='São Tomé and Príncipe' & NAME!='Seychelles') # keep the mainland + Madagascar only, remove islands
-ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
-ssa_grid <- terra::rast(nrow = 2000, ncol = 2000, ext = floor(terra::ext(ssa)))
-ssa_rast <- terra::rasterize(ssa, ssa_grid, field = 'NAME_0')
-pal <- colorRampPalette(c('darkred', 'orange', 'gold', 'darkolivegreen3', 'darkgreen'))
-
-# ------------------------------------------------------------------------------
-#define the countries for which LSMS data are available
-sixteen_countries <- c('Benin', 'Burkina', 'Cote_d_Ivoire', 'Ethiopia', 'Ghana', 'Guinea_Bissau', 'Malawi', 'Mali', 'Niger', 'Nigeria', 'Rwanda','Senegal', 'Tanzania', 'Togo', 'Uganda', 'Zambia')
-sixteen_country_codes <- c('BEN', 'BFA', 'CIV', 'ETH', 'GHA', 'GNB', 'MWI', 'MLI', 'NER', 'NGA', 'RWA', 'SEN', 'TZA', 'TGO', 'UGA', 'ZMB')
-# ------------------------------------------------------------------------------
-# Prepare data: load lsms data and stacked (raster of drivers)
-lsms_spatial <- readRDS('../data/processed/lsms_trimmed_95th_africa.rds') # this was retrieved from '03.1.pooled_data_for_analysis.r'
-stacked <- terra::rast('../data/processed/stacked_rasters_africa.tif')
-
-rf_model_predictions <- terra::rast('../data/processed/rf_model_predictions_SSA.tif')
-names(rf_model_predictions) <- 'pred_farm_area_ha'
-qrf_model_predictions <- terra::rast('../data/processed/qrf_100quantiles_predictions_africa.tif')
-names(qrf_model_predictions) <- paste0('qrf_q', sprintf('%03g', 1:100))
-calc_nb_farms <- terra::rast('../data/processed/nb_farms_per_grid_cell.tif')
-
-xx <- readRDS('../data/processed/fsize_distribution_resample_long.rds')
-# theor_farms <- xx$theor_farms
-theor_farms_application <- ungroup(xx$theor_farms_application); rm(xx)
-
-# Get the AEZ_5
-aez5 <- terra::rast(paste0(input_path, '/AEZ_SSA_IFPRI/AEZ5_CLAS--SSA.tif'))
-names(aez5) <- 'aez_class'
-lookup <- data.frame(aez_class = 0:5, aez = c('humid', 'sub-humid', 'semi-arid', 'arid', 'tropical highlands', 'sub-tropical'))
-levels(aez5) <- lookup
-
-gc()
-theor_farms_application <- theor_farms_application |>
-  rename(individual_farm_size_ha = linear_farm_size_ha) |>
-  bind_cols(terra::extract(aez5, 
-                           theor_farms_application |>
-                             ungroup() |>
-                             select(x, y)))
-gc()
-
-theor_app2 <- theor_farms_application |>
-  select(-ID) |>
-  bind_cols(terra::extract(ssa, 
-                           theor_farms_application |>
-                             ungroup() |>
-                             select(x, y))) |>
-  mutate(region = case_when(GID_0 %in% c('BEN', 'BFA', 'CIV', 'GHA', 'GIN', 'GMB', 'GNB', 'LBR', 'MLI', 'MRT', 'NER', 'NGA', 'SEN', 'SLE', 'TGO') ~ 'Western',
-                            GID_0 %in% c('AGO', 'CAF', 'CMR', 'COD', 'COG', 'GNQ', 'GAB', 'TCD') ~ 'Central',
-                            GID_0 %in% c('BDI', 'DJI', 'ERI', 'ETH', 'KEN', 'MDG', 'MOZ', 'MWI', 'RWA', 'SDN', 'SOM', 'SSD', 'TZA', 'UGA', 'ZMB', 'ZWE') ~ 'Eastern',
-                            GID_0 %in% c('BWA', 'LSO', 'NAM', 'SWZ', 'ZAF') ~ 'Southern',
-                            .default = NA)
-         ) |>
-  ungroup()
-
-gc()
-
-# predicted average farm size per grid cell
-simpl_aez <- rf_model_predictions |>
-  terra::as.data.frame(xy = T) |>
-  bind_cols(
-    terra::extract(aez5, terra::crds(rf_model_predictions)) ) |>
-  filter(!is.na(pred_farm_area_ha), !is.na(aez))
-
-
-#  loop over "harv_area", "prod", and "value"
-
-}  # close first crop loop (harv_area / production / value)
-
-all_df <- compil_df <- tibble()
-for(var in c('harv_area', 'production', 'value')){
-  var_code <- case_when(var == 'harv_area' ~ '_H',
-                        var == 'production' ~ '_P',
-                        var == 'yield' ~ '_Y',
-                        var == 'value' ~ '_V')
-  
-  each_2017_crop <- terra::rast(paste0(input_path, '/spam/spam2017/', dir(paste0(input_path,'/spam/spam2017'))[grep(paste0(var_code, '_[A-Z]+_A.tif$'), dir(paste0(input_path,'/spam/spam2017')))]) ) # _A is total area (rainfed  + irrigated)
-  each_2017_crop <- terra::crop(each_2017_crop, ssa, mask = T)
-  names(each_2017_crop) <- paste0(substr(names(each_2017_crop), 20, 23), var_code)
-  # Pick Sudan data from SPAM 2010, and merge with SPAM 2017
-  if(var != 'value'){
-    each_2010_crop <- terra::rast(paste0(input_path, '/spam/spam2010/', dir(paste0(input_path,'/spam/spam2010'))[grep(paste0(var_code, '_[A-Z]+_A.tif$'),  dir(paste0(input_path,'/spam/spam2010')))]) ) 
-    names(each_2010_crop) <- paste0(substr(names(each_2010_crop), 20, 23), var_code)
-    sudan_rows <- which(terra::values(ssa)[['NAME_0']] == 'Sudan')
-    if (length(sudan_rows) == 0) sudan_rows <- 1L
-    sudan_mask <- terra::crop(each_2010_crop, ssa[sudan_rows, ], mask = TRUE)
-    each_crop <- terra::merge(each_2017_crop, sudan_mask); rm(each_2010_crop, each_2017_crop)
-    names(each_crop) <- make.unique(names(each_crop))  # avoid duplicate name error in summarize
-  } else {each_crop <- each_2017_crop; rm(each_2017_crop)}
-  terra::ext(each_crop) <- floor(terra::ext(each_crop))
-  
-  crop_rel_importance <- each_crop |> 
-    terra::as.data.frame() |> 
-    summarize(across(everything(), \(x) sum(x, na.rm = TRUE))) |>
-    unlist() |>
-    sort(decreasing = T)
-  
-  all_crops <- sum(each_crop, na.rm = T); names(all_crops) <- paste0('all_crops', var_code)
-  maize_ssa <- tryCatch(each_crop[['MAIZ', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  sorgh_ssa <- tryCatch(each_crop[[paste0('SORG', var_code)]], error=function(e) each_crop[[1]])
-  pmil_ssa <- tryCatch(each_crop[[paste0('PMIL', var_code)]], error=function(e) each_crop[[1]])
-  millet_ssa <- sum(c(each_crop[[paste0('PMIL', var_code)]], tryCatch(each_crop[[paste0('SMIL', var_code)]], error=function(e) each_crop[[1]])), na.rm = T); names(millet_ssa) <- paste0('millet', var_code)
-  rice_ssa <- tryCatch(each_crop[[paste0('RICE', var_code)]], error=function(e) each_crop[[1]])
-  whea_ssa <- tryCatch(each_crop[['WHEA', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  barl_ssa <- tryCatch(each_crop[['BARL', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  ocer_ssa <- tryCatch(each_crop[['OCER', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  cere_ssa <- sum(c(maize_ssa, sorgh_ssa, millet_ssa, rice_ssa, whea_ssa, barl_ssa, ocer_ssa), na.rm = T); names(cere_ssa) <- paste0('cere', var_code)
-  
-  cassa_ssa <- tryCatch(each_crop[['CASS', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r}) 
-  yams_ssa <- tryCatch(each_crop[['YAMS', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  pota_ssa <- tryCatch(each_crop[['POTA', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  swpo_ssa <- tryCatch(each_crop[['SWPO', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  root_ssa <- sum(c(cassa_ssa, yams_ssa, pota_ssa, swpo_ssa), na.rm = T); names(root_ssa) <- paste0('root', var_code)
-  
-  grou_ssa <- tryCatch(each_crop[['GROU', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
-  beans_ssa <- tryCatch(each_crop[['BEAN', var_code]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r})
+  grou_ssa <- tryCatch(each_crop[[paste0('GROU', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('GROU',var_code);r})
+  beans_ssa <- tryCatch(each_crop[[paste0('BEAN', var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;names(r)<-paste0('BEAN',var_code);r})
   
   legm_bands <- c('BEAN','CHIC','COWP','PIGE','LENT','OPUL','SOYB','GROU')
   legm_layers <- lapply(legm_bands, function(b) tryCatch(each_crop[[paste0(b, var_code)]], error=function(e){r<-each_crop[[1]];terra::values(r)<-0;r}))
