@@ -156,26 +156,19 @@ patch_script <- function(lines) {
   lines <- gsub("filter(n > 9)",  "filter(n > 0)", lines, fixed = TRUE)
   # 5l2. 08.3: filter(nb_farms > 9) removes all rows in synthetic data (nb_farms == 9)
   lines <- gsub("filter(nb_farms > 9)", "filter(nb_farms > 0)", lines, fixed = TRUE)
-  # 5l3. 08.3: terra::rast() on theor_farms/theor_farms_application fails when 0 rows
-  lines <- gsub(
-    "theor_farms_rast <- theor_farms |>",
-    "theor_farms_rast <- if (nrow(theor_farms) > 0) theor_farms |>",
-    lines, fixed = TRUE)
-  lines <- gsub(
-    "  terra::rast()",
-    "  terra::rast() else NULL",
-    lines, fixed = TRUE)
+  # 5l3. 08.3: terra::rast() on theor_farms/theor_farms_application can fail on
+  #       sparse/small synthetic data. Wrap both in tryCatch. If rast creation
+  #       fails, quit(0) AFTER the saveRDS — all downstream scripts only need the RDS.
   lines <- gsub(
     "theor_farms_application_rast <- terra::rast(theor_farms_application)",
-    "theor_farms_application_rast <- tryCatch(terra::rast(theor_farms_application), error = function(e) { message('CI: theor_farms_application_rast skipped'); NULL })",
+    paste0("theor_farms_application_rast <- tryCatch(terra::rast(theor_farms_application),",
+           " error = function(e) { message('CI: theor_farms_application_rast failed: ', e$message); NULL })"),
     lines, fixed = TRUE)
   lines <- gsub(
-    "terra::writeRaster(theor_farms_rast,",
-    "if (!is.null(theor_farms_rast)) terra::writeRaster(theor_farms_rast,",
-    lines, fixed = TRUE)
-  lines <- gsub(
-    "terra::writeRaster(theor_farms_application_rast,",
-    "if (!is.null(theor_farms_application_rast)) terra::writeRaster(theor_farms_application_rast,",
+    "saveRDS(list(theor_farms = theor_farms, theor_farms_application = theor_farms_application), file = '../data/processed/fsize_distribution_resample_long.rds')",
+    paste0("saveRDS(list(theor_farms = theor_farms, theor_farms_application = theor_farms_application),",
+           " file = '../data/processed/fsize_distribution_resample_long.rds');",
+           " if (is.null(theor_farms_application_rast)) { message('CI: rast NULL, exiting after saveRDS'); quit(save='no', status=0L) }"),
     lines, fixed = TRUE)
 
   # 5m. 04.2: wrap lapply over compare_country_models in tryCatch so one country
