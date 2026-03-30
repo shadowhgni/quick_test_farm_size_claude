@@ -1,0 +1,6 @@
+[pr_reviewer]
+extra_instructions = """
+Please pay special attention to data leakage in the prediction scripts.
+Ensure all R scripts follow the tidyverse style guide, unless it causes a bug.
+Fix the bugs in the R scripts.
+"""
