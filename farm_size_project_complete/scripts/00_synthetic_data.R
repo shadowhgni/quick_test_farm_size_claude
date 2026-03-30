@@ -396,9 +396,9 @@ write.csv(var_imp, file.path(output_path, "other_illustr/tables/etr_variable_imp
 
 # Leave-one-out tables
 loo <- data.frame(country = sixteen_countries, rsq = round(runif(16, 0.2, 0.6), 2))
-saveRDS(loo, file.path(output_path, "other_illustr/tables/leave_one_RF.rds"))
-saveRDS(loo, file.path(output_path, "other_illustr/tables/leave_one_TPS.rds"))
-saveRDS(loo, file.path(output_path, "other_illustr/tables/leave_one_cor.rds"))
+saveRDS(loo, "../data/processed/leave_one_RF.rds")
+saveRDS(loo, "../data/processed/leave_one_TPS.rds")
+saveRDS(loo, "../data/processed/leave_one_cor.rds")
 
 # RF optimisation table (used by 06.1 and 05.3)
 # Needs: filename, Rsquared, RMSE, MAE, mtry, min.node.size, splitrule, mbucket
@@ -976,11 +976,10 @@ loo_cor <- rbind(
              cor = round(runif(16, 0.5, 0.9), 3), stringsAsFactors = FALSE)
 )
 
-for (dest in c(file.path(output_path, "tables"), file.path(output_path))) {
-  saveRDS(loo_rf,  file.path(dest, "leave_one_RF.rds"))
-  saveRDS(loo_tps, file.path(dest, "leave_one_TPS.rds"))
-  saveRDS(loo_cor, file.path(dest, "leave_one_cor.rds"))
-}
+# leave_one files go to data/processed/ (output/tables/ removed)
+saveRDS(loo_rf,  "../data/processed/leave_one_RF.rds")
+saveRDS(loo_tps, "../data/processed/leave_one_TPS.rds")
+saveRDS(loo_cor, "../data/processed/leave_one_cor.rds")
 message("   Leave-one stubs done (character means/test, TPS test-only).")
 
 # ==============================================================================
