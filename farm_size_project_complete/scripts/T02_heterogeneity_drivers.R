@@ -36,7 +36,7 @@ make_wide <- function(grp) {
 }
 
 # ── AEZ table ──────────────────────────────────────────────────────────────────
-aez_order <- c('humid','sub-humid','semi-arid','arid','tropical highlands','sub-tropical')
+aez_order <- c('humid','sub-humid','semi-arid','tropical highlands','sub-tropical')  # arid excluded
 t2_aez <- make_wide('aez') |>
   mutate(aez = factor(aez, levels = aez_order)) |>
   arrange(aez) |>
