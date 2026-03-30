@@ -104,4 +104,4 @@ P00 <- ggplot(summ_hpc, aes(val)) +
   guides(fill = 'none')
 P00
 
-ggsave('../output/suppl_fig/Suppl.Fig.04.pdf', P00, width = 9, height = 5, dpi = 1000)
+ggsave('../output/suppl_fig/Suppl.Fig.04.png', P00, width = 9, height = 5, dpi = 200)

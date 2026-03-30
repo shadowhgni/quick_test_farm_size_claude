@@ -124,4 +124,4 @@ P01
 
 P02 <- P00 / P01 + patchwork::plot_layout(ncol = 1, heights = c(2, 1))
 
-ggsave('../output/suppl_fig/Suppl.Fig05.pdf', P02, width = 9, height = 9, units = 'in', dpi = 1000)
+ggsave('../output/suppl_fig/Suppl.Fig05.png', P02, width = 9, height = 9, units = 'in', dpi = 200)

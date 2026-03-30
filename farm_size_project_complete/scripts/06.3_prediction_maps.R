@@ -40,7 +40,7 @@ lsms_spatial <- lsms_spatial |>
 #    (lsms_oob.rds written to scripts/ directory by the Python script)
 # ------------------------------------------------------------------------------
 lsms_oob <- tryCatch(
-  readRDS('lsms_oob.rds'),
+  readRDS('../data/processed/lsms_oob.rds'),
   error = function(e) {
     message('lsms_oob.rds not found - run 06.1_basic_RF_model.py first. Using stub.')
     data.frame(farm_area_ha   = lsms_spatial$farm_area_ha,

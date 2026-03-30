@@ -133,7 +133,7 @@ oob_data = pd.DataFrame({
 lsms_oob = lsms_spatial00.loc[lsms_spatial.index].copy()
 lsms_oob = pd.concat([lsms_oob, oob_data], axis=1)
 
-oob_path = 'lsms_oob.rds'          # S04 reads from scripts dir
+oob_path = '../data/processed/lsms_oob.rds'  # moved to data/processed/
 pyreadr.write_rds(oob_path, lsms_oob)
 print(f"   Saved → {oob_path}  ({len(lsms_oob):,} rows)")
 

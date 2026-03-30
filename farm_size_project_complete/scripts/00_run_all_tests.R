@@ -542,7 +542,7 @@ message("PHASE 4: ML Model Training (04.x)")
 message(paste(rep("-", 70), collapse = ""))
 for (s in c("04.1_comparing_ML_algorithms.R", "04.2_RF_within_country.R",
             "04.3_RF_between_countries.R",
-            "04.5_cross_country_graphs.R",    "04.6_discrepancy_analysis.R")) {
+            "04.5_cross_country_graphs.R")) {  # 04.6 removed (script deleted)
   r <- run_script(s, timeout_sec = 600)
   record(s, r$passed, r$elapsed, r$msg)
 }

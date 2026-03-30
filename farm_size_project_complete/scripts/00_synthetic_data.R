@@ -547,7 +547,7 @@ lsms_oob$gadm_3 <- NA_character_
 lsms_oob$gadm_4 <- NA_character_
 lsms_oob$oob_pred      <- pmax(0.01, lsms_oob$farm_area_ha * runif(nrow(lsms_oob), 0.6, 1.4))
 lsms_oob$in_sample_pred <- pmax(0.01, lsms_oob$farm_area_ha * runif(nrow(lsms_oob), 0.8, 1.2))
-saveRDS(lsms_oob, "lsms_oob.rds")  # S04 reads from scripts dir (no ../)
+saveRDS(lsms_oob, "../data/processed/lsms_oob.rds")  # moved to data/processed/
 
 # output/plot_data/ stub — S03 reads plot_suppl_01_effect_of_source_of_cropland_masks.rds
 plot_data_dir <- file.path(output_path, "plot_data")

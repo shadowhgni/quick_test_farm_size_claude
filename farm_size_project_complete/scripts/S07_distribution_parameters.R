@@ -116,7 +116,7 @@ P01
 
 P02 <- P00 / P01 + patchwork::plot_layout(ncol = 1)
 
-ggsave('../output/suppl_fig/Suppl.Fig06.pdf', P02, width = 9, height = 9, units = 'in', dpi = 1000)
+ggsave('../output/suppl_fig/Suppl.Fig06.png', P02, width = 9, height = 9, units = 'in', dpi = 200)
 
 # ways of displaying the farm size class (but too small to be legible)
 # P01 <- ggplot(comp_fsize_classes_ha |>

@@ -141,14 +141,20 @@ theor_farms <- my_points_cells |>
       min=min(px,na.rm=TRUE), max=max(px,na.rm=TRUE)))),
       error=function(e) list(rep(NA_real_,n)))},
   .theor_tmp$nb_farms, .theor_tmp$pred_farm_sizes, SIMPLIFY=FALSE)
-# Step 1: compute sample_mean and sample_sd from the truncated log-normal samples
-# (must be in a separate mutate() so the next mutate() can reference them)
+# Compute sample_mean / sample_sd via base-R assignment into .theor_tmp first.
+# This avoids any dplyr pipe-environment issues with column forward-referencing.
+.theor_tmp$sample_mean <- vapply(
+  .theor_tmp$fitted_trunc_logn,
+  function(x) tryCatch(mean(unlist(x), na.rm = TRUE), error = function(e) NA_real_),
+  FUN.VALUE = numeric(1)
+)
+.theor_tmp$sample_sd <- vapply(
+  .theor_tmp$fitted_trunc_logn,
+  function(x) tryCatch(sd(unlist(x),   na.rm = TRUE), error = function(e) NA_real_),
+  FUN.VALUE = numeric(1)
+)
+# Now sample_mean and sample_sd are real columns in .theor_tmp — safe to use in mutate()
 theor_farms <- .theor_tmp |>
-  mutate(
-    sample_mean = unlist(map(fitted_trunc_logn, \(x) tryCatch(mean(unlist(x), na.rm = TRUE), error = function(e) NA_real_))),
-    sample_sd   = unlist(map(fitted_trunc_logn, \(x) tryCatch(sd(unlist(x),   na.rm = TRUE), error = function(e) NA_real_)))
-  ) |>
-  # Step 2: now sample_mean / sample_sd exist as proper columns and can be used below
   mutate(
     adjusted_logn_mean = log(sample_mean^2 / sqrt(sample_mean^2 + sample_sd^2)),
     adjusted_logn_sd   = sqrt(log(1 + sample_sd^2 / sample_mean^2)),

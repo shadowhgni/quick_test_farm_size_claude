@@ -55,7 +55,7 @@ mask_forest_ssa <- terra::rast('../../data/processed/mask_forest_ssa.tif')
 mask_drylands_ssa <- terra::rast('../../data/processed/mask_drylands_ssa.tif')
 # lsms data
 # lsms_spatial <- readRDS('../../data/processed/lsms_trimmed_95th_africa.rds') 
-lsms_oob <- readRDS('lsms_oob.rds') 
+lsms_oob <- readRDS('../data/processed/lsms_oob.rds')
 lsms_spatial <- lsms_oob
 # # ------------------------------------------------------------------------------
 # # keep only variables needed in the models
@@ -211,7 +211,7 @@ yy <- xx |>
   ) |>
   as.data.frame()
 #-------------------------------------------------------------------------------
-pdf('../output/suppl_fig/Suppl.Fig.03.pdf', width = 9, height = 4.5)
+png('../output/suppl_fig/Suppl.Fig.03.png', width = 9, height = 4.5, units = 'in', res = 200)
 # par(mfrow=c(1, 2), mar = c(3.5, 3.5, 1, 1), xaxs='i', yaxs='i')
 layout(matrix(c(1, 2, 3), nrow = 1, ncol = 3), widths = c(1, 1, 0.85))
 
