@@ -281,10 +281,12 @@ dev.off()
 
 # ------------------------------------------------------------------------------
 # regular sampling over grid cells (farms)
+# Option A (production): derive coords from raster extent — use lines below
+# Option B (CI/stub): use fixed SSA bounding box — comment out A and uncomment B
 n_grid <- 15 # distance (arbitrary) between points to select. Increase n_grid to reduce the number of points
-x_coords <- seq(floor(terra::ext(theor_farms_application_rast))[1], floor(terra::ext(theor_farms_application_rast)[2]), n_grid)
-y_coords <- seq(floor(terra::ext(theor_farms_application_rast))[3], floor(terra::ext(theor_farms_application_rast))[4], n_grid)
-# x_coords <- seq(-10, 40, 10); y_coords <- seq(-30, 10, 10)
+# x_coords <- seq(floor(terra::ext(theor_farms_application_rast))[1], floor(terra::ext(theor_farms_application_rast)[2]), n_grid)
+# y_coords <- seq(floor(terra::ext(theor_farms_application_rast))[3], floor(terra::ext(theor_farms_application_rast))[4], n_grid)
+x_coords <- seq(-10, 40, 10); y_coords <- seq(-30, 10, 10)
 regular_sample_coords <- expand.grid(x = x_coords, y = y_coords)
 
 selected_theor_app <- theor_farms |>

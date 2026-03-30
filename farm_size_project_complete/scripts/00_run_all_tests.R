@@ -156,19 +156,11 @@ patch_script <- function(lines) {
   lines <- gsub("filter(n > 9)",  "filter(n > 0)", lines, fixed = TRUE)
   # 5l2. 08.3: filter(nb_farms > 9) removes all rows in synthetic data (nb_farms == 9)
   lines <- gsub("filter(nb_farms > 9)", "filter(nb_farms > 0)", lines, fixed = TRUE)
-  # 5l3. 08.3: terra::rast() on theor_farms/theor_farms_application can fail on
-  #       sparse/small synthetic data. Wrap both in tryCatch. If rast creation
-  #       fails, quit(0) AFTER the saveRDS — all downstream scripts only need the RDS.
+  # 5l3. 08.3: theor_farms_application_rast — wrap in tryCatch for safety
   lines <- gsub(
     "theor_farms_application_rast <- terra::rast(theor_farms_application)",
     paste0("theor_farms_application_rast <- tryCatch(terra::rast(theor_farms_application),",
            " error = function(e) { message('CI: theor_farms_application_rast failed: ', e$message); NULL })"),
-    lines, fixed = TRUE)
-  lines <- gsub(
-    "saveRDS(list(theor_farms = theor_farms, theor_farms_application = theor_farms_application), file = '../data/processed/fsize_distribution_resample_long.rds')",
-    paste0("saveRDS(list(theor_farms = theor_farms, theor_farms_application = theor_farms_application),",
-           " file = '../data/processed/fsize_distribution_resample_long.rds');",
-           " if (is.null(theor_farms_application_rast)) { message('CI: rast NULL, exiting after saveRDS'); quit(save='no', status=0L) }"),
     lines, fixed = TRUE)
 
   # 5m. 04.2: wrap lapply over compare_country_models in tryCatch so one country
