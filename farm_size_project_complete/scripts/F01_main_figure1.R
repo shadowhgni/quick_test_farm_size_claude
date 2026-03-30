@@ -253,17 +253,22 @@ compare_pred_measured_gadm1 <- tryCatch(.cpm_tmp |>
   summarize(across(starts_with('avg_'), ~ mean(., na.rm =  T)))
 
 r2_gadm1_validation <- with(compare_pred_measured_gadm1, round(cor(avg_farm_area_ha, avg_pred_farm_area_ha)^2, 2))
-P00 <- ggplot(compare_pred_measured_gadm1, aes(avg_farm_area_ha, avg_pred_farm_area_ha, colour = NAME_0)) + 
-  geom_point() + 
-  geom_abline(intercept = 0, slope = 1, linewidth = 0.8) +
-  geom_abline(intercept = 0, slope = 0.5, linewidth = 0.8, linetype = 'dashed') +
-  geom_abline(intercept = 0, slope = 2, linewidth = 0.8, linetype = 'dashed') +
-  scale_x_continuous(expand = c(0, 0), limits = c(0, 7.5)) +
-  scale_y_continuous(expand = c(0, 0), limits = c(0, 7.5)) +
-  labs(x = 'Average farm size from national sources, ha', y = 'Predicted average farm size, ha', colour = 'Country') +
-  facet_grid(~ NAME_0) +
-  theme_test() 
-P00
+# Guard: facet_grid crashes on empty data frame
+if (nrow(compare_pred_measured_gadm1) > 0 && length(unique(compare_pred_measured_gadm1$NAME_0)) > 0) {
+  P00 <- ggplot(compare_pred_measured_gadm1, aes(avg_farm_area_ha, avg_pred_farm_area_ha, colour = NAME_0)) + 
+    geom_point() + 
+    geom_abline(intercept = 0, slope = 1, linewidth = 0.8) +
+    geom_abline(intercept = 0, slope = 0.5, linewidth = 0.8, linetype = 'dashed') +
+    geom_abline(intercept = 0, slope = 2, linewidth = 0.8, linetype = 'dashed') +
+    scale_x_continuous(expand = c(0, 0), limits = c(0, 7.5)) +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 7.5)) +
+    labs(x = 'Average farm size from national sources, ha', y = 'Predicted average farm size, ha', colour = 'Country') +
+    facet_grid(~ NAME_0) +
+    theme_test()
+  print(P00)
+} else {
+  message('CI: compare_pred_measured_gadm1 empty — skipping faceted P00')
+}
 
 P01 <- ggplot(compare_pred_measured_gadm1, aes(avg_farm_area_ha, avg_pred_farm_area_ha, colour = NAME_0)) + 
   geom_point() + 

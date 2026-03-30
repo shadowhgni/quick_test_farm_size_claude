@@ -169,7 +169,7 @@ theor_farms <- .theor_tmp |>
   )
 fin <- Sys.time() - deb; print(fin)
 # LOGN has a pb with heavy tails for many obs. I truncated
-for(i in sort(sample(1:nrow(theor_farms), 100))){
+for(i in sort(sample(1:nrow(theor_farms), min(100, nrow(theor_farms))))){
   print(paste0('------------- row ', i, '----------------' ))
   print(range(theor_farms$pred_farm_sizes[i]))
   print(range(theor_farms$fitted_logn[i]))
@@ -185,7 +185,7 @@ for(i in sort(sample(1:nrow(theor_farms), 100))){
 }
 
 # Moreover, no matter the dist, when resampling is done, there is a bias for largest values (underestimated)
-for(i in sort(sample(1:nrow(theor_farms), 100))){
+for(i in sort(sample(1:nrow(theor_farms), min(100, nrow(theor_farms))))){
   print(paste0('------------- row ', i, '----------------' ))
   a <- theor_farms$pred_farm_sizes[[i]]
   b <- quantile(theor_farms$virt_farms_f_max_trunc[[i]], 0.01 * 1:100)
@@ -202,7 +202,7 @@ for(i in sort(sample(1:nrow(theor_farms), 100))){
 
 # visually, evaluate the systematic bias in resampling for very poorly resampled grid cells
 count_r80 <- 0
-for(i in sort(sample(1:nrow(theor_farms), 100))){
+for(i in sort(sample(1:nrow(theor_farms), min(100, nrow(theor_farms))))){
   print(paste0('------------- row ', i, '----------------' ))
   a <- theor_farms$pred_farm_sizes[[i]]
   b <- quantile(theor_farms$virt_farms_f_max_trunc[[i]], 0.01 * 1:100)

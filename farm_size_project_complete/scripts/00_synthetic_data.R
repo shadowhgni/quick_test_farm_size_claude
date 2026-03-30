@@ -415,11 +415,25 @@ rf_optim <- data.frame(
 saveRDS(rf_optim, file.path(output_path, "other_illustr/tables/RF_optim_summarized_table.rds"))
 write.csv(rf_optim, file.path(output_path, "other_illustr/tables/RF_optim_summarized_table.csv"), row.names = FALSE)
 
-# Cropland stats
+# Cropland stats per AEZ — matches structure produced by 10.1_prepare_validation_data.R
+aez_vals <- c('humid', 'sub-humid', 'semi-arid', 'arid', 'tropical highlands', 'sub-tropical')
 cropland_stats <- data.frame(
-  aez = paste0("AEZ_", 1:5),
-  cropland_area = round(runif(5, 1e5, 1e7), 0),
-  n_farms = round(runif(5, 1e4, 1e6), 0)
+  aez          = aez_vals,
+  avg          = round(runif(6, 0.5, 4.0), 2),
+  med          = round(runif(6, 0.3, 2.5), 2),
+  std          = round(runif(6, 0.5, 3.0), 2),
+  gini         = round(runif(6, 0.3, 0.7), 3),
+  tot_cropland = round(runif(6, 1e6, 5e7), 0),
+  nb           = round(runif(6, 1e4, 5e5), 0),
+  nb_0.5       = round(runif(6, 1e3, 2e5), 0),
+  cropland_0.5 = round(runif(6, 5e4, 5e6), 0),
+  prop_0.5     = round(runif(6, 0.05, 0.40), 3),
+  nb_1         = round(runif(6, 2e3, 3e5), 0),
+  cropland_1   = round(runif(6, 1e5, 1e7), 0),
+  prop_1       = round(runif(6, 0.10, 0.55), 3),
+  nb_2         = round(runif(6, 4e3, 4e5), 0),
+  cropland_2   = round(runif(6, 2e5, 2e7), 0),
+  prop_2       = round(runif(6, 0.20, 0.70), 3)
 )
 saveRDS(cropland_stats, file.path(output_path, "other_illustr/tables/cropland_stats_per_aez.rds"))
 message("   Output stubs done.")
