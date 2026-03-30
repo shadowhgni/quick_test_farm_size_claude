@@ -141,20 +141,26 @@ theor_farms <- my_points_cells |>
       min=min(px,na.rm=TRUE), max=max(px,na.rm=TRUE)))),
       error=function(e) list(rep(NA_real_,n)))},
   .theor_tmp$nb_farms, .theor_tmp$pred_farm_sizes, SIMPLIFY=FALSE)
-.theor_tmp |>
+# Step 1: compute sample_mean and sample_sd from the truncated log-normal samples
+# (must be in a separate mutate() so the next mutate() can reference them)
+theor_farms <- .theor_tmp |>
   mutate(
-         sample_mean = unlist(map(fitted_trunc_logn, \(x) tryCatch(mean(unlist(x), na.rm=TRUE), error=function(e) NA_real_))),
-         sample_sd   = unlist(map(fitted_trunc_logn, \(x) tryCatch(sd(unlist(x),   na.rm=TRUE), error=function(e) NA_real_))),
-         adjusted_logn_mean = log(sample_mean^2 / sqrt(sample_mean^2 + sample_sd^2)),
-         adjusted_logn_sd = sqrt(log(1 + sample_sd^2 / sample_mean^2)), 
-         sd_sample_mean = unlist(map(fit_logn, \(x)unlist(x)[['sd.meanlog']])),
-         sd_sample_sd = unlist(map(fit_logn, \(x)unlist(x)[['sd.sdlog']])),
-         ks_test = map2(pred_farm_sizes, fitted_logn, ~ ks.test(.x, .y)),
-         ks_D = map_dbl(ks_test, ~ .x$statistic),
-         ks_pval = map_dbl(ks_test, ~ .x$p.value),
-         ks_trunc_test = map2(pred_farm_sizes, fitted_trunc_logn, ~ ks.test(.x, .y)),
-         ks_trunc_D = map_dbl(ks_trunc_test, ~ .x$statistic),
-         ks_trunc_pval = map_dbl(ks_trunc_test, ~ .x$p.value))
+    sample_mean = unlist(map(fitted_trunc_logn, \(x) tryCatch(mean(unlist(x), na.rm = TRUE), error = function(e) NA_real_))),
+    sample_sd   = unlist(map(fitted_trunc_logn, \(x) tryCatch(sd(unlist(x),   na.rm = TRUE), error = function(e) NA_real_)))
+  ) |>
+  # Step 2: now sample_mean / sample_sd exist as proper columns and can be used below
+  mutate(
+    adjusted_logn_mean = log(sample_mean^2 / sqrt(sample_mean^2 + sample_sd^2)),
+    adjusted_logn_sd   = sqrt(log(1 + sample_sd^2 / sample_mean^2)),
+    sd_sample_mean     = unlist(map(fit_logn, \(x) unlist(x)[['sd.meanlog']])),
+    sd_sample_sd       = unlist(map(fit_logn, \(x) unlist(x)[['sd.sdlog']])),
+    ks_test            = map2(pred_farm_sizes, fitted_logn,       ~ ks.test(.x, .y)),
+    ks_D               = map_dbl(ks_test,       ~ .x$statistic),
+    ks_pval            = map_dbl(ks_test,        ~ .x$p.value),
+    ks_trunc_test      = map2(pred_farm_sizes, fitted_trunc_logn, ~ ks.test(.x, .y)),
+    ks_trunc_D         = map_dbl(ks_trunc_test, ~ .x$statistic),
+    ks_trunc_pval      = map_dbl(ks_trunc_test,  ~ .x$p.value)
+  )
 fin <- Sys.time() - deb; print(fin)
 # LOGN has a pb with heavy tails for many obs. I truncated
 for(i in sort(sample(1:nrow(theor_farms), 100))){
