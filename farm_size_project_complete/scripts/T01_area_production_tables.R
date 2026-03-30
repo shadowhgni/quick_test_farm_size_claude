@@ -1,126 +1,112 @@
 # ==============================================================================
-# Script: S08_variable_importance.R
+# Script: T01_area_production_tables.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Supplementary Figure 8 - RF variable importance analysis
+# Purpose: Table 1 — Survey summary statistics by country
+#          (replicates the table_01 built in 04.1, saved here as the canonical
+#           output to output/main_fig/T01_summary_descriptive_stats_survey.csv)
 #
 # Authors: Deo, Joao, Robert, Fred
-# Code documentation: Claude (Anthropic) - February 2026
+# Code documentation: Claude (Anthropic) - March 2026
 # ==============================================================================
 
-
 require(tidyverse)
-require(patchwork)
 
-# Clean environment
-rm(list=ls())
-
-# # Set working directory
-# setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/suppl_fig', recursive = TRUE, showWarnings = FALSE)
+rm(list = ls())
+setwd(paste0(here::here(), '/scripts'))
 dir.create('../output/main_fig', recursive = TRUE, showWarnings = FALSE)
 
-# ------------------------------------------------------------------------------
-# Preparation for functions and mapping
-input_path <- '../data/raw/spatial'
-country <- geodata::world(path=input_path, resolution=5, level=0)
-isocodes <- geodata::country_codes()
-isocodes_ssa <- subset(isocodes, NAME=='Sudan' | UNREGION1=='Middle Africa' | UNREGION1=='Western Africa' | UNREGION1=='Southern Africa' | UNREGION1=='Eastern Africa')
-isocodes_ssa <- subset(isocodes_ssa, NAME!='Cabo Verde' & NAME!='Comoros' & NAME!='Mauritius' & NAME!='Mayotte' & NAME!='Réunion' & NAME!='Saint Helena' & NAME!='São Tomé and Príncipe' & NAME!='Seychelles') # keep the mainland + Madagascar only, remove islands
-ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
-pal1 <- colorRampPalette(c('darkred', 'orange', 'gold', 'darkolivegreen3', 'darkgreen'))
-pal2 <- colorRampPalette(c('#c6dbef','#6baed6','#3182bd', '#08519c', '#08306b'))
-pal3 <- colorRampPalette(c('skyblue1', 'blue4'))
-pal4 <- colorRampPalette(c('#A1D99B', '#00441B')) # RColorBrewer::brewer.pal(9,'Greens')
-pal5 <- colorRampPalette(c('#FFFFCC', '#800026'))
-pal6 <- colorRampPalette(c('#F0F921FF', '#0D0887FF'))
-pal7 <- colorRampPalette(c('#C7EAE5', '#01665E'))
-pal8 <- viridis::plasma(6)
-pal9 <- viridis::mako(10)
+# ── Load data ──────────────────────────────────────────────────────────────────
+processed_path <- '../data/processed'
+lsms_spatial <- tryCatch(
+  read.csv(file.path(processed_path, 'lsms_and_zambia.csv')),
+  error = function(e) {
+    message('CI: lsms_and_zambia.csv not found, using lsms_trimmed stub')
+    readRDS(file.path(processed_path, 'lsms_trimmed_95th_africa.rds'))
+  }
+)
 
-# force terra to use disk-based processing and 50% of RAM (Use this if R crashes because of limited memory)
-terra::terraOptions(memfrac = 0.5, todisk = T)
-gc()
-# ------------------------------------------------------------------------------
-# define the countries for which LSMS data are available
-sixteen_countries <- c('Benin', 'Burkina', 'Cote_d_Ivoire', 'Ethiopia', 'Ghana', 'Guinea_Bissau', 'Malawi', 'Mali', 'Niger', 'Nigeria', 'Rwanda','Senegal', 'Tanzania', 'Togo', 'Uganda', 'Zambia')
-sixteen_country_codes <- c('BEN', 'BFA', 'CIV', 'ETH', 'GHA', 'GNB', 'MWI', 'MLI', 'NER', 'NGA', 'RWA', 'SEN', 'TZA', 'TGO', 'UGA', 'ZMB')
+my_lsms <- lsms_spatial |>
+  filter(!is.na(farm_area_ha), farm_area_ha > 0)
 
-# ------------------------------------------------------------------------------
-# get tables for plotting
-xx <- readRDS('../../data/processed/cross_validation_graphs.rds')
-var_importance_table <- xx$var_importance_table; rm(xx)
-var_importance_table <- var_importance_table |>
-  mutate(var = case_when(var == 'cropland' ~ 'Cropland',
-                              var == 'cattle' ~ 'Cattle density',
-                              var == 'pop' ~ 'Population density',
-                              var == 'cropland_per_capita' ~ 'Cropland per capita',
-                              var == 'sand' ~ 'Sand content',
-                              var == 'slope' ~ 'Terrain slope',
-                              var == 'temperature' ~ 'Temperature',
-                              var == 'rainfall' ~ 'Precipitation',
-                              var == 'maizeyield' ~ 'Water-limited maize yield',
-                              var == 'market' ~ 'Distance to nearest town')) |>inner_join(bind_cols(country = sixteen_countries, GID_0 = sixteen_country_codes))
+message("Total observations: ", nrow(my_lsms))
+message("Countries: ", length(unique(my_lsms$country)))
 
-var_imp <- read.csv('../output/other_illustr/tables/etr_variable_importance.csv') |>
-  mutate(Variable = case_when(Variable == 'cropland' ~ 'Cropland',
-                              Variable == 'cattle' ~ 'Cattle density',
-                              Variable == 'pop' ~ 'Population density',
-                              Variable == 'cropland_per_capita' ~ 'Cropland per capita',
-                              Variable == 'sand' ~ 'Sand content',
-                              Variable == 'slope' ~ 'Terrain slope',
-                              Variable == 'temperature' ~ 'Temperature',
-                              Variable == 'rainfall' ~ 'Precipitation',
-                              Variable == 'maizeyield' ~ 'Water-limited maize yield',
-                              Variable == 'market' ~ 'Distance to nearest town')) |>
-  arrange(-Importance)
-#--------------------
-# Plot A
-P00 <- ggplot(var_imp, aes(reorder(Variable, Importance), 100 * Importance)) + 
-  geom_segment(y = 0, aes(yend = 100 * Importance)) +  
-  geom_point() + 
-  labs(x = 'Feature', y = 'Relative importance (%)') +
-  coord_flip() +
-  geom_text(x = 1.5, y = 19, label = 'A)', size = 8) + 
-  theme_test() + 
-  theme(axis.title = element_text(size = 17),
-        axis.text = element_text(size = 13, colour = 'grey25'),
-        axis.ticks.y = element_blank(),
-        title = element_text(size = 14),
-        plot.margin = margin(3, 5, 20, 3)
+# ── Build per-country summary ──────────────────────────────────────────────────
+nb_waves <- my_lsms |>
+  group_by(country, year) |>
+  summarize(.groups = 'drop') |>
+  group_by(country) |>
+  summarize(
+    n_waves = n(),
+    period  = paste0(min(year), '-', max(year)),
+    .groups = 'drop'
+  ) |>
+  mutate(
+    period = ifelse(
+      substr(period, 1, 4) == substr(period, 6, 9),
+      substr(period, 1, 4),
+      period
+    )
   )
-P00
-#--------------------
-# Plot B
-P01 <- ggplot(var_importance_table, aes(GID_0, var, fill = rank)) +
-  geom_raster() +
-  geom_text(aes(label = rank), size = 6) +
-  geom_hline(yintercept = seq(0.5, 9.5, by = 1)) +
-  geom_vline(xintercept = seq(0.5, 15.5, by = 1)) +
-  geom_text(x = 1, y = 11.5, label = 'B)', size = 8) +
-  labs(x = 'Country', y = 'Featrue', fill = 'Rank  ') +
-  scale_x_discrete(expand =c(0, 0)) +
-  scale_y_discrete(expand =c(0, 0)) +
-  scale_fill_continuous(low = 'steelblue1', high = 'grey95', breaks = c(1, 5, 10)) +
-  coord_cartesian(clip = 'off') +
-  theme_test() +
-  theme(axis.title = element_text(size = 17),
-        axis.text = element_text(size = 13, colour = 'grey25'),
-        axis.text.x = element_text(angle = -90, hjust = 1),
-        axis.ticks = element_blank(),
-        legend.text = element_text(size = 14),
-        legend.title = element_text(size = 15),
-        legend.key.width = unit(0.5, 'in'),
-        legend.position = 'top',
-        legend.justification = 'right',
-        legend.direction = 'horizontal',
-        title = element_text(size = 14),
-        plot.margin = margin(20, 5, 3, 3)
-        )
-P01
 
-P02 <- P00 / P01 + patchwork::plot_layout(ncol = 1, heights = c(1, 2))
+nb_obs <- my_lsms |>
+  group_by(country) |>
+  summarize(n_obs = n(), .groups = 'drop')
 
-# Save T01 summary CSV to main_fig/
-tryCatch(write.csv(P02$data, '../output/main_fig/T01_summary_descriptive_stats_survey.csv', row.names = FALSE),
-         error = function(e) message('CI: T01 CSV save skipped: ', e$message))
-ggsave('../output/suppl_fig/Suppl.Fig08.png', P02, width = 9, height = 9, units = 'in', dpi = 200)
+farms_below_0.5 <- my_lsms |>
+  group_by(country) |>
+  summarize(n_0.5 = sum(farm_area_ha < 0.5, na.rm = TRUE), .groups = 'drop')
+
+farms_below_1 <- my_lsms |>
+  group_by(country) |>
+  summarize(n_1 = sum(farm_area_ha < 1, na.rm = TRUE), .groups = 'drop')
+
+descrip_farm_sizes <- my_lsms |>
+  group_by(country) |>
+  summarize(
+    avg = round(mean(farm_area_ha,             na.rm = TRUE), 2),
+    med = round(median(farm_area_ha,           na.rm = TRUE), 2),
+    q10 = round(quantile(farm_area_ha, 0.10,   na.rm = TRUE), 2),
+    q90 = round(quantile(farm_area_ha, 0.90,   na.rm = TRUE), 2),
+    .groups = 'drop'
+  )
+
+table_01 <- nb_waves |>
+  left_join(nb_obs,          by = 'country') |>
+  left_join(farms_below_0.5, by = 'country') |>
+  left_join(farms_below_1,   by = 'country') |>
+  left_join(descrip_farm_sizes, by = 'country') |>
+  mutate(
+    prct_below_0.5 = round(100 * n_0.5 / n_obs, 2),
+    prct_below_1   = round(100 * n_1   / n_obs, 2)
+  )
+
+# TOTAL row
+sum_table01 <- tibble(
+  country        = 'TOTAL',
+  n_waves        = sum(table_01$n_waves),
+  period         = paste0(min(my_lsms$year), '-', max(my_lsms$year)),
+  n_obs          = sum(table_01$n_obs),
+  n_0.5          = sum(table_01$n_0.5),
+  n_1            = sum(table_01$n_1),
+  prct_below_0.5 = round(100 * sum(table_01$n_0.5) / sum(table_01$n_obs), 2),
+  prct_below_1   = round(100 * sum(table_01$n_1)   / sum(table_01$n_obs), 2),
+  avg            = round(mean(my_lsms$farm_area_ha,            na.rm = TRUE), 2),
+  med            = round(median(my_lsms$farm_area_ha,          na.rm = TRUE), 2),
+  q10            = round(quantile(my_lsms$farm_area_ha, 0.10,  na.rm = TRUE), 2),
+  q90            = round(quantile(my_lsms$farm_area_ha, 0.90,  na.rm = TRUE), 2)
+)
+
+table_01 <- table_01 |>
+  bind_rows(sum_table01) |>
+  select(country, n_waves, period, n_obs, prct_below_0.5, prct_below_1,
+         q10, med, avg, q90)
+
+message("\n=== T01 Survey Summary Statistics ===")
+print(table_01, n = 20)
+
+# ── Save ───────────────────────────────────────────────────────────────────────
+write.csv(table_01,
+          '../output/main_fig/T01_summary_descriptive_stats_survey.csv',
+          row.names = FALSE)
+message("Saved: ../output/main_fig/T01_summary_descriptive_stats_survey.csv")

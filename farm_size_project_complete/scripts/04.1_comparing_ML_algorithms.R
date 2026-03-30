@@ -160,10 +160,9 @@ table_01 <- table_01 |>
 message("\n=== Summary Statistics ===")
 print(table_01, n = 20)
 
-# Save table
-output_file <- file.path(output_path, 'tables/summary_descriptive_stats_survey.csv')
-write_csv(table_01, file = output_file)
-message("\nSaved: ", output_file)
+# Save table — moved to T01_area_production_tables.R (output/main_fig/)
+# output_file <- file.path(output_path, 'tables/summary_descriptive_stats_survey.csv')
+# write_csv(table_01, file = output_file)
 
 # ------------------------------------------------------------------------------
 # 6. KEY FINDINGS

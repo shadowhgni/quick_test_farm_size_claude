@@ -54,7 +54,7 @@ gc()
 # mask_drylands_ssa <- terra::rast('../../../data/processed/mask_drylands_ssa.tif')
 # ------------------------------------------------------------------------------
 # from JOAO
-png("../output/main_fig/figure-1.png", width = 9, height = 8.8, units = "in", res = 200)
+png("../output/main_fig/Fig.01.png", width = 9, height = 8.8, units = "in", res = 200)
 par(mfrow=c(2,2), mar=c(3.5,3.5,1,1), xaxs='i', yaxs='i')
 
 # plot 1

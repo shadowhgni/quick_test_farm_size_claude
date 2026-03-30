@@ -37,7 +37,7 @@ lsms_spatial <- lsms_spatial |>
 
 # ------------------------------------------------------------------------------
 # 2. OOB predictions from Python script 06.1_basic_RF_model.py
-#    (lsms_oob.rds written to scripts/ directory by the Python script)
+#    (lsms_oob.rds written to data/processed/ by the Python script)
 # ------------------------------------------------------------------------------
 lsms_oob <- tryCatch(
   readRDS('../data/processed/lsms_oob.rds'),
