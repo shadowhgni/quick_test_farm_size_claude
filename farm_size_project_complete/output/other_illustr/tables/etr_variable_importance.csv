@@ -1,0 +1,11 @@
+"Variable","Importance"
+"cropland",0.105
+"cattle",0.199
+"pop",0.187
+"cropland_per_capita",0.175
+"sand",0.068
+"slope",0.208
+"temperature",0.182
+"rainfall",0.231
+"maizeyield",0.248
+"market",0.053
