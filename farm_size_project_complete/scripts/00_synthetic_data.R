@@ -415,27 +415,30 @@ rf_optim <- data.frame(
 saveRDS(rf_optim, file.path(output_path, "other_illustr/tables/RF_optim_summarized_table.rds"))
 write.csv(rf_optim, file.path(output_path, "other_illustr/tables/RF_optim_summarized_table.csv"), row.names = FALSE)
 
-# Cropland stats per AEZ — matches structure produced by 10.1_prepare_validation_data.R
-aez_vals <- c('humid', 'sub-humid', 'semi-arid', 'arid', 'tropical highlands', 'sub-tropical')
-cropland_stats <- data.frame(
-  aez          = aez_vals,
-  avg          = round(runif(6, 0.5, 4.0), 2),
-  med          = round(runif(6, 0.3, 2.5), 2),
-  std          = round(runif(6, 0.5, 3.0), 2),
-  gini         = round(runif(6, 0.3, 0.7), 3),
-  tot_cropland = round(runif(6, 1e6, 5e7), 0),
-  nb           = round(runif(6, 1e4, 5e5), 0),
-  nb_0.5       = round(runif(6, 1e3, 2e5), 0),
-  cropland_0.5 = round(runif(6, 5e4, 5e6), 0),
-  prop_0.5     = round(runif(6, 0.05, 0.40), 3),
-  nb_1         = round(runif(6, 2e3, 3e5), 0),
-  cropland_1   = round(runif(6, 1e5, 1e7), 0),
-  prop_1       = round(runif(6, 0.10, 0.55), 3),
-  nb_2         = round(runif(6, 4e3, 4e5), 0),
-  cropland_2   = round(runif(6, 2e5, 2e7), 0),
-  prop_2       = round(runif(6, 0.20, 0.70), 3)
+# Cropland stats — list matching structure produced by 10.1_prepare_validation_data.R
+aez_vals    <- c('humid','sub-humid','semi-arid','arid','tropical highlands','sub-tropical')
+region_vals <- c('Central','Eastern','Southern','Western')
+thresholds  <- c('< 0.5 ha','0.5 - 1 ha','1 - 2 ha','2 - 5 ha','> 5 ha')
+aez_farm_stat_stub <- data.frame(
+  aez = aez_vals,
+  avg = round(runif(6, 0.5, 4.0), 2), med = round(runif(6, 0.3, 2.5), 2),
+  std = round(runif(6, 0.5, 3.0), 2), gini = round(runif(6, 0.3, 0.7), 3),
+  tot_cropland = round(runif(6, 1e6, 5e7), 0), nb = round(runif(6, 1e4, 5e5), 0),
+  nb_0.5 = 100L, cropland_0.5 = 1e4, prop_0.5 = 0.1,
+  nb_1   = 200L, cropland_1   = 2e4, prop_1   = 0.2,
+  nb_2   = 300L, cropland_2   = 3e4, prop_2   = 0.3
 )
-saveRDS(cropland_stats, file.path(output_path, "other_illustr/tables/cropland_stats_per_aez.rds"))
+farm_classes_long_stub <- bind_rows(
+  expand.grid(group_col = 'aez',    group_val = aez_vals,    size_class = thresholds, stringsAsFactors = FALSE),
+  expand.grid(group_col = 'region', group_val = region_vals, size_class = thresholds, stringsAsFactors = FALSE)
+) |>
+  mutate(tot_area = 1e6, tot_farms = 1000L,
+         area  = round(runif(dplyr::n(), 5e4, 3e5), 0),
+         farms = round(runif(dplyr::n(), 50, 300), 0),
+         prop_area  = round(100 * area  / tot_area,  1),
+         prop_farms = round(100 * farms / tot_farms, 1))
+saveRDS(list(aez_farm_stat = aez_farm_stat_stub, farm_classes_long = farm_classes_long_stub),
+        file.path(output_path, "other_illustr/tables/cropland_stats_per_aez.rds"))
 message("   Output stubs done.")
 
 # ==============================================================================

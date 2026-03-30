@@ -117,7 +117,57 @@ aez_farm_stat <- aez_farm_stat |>
   inner_join(cropland_under_1) |>
   inner_join(cropland_under_2)
 
-saveRDS(aez_farm_stat, file = '../output/other_illustr/tables/cropland_stats_per_aez.rds')
+# Add region column via terra::extract on the ssa GADM vector
+theor_farms_application <- theor_farms_application |>
+  bind_cols(tryCatch(
+    terra::extract(ssa, theor_farms_application |> ungroup() |> select(x, y)) |>
+      select(GID_0),
+    error = function(e) { message('10.1: ssa extract failed: ', e$message)
+      data.frame(GID_0 = NA_character_) }
+  )) |>
+  mutate(region = case_when(
+    GID_0 %in% c('AGO','CAF','CMR','COD','COG','GAB','GNQ','STP','TCD') ~ 'Central',
+    GID_0 %in% c('BDI','DJI','ERI','ETH','KEN','MDG','MOZ','MWI','RWA',
+                 'SDN','SOM','SSD','TZA','UGA','ZMB','ZWE')             ~ 'Eastern',
+    GID_0 %in% c('BWA','LSO','NAM','SWZ','ZAF')                        ~ 'Southern',
+    GID_0 %in% c('BEN','BFA','CIV','GHA','GIN','GMB','GNB','LBR','MLI',
+                 'MRT','NER','NGA','SEN','SLE','TGO')                   ~ 'Western',
+    .default = NA_character_
+  ))
+
+# Build 5-class proportions by aez and by region (used by T02)
+thresholds <- c('< 0.5 ha', '0.5 - 1 ha', '1 - 2 ha', '2 - 5 ha', '> 5 ha')
+
+farm_classes_long <- bind_rows(
+  theor_farms_application |>
+    filter(!is.na(aez)) |>
+    mutate(group_col = 'aez', group_val = aez),
+  theor_farms_application |>
+    filter(!is.na(region)) |>
+    mutate(group_col = 'region', group_val = region)
+) |>
+  mutate(size_class = case_when(
+    individual_farm_size_ha <  0.5                                ~ '< 0.5 ha',
+    individual_farm_size_ha >= 0.5 & individual_farm_size_ha <  1 ~ '0.5 - 1 ha',
+    individual_farm_size_ha >= 1   & individual_farm_size_ha <  2 ~ '1 - 2 ha',
+    individual_farm_size_ha >= 2   & individual_farm_size_ha <  5 ~ '2 - 5 ha',
+    individual_farm_size_ha >= 5                                   ~ '> 5 ha',
+    .default = NA_character_
+  ),
+  size_class = factor(size_class, levels = thresholds)) |>
+  filter(!is.na(size_class)) |>
+  group_by(group_col, group_val) |>
+  mutate(tot_area  = sum(individual_farm_size_ha, na.rm = TRUE),
+         tot_farms = n()) |>
+  group_by(group_col, group_val, size_class, tot_area, tot_farms) |>
+  summarize(area  = sum(individual_farm_size_ha, na.rm = TRUE),
+            farms = n(), .groups = 'drop') |>
+  mutate(prop_area  = round(100 * area  / tot_area,  1),
+         prop_farms = round(100 * farms / tot_farms, 1))
+
+saveRDS(list(aez_farm_stat    = aez_farm_stat,
+             farm_classes_long = farm_classes_long),
+        file = '../output/other_illustr/tables/cropland_stats_per_aez.rds')
 write_csv(aez_farm_stat, file = '../output/other_illustr/tables/cropland_stats_per_aez.csv')
 
 # predicted average farm size per grid cell
