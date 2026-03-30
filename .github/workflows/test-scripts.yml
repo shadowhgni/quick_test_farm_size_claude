@@ -230,10 +230,20 @@ jobs:
           git add ${PROJECT}/output/reports/ 2>/dev/null || true
           git diff --cached --quiet || \
             git commit -m "ci: update test log [skip ci]"
-          git stash --include-untracked || true
-          git pull --rebase origin main
-          git stash pop || true
-          git push origin main
+          # Pull with conflict resolution: always take remote for binary outputs,
+          # ours for the freshly-generated log files
+          git fetch origin main
+          git rebase origin/main -X ours || (
+            git checkout --theirs ${PROJECT}/ci-logs/raw-output.txt 2>/dev/null || true
+            git checkout --theirs ${PROJECT}/ci-logs/latest.md 2>/dev/null || true
+            # For binary RDS/PNG conflicts, take ours (freshly generated this run)
+            git ls-files --unmerged | awk '{print $4}' | sort -u | while read f; do
+              git checkout --ours "$f" 2>/dev/null || true
+              git add "$f" 2>/dev/null || true
+            done
+            git rebase --continue
+          ) || git rebase --skip
+          git push origin main --force-with-lease
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
