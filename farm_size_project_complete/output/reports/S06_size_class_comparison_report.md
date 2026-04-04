@@ -1,21 +1,22 @@
 # Report: S06_size_class_comparison.R
 
-**Generated:** 2026-04-04 14:27:01 UTC
-**Elapsed:** 1.8s
-**Purpose:** Supp Fig 6: farm size class comparison vs Lowder census; divergence table
+**Generated:** 2026-04-04 15:03:48 UTC
+**Elapsed:** 4.6s
+**Purpose:** Supp Fig 6: predicted vs census farm count and cropland ha by country and size class
 
 ## Inputs
 
-- **Sarah RDS**: `../data/processed/summarized_farm_area_ha_per_class_vs_sarah.rds` ✅ (2,345 B)
+- **Sarah comparison RDS**: `../data/processed/summarized_farm_area_ha_per_class_vs_sarah.rds` ✅ (711,375 B)
+- **Divergence table**: `Suppl.Fig06_divergence_table.rds` ✅ (554 B)
 
 ## Outputs
 
-- **Supp Fig**: `./Suppl.Fig06_divergence_table.rds` ✅ written (1,816 B)
-- **PNG**: `../output/suppl_fig/Suppl.Fig06.png` ✅ written (158,255 B)
+- **Suppl.Fig06.png**: `../output/other_illustr/graphs/Suppl.Fig06.png` ✅ written (171,391 B)
 
-## Divergence summary
+## Data dimensions
 
 ```
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.1080  0.1188  0.1369  0.1409  0.1600  0.1881 
+comp_fsize_classes_nb: 126 rows
+comp_fsize_classes_ha: 126 rows
+div_table countries: 16
 ```
