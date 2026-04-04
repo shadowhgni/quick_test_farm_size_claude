@@ -12,7 +12,6 @@ t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
 setwd(paste0(here::here(), '/scripts'))
 dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
-dir.create('../output/main_fig', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -278,7 +277,6 @@ P01 <- ggplot(compare_pred_measured_gadm1, aes(avg_farm_area_ha, avg_pred_farm_a
 P01
 png(paste0('../output/other_illustr/graphs/external_validation_GADM1.2_for_4countries.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01
-ggsave(paste0('../output/other_illustr/graphs/external_validation_GADM1.2_for_4countries.png'))
 dev.off()
 
 # ── Report ────────────────────────────────────────────────────────────────────

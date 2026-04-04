@@ -45,21 +45,10 @@ comp_fsize_classes_nb <- xx$comp_fsize_classes_nb
 rm(xx)
 div_table <- readRDS("Suppl.Fig06_divergence_table.rds")
 
-# Attach GID_0 from ssa if not already present
-ssa_df <- terra::as.data.frame(ssa)   # NAME_0, GID_0, ...
-
-comp_fsize_classes_nb <- tryCatch(
-  comp_fsize_classes_nb |> inner_join(ssa_df |> select(NAME_0, GID_0) |> distinct(),
-                                       by = "NAME_0"),
-  error = function(e) {
-    message("CI: ssa join failed, using GID_0 from stub: ", e$message)
-    comp_fsize_classes_nb  # stub already has GID_0
-  })
-
-comp_fsize_classes_ha <- tryCatch(
-  comp_fsize_classes_ha |> inner_join(ssa_df |> select(NAME_0, GID_0) |> distinct(),
-                                       by = "NAME_0"),
-  error = function(e) comp_fsize_classes_ha)
+# The stub already carries GID_0 (three-letter ISO code).
+# In production the join was used to add GID_0 from the ssa boundary via NAME_0,
+# but name mismatches (e.g. "Burkina" vs "Burkina Faso") make that fragile.
+# Both tables already have GID_0 so we skip the join entirely.
 
 # ── Panel A: nb farms ────────────────────────────────────────────────────────
 P00 <- ggplot(
@@ -74,8 +63,7 @@ P00 <- ggplot(
   geom_text(x = 1, y = 8.5, label = "A)", size = 9, inherit.aes = FALSE) +
   geom_text(
     data = div_table |>
-      inner_join(comp_fsize_classes_nb |> select(NAME_0, GID_0) |> distinct(),
-                 by = c("NAME_0","GID_0")),
+      inner_join(comp_fsize_classes_nb |> select(GID_0) |> distinct(), by = "GID_0"),
     aes(x = GID_0, label = round(divergence_nb, 2)),
     y = 6, size = 5, angle = 60, inherit.aes = FALSE) +
   labs(x = "Country", y = "Million farms per farm size class",
@@ -104,8 +92,7 @@ P01 <- ggplot(
   geom_text(x = 1, y = 11, label = "B)", size = 9, inherit.aes = FALSE) +
   geom_text(
     data = div_table |>
-      inner_join(comp_fsize_classes_ha |> select(NAME_0, GID_0) |> distinct(),
-                 by = c("NAME_0","GID_0")),
+      inner_join(comp_fsize_classes_ha |> select(GID_0) |> distinct(), by = "GID_0"),
     aes(x = GID_0, label = round(divergence_ha, 2)),
     y = 8.5, size = 5, angle = 60, inherit.aes = FALSE) +
   labs(x = "Country", y = "Million ha cultivated per farm size class",
