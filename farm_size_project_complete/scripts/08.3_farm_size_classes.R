@@ -175,47 +175,48 @@ P02
 ggsave(paste0('../output/other_illustr/africa_ECDF_3selected_groups_ugly.png'))
 dev.off()
 
-P02_data <- ggplot_build(P02)$data
-P02_ribbon <- P02_data[[1]] |>
-  filter(!is.infinite(x)) |>
-  mutate(farm_class = case_when(colour == '#8B0000' ~ '< 0.5 ha',
-                                colour == '#FFCB00' ~ '1 - 2 ha',
-                                colour == '#489228' ~ '> 5 ha',
-                                .default = NA)) |>
-  group_by(farm_class, x) |>
-  summarize(min = min(y, na.rm = T), max = max(y, na.rm = T))
-P02_central <- P02_data[[2]] |>
-  filter(!is.infinite(x)) |>
-  mutate(farm_class = case_when(colour == '#8B0000' ~ '< 0.5 ha',
-                                colour == '#FFCB00' ~ '1 - 2 ha',
-                                colour == '#489228' ~ '> 5 ha',
-                                .default = NA)) |>
-  select(x, y, farm_class)
-
-P02_failed <- ggplot() +
-  geom_ribbon(data = P02_ribbon |>
+if (nrow(grouped_theor_app) > 0) {
+  P02_data <- ggplot_build(P02)$data
+  P02_ribbon <- P02_data[[1]] |>
+    filter(!is.infinite(x)) |>
+    mutate(farm_class = case_when(colour == '#8B0000' ~ '< 0.5 ha',
+                                  colour == '#FFCB00' ~ '1 - 2 ha',
+                                  colour == '#489228' ~ '> 5 ha',
+                                  .default = NA)) |>
+    group_by(farm_class, x) |>
+    summarize(min = min(y, na.rm = T), max = max(y, na.rm = T))
+  P02_central <- P02_data[[2]] |>
+    filter(!is.infinite(x)) |>
+    mutate(farm_class = case_when(colour == '#8B0000' ~ '< 0.5 ha',
+                                  colour == '#FFCB00' ~ '1 - 2 ha',
+                                  colour == '#489228' ~ '> 5 ha',
+                                  .default = NA)) |>
+    select(x, y, farm_class)
+  P02_failed <- ggplot() +
+    geom_ribbon(data = P02_ribbon |>
+                  mutate(x = round(x, 3)) |>
+                  group_by(farm_class, x) |>
+                  summarize(min = mean(min, na.rm = T), max = mean(max, na.rm = T)),
+                aes(x = x, ymin = min, ymax = max, fill = farm_class), alpha = 0.05) +
+    geom_line(data = P02_central |>
                 mutate(x = round(x, 3)) |>
                 group_by(farm_class, x) |>
-                summarize(min = mean(min, na.rm = T), max = mean(max, na.rm = T)),  
-              aes(x = x, ymin = min, ymax = max, fill = farm_class), alpha = 0.05) +
-  geom_line(data = P02_central |>
-              mutate(x = round(x, 3)) |>
-              group_by(farm_class, x) |>
-              summarize(y= mean(y, na.rm = T)),  
-            aes(x = x, y = y, colour = farm_class), linewidth = 0.8) + 
-  labs(x= 'Predicted individual farm sizes per grid cell, ha', y = 'ECDF',
-       title = NULL, colour = 'Farm size class') +
-  scale_x_continuous(expand = c(0, 0), limits = c(0, 15)) +
-  scale_y_continuous(expand = c(0, 0), limits = c(0, 1)) +
-  scale_fill_manual(values = c('#8B0000', '#FFCB00', '#489228')) +
-  scale_colour_manual(values = c('#8B0000', '#FFCB00', '#489228')) +
-  theme_test() +
-  theme(legend.position = c(0.8, 0.35))
-P02_failed
-png(paste0('../output/other_illustr/africa_ECDF_3selected_groups_of_farm_sizes.png'), height = 5, width = 7.5, units = 'in', res = 600)
-P02_failed
-ggsave(paste0('../output/other_illustr/africa_ECDF_3selected_groups_of_farm_sizes.png'))
-dev.off()
+                summarize(y = mean(y, na.rm = T)),
+              aes(x = x, y = y, colour = farm_class), linewidth = 0.8) +
+    labs(x= 'Predicted individual farm sizes per grid cell, ha', y = 'ECDF',
+         title = NULL, colour = 'Farm size class') +
+    scale_x_continuous(expand = c(0, 0), limits = c(0, 15)) +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 1)) +
+    scale_fill_manual(values = c('#8B0000', '#FFCB00', '#489228')) +
+    scale_colour_manual(values = c('#8B0000', '#FFCB00', '#489228')) +
+    theme_test() +
+    theme(legend.position = c(0.8, 0.35))
+  P02_failed
+  png(paste0('../output/other_illustr/africa_ECDF_3selected_groups_of_farm_sizes.png'), height = 5, width = 7.5, units = 'in', res = 600)
+  P02_failed
+  ggsave(paste0('../output/other_illustr/africa_ECDF_3selected_groups_of_farm_sizes.png'))
+  dev.off()
+} else { message('CI: P02_ribbon/P02_failed skipped — grouped_theor_app empty') }
 
 saveRDS(list(grouped_theor_app = grouped_theor_app, grp_avg_theor_app = grp_avg_theor_app, P02 = P02),
         file = '../output/plot_data/ECDF_3groups.rds')
