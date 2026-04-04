@@ -156,20 +156,7 @@ patch_script <- function(lines) {
   lines <- gsub("filter(n > 9)",  "filter(n > 0)", lines, fixed = TRUE)
   # 5l2. 08.3: filter(nb_farms > 9) removes all rows in synthetic data (nb_farms == 9)
   lines <- gsub("filter(nb_farms > 9)", "filter(nb_farms > 0)", lines, fixed = TRUE)
-  # 5l3. 08.3: both rast() calls crash on empty theor_farms (0 rows in CI).
-  #   Wrap both in tryCatch, move saveRDS before writeRaster, skip writeRaster if NULL.
-  lines <- gsub(
-    "# save rasters\ntheor_farms_rast <- theor_farms |>\n  ungroup() |>\n  select(x, y, starts_with(\'adjusted\'), ks_trunc_D, ks_trunc_pval) |>\n  terra::rast()\ntheor_farms_application_rast <- terra::rast(theor_farms_application)\nsaveRDS(list(theor_farms = theor_farms, theor_farms_application = theor_farms_application), file = \'../data/processed/fsize_distribution_resample_long.rds\')\nterra::writeRaster(theor_farms_rast, filename = \'../data/processed/farm_size_distribution_parms.tif\', overwrite = T)\nterra::writeRaster(theor_farms_application_rast, filename = \'../data/processed/virtual_farm_population.tif\', overwrite = T)",
-    paste0(
-      "# save RDS first — downstream scripts only need this\n",
-      "saveRDS(list(theor_farms = theor_farms, theor_farms_application = theor_farms_application), file = \'../data/processed/fsize_distribution_resample_long.rds\')\n",
-      "# save rasters (skipped in CI if theor_farms is empty)\n",
-      "theor_farms_rast <- tryCatch(theor_farms |> ungroup() |> select(x, y, starts_with(\'adjusted\'), ks_trunc_D, ks_trunc_pval) |> terra::rast(), error = function(e) { message(\'CI: theor_farms_rast skipped\'); NULL })\n",
-      "theor_farms_application_rast <- tryCatch(terra::rast(theor_farms_application), error = function(e) { message(\'CI: theor_farms_application_rast skipped\'); NULL })\n",
-      "if (!is.null(theor_farms_rast)) terra::writeRaster(theor_farms_rast, filename = \'../data/processed/farm_size_distribution_parms.tif\', overwrite = T)\n",
-      "if (!is.null(theor_farms_application_rast)) terra::writeRaster(theor_farms_application_rast, filename = \'../data/processed/virtual_farm_population.tif\', overwrite = T)"
-    ),
-    lines, fixed = TRUE)
+  # 5l3. 08.3 now reads theor_farms from 08.2 RDS — no rast patching needed
 
   # 5m. 04.2: wrap lapply over compare_country_models in tryCatch so one country
   #     failure doesn't crash the whole script (caret internal stop("Stopping"))
