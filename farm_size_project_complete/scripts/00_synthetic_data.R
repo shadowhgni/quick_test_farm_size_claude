@@ -454,75 +454,44 @@ message("6. Creating processed data stubs...")
 # Needs: theor_farms with x, y, skew, kurt, gini, ks_trunc_D, ks_trunc_pval
 #        theor_farms_application with x, y, linear_farm_size_ha, trunc_log_farm_size_ha
 n_theor <- nrow(lsms_ml)
+fa      <- pmax(0.01, lsms_ml$farm_area_ha)
 
-# Build a qrf_stub raster so we can derive cell IDs matching lsms_ml x/y
-qrf_stub <- tryCatch(
-  terra::rast(file.path(processed_path, "qrf_100quantiles_predictions_africa.tif")),
-  error = function(e) NULL
+# list-columns: 100-quantile vectors and 9-sample fitted distributions
+pred_farm_sizes_list   <- lapply(fa, function(mu)
+  sort(qlnorm(seq(0.01, 0.99, length.out = 100), meanlog = log(mu), sdlog = 0.8)))
+fitted_trunc_logn_list <- lapply(fa, function(mu)
+  sort(pmax(0.01, rlnorm(9, meanlog = log(mu), sdlog = 0.6))))
+
+theor_farms <- data.frame(
+  x = lsms_ml$x, y = lsms_ml$y, cell = seq_len(n_theor), nb_farms = 9L,
+  country = lsms_ml$country, farm_area_ha = fa,
+  skew = runif(n_theor, 0.5, 4.0), kurt = runif(n_theor, 2.0, 8.0),
+  gini = runif(n_theor, 0.3, 0.6),
+  ks_trunc_D = runif(n_theor, 0.05, 0.4), ks_trunc_pval = runif(n_theor, 0.01, 0.99),
+  ks_D       = runif(n_theor, 0.05, 0.4), ks_pval       = runif(n_theor, 0.01, 0.99),
+  adjusted_logn_mean = log(fa / sqrt(1.5)), adjusted_logn_sd = sqrt(log(1.5)),
+  logn_mean = log(fa), logn_sd = 0.8,
+  sample_mean = fa * runif(n_theor, 0.8, 1.2),
+  sample_sd   = fa * runif(n_theor, 0.2, 0.5),
+  sd_sample_mean = runif(n_theor, 0.05, 0.3),
+  sd_sample_sd   = runif(n_theor, 0.02, 0.2),
+  stringsAsFactors = FALSE
 )
-make_cell_ids <- function(pts_xy) {
-  if (!is.null(qrf_stub))
-    as.integer(terra::cellFromXY(qrf_stub[[1]], as.matrix(pts_xy)))
-  else
-    seq_len(nrow(pts_xy))
-}
-cell_ids <- make_cell_ids(lsms_ml[, c("x", "y")])
+# Attach list-columns after data.frame() (avoids recycling issues)
+theor_farms$pred_farm_sizes      <- pred_farm_sizes_list
+theor_farms$fitted_trunc_logn    <- fitted_trunc_logn_list
+theor_farms$fitted_logn          <- fitted_trunc_logn_list
+theor_farms$virt_farms           <- fitted_trunc_logn_list
+theor_farms$virt_farms_fixed     <- fitted_trunc_logn_list
+theor_farms$virt_farms_f_max_trunc <- fitted_trunc_logn_list
 
-# Helper: make a list-column of 100 synthetic quantile values per row
-make_pred_farm_sizes <- function(n, mu = 0.5, sigma = 0.8) {
-  lapply(seq_len(n), function(i)
-    sort(qlnorm(seq(0.01, 0.99, length.out = 100),
-                meanlog = log(lsms_ml$farm_area_ha[i]),
-                sdlog   = sigma)))
-}
-pred_farm_sizes_list   <- make_pred_farm_sizes(n_theor)
-fitted_trunc_logn_list <- lapply(seq_len(n_theor), function(i)
-  sort(pmax(0.01, rlnorm(9, meanlog = log(pmax(0.01, lsms_ml$farm_area_ha[i])), sdlog = 0.6))))
-
-theor_farms <- tibble(
-  x            = lsms_ml$x,
-  y            = lsms_ml$y,
-  cell         = cell_ids,
-  nb_farms     = 9L,                               # 08.3 filters nb_farms > 0
-  country      = lsms_ml$country,
-  farm_area_ha = lsms_ml$farm_area_ha,
-  # list-columns used by 08.3 map() calls
-  pred_farm_sizes    = pred_farm_sizes_list,
-  fitted_trunc_logn  = fitted_trunc_logn_list,
-  # scalar columns used by 08.3 / S08 plots
-  skew               = runif(n_theor, 0.5, 4.0),
-  kurt               = runif(n_theor, 2.0, 8.0),
-  gini               = runif(n_theor, 0.3, 0.6),
-  ks_trunc_D         = runif(n_theor, 0.05, 0.4),
-  ks_trunc_pval      = runif(n_theor, 0.01, 0.99),
-  adjusted_logn_mean = log(pmax(0.01, lsms_ml$farm_area_ha) / sqrt(1.5)),
-  adjusted_logn_sd   = sqrt(log(1.5)),
-  logn_mean          = log(pmax(0.01, lsms_ml$farm_area_ha)),
-  logn_sd            = 0.8,
-  sample_mean        = pmax(0.01, lsms_ml$farm_area_ha * runif(n_theor, 0.8, 1.2)),
-  sample_sd          = pmax(0.01, lsms_ml$farm_area_ha * runif(n_theor, 0.2, 0.5)),
-  sd_sample_mean     = runif(n_theor, 0.05, 0.3),
-  sd_sample_sd       = runif(n_theor, 0.02, 0.2),
-  ks_D               = runif(n_theor, 0.05, 0.4),
-  ks_pval            = runif(n_theor, 0.01, 0.99),
-  # virt_farms variants (list-cols) used in diagnostic loops
-  virt_farms           = fitted_trunc_logn_list,
-  virt_farms_fixed     = fitted_trunc_logn_list,
-  virt_farms_f_max_trunc = fitted_trunc_logn_list,
-  fitted_logn          = fitted_trunc_logn_list
-)
-
-# theor_farms_application: one row per virtual farm (unnested from theor_farms)
-# 09.1 / 10.1 need individual_farm_size_ha; 08.3 needs linear_ and trunc_log_
-theor_farms_application <- tibble(
-  x                      = lsms_ml$x,
-  y                      = lsms_ml$y,
-  cell                   = cell_ids,
-  nb_farms               = 9L,
-  country                = lsms_ml$country,
-  linear_farm_size_ha    = pmax(0.01, rlnorm(n_theor, log(pmax(0.01, lsms_ml$farm_area_ha)), 0.6)),
-  trunc_log_farm_size_ha = pmax(0.01, rlnorm(n_theor, log(pmax(0.01, lsms_ml$farm_area_ha)), 0.5)),
-  individual_farm_size_ha = pmax(0.01, rlnorm(n_theor, log(pmax(0.01, lsms_ml$farm_area_ha)), 0.6))
+theor_farms_application <- data.frame(
+  x = lsms_ml$x, y = lsms_ml$y, cell = seq_len(n_theor), nb_farms = 9L,
+  country = lsms_ml$country,
+  linear_farm_size_ha     = pmax(0.01, rlnorm(n_theor, log(fa), 0.6)),
+  trunc_log_farm_size_ha  = pmax(0.01, rlnorm(n_theor, log(fa), 0.5)),
+  individual_farm_size_ha = pmax(0.01, rlnorm(n_theor, log(fa), 0.6)),
+  stringsAsFactors = FALSE
 )
 saveRDS(list(theor_farms = theor_farms,
              theor_farms_application = theor_farms_application),
