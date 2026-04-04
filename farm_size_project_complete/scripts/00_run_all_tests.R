@@ -156,6 +156,8 @@ patch_script <- function(lines) {
   lines <- gsub("filter(n > 9)",  "filter(n > 0)", lines, fixed = TRUE)
   # 5l2. 08.3: filter(nb_farms > 9) removes all rows in synthetic data (nb_farms == 9)
   lines <- gsub("filter(nb_farms > 9)", "filter(nb_farms > 0)", lines, fixed = TRUE)
+  # 5l4. View() crashes in headless CI — replace with invisible()
+  lines <- gsub("View(", "invisible( # CI: View(", lines, fixed = TRUE)
   # 5l3. 08.3 now reads theor_farms from 08.2 RDS — no rast patching needed
 
   # 5m. 04.2: wrap lapply over compare_country_models in tryCatch so one country

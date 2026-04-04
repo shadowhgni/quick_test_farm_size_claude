@@ -40,6 +40,13 @@ xx <- readRDS('../data/processed/fsize_distribution_resample_long.rds')
 theor_farms             <- xx$theor_farms
 theor_farms_application <- xx$theor_farms_application; rm(xx)
 
+# theor_farms_rast: saved by 08.2 (or synthetic stub) — read directly
+# avoids rebuilding from theor_farms which may be empty in CI
+theor_farms_rast <- tryCatch(
+  terra::rast('../data/processed/farm_size_distribution_parms.tif'),
+  error = function(e) { message('CI: farm_size_distribution_parms.tif not found'); NULL }
+)
+
 
 # ------------------------------------------------------------------------------
 gc()

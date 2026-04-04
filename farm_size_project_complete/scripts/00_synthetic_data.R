@@ -163,8 +163,11 @@ terra::writeRaster(qrf_pred,
   file.path(processed_path, "hundred_quantiles_rasters.tif"), overwrite = TRUE)
 
 # Distribution parameter rasters — coarse res
-farm_dist_parms <- terra::rast(replicate(3, make_rast("p", 1, 0.5, r_res = res_pred)))
-names(farm_dist_parms) <- c("mu", "sigma", "xi")
+# farm_size_distribution_parms.tif: rasterized from theor_farms cols used by 08.3
+# Built here as a stub; the real version comes from 08.3 on local
+farm_dist_parms <- terra::rast(replicate(5, make_rast("p", 1, 0.5, r_res = res_pred)))
+names(farm_dist_parms) <- c("adjusted_logn_mean", "adjusted_logn_sd",
+                             "ks_trunc_D", "ks_trunc_pval", "logn_mean")
 terra::writeRaster(farm_dist_parms,
   file.path(processed_path, "farm_size_distribution_parms.tif"), overwrite = TRUE)
 terra::writeRaster(farm_dist_parms,
