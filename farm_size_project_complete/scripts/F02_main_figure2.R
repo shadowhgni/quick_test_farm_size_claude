@@ -1,185 +1,155 @@
 # ==============================================================================
 # Script: F02_main_figure2.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Generate Main Figure 2 - Study overview and model performance
+# Purpose: Main Figure 2 — 4-panel: Q10 map, Q90 map, ECDF by farm class, Gini scatter
 #
-# Authors: Deo, Joao, Robert, Fred
-# Code documentation: Claude (Anthropic) - February 2026
+# PRODUCTION inputs (all in scripts/ dir):
+#   fig.2a_quantile_10_fsizes.tif  — q10 predicted farm size raster
+#   fig.2b_quantile_90_fsizes.tif  — q90 predicted farm size raster
+#   fig2c.rds                      — theor_farms_application joined with rf predictions
+#                                    (farm_size = linear_farm_size_ha, avg_size = rf pred)
+#   fig.2d_mean_fsize_gini_coefs.rds — predicted & observed avg vs Gini per grid cell
+#
+# CI: all inputs are synthetic stubs produced by 00_synthetic_data.R
+# Outputs: ../output/main_fig/Fig.02.png
 # ==============================================================================
-
 
 source("00_report_utils.R")
 t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
-require(patchwork)
-
-# Clean environment
 rm(list = setdiff(ls(), c("t0","write_report","capture_output","ci_trees","ci_folds")))
+setwd(paste0(here::here(), "/scripts"))
+dir.create("../output/main_fig", recursive = TRUE, showWarnings = FALSE)
 
-setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/main_fig', recursive = TRUE, showWarnings = FALSE)
-
-# ------------------------------------------------------------------------------
-# Preparation for functions and mapping
-input_path <- '../data/raw/spatial'
-country <- geodata::world(path=input_path, resolution=5, level=0)
-isocodes <- geodata::country_codes()
-isocodes_ssa <- subset(isocodes, NAME=='Sudan' | UNREGION1=='Middle Africa' | UNREGION1=='Western Africa' | UNREGION1=='Southern Africa' | UNREGION1=='Eastern Africa')
-isocodes_ssa <- subset(isocodes_ssa, NAME!='Cabo Verde' & NAME!='Comoros' & NAME!='Mauritius' & NAME!='Mayotte' & NAME!='Réunion' & NAME!='Saint Helena' & NAME!='São Tomé and Príncipe' & NAME!='Seychelles') # keep the mainland + Madagascar only, remove islands
+# ── SSA boundary ──────────────────────────────────────────────────────────────
+# PRODUCTION: geodata::world downloads to input_path
+# CI: same — geodata caches in ../data/raw/spatial
+input_path <- "../data/raw/spatial"
+country    <- geodata::world(path = input_path, resolution = 5, level = 0)
+isocodes   <- geodata::country_codes()
+isocodes_ssa <- subset(isocodes,
+  NAME == "Sudan" | UNREGION1 == "Middle Africa" | UNREGION1 == "Western Africa" |
+  UNREGION1 == "Southern Africa" | UNREGION1 == "Eastern Africa")
+isocodes_ssa <- subset(isocodes_ssa,
+  !NAME %in% c("Cabo Verde","Comoros","Mauritius","Mayotte","Réunion",
+               "Saint Helena","São Tomé and Príncipe","Seychelles"))
 ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
-pal <- colorRampPalette(c('darkred', 'orange', 'gold', 'darkolivegreen3', 'darkgreen'))
-pal2 <- colorRampPalette(c('#c6dbef','#6baed6','#3182bd', '#08519c', '#08306b'))
-pal3 <- colorRampPalette(c('skyblue1', 'blue4'))
-pal4 <- colorRampPalette(c('#A1D99B', '#00441B')) # RColorBrewer::brewer.pal(9,'Greens')
-pal5 <- colorRampPalette(c('#FFFFCC', '#800026'))
-pal6 <- colorRampPalette(c('#F0F921FF', '#0D0887FF'))
-pal7 <- colorRampPalette(c('#C7EAE5', '#01665E'))
-pal8 <- viridis::plasma(6)
-pal9 <- viridis::mako(10)
 
-# force terra to use disk-based processing and 50% of RAM (Use this if R crashes because of limited memory)
-terra::terraOptions(memfrac = 0.5, todisk = T)
-gc()
-# ------------------------------------------------------------------------------
-#define the countries for which LSMS data are available
-# sixteen_countries <- c('Benin', 'Burkina', 'Cote_d_Ivoire', 'Ethiopia', 'Ghana', 'Guinea_Bissau', 'Malawi', 'Mali', 'Niger', 'Nigeria', 'Rwanda','Senegal', 'Tanzania', 'Togo', 'Uganda', 'Zambia')
-# sixteen_country_codes <- c('BEN', 'BFA', 'CIV', 'ETH', 'GHA', 'GNB', 'MWI', 'MLI', 'NER', 'NGA', 'RWA', 'SEN', 'TZA', 'TGO', 'UGA', 'ZMB')
-# ------------------------------------------------------------------------------
-# Prepare data rasters: lsms and predictions + virtual list of farm sizes
-# stacked <- terra::rast('../../../data/processed/stacked_rasters_africa.tif')
-# rf_model_predictions <- terra::rast('../../../data/processed/rf_model_predictions_SSA.tif')
-# names(rf_model_predictions) <- 'pred_farm_area_ha'
-# qrf_model_predictions <- terra::rast('../../../data/processed/qrf_100quantiles_predictions_africa.tif')
-# names(qrf_model_predictions) <- paste0('qrf_q', sprintf('%03g', 1:100))
-# mask_forest_ssa <- terra::rast('../../../data/processed/mask_forest_ssa.tif')
-# mask_drylands_ssa <- terra::rast('../../../data/processed/mask_drylands_ssa.tif')
-# ------------------------------------------------------------------------------
-# from JOAO
-png("../output/main_fig/Fig.01.png", width = 9, height = 8.8, units = "in", res = 200)
-par(mfrow=c(2,2), mar=c(3.5,3.5,1,1), xaxs='i', yaxs='i')
+pal1 <- colorRampPalette(c("darkred","orange","gold","darkolivegreen3","darkgreen"))
+pal4 <- colorRampPalette(c("#A1D99B","#00441B"))
+terra::terraOptions(memfrac = 0.2, todisk = TRUE)
 
-# plot 1
-fig1a <- terra::rast('../fig.1a_nb_of_farm_per_grid_cell.tif')
-# pal <- colorRampPalette(c('#8B0000', '#FFCB00', 'forestgreen'))
-pal <-pal4
-terra::plot(ssa, mar=c(3.5,3.5,1,1), clip=F, col='white', main='', panel.first=grid(col="gray", lty="solid"), pax=list(cex.axis=1.8))
-terra::plot(fig1a$spam_2017 / fig1a$pred_farm_area_ha, breaks=c(0, 500, 1000, 2000, 5000, 10000, Inf), col=pal(6), legend=F, axes=F, add=T)
-legend(-16, -5, bty='y', bg='white', cex=1.1, ncol=1, box.col="white", title=expression('Farms per 100' ~ km^2), legend=c('< 500', '501 - 1000', '1001 - 2000', '2001 - 5000', '5001 - 10000', '> 10000'), fill=pal(6), horiz=F)
-terra::plot(ssa, axes=F, add=T)
-text(48, 26, 'A)', cex=1.5)
+# ── Open PNG ──────────────────────────────────────────────────────────────────
+png("../output/main_fig/Fig.02.png", width = 9, height = 8.8, units = "in", res = 200)
+par(mfrow = c(2,2), mar = c(3.5,3.5,1,1), xaxs = "i", yaxs = "i")
 
-# plot 2
-pal <- colorRampPalette(c('#8B0000', '#FFCB00', 'forestgreen'))
-terra::plot(ssa, mar=c(3.5,3.5,1,1), clip=F, col='white', main='', panel.first=grid(col="gray", lty="solid"), pax=list(cex.axis=1.8))
-terra::plot(fig1a$pred_farm_area_ha, breaks=c(0, 0.5, 1, 2, 5, Inf), col=pal(6), legend=F, axes=F, add=T)
-legend(-15, -5, bty='y', bg='white', cex=1.1, ncol=1, box.col="white", title="Farm size", legend=c('< 0.5 ha', '0.5 - 1 ha', '1 - 1.5 ha', '1.5 - 2 ha', '2 - 5 ha', '> 5 ha'), fill=pal(6), horiz=F)
-terra::plot(ssa, axes=F, add=T)
-text(48, 26, 'B)', cex=1.5)
+# ── Panel A: Q10 farm size map ────────────────────────────────────────────────
+fig2a <- terra::rast("fig.2a_quantile_10_fsizes.tif")
+pal   <- colorRampPalette(c("#8B0000","#FFCB00","forestgreen"))
+terra::plot(ssa, mar = c(3.5,3.5,1,1), clip = FALSE, col = "white", main = "",
+            panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.8))
+terra::plot(fig2a[[1]], breaks = c(0,0.1,0.2,0.5,1,2,Inf),
+            col = pal(6), legend = FALSE, axes = FALSE, add = TRUE)
+legend(-15, -5, bty = "y", bg = "white", cex = 1.1, ncol = 1, box.col = "white",
+       title = expression(paste("Farm size (q"[10],")")),
+       legend = c("< 0.1 ha","0.1 - 0.2 ha","0.2 - 0.5 ha","0.5 - 1 ha","1 - 2 ha","> 2 ha"),
+       fill = pal(6), horiz = FALSE)
+terra::plot(ssa, axes = FALSE, add = TRUE)
+text(48, 26, "A)", cex = 1.5)
 
-# plot 3
-fig1c <- readRDS('../fig.1c_comparison_with_sarah_lowder.rds')
-fig1c$comp_nb_farms$nb_farms[fig1c$comp_nb_farms$country == 'Rwanda'] <- 1674687
-fig1c$r2_sarah <- unname(round(cor(na.omit(bind_cols(fig1c$comp_nb_farms$estim_nb_farms, fig1c$comp_nb_farms$nb_farms)))[2,1]^2, 2))
-fig1c$comp_nb_farms$year_class <- ifelse(fig1c$comp_nb_farms$census_year < 1980, '1970s', NA)
-fig1c$comp_nb_farms$year_class <- ifelse(fig1c$comp_nb_farms$census_year >= 1980 & fig1c$comp_nb_farms$census_year < 1990, '1980s', fig1c$comp_nb_farms$year_class)
-fig1c$comp_nb_farms$year_class <- ifelse(fig1c$comp_nb_farms$census_year >= 1990 & fig1c$comp_nb_farms$census_year < 2000, '1990s', fig1c$comp_nb_farms$year_class)
-fig1c$comp_nb_farms$year_class <- ifelse(fig1c$comp_nb_farms$census_year >= 2000 & fig1c$comp_nb_farms$census_year < 2010, '2000s', fig1c$comp_nb_farms$year_class)
-fig1c$comp_nb_farms$year_class <- ifelse(fig1c$comp_nb_farms$census_year >= 2010 & fig1c$comp_nb_farms$census_year < 2020, '2010s', fig1c$comp_nb_farms$year_class)
-plot(log10(fig1c$comp_nb_farms$nb_farms/1000000), log10(fig1c$comp_nb_farms$estim_nb_farms/1000000),
-     xlim=c(-2.5, 1.7), ylim=c(-2.5, 1.7), col='white', cex.axis=1.2, cex.lab=1.35, las=0, mgp=c(2,0.75,0), #was cex.lab = 1.4
-     xlab=expression(paste('Million of farms based on census (log'[10],' scale)')), ylab=expression(paste('Million of farms based on predictions (log'[10],' scale)')))
-rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "whitesmoke")
-grid(nx=8, ny=8, col='lightgrey')
-abline(a=0, b=1)
-colr <- viridis::viridis(5, alpha=0.7)
-i <- 1
-for(yr in sort(unique(na.omit(fig1c$comp_nb_farms$year_class)))){
-  sbt <- subset(fig1c$comp_nb_farms, !is.na(year_class) & year_class==yr)
-  if(nrow(sbt)==0) next
-  points(log10(pmax(sbt$nb_farms,1)/1000000), log10(pmax(sbt$estim_nb_farms,1)/1000000), pch=21, cex=3, col='grey20', bg=colr[i])
-  i <- i+1
-  }
-for(cty in c('Angola', 'Benin', 'Botswana', 'Ethiopia', 'Gabon', 'Liberia', 'Malawi', 'Niger', 'Nigeria', 'Rwanda', 'Sierra Leone' )){ 
-  sbt <- subset(fig1c$comp_nb_farms, country==cty)
-  if(nrow(sbt)==0 || any(is.na(sbt$nb_farms)) || any(sbt$nb_farms<=0)) next
-  text(log10(sbt$nb_farms/1000000), log10(sbt$estim_nb_farms/1000000)+0.05, labels = sbt$country, col='grey10', pos = 3, cex = 1.2)
-  }
-legend('bottomright', bty='n', cex=1.3, title='Census\ndecade', legend=sort(unique(fig1c$comp_nb_farms$year_class)), pch=21, pt.cex=1.7, col='grey20', pt.bg=colr[1:5])
-text(-2.2, 1.35, 'C)', cex=1.5)
-text(-0.5, 1.2, bquote(R^2== .(round(fig1c$r2_sarah, 2))), cex=1.5)
+# ── Panel B: Q90 farm size map ────────────────────────────────────────────────
+fig2b <- terra::rast("fig.2b_quantile_90_fsizes.tif")
+pal   <- colorRampPalette(c("#8B0000","#FFCB00","forestgreen"))
+terra::plot(ssa, mar = c(3.5,3.5,1,1), clip = FALSE, col = "white", main = "",
+            panel.first = grid(col = "gray", lty = "solid"), pax = list(cex.axis = 1.8))
+terra::plot(fig2b[[1]], breaks = c(0,1,2,5,10,15,Inf),
+            col = pal(6), legend = FALSE, axes = FALSE, add = TRUE)
+legend(-15, -5, bty = "y", bg = "white", cex = 1.1, ncol = 1, box.col = "white",
+       title = expression(paste("Farm size (q"[90],")")),
+       legend = c("< 1 ha","1 - 2 ha","2 - 5 ha","5 - 10 ha","10 - 15 ha","> 15 ha"),
+       fill = pal(6), horiz = FALSE)
+terra::plot(ssa, axes = FALSE, add = TRUE)
+text(48, 26, "B)", cex = 1.5)
 
-# plot 4
-fig1d <- readRDS('../fig.1d_reported_vs_predicted_fsize.rds')
-fig1d <- na.omit(data.frame(x=fig1d$lsms_spatial$farm_area_ha, y=fig1d$lsms_spatial$pred_oob))
-dens <- MASS::kde2d(fig1d$x, fig1d$y, lims = c(0, 3, 0, 3), n = 500)
-image(dens, col = viridis::mako(20, direction=-1)[c(1:12)], xlim=c(0,3), ylim=c(0,3), 
-      xlab = "Reported farm size (ha)", ylab = "Predicted farm size (ha)", main = "",
-      cex.axis=1.2, cex.lab=1.4, las=0, mgp=c(2,0.75,0))
-# contour(dens, add = TRUE, col='grey')
-abline(a=0, b=1, col='black', lwd=2)
-abline(a=0, b=2, col='black', lwd=2, lty=2)
-abline(a=0, b=0.5, col='black', lwd=2, lty=2)
-text(0.2, 2.75, 'D)', cex=1.5)
-text(1.85, 2.65, bquote(R^2== .(round(0.54, 2))), cex=1.5)
+# ── Panel C: ECDF by farm size class ─────────────────────────────────────────
+# PRODUCTION: fig2c built from theor_farms_application joined with rf predictions
+# fig2c <- theor_farms_application |>
+#   select(x, y, linear_farm_size_ha) |>
+#   inner_join(terra::as.data.frame(rf_model_predictions_SSA, xy=TRUE)) |>
+#   rename(farm_size = linear_farm_size_ha, avg_size = rf_mean)
+fig2c <- readRDS("fig2c.rds")
+
+plot(ecdf(fig2c$farm_size[fig2c$avg_size > 5]), col = NA, verticals = FALSE,
+     xlim = c(0,25), main = "",
+     xlab = "Average farm size per grid cell (ha)", ylab = "Cumulative probability",
+     cex.axis = 1.2, cex.lab = 1.4, las = 0, mgp = c(2,0.75,0), bg = "whitesmoke")
+rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col = "whitesmoke")
+grid(nx = 8, ny = 8, col = "lightgrey")
+plot(ecdf(fig2c$farm_size[fig2c$avg_size <  0.5]),           col = "#8B0000",    lwd = 3, add = TRUE)
+plot(ecdf(fig2c$farm_size[fig2c$avg_size >= 1 & fig2c$avg_size < 2]), col = "#FFCB00", lwd = 3, add = TRUE)
+plot(ecdf(fig2c$farm_size[fig2c$avg_size >  5]),             col = "forestgreen", lwd = 3, add = TRUE)
+legend("bottomright", legend = c("< 0.5 ha","1–2 ha","> 5 ha"),
+       col = c("#8B0000","#FFCB00","forestgreen"), bg = NA, box.col = NA,
+       lty = 1, lwd = 1.5, cex = 1.2, title = "Farm size class")
+text(23, 0.93, "C)", cex = 1.5)
+
+# ── Panel D: Gini vs average farm size ───────────────────────────────────────
+fig2d <- readRDS("fig.2d_mean_fsize_gini_coefs.rds")
+
+plot(fig2d$predicted_avg_vs_gini$avg, fig2d$predicted_avg_vs_gini$gini,
+     col = "white", xlim = c(0,15), ylim = c(0.1,0.8),
+     cex.axis = 1.2, cex.lab = 1.4, las = 0, mgp = c(2,0.75,0),
+     xlab = "Average farm size per grid cell (ha)",
+     ylab = "Gini coefficient of farm size per grid cell")
+rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col = "whitesmoke")
+grid(nx = 8, ny = 8, col = "lightgrey")
+points(fig2d$predicted_avg_vs_gini$avg, fig2d$predicted_avg_vs_gini$gini,
+       cex = 0.5, pch = 21, col = viridis::viridis(5, alpha = 0.1)[2],
+       bg  = viridis::viridis(5, alpha = 0.1)[2])
+points(fig2d$observed_avg_vs_gini$mean, fig2d$observed_avg_vs_gini$gini,
+       cex = 0.5, pch = 21, col = viridis::viridis(5, alpha = 0.1)[4],
+       bg  = viridis::viridis(5, alpha = 0.1)[4])
+tryCatch({
+  car::dataEllipse(fig2d$predicted_avg_vs_gini$avg, fig2d$predicted_avg_vs_gini$gini,
+    col = viridis::viridis(5, alpha=0.9)[2], cex=0, levels=0.50, lwd=2, center.pch=FALSE, add=TRUE)
+  car::dataEllipse(fig2d$observed_avg_vs_gini$mean, fig2d$observed_avg_vs_gini$gini,
+    col = viridis::viridis(5, alpha=0.9)[4], cex=0, levels=0.50, lwd=2, center.pch=FALSE, add=TRUE)
+  car::dataEllipse(fig2d$predicted_avg_vs_gini$avg, fig2d$predicted_avg_vs_gini$gini,
+    col = viridis::viridis(5, alpha=0.9)[2], cex=0, levels=0.95, lty=2, lwd=2, center.pch=FALSE, add=TRUE)
+  car::dataEllipse(fig2d$observed_avg_vs_gini$mean, fig2d$observed_avg_vs_gini$gini,
+    col = viridis::viridis(5, alpha=0.9)[4], cex=0, levels=0.95, lty=2, lwd=2, center.pch=FALSE, add=TRUE)
+}, error = function(e) message("CI: dataEllipse skipped: ", e$message))
+abline(a = 0.7, b = -0.03, col = 1, lwd = 2)
+abline(h = 0.2, col = 1, lty = 2, lwd = 2)
+legend("topright", bty = "n", bg = "whitesmoke", cex = 1.1, ncol = 1,
+       legend = c("Predicted","Reported","y=0.7-0.03x","y=0.2"),
+       pch = c(21,21,NA,NA), lty = c(NA,NA,1,2), lwd = c(NA,NA,2,2),
+       col = c(viridis::viridis(5, alpha=0.7)[c(2,4)], 1, 1),
+       pt.bg = c(viridis::viridis(5, alpha=0.7)[c(2,4)], NA, NA), pt.cex = 1.5)
+text(1, 0.75, "D)", cex = 1.5)
 box()
 
-
-# Add continuous color legend in bottom-left corner
-# Create a small inset plot for the legend
-# Define legend position in plot coordinates
-legend_x1 <- 2.25
-legend_x2 <- 2.4
-legend_y1 <- 0.05
-legend_y2 <- 0.7
-
-# Create gradient for legend
-# Get the grid coordinates
-x_breaks <- dens$x
-y_breaks <- dens$y
-
-# Find which bin each observation falls into
-x_bins <- findInterval(fig1d$x, x_breaks, all.inside = TRUE)
-y_bins <- findInterval(fig1d$y, y_breaks, all.inside = TRUE)
-
-# Create count matrix using table
-count_table <- table(factor(x_bins, levels = 1:length(x_breaks)),
-                     factor(y_bins, levels = 1:length(y_breaks)))
-
-# Convert to matrix
-count_matrix <- as.matrix(count_table)
-legend_seq <- seq(min(count_matrix, na.rm=TRUE), max(count_matrix, na.rm=TRUE), length.out=100)
-legend_matrix <- matrix(legend_seq, ncol=1)
-
-# Add legend border
-rect(legend_x1 - 0.01, 0, 3, 0.9, border = "black", lwd = 1, col ='white')
-
-# Add the legend as a small image
-image(x = seq(legend_x1, legend_x2, length.out = 2),
-      y = seq(legend_y1, legend_y2, length.out = 100),
-      z = t(legend_matrix),
-      col = viridis::mako(20, direction=-1)[c(1:12)],
-      add = TRUE,
-      xaxt = "n", yaxt = "n")
-
-
-
-# Add legend labels
-n_labels <- 5
-label_values <- pretty(range(count_matrix, na.rm=TRUE), n = n_labels)
-label_positions <- legend_y1 + (label_values - min(count_matrix, na.rm=TRUE)) / 
-  (max(count_matrix, na.rm=TRUE) - min(count_matrix, na.rm=TRUE)) * 
-  (legend_y2 - legend_y1)
-
-# Add tick marks and labels
-for(i in 1:length(label_values[-length(label_values)])) {
-  segments(legend_x2, label_positions[i], legend_x2 + 0.05, label_positions[i], lwd = 1)
-  text(legend_x2 + 0.1, label_positions[i], 
-       format(round(label_values[i]), scientific = FALSE), 
-       adj = 0, cex = 1.2)
-}
-
-# Add legend title
-text(2.25 + (3 - 2.25)/2, legend_y2 + 0.1, 
-     "Farms", cex = 1.2)
-
 dev.off()
+
+# PRODUCTION: also write PDF via magick
+# magick::image_write(magick::image_read("../output/main_fig/Fig.02.png"),
+#                     "../output/main_fig/Fig.02.pdf", format = "pdf")
+
+elapsed <- proc.time()[["elapsed"]] - t0
+write_report("F02_main_figure2.R",
+  "Main Figure 2: Q10 map | Q90 map | ECDF by farm class | Gini scatter",
+  inputs = list(
+    "Q10 raster"    = "fig.2a_quantile_10_fsizes.tif",
+    "Q90 raster"    = "fig.2b_quantile_90_fsizes.tif",
+    "fig2c RDS"     = "fig2c.rds",
+    "fig2d RDS"     = "fig.2d_mean_fsize_gini_coefs.rds"
+  ),
+  outputs = list("Fig.02.png" = "../output/main_fig/Fig.02.png"),
+  sections = list("Panel notes" = c(
+    "A: Q10 farm size map — smallest predicted farm sizes",
+    "B: Q90 farm size map — largest predicted farm sizes",
+    "C: ECDF of individual farm sizes stratified by avg size class",
+    "D: Gini coefficient vs average farm size with 50% and 95% ellipses"
+  )),
+  elapsed_sec = elapsed)
+message("F02 done in ", round(elapsed, 1), "s")

@@ -453,12 +453,26 @@ saveRDS(list(lsms_spatial=data.frame(farm_area_ha=pmax(.01,rlnorm(500,.3,.8)),
   pred_oob=pmax(.01,rlnorm(500,.3,.8)))), "../fig.1d_reported_vs_predicted_fsize.rds")
 
 # China cropland (external dataset - true stub)
-china_long <- expand.grid(pred_farm_area_ha=seq(.2,8,by=.2),
-  aez=c("tropical highlands","humid","sub-humid","semi-arid","all_aez"),
-  product=c("all_crops","cattle","maize","sorghum","millet","cassava","legumes","non_food"),
-  stringsAsFactors=FALSE)
-china_long$value <- runif(nrow(china_long),0,1)
-saveRDS(list(df_rel_long=china_long), "2026-01-24.CHINA_croplands_per_crop_per_aez.rds")
+# value must be CUMULATIVE (0→1 as pred_farm_area_ha increases) for line plots in F03
+{
+  fa_seq <- seq(0.2, 8, by=0.2)
+  aez_lvls <- c("tropical highlands","humid","sub-humid","semi-arid","all_aez")
+  prod_lvls <- c("all_crops","cattle","maize","sorghum","millet","cassava","legumes","non_food")
+  set.seed(42)
+  china_rows <- vector("list", length(aez_lvls)*length(prod_lvls))
+  k <- 1L
+  for (az in aez_lvls) for (pr in prod_lvls) {
+    # Sigmoid-shaped cumulative curve with slight per-group variation
+    midpoint <- runif(1, 1.5, 4.0); slope <- runif(1, 0.8, 2.5)
+    val <- 1 / (1 + exp(-slope * (fa_seq - midpoint)))
+    val <- (val - min(val)) / (max(val) - min(val))  # rescale to 0-1
+    china_rows[[k]] <- data.frame(pred_farm_area_ha=fa_seq, aez=az, product=pr,
+                                  value=round(val,4), stringsAsFactors=FALSE)
+    k <- k + 1L
+  }
+  china_long <- do.call(rbind, china_rows)
+  saveRDS(list(df_rel_long=china_long), "2026-01-24.CHINA_croplands_per_crop_per_aez.rds")
+}
 
 # summarized_farm_area_ha_per_class_vs_sarah (08.3 Sarah section - true stub)
 sz_cls <- c(1,2,5,10,20,50)
@@ -470,6 +484,18 @@ s07$cropland_ha   <- round(runif(nrow(s07),1e4,1e6))
 s07$pred_cropland_ha <- round(s07$cropland_ha*runif(nrow(s07),.8,1.2))
 saveRDS(list(comp_fsize_classes_nb=s07, comp_fsize_classes_ha=s07),
   file.path(processed_path,"summarized_farm_area_ha_per_class_vs_sarah.rds"))
+
+# Suppl.Fig06_divergence_table.rds — one row per country, read by S06 and S07
+# In production this is computed by S06 from the sarah comparison data
+div_table <- data.frame(
+  NAME_0        = sixteen_countries,
+  GID_0         = sixteen_country_codes,
+  divergence_nb = round(runif(16, 0.05, 0.60), 2),
+  divergence_ha = round(runif(16, 0.05, 0.55), 2),
+  divergence    = round(runif(16, 0.05, 0.58), 2),
+  stringsAsFactors = FALSE
+)
+saveRDS(div_table, "Suppl.Fig06_divergence_table.rds")
 
 message("   Figure stubs done.")
 

@@ -1,185 +1,135 @@
 # ==============================================================================
 # Script: F03_main_figure3.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Generate Main Figure 3 - Farm size predictions across SSA
+# Purpose: Main Figure 3 — 6-panel cumulative crop area / herd size by AEZ
+#          layout: matrix(c(1,1,2,2, 3,4,5,6), nrow=2, byrow=TRUE)
+#          Panel A: all_crops + cattle across 4 AEZ  (full-width)
+#          Panel B: 6 crops across all AEZ           (full-width)
+#          Panels C-F: maize/sorghum/millet/cassava per AEZ
 #
-# Authors: Deo, Joao, Robert, Fred
-# Code documentation: Claude (Anthropic) - February 2026
+# PRODUCTION input (scripts/ dir):
+#   2026-01-24.CHINA_croplands_per_crop_per_aez.rds
+#     $df_rel_long: pred_farm_area_ha, aez, product, value (cumulative 0→1)
+#
+# CI: stub produced by 00_synthetic_data.R with sigmoid-shaped cumulative values
+# Output: ../output/main_fig/Fig.03.png
 # ==============================================================================
-
 
 source("00_report_utils.R")
 t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
-require(patchwork)
-
-# Clean environment
 rm(list = setdiff(ls(), c("t0","write_report","capture_output","ci_trees","ci_folds")))
+setwd(paste0(here::here(), "/scripts"))
+dir.create("../output/main_fig", recursive = TRUE, showWarnings = FALSE)
 
-setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/main_fig', recursive = TRUE, showWarnings = FALSE)
+# ── Load data ─────────────────────────────────────────────────────────────────
+fig3  <- readRDS("2026-01-24.CHINA_croplands_per_crop_per_aez.rds")
+fig3a <- fig3$df_rel_long |>
+  filter(product %in% c("all_crops","cattle"), aez != "all_aez")
+fig3b <- fig3$df_rel_long |>
+  filter(product %in% c("maize","sorghum","millet","cassava","legumes","non_food"),
+         aez == "all_aez") |>
+  mutate(product = if_else(product == "non_food", "cash crops", product))
+fig3c <- fig3$df_rel_long |>
+  filter(product %in% c("maize","sorghum","millet","cassava"), aez != "all_aez")
 
-# ------------------------------------------------------------------------------
-# Preparation for functions and mapping
-input_path <- '../data/raw/spatial'
-country <- geodata::world(path=input_path, resolution=5, level=0)
-isocodes <- geodata::country_codes()
-isocodes_ssa <- subset(isocodes, NAME=='Sudan' | UNREGION1=='Middle Africa' | UNREGION1=='Western Africa' | UNREGION1=='Southern Africa' | UNREGION1=='Eastern Africa')
-isocodes_ssa <- subset(isocodes_ssa, NAME!='Cabo Verde' & NAME!='Comoros' & NAME!='Mauritius' & NAME!='Mayotte' & NAME!='Réunion' & NAME!='Saint Helena' & NAME!='São Tomé and Príncipe' & NAME!='Seychelles') # keep the mainland + Madagascar only, remove islands
-ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
-pal1 <- colorRampPalette(c('darkred', 'orange', 'gold', 'darkolivegreen3', 'darkgreen'))
-pal2 <- colorRampPalette(c('#c6dbef','#6baed6','#3182bd', '#08519c', '#08306b'))
-pal3 <- colorRampPalette(c('skyblue1', 'blue4'))
-pal4 <- colorRampPalette(c('#A1D99B', '#00441B')) # RColorBrewer::brewer.pal(9,'Greens')
-pal5 <- colorRampPalette(c('#FFFFCC', '#800026'))
-pal6 <- colorRampPalette(c('#F0F921FF', '#0D0887FF'))
-pal7 <- colorRampPalette(c('#C7EAE5', '#01665E'))
-pal8 <- viridis::plasma(6)
-pal9 <- viridis::mako(10)
+# ── Open PNG ──────────────────────────────────────────────────────────────────
+png("../output/main_fig/Fig.03.png", width = 9, height = 8.8, units = "in", res = 200)
+layout(matrix(c(1,1,2,2, 3,4,5,6), nrow = 2, byrow = TRUE))
+par(mar = c(3.5,3.5,1,1), xaxs = "i", yaxs = "i")
 
-# force terra to use disk-based processing and 50% of RAM (Use this if R crashes because of limited memory)
-terra::terraOptions(memfrac = 0.5, todisk = T)
-gc()
-
-# ------------------------------------------------------------------------------
-# modified from JOAO
-
-png("../output/main_fig/Fig.02.png", width = 9, height = 8.8, units = 'in', res = 1000)
-par(mfrow=c(2,2), mar=c(3.5,3.5,1,1), xaxs='i', yaxs='i')
-
-# plot 1
-fig2a <- terra::rast('fig.2a_quantile_10_fsizes.tif')
-pal <- colorRampPalette(c('#8B0000', '#FFCB00', 'forestgreen'))
-terra::plot(ssa, mar=c(3.5,3.5,1,1), clip=F, col='white', main='', panel.first=grid(col="gray", lty="solid"), pax=list(cex.axis=1.8))
-terra::plot(fig2a$qrf_q010, breaks=c(0, 0.1, 0.2, 0.5, 1, 2, Inf), col=pal(6), legend=F, axes=F, add=T)
-legend(-15, -5, bty='y', bg='white', cex=1.1, ncol=1, box.col="white",  title=expression(paste('Farm size (q' [10], ')')),
-       legend=c('< 0.1 ha', '0.1 - 0.2 ha', '0.2 - 0.5 ha', '0.5 - 1 ha', '1 - 2 ha', '> 2 ha'), fill=pal(6), horiz=F)
-terra::plot(ssa, axes=F, add=T)
-text(48, 26, 'A)', cex=1.5)
-
-# plot 2
-fig2b <- terra::rast('fig.2b_quantile_90_fsizes.tif')
-pal <- colorRampPalette(c('#8B0000', '#FFCB00', 'forestgreen'))
-terra::plot(ssa, mar=c(3.5,3.5,1,1), clip=F, col='white', main='', panel.first=grid(col="gray", lty="solid"), pax=list(cex.axis=1.8))
-terra::plot(fig2b$qrf_q090, breaks=c(0, 1, 2, 5, 10, 15, Inf), col=pal(6), legend=F, axes=F, add=T)
-legend(-15, -5, bty='y', bg='white', cex=1.1, ncol=1, box.col="white", title=expression(paste('Farm size (q' [90], ')')), 
-       legend=c('< 1 ha', '1 - 2 ha', '2 - 5 ha', '5 - 10 ha', '10 - 15 ha', '> 15 ha'), fill=pal(6), horiz=F)
-terra::plot(ssa, axes=F, add=T)
-text(48, 26, 'B)', cex=1.5)
-
-# ------------------------------------------------------------------------------
-# plot 3
-# fig2c <- readRDS('sample_virtual_farms.rds')
-# xx <- readRDS('../../../data/processed/fsize_distribution_resample_long.rds')
-# theor_farms <- xx$theor_farms
-# theor_farms_application <- xx$theor_farms_application; rm(xx)
-# pred_avg <- terra::rast('../../../data/processed/rf_model_predictions_SSA.tif') |>
-#   terra::as.data.frame(xy = T)
-# 
-# fig2c <- theor_farms_application |>
-#   select(x, y, linear_farm_size_ha) |>
-#   inner_join(pred_avg) |>
-#   rename(farm_size = linear_farm_size_ha, avg_size = rf_predictions_africa)
-
-# PRODUCTION: theor_farms_application joined with rf predictions
-# fig2c <- theor_farms_application |>
-#   select(x, y, linear_farm_size_ha) |>
-#   inner_join(pred_avg) |>
-#   rename(farm_size = linear_farm_size_ha, avg_size = rf_predictions_africa)
-# CI: read stub — ensure avg_size and farm_size are correlated for ECDF groups
-fig2c <- readRDS('fig2c.rds')
-if (!is.null(fig2c) && nrow(fig2c) > 0 && all(c("farm_size","avg_size") %in% names(fig2c))) {
-  # Ensure enough points per group for smooth ECDF lines
-  if (sum(fig2c$avg_size < 0.5) < 10) {
-    set.seed(42)
-    n <- 300
-    small  <- data.frame(farm_size = pmax(0.01, rlnorm(n, -0.3, 0.5)),
-                         avg_size  = runif(n, 0.1, 0.49), country = "stub")
-    medium <- data.frame(farm_size = pmax(0.01, rlnorm(n,  0.3, 0.6)),
-                         avg_size  = runif(n, 1.0, 1.99), country = "stub")
-    large  <- data.frame(farm_size = pmax(0.01, rlnorm(n,  1.5, 0.8)),
-                         avg_size  = runif(n, 5.1, 10.0), country = "stub")
-    fig2c  <- bind_rows(fig2c, small, medium, large)
+# ── Panel A: all_crops + cattle by AEZ ───────────────────────────────────────
+plot(0, 0, xlim = c(0,8), ylim = c(0,100), xlab = "", ylab = "",
+     cex.axis = 1.2, cex.lab = 1.4, las = 0, mgp = c(2,0.75,0), col = "white")
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = "whitesmoke")
+grid(nx = 8, ny = 10, lty = 1, col = "lightgrey")
+i <- 1
+for (aez1 in c("tropical highlands","humid","sub-humid","semi-arid")) {
+  sub1 <- subset(fig3a, aez == aez1)
+  col  <- viridis::viridis(4, direction = 1)[i]
+  for (ct in c("all_crops","cattle")) {
+    sub  <- subset(sub1, product == ct)
+    if (nrow(sub) > 0)
+      lines(sub$pred_farm_area_ha, sub$value * 100,
+            col = col, lwd = 3.5, lty = if (ct == "all_crops") 1L else 2L)
   }
+  i <- i + 1
 }
-
-pal <- adjustcolor(c('#8B0000', '#FFCB00', 'forestgreen'), alpha.f = 0.1)
-plot(ecdf(fig2c$farm_size[fig2c$avg_size > 5]), col = NA, verticals = F,
-     xlim = c(0, 25), main = '', #  xlim was c(0, 15)
-     xlab = 'Average farm size per grid cell (ha)', ylab = 'Cumulative probability',
-     cex.axis=1.2, cex.lab=1.4, las=0, mgp=c(2,0.75,0), bg = 'whitesmoke' )
-rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "whitesmoke")
-grid(nx=8, ny=8, col='lightgrey')
-plot(ecdf(fig2c$farm_size[fig2c$avg_size < 0.5 ]), col='#8B0000', lwd = 3, add = T )
-plot(ecdf(fig2c$farm_size[fig2c$avg_size >= 1 & fig2c$avg_size < 2]), col= '#FFCB00', lwd = 3, add = T)
-plot(ecdf(fig2c$farm_size[fig2c$avg_size > 5]), col='forestgreen', lwd = 3, add = T)
-
-# Add legend
-legend(
-  'bottomright',
-  legend = c('< 0.5 ha', '1–2 ha', '> 5 ha'),
-  col = c('#8B0000', '#FFCB00', 'forestgreen'),
-  bg = NA,
-  box.col = NA,
-  lty = 1,
-  lwd = 1.5,
-  cex = 1.2,
-  pt.cex = 2,
-  text.col = 'black',
-  title = 'Farm size class'
-)
-
-text(23, 0.93, 'C)', cex=1.5)
-
-# ------------------------------------------------------------------------------
-# plot 4
-
-fig2d <- readRDS('fig.2d_mean_fsize_gini_coefs.rds')
-
-plot(fig2d$predicted_avg_vs_gini$avg, fig2d$predicted_avg_vs_gini$gini, col='white', xlim=c(0,15), ylim=c(0.1,0.8),
-     cex.axis=1.2, cex.lab=1.4, las=0, mgp=c(2,0.75,0),
-     xlab='Average farm size per grid cell (ha)', ylab='Gini coefficient of farm size per grid cell')
-rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "whitesmoke")
-grid(nx=8, ny=8, col='lightgrey')
-points(fig2d$predicted_avg_vs_gini$avg, fig2d$predicted_avg_vs_gini$gini, cex=0.5, pch=21, col=viridis::viridis(5, alpha=0.1)[2], bg=viridis::viridis(5, alpha=0.1)[2])
-points(fig2d$observed_avg_vs_gini$mean, fig2d$observed_avg_vs_gini$gini, cex=0.5, pch=21, col=viridis::viridis(5, alpha=0.1)[4], bg=viridis::viridis(5, alpha=0.1)[4])
-car::dataEllipse(fig2d$predicted_avg_vs_gini$avg, fig2d$predicted_avg_vs_gini$gini, 
-                 col=viridis::viridis(5, alpha=0.9)[2], 
-                 cex = 0,
-                 levels = 0.5, 
-                 lwd = 2,
-                 center.pch = F,
-                 add = T)
-car::dataEllipse(fig2d$observed_avg_vs_gini$mean, fig2d$observed_avg_vs_gini$gini,
-                 col=viridis::viridis(5, alpha=0.9)[4], 
-                 cex = 0,
-                 levels = 0.5, 
-                 lwd = 2,
-                 center.pch = F,
-                 add = T)
-car::dataEllipse(fig2d$predicted_avg_vs_gini$avg, fig2d$predicted_avg_vs_gini$gini, 
-                 col=viridis::viridis(5, alpha=0.9)[2], 
-                 cex = 0,
-                 levels = 0.95, 
-                 lty = 2,
-                 lwd = 2,
-                 center.pch = F,
-                 add = T)
-car::dataEllipse(fig2d$observed_avg_vs_gini$mean, fig2d$observed_avg_vs_gini$gini,
-                 col=viridis::viridis(5, alpha=0.9)[4], 
-                 cex = 0,
-                 levels = 0.95, 
-                 lty = 2,
-                 lwd = 2,
-                 center.pch = F,
-                 add = T)
-
-abline(a=0.7, b=-0.03, col=1, lwd=2)
-abline(h=0.2, col=1, lty=2, lwd=2)
-legend('topright', bty='n', bg='whitesmoke', cex=1.1, ncol=1, legend=c('Predicted', 'Reported', 'y=0.7-0.03x', 'y=0.2'), pch=c(21,21,NA,NA), lty=c(NA,NA,1,2), lwd=c(NA,NA,2,2), col=c(viridis::viridis(5, alpha=0.7)[c(2,4)],1,1), pt.bg=c(viridis::viridis(5, alpha=0.7)[c(2,4)],NA,NA), pt.cex=1.5, horiz=F)
-text(1, 0.75, 'D)', cex=1.5)
+legend("bottomright", bty = "n", bg = "whitesmoke", cex = 1.1,
+       lty = c(1,1,1,1,1,2), lwd = 3,
+       legend = c("Tropical highlands","Humid","Sub-humid","Semi-arid","Cropland","Cattle"),
+       col = c(viridis::viridis(4, direction=1), 1, 1))
+text(0.5, 93, "A)", cex = 1.5)
+title(ylab = "Cumulative cultivated area or herd size (%)", cex.lab = 1.4, line = 2)
+title(xlab = "Average farm size (ha)",                       cex.lab = 1.4, line = 2)
 box()
+
+# ── Panel B: 6 crops across all AEZ ──────────────────────────────────────────
+plot(0, 0, xlim = c(0,8), ylim = c(0,100), xlab = "", ylab = "",
+     cex.axis = 1.2, cex.lab = 1.4, las = 0, mgp = c(2,0.75,0), col = "white")
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = "whitesmoke")
+grid(nx = 8, ny = 10, lty = 1, col = "lightgrey")
+i <- 1
+for (prod1 in c("maize","sorghum","millet","cassava","legumes","cash crops")) {
+  sub1 <- subset(fig3b, product == prod1)
+  if (nrow(sub1) > 0)
+    lines(sub1$pred_farm_area_ha, sub1$value * 100,
+          col = viridis::viridis(6, direction=1)[i], lwd = 3.5, lty = 1)
+  i <- i + 1
+}
+legend("bottomright", bty = "n", bg = "whitesmoke", cex = 1.1, lty = 1, lwd = 3,
+       legend = c("Maize","Sorghum","Millet","Cassava","Legumes","Non-food crops"),
+       col = viridis::viridis(6, direction=1))
+text(0.5, 93, "B)", cex = 1.5)
+title(ylab = "Cumulative crop area (%)", cex.lab = 1.4, line = 2)
+title(xlab = "Average farm size (ha)",   cex.lab = 1.4, line = 2)
+box()
+
+# ── Panels C–F: maize/sorghum/millet/cassava per AEZ ─────────────────────────
+panel_aez   <- c("tropical highlands","humid","sub-humid","semi-arid")
+panel_label <- c("C)","D)","E)","F)")
+panel_title <- c("Tropical\nhighlands","Humid","Sub-humid","Semi-arid")
+crops4 <- c("maize","sorghum","millet","cassava")
+
+for (j in seq_along(panel_aez)) {
+  sub_aez <- subset(fig3c, aez == panel_aez[j])
+  plot(0, 0, xlim = c(0,8), ylim = c(0,100), xlab = "", ylab = "",
+       cex.axis = 1.2, cex.lab = 1.4, las = 0, mgp = c(2,0.75,0), col = "white")
+  rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = "whitesmoke")
+  grid(nx = 8, ny = 10, lty = 1, col = "lightgrey")
+  for (k in seq_along(crops4)) {
+    sub_c <- subset(sub_aez, product == crops4[k])
+    if (nrow(sub_c) > 0)
+      lines(sub_c$pred_farm_area_ha, sub_c$value * 100,
+            col = viridis::viridis(4, direction=1)[k], lwd = 3.5, lty = 1)
+  }
+  legend("bottomright", bty = "n", bg = "whitesmoke", cex = 1.1, lty = 1, lwd = 3,
+         title = bquote(bold(.(panel_title[j]))),
+         legend = c("Maize","Sorghum","Millet","Cassava"),
+         col = viridis::viridis(4, direction=1))
+  text(0.8, 93, panel_label[j], cex = 1.5)
+  title(ylab = "Cumulative crop area (%)", cex.lab = 1.4, line = 2)
+  title(xlab = "Average farm size (ha)",   cex.lab = 1.4, line = 2)
+  box()
+}
 
 dev.off()
 
-message('Figure saved as PNG: ../output/main_fig/Fig.02.png')
+elapsed <- proc.time()[["elapsed"]] - t0
+write_report("F03_main_figure3.R",
+  "Main Figure 3: 6-panel cumulative crop area / herd size by AEZ",
+  inputs  = list("CHINA RDS" = "2026-01-24.CHINA_croplands_per_crop_per_aez.rds"),
+  outputs = list("Fig.03.png" = "../output/main_fig/Fig.03.png"),
+  sections = list("Panel layout" = c(
+    "A (full-width): all_crops + cattle vs farm size, 4 AEZ",
+    "B (full-width): 6 crops across all AEZ",
+    "C: tropical highlands — 4 crops",
+    "D: humid — 4 crops",
+    "E: sub-humid — 4 crops",
+    "F: semi-arid — 4 crops",
+    paste("fig3a rows:", nrow(fig3a)),
+    paste("fig3b rows:", nrow(fig3b)),
+    paste("fig3c rows:", nrow(fig3c))
+  )),
+  elapsed_sec = elapsed)
+message("F03 done in ", round(elapsed, 1), "s")

@@ -1,65 +1,144 @@
 # ==============================================================================
 # Script: S06_size_class_comparison.R
-# Purpose: Supplementary Figure 6 - Farm size class comparison vs Sarah Lowder
-# Reads:  data/processed/summarized_farm_area_ha_per_class_vs_sarah.rds
-#         data/processed/cross_validation_graphs.rds
-# Writes: output/suppl_fig/Suppl.Fig06.png
-#         Suppl.Fig06_divergence_table.rds  (in scripts dir for S07)
+# Project: Farm Size Prediction Across Sub-Saharan Africa
+# Purpose: Supplementary Figure 6 — farm size class comparison vs Lowder census
+#          Panel A: nb farms per country × size class (predicted vs reported)
+#          Panel B: cropland ha per country × size class (predicted vs reported)
+#          Divergence scores annotated on bars
+#
+# PRODUCTION inputs:
+#   ../data/processed/summarized_farm_area_ha_per_class_vs_sarah.rds
+#     $comp_fsize_classes_nb  — NAME_0, GID_0, farm_class, nb_farms, pred_nb_farms
+#     $comp_fsize_classes_ha  — NAME_0, GID_0, farm_class, cropland_ha, pred_cropland_ha
+#   Suppl.Fig06_divergence_table.rds  — NAME_0, GID_0, divergence_nb, divergence_ha
+#
+# CI: all inputs are stubs from 00_synthetic_data.R
+# Output: ../output/other_illustr/graphs/Suppl.Fig06.png
 # ==============================================================================
 
-source("00_report_utils.R"); t0 <- proc.time()[["elapsed"]]
+source("00_report_utils.R")
+t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
+require(patchwork)
 rm(list = setdiff(ls(), c("t0","write_report","capture_output","ci_trees","ci_folds")))
 setwd(paste0(here::here(), "/scripts"))
-dir.create("../output/suppl_fig", recursive=TRUE, showWarnings=FALSE)
+dir.create("../output/other_illustr/graphs", recursive = TRUE, showWarnings = FALSE)
 
-xx  <- readRDS("../data/processed/summarized_farm_area_ha_per_class_vs_sarah.rds")
-nb  <- xx$comp_fsize_classes_nb
-ha  <- xx$comp_fsize_classes_ha
+# ── SSA boundary — for GID_0 join ─────────────────────────────────────────────
+# PRODUCTION: used to attach GID_0 to comp tables (join on NAME_0)
+# CI: geodata caches to ../data/raw/spatial
+input_path <- "../data/raw/spatial"
+country    <- geodata::world(path = input_path, resolution = 5, level = 0)
+isocodes   <- geodata::country_codes()
+isocodes_ssa <- subset(isocodes,
+  NAME == "Sudan" | UNREGION1 %in% c("Middle Africa","Western Africa",
+                                      "Southern Africa","Eastern Africa"))
+isocodes_ssa <- subset(isocodes_ssa,
+  !NAME %in% c("Cabo Verde","Comoros","Mauritius","Mayotte","Réunion",
+               "Saint Helena","São Tomé and Príncipe","Seychelles"))
+ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
 
-# Compute divergence (KL-divergence proxy: sum |pred - actual| / total)
-pred_cols <- c("cropland","cattle","pop","cropland_per_capita","sand",
-               "slope","temperature","rainfall","maizeyield","market")
+# ── Load data ─────────────────────────────────────────────────────────────────
+xx                  <- readRDS("../data/processed/summarized_farm_area_ha_per_class_vs_sarah.rds")
+comp_fsize_classes_ha <- xx$comp_fsize_classes_ha
+comp_fsize_classes_nb <- xx$comp_fsize_classes_nb
+rm(xx)
+div_table <- readRDS("Suppl.Fig06_divergence_table.rds")
 
-div_table <- nb |>
-  group_by(NAME_0, GID_0) |>
-  summarise(
-    divergence_nb = tryCatch(
-      sum(abs(pred_nb_farms - nb_farms), na.rm=TRUE) / sum(nb_farms, na.rm=TRUE),
-      error=function(e) NA_real_),
-    .groups="drop") |>
-  left_join(
-    ha |> group_by(NAME_0, GID_0) |>
-      summarise(divergence_ha = tryCatch(
-        sum(abs(pred_cropland_ha - cropland_ha), na.rm=TRUE) / sum(cropland_ha, na.rm=TRUE),
-        error=function(e) NA_real_), .groups="drop"),
-    by=c("NAME_0","GID_0"))
-div_table$divergence <- rowMeans(div_table[,c("divergence_nb","divergence_ha")], na.rm=TRUE)
-# Add predictor columns (used by S07 which maps divergence by variable)
-n_row <- nrow(div_table)
-for (p in pred_cols) div_table[[p]] <- runif(n_row)
-div_table$var <- pred_cols[seq_len(n_row) %% length(pred_cols) + 1]
-div_table$divergence_nb <- div_table$divergence_nb
-div_table$divergence_ha <- div_table$divergence_ha
-saveRDS(div_table, "Suppl.Fig06_divergence_table.rds")
+# Attach GID_0 from ssa if not already present
+ssa_df <- terra::as.data.frame(ssa)   # NAME_0, GID_0, ...
 
-# Plot: nb farms comparison
-P <- nb |>
-  ggplot(aes(nb_farms/1e6, pred_nb_farms/1e6)) +
-  geom_point(alpha=0.5, colour="steelblue") +
-  geom_abline(slope=1, intercept=0, colour="red4", linetype=2) +
-  facet_wrap(~farm_class, scales="free", labeller=label_both) +
-  labs(x="Census nb farms (M)", y="Predicted nb farms (M)",
-       title="Farm count: predicted vs census by size class") +
-  theme_minimal(base_size=9)
-ggsave("../output/suppl_fig/Suppl.Fig06.png", P, width=9, height=9, units="in", dpi=200)
+comp_fsize_classes_nb <- tryCatch(
+  comp_fsize_classes_nb |> inner_join(ssa_df |> select(NAME_0, GID_0) |> distinct(),
+                                       by = "NAME_0"),
+  error = function(e) {
+    message("CI: ssa join failed, using GID_0 from stub: ", e$message)
+    comp_fsize_classes_nb  # stub already has GID_0
+  })
+
+comp_fsize_classes_ha <- tryCatch(
+  comp_fsize_classes_ha |> inner_join(ssa_df |> select(NAME_0, GID_0) |> distinct(),
+                                       by = "NAME_0"),
+  error = function(e) comp_fsize_classes_ha)
+
+# ── Panel A: nb farms ────────────────────────────────────────────────────────
+P00 <- ggplot(
+  comp_fsize_classes_nb |>
+    pivot_longer(cols = c(nb_farms, pred_nb_farms),
+                 names_to = "category", values_to = "val") |>
+    mutate(category = if_else(grepl("pred", category), "Predicted", "Reported")),
+  aes(GID_0, val / 1e6)) +
+  geom_col(aes(colour = category, fill = category, group = farm_class,
+               width = if_else(category == "Reported", 0.8, 0.2)),
+           position = position_dodge(width = 0.8), linewidth = 0.8) +
+  geom_text(x = 1, y = 8.5, label = "A)", size = 9, inherit.aes = FALSE) +
+  geom_text(
+    data = div_table |>
+      inner_join(comp_fsize_classes_nb |> select(NAME_0, GID_0) |> distinct(),
+                 by = c("NAME_0","GID_0")),
+    aes(x = GID_0, label = round(divergence_nb, 2)),
+    y = 6, size = 5, angle = 60, inherit.aes = FALSE) +
+  labs(x = "Country", y = "Million farms per farm size class",
+       fill = NULL, colour = NULL) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,9)) +
+  scale_colour_manual(values = c("red3","blue4")) +
+  scale_fill_manual(values   = c("red3","lightskyblue1")) +
+  theme_test() +
+  theme(axis.title     = element_text(size = 17),
+        axis.text      = element_text(size = 12),
+        axis.ticks.x   = element_blank(),
+        legend.text    = element_text(size = 14),
+        legend.position = c(0.9, 0.9),
+        plot.margin    = margin(3, 0, 15, 0))
+
+# ── Panel B: cropland ha ──────────────────────────────────────────────────────
+P01 <- ggplot(
+  comp_fsize_classes_ha |>
+    pivot_longer(cols = c(cropland_ha, pred_cropland_ha),
+                 names_to = "category", values_to = "val") |>
+    mutate(category = if_else(grepl("pred", category), "Predicted", "Reported")),
+  aes(GID_0, val / 1e6)) +
+  geom_col(aes(colour = category, fill = category, group = farm_class,
+               width = if_else(category == "Reported", 0.8, 0.2)),
+           position = position_dodge(width = 0.8), linewidth = 0.8) +
+  geom_text(x = 1, y = 11, label = "B)", size = 9, inherit.aes = FALSE) +
+  geom_text(
+    data = div_table |>
+      inner_join(comp_fsize_classes_ha |> select(NAME_0, GID_0) |> distinct(),
+                 by = c("NAME_0","GID_0")),
+    aes(x = GID_0, label = round(divergence_ha, 2)),
+    y = 8.5, size = 5, angle = 60, inherit.aes = FALSE) +
+  labs(x = "Country", y = "Million ha cultivated per farm size class",
+       fill = NULL, colour = NULL) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,12)) +
+  scale_colour_manual(values = c("red3","blue4")) +
+  scale_fill_manual(values   = c("red3","lightskyblue1")) +
+  theme_test() +
+  theme(axis.title      = element_text(size = 17),
+        axis.text       = element_text(size = 12),
+        axis.ticks.x    = element_blank(),
+        legend.text     = element_text(size = 14),
+        legend.position = "none",
+        plot.margin     = margin(3, 0, 15, 0))
+
+P02 <- P00 / P01 + patchwork::plot_layout(ncol = 1)
+ggsave("../output/other_illustr/graphs/Suppl.Fig06.png",
+       P02, width = 9, height = 9, units = "in", dpi = 200)
 
 elapsed <- proc.time()[["elapsed"]] - t0
 write_report("S06_size_class_comparison.R",
-  "Supp Fig 6: farm size class comparison vs Lowder census; divergence table",
-  inputs  = list("Sarah RDS"="../data/processed/summarized_farm_area_ha_per_class_vs_sarah.rds"),
-  outputs = list("Supp Fig"="./Suppl.Fig06_divergence_table.rds",
-                 "PNG"="../output/suppl_fig/Suppl.Fig06.png"),
-  sections = list("Divergence summary"=capture_output(print(summary(div_table$divergence)))),
-  elapsed_sec=elapsed)
-message("S06 done in ", round(elapsed,1), "s")
+  "Supp Fig 6: predicted vs census farm count and cropland ha by country and size class",
+  inputs = list(
+    "Sarah comparison RDS" = "../data/processed/summarized_farm_area_ha_per_class_vs_sarah.rds",
+    "Divergence table"     = "Suppl.Fig06_divergence_table.rds"
+  ),
+  outputs = list("Suppl.Fig06.png" = "../output/other_illustr/graphs/Suppl.Fig06.png"),
+  sections = list(
+    "Data dimensions" = c(
+      paste("comp_fsize_classes_nb:", nrow(comp_fsize_classes_nb), "rows"),
+      paste("comp_fsize_classes_ha:", nrow(comp_fsize_classes_ha), "rows"),
+      paste("div_table countries:", nrow(div_table))
+    )
+  ),
+  elapsed_sec = elapsed)
+message("S06 done in ", round(elapsed, 1), "s")
