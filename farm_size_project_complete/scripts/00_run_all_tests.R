@@ -20,6 +20,35 @@
 #   Pass/fail is recorded per script; exits 1 only if >50% core scripts fail.
 # ==============================================================================
 
+# ==============================================================================
+# CLEAN OUTPUT AND DATA FOLDERS BEFORE EACH RUN
+# Ensures every CI run starts from a known empty state.
+# data/raw/ is NOT cleaned (contains stubs written before the runner starts).
+# ==============================================================================
+message("\nCleaning output/ and data/processed/ from previous run...")
+{
+  dirs_to_clean <- c(
+    "../output/main_fig",
+    "../output/other_illustr/graphs",
+    "../output/other_illustr/maps",
+    "../output/other_illustr/tables",
+    "../output/suppl_fig",
+    "../output/reports",
+    "../output/plot_data",
+    "../output/leave_one",
+    "../data/processed"
+  )
+  for (d in dirs_to_clean) {
+    if (dir.exists(d)) {
+      # Remove all files (not subdirs) — preserves directory structure
+      files <- list.files(d, full.names = TRUE, recursive = FALSE)
+      invisible(file.remove(files[file.info(files)$isdir == FALSE]))
+    }
+    dir.create(d, recursive = TRUE, showWarnings = FALSE)
+  }
+  message("  Done. Directories recreated.")
+}
+
 message("\n", paste(rep("=", 70), collapse = ""))
 message("FARM SIZE PREDICTION - FULL SEQUENTIAL PIPELINE TEST")
 message(paste(rep("=", 70), collapse = ""))
