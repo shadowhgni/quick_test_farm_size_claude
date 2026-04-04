@@ -8,6 +8,8 @@
 # ==============================================================================
 
 
+source("00_report_utils.R")
+t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
 require(patchwork)
 
@@ -17,7 +19,7 @@ rm(list=ls())
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
 dir.create('../output/other_illustr/maps', recursive = TRUE, showWarnings = FALSE)
-dir.create('../output/suppl_fig', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -360,6 +362,16 @@ for(i in names(six_crop_masks)[c(3, 4, 6)]){
 combined_plot <- tmap::tmap_arrange(tmap_list, ncol = 4)
 
 # Save combined plot
-tmap::tmap_save(combined_plot, '../output/suppl_fig/Suppl.Fig01.png', 
+tmap::tmap_save(combined_plot, '../output/other_illustr/graphs/Suppl.Fig01.png', 
                 width = 10, height = 7, units = 'in', dpi = 150)
 # No PDF conversion (ImageMagick policy blocked) — PNG is the final output; message('CI: PDF write skipped (ImageMagick policy), PNG available')
+
+# ── Report ────────────────────────────────────────────────────────────────────
+elapsed <- proc.time()[["elapsed"]] - t0
+write_report(
+  "S02_cropland_uncertainty.R",
+  "Supp Fig 2: cropland data uncertainties",
+  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig02.png"),
+  elapsed_sec = elapsed
+)
+message("S02_cropland_uncertainty.R done in ", round(elapsed,1), "s")

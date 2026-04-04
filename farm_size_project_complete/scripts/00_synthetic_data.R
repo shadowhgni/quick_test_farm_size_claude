@@ -417,8 +417,14 @@ message("   Sarah Lowder xlsx stubs done.")
 # ==============================================================================
 message("7. Creating figure stubs...")
 
-saveRDS(data.frame(farm_size=pmax(.01,rlnorm(500,.3,.8)), avg_size=runif(500,.2,8),
-  country=sample(sixteen_countries,500,TRUE)), "fig2c.rds")
+# fig2c: farm_size grouped by avg_size class — need enough points per class for ECDF
+# PRODUCTION: theor_farms_application joined with rf_model_predictions
+set.seed(42)
+n_each <- 300L
+fig2c_small  <- data.frame(farm_size=pmax(.01,rlnorm(n_each,-0.3,0.5)), avg_size=runif(n_each,0.1,0.49), country=sample(sixteen_countries,n_each,TRUE))
+fig2c_medium <- data.frame(farm_size=pmax(.01,rlnorm(n_each, 0.3,0.6)), avg_size=runif(n_each,1.0,1.99), country=sample(sixteen_countries,n_each,TRUE))
+fig2c_large  <- data.frame(farm_size=pmax(.01,rlnorm(n_each, 1.5,0.8)), avg_size=runif(n_each,5.1,10.0), country=sample(sixteen_countries,n_each,TRUE))
+saveRDS(rbind(fig2c_small,fig2c_medium,fig2c_large), "fig2c.rds")
 
 qrf_q010_r <- make_rast("qrf_q010", 1.5, 0.8, r_res=res_pred)
 qrf_q090_r <- make_rast("qrf_q090", 4.0, 1.5, r_res=res_pred)

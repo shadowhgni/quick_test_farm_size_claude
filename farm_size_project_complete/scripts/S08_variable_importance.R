@@ -8,6 +8,8 @@
 # ==============================================================================
 
 
+source("00_report_utils.R")
+t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
 require(patchwork)
 
@@ -16,11 +18,11 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/suppl_fig', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/suppl_fig', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -175,6 +177,16 @@ for(i in names(selected_rast)){
 combined_plot <- tmap::tmap_arrange(tmap_list, ncol = 2)
 
 # Save combined plot
-tmap::tmap_save(combined_plot, '../output/suppl_fig/Suppl.Fig07.png', 
+tmap::tmap_save(combined_plot, '../output/other_illustr/graphs/Suppl.Fig07.png', 
                 width = 7, height = 10, units = 'in', dpi = 150)
 # No PDF conversion (ImageMagick policy blocked) — PNG is the final output; message('CI: PDF write skipped (ImageMagick policy), PNG available')
+
+# ── Report ────────────────────────────────────────────────────────────────────
+elapsed <- proc.time()[["elapsed"]] - t0
+write_report(
+  "S08_variable_importance.R",
+  "Supp Fig 8: RF variable importance",
+  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig08.png"),
+  elapsed_sec = elapsed
+)
+message("S08_variable_importance.R done in ", round(elapsed,1), "s")

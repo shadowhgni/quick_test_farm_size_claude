@@ -15,6 +15,8 @@
 # ==============================================================================
 
 
+source("00_report_utils.R")
+t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
 china_file <- '2026-01-24.CHINA_croplands_per_crop_per_aez.rds'
 if (!file.exists(china_file)) { message('China cropland RDS not found - skipping S01'); quit(save='no', status=0L) }
@@ -27,7 +29,7 @@ fig3b <- fig3$df_rel_long |>
 fig3c <- fig3$df_rel_long |> filter(product %in% c('maize', 'sorghum', 'millet', 'cassava'), aez != 'all_aez')
 
 dir.create("../output/main_fig", recursive = TRUE, showWarnings = FALSE)
-png("../output/main_fig/Fig.03.png", width = 9, height = 8.8, units = "in", res = 200)
+png("../output/other_illustr/graphs/Suppl.Fig01.png", width = 9, height = 8.8, units = "in", res = 200)
 layout(matrix(c(1,1,2,2,3,4,5,6), nrow=2, byrow=TRUE))
 par(mar=c(3.5,3.5,1,1), xaxs='i', yaxs='i')
 
@@ -164,3 +166,13 @@ title(xlab="Average farm size (ha)", cex.lab=1.4, line=2)
 box()
 
 dev.off()
+
+# ── Report ────────────────────────────────────────────────────────────────────
+elapsed <- proc.time()[["elapsed"]] - t0
+write_report(
+  "S01_drivers.R",
+  "Supp Fig 1: predictor variable distributions",
+  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig01.png"),
+  elapsed_sec = elapsed
+)
+message("S01_drivers.R done in ", round(elapsed,1), "s")

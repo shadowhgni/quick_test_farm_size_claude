@@ -8,6 +8,8 @@
 # ==============================================================================
 
 
+source("00_report_utils.R")
+t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
 require(patchwork)
 
@@ -16,7 +18,7 @@ rm(list=ls())
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/suppl_fig', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -104,4 +106,14 @@ P00 <- ggplot(summ_hpc, aes(val)) +
   guides(fill = 'none')
 P00
 
-ggsave('../output/suppl_fig/Suppl.Fig.04.png', P00, width = 9, height = 5, dpi = 200)
+ggsave('../output/other_illustr/graphs/Suppl.Fig05.png', P00, width = 9, height = 5, dpi = 200)
+
+# ── Report ────────────────────────────────────────────────────────────────────
+elapsed <- proc.time()[["elapsed"]] - t0
+write_report(
+  "S05_RF_unseen_performance.R",
+  "Supp Fig 5: RF performance on holdout data",
+  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig05.png"),
+  elapsed_sec = elapsed
+)
+message("S05_RF_unseen_performance.R done in ", round(elapsed,1), "s")

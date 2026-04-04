@@ -2,22 +2,15 @@
 # Script: F01_main_figure1.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
 # Purpose: Generate Main Figure 1 - External validation at GADM1 level
-#
-# Authors: Deo, Joao, Robert, Fred
-# Code documentation: Claude (Anthropic) - February 2026
+#          Panel: predicted vs census farm size at GADM1 for BWA/KEN/MOZ/ZWE
+# PRODUCTION: reads zip files from validation/ dir (one per country)
+# CI: uses stub data embedded in this script
 # ==============================================================================
 
-
-require(tidyverse)
-
-# Clean environment
-rm(list=ls())
-
-# Set the appropriate JAVA environment
-Sys.setenv(JAVA_HOME='C:/Program Files/Eclipse Adoptium/jdk-21.0.3.9-hotspot')
-
-# Set working directory
+source("00_report_utils.R")
+t0 <- proc.time()[["elapsed"]]
 setwd(paste0(here::here(), '/scripts'))
+dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
 dir.create('../output/main_fig', recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
@@ -282,7 +275,32 @@ P01 <- ggplot(compare_pred_measured_gadm1, aes(avg_farm_area_ha, avg_pred_farm_a
   scale_colour_brewer(palette = 'Set1') +
   theme_test() 
 P01
-png(paste0('../output/main_fig/external_validation_GADM1.2_for_4countries.png'), height = 5, width = 7.5, units = 'in', res = 600)
+png(paste0('../output/other_illustr/graphs/external_validation_GADM1.2_for_4countries.png'), height = 5, width = 7.5, units = 'in', res = 600)
 P01
-ggsave(paste0('../output/main_fig/external_validation_GADM1.2_for_4countries.png'))
+ggsave(paste0('../output/other_illustr/graphs/external_validation_GADM1.2_for_4countries.png'))
 dev.off()
+
+# ── Report ────────────────────────────────────────────────────────────────────
+elapsed <- proc.time()[["elapsed"]] - t0
+write_report(
+  "F01_main_figure1.R",
+  "External GADM1 validation: predicted vs census farm size (BWA, KEN, MOZ, ZWE)",
+  inputs  = list(
+    "RF predictions" = "../data/processed/rf_model_predictions_SSA.tif",
+    "Validation stubs" = "../validation/"
+  ),
+  outputs = list(
+    "External validation PNG" = "../output/other_illustr/graphs/external_validation_GADM1.2_for_4countries.png"
+  ),
+  sections = list(
+    "Matched GADM1 units" = capture_output(
+      if (exists("compare_pred_measured_gadm1") && nrow(compare_pred_measured_gadm1) > 0)
+        print(compare_pred_measured_gadm1[, c("NAME_0","NAME_1","avg_farm_area_ha","avg_pred_farm_area_ha")])
+      else message("No matched units in CI (stub data).")
+    ),
+    "R2" = if (exists("r2_gadm1_validation"))
+      paste("R² =", r2_gadm1_validation) else "R² not computed"
+  ),
+  elapsed_sec = elapsed
+)
+message("F01 done in ", round(elapsed,1), "s")
