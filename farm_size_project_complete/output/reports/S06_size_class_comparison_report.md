@@ -1,6 +1,6 @@
 # Report: S06_size_class_comparison.R
 
-**Generated:** 2026-04-04 15:03:48 UTC
+**Generated:** 2026-04-04 15:23:11 UTC
 **Elapsed:** 4.6s
 **Purpose:** Supp Fig 6: predicted vs census farm count and cropland ha by country and size class
 
