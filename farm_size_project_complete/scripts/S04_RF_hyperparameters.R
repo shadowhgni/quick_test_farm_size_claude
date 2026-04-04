@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: S03_aggregate_vs_disaggregate.R
+# Script: S04_RF_hyperparameters.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Supplementary Figure 3 - Country vs GADM1 aggregation comparison
+# Purpose: Supplementary Figure 4 - RF hyperparameter sensitivity
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

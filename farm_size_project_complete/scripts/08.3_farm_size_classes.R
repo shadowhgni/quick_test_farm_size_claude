@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 08.2_generate_virtual_farms.R
+# Script: 08.3_farm_size_classes.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Generate virtual farm population from predictions
+# Purpose: Classify farms by size category per country and compare with census data
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026
@@ -97,7 +97,7 @@ selected_theor_app <- theor_farms |>
          round(y, 1) %in% round(regular_sample_coords$y, 1)) |>
   mutate(unique_coords = paste0(round(x, 0), '_', round(y, 0)) ) |>
   distinct(unique_coords, .keep_all = T) |>
-  unnest_longer(virt_farms_fixed)
+  unnest_longer(linear_farm_size_ha)  # renamed from virt_farms_fixed in 08.2
 
 theor_farms |>
   filter(round(x, 1) %in% round(regular_sample_coords$x, 1),
@@ -105,7 +105,7 @@ theor_farms |>
   distinct(paste0(round(x, 0), '_', round(y, 0)), .keep_all = T) |>
   View() # 11 grid cells were picked
 
-P01 <- ggplot(selected_theor_app, aes(virt_farms_fixed, colour = paste0(x, ', ', y))) + 
+P01 <- ggplot(selected_theor_app, aes(linear_farm_size_ha, colour = paste0(x, ', ', y))) + 
   stat_ecdf(geom = 'line', linewidth = 0.8) +
   stat_ecdf(data = theor_farms_application, aes(x = linear_farm_size_ha), geom = 'line', linewidth = 1.2, colour = 'red4') +
   scale_x_continuous(expand = c(0, 0), limits = c(0, 15)) +
@@ -525,7 +525,7 @@ P02e
 # with linear reg
 theor_bound_line <- theor_farms |>
   mutate(avg = unlist(map(pred_farm_sizes, \(x) mean(unlist(x), na.rm = T))),
-         gini = unlist(map(virt_farms_fixed, function(x) ineq::Gini(unlist(x), na.rm = T))) ) |>
+         gini = unlist(map(linear_farm_size_ha, function(x) ineq::Gini(unlist(x), na.rm = T))) ) |>
   select(x, y, avg, gini)
 avg_bin <- seq(0, 10, 0.1)
 avg_bin_table <- tibble()

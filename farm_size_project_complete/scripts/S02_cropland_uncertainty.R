@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: S01_drivers.R
+# Script: S02_cropland_uncertainty.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Supplementary Figure 1 - Predictor variable distributions
+# Purpose: Supplementary Figure 2 - Cropland data uncertainties
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

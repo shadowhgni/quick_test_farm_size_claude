@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 04.4_RF_model_evaluation.R
+# Script: 04.5_cross_country_graphs.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Comprehensive Random Forest model evaluation
+# Purpose: Cross-country leave-one-out graphs and performance summaries
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

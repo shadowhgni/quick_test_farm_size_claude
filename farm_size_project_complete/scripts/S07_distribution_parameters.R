@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: S06_size_class_comparison.R
+# Script: S07_distribution_parameters.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Supplementary Figure 6 - Farm size class distributions
+# Purpose: Supplementary Figure 7 - Distribution fitting parameters
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

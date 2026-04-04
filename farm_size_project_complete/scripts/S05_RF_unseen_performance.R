@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: S04_RF_hyperparameters.R
+# Script: S05_RF_unseen_performance.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Supplementary Figure 4 - RF hyperparameter sensitivity
+# Purpose: Supplementary Figure 5 - RF performance on holdout data
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 04.6_discrepancy_analysis.R
+# Script: 05.1_RF_optimization.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Analyze discrepancies between target country TPS and cross-country RF
+# Purpose: Optimize Random Forest hyperparameters
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 00_synthetic_data_base.R
+# Script: 01.1_chirps_download.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Generate synthetic data using ONLY base R (no external packages)
+# Purpose: Download CHIRPS dekadal rainfall data for Africa (1981-2024)
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

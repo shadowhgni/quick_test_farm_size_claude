@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 03.1_pooled_data.R
+# Script: 03.2_correlation_drivers.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Prepare pooled LSMS dataset with spatial predictors for ML analysis
+# Purpose: Analyze correlations between predictor variables
 #
 # Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026

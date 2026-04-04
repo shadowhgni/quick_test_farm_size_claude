@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: S05_RF_unseen_performance.R
+# Script: S06_size_class_comparison.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Supplementary Figure 5 - RF performance on holdout data
+# Purpose: Supplementary Figure 6 - Farm size class distributions
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

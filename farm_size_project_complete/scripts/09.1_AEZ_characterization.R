@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 08.3_farm_size_classes.R
+# Script: 09.1_AEZ_characterization.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Classify farms by size category per country
+# Purpose: Characterize farms by Agro-Ecological Zone
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

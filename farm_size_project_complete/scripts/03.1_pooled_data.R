@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 02.3_measured_vs_reported.R
+# Script: 03.1_pooled_data.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Analyze agreement between GPS-measured and farmer-reported plot sizes
+# Purpose: Prepare pooled LSMS dataset with spatial predictors for ML analysis
 #
 # Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026

@@ -1,5 +1,5 @@
 # ==============================================================================
-# Script: 08.1_predictions_by_country.R
+# Script: 08.2_generate_virtual_farms.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
 # Purpose: Generate farm size predictions by country
 #

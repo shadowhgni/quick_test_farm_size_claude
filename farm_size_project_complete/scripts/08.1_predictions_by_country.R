@@ -1,5 +1,5 @@
 # ==============================================================================
-# Script: 07.2_QRF_distribution_eval.R
+# Script: 08.1_predictions_by_country.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
 # Purpose: Evaluate predicted distributions from Quantile RF
 #

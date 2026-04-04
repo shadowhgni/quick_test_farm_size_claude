@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 01.4_prepare_spatial_layers.R
+# Script: 02.1_compile_LSMS.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Prepare all spatial predictor layers for machine learning models
+# Purpose: Compile and standardize LSMS survey data across 16 SSA countries
 #
 # Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026

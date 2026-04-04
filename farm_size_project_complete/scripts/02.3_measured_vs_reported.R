@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 02.2_harmonize_farm_area.R
+# Script: 02.3_measured_vs_reported.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Harmonize farm area calculations across countries and integrate Zambia data
+# Purpose: Analyze agreement between GPS-measured and farmer-reported plot sizes
 #
 # Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026

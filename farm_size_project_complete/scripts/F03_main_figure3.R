@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: F02_main_figure2.R
+# Script: F03_main_figure3.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Generate Main Figure 2 - Model performance
+# Purpose: Generate Main Figure 3 - Farm size predictions across SSA
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

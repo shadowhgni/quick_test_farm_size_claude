@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 04.3_RF_between_countries.R
+# Script: 04.4_RF_model_evaluation.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Evaluate Random Forest cross-country transferability
+# Purpose: Comprehensive Random Forest model evaluation
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

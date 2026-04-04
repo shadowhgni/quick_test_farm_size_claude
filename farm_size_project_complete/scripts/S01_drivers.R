@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: F03_main_figure3.R
+# Script: S01_drivers.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Generate Main Figure 3 - Farm size predictions (uses Du et al. 2025 cattle data)
+# Purpose: Supplementary Figure 1 - Predictor variable distributions
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

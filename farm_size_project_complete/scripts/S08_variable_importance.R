@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: S07_distribution_parameters.R
+# Script: S08_variable_importance.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Supplementary Figure 7 - Distribution fitting parameters
+# Purpose: Supplementary Figure 8 - RF variable importance analysis
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

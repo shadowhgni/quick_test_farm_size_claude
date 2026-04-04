@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 05.1_RF_optimization.R
+# Script: 05.2_RF_optimization_summary.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Optimize Random Forest hyperparameters
+# Purpose: Summarize RF optimization results
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

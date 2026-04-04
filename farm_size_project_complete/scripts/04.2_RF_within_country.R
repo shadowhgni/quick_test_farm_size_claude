@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 04.1_comparing_ML_algorithms.R
+# Script: 04.2_RF_within_country.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Compare Random Forest, XGBoost, SVM, and other ML algorithms
+# Purpose: Evaluate Random Forest performance within each country
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

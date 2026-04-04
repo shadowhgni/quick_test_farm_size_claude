@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 05.2_RF_optimization_summary.R
+# Script: 05.3_RF_robustness.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Summarize RF optimization results
+# Purpose: Assess robustness of optimized RF model
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

@@ -1,7 +1,7 @@
 # ==============================================================================
 # Script: 06.3_prediction_maps.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Visualise QRF predictions and OOB fit — loads outputs produced by
+# Purpose: Visualise QRF predictions and OOB fit
 #          the two companion Python scripts:
 #            06.1_basic_RF_model.py   -> rf_best_model.pkl, lsms_oob.rds
 #            06.2_quantile_RF.py      -> qrf_100quantiles_predictions_africa.tif

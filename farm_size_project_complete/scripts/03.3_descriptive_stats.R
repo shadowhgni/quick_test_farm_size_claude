@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 03.2_correlation_drivers.R
+# Script: 03.3_descriptive_stats.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Analyze correlations between predictor variables
+# Purpose: Generate descriptive statistics of LSMS farm size data
 #
 # Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026

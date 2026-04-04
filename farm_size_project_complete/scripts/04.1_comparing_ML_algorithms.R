@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 03.3_descriptive_stats.R
+# Script: 04.1_comparing_ML_algorithms.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Generate descriptive statistics of LSMS farm size data
+# Purpose: Compare Random Forest, XGBoost, SVM, and other ML algorithms
 #
 # Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026

@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 05.3_RF_robustness.R
+# Script: 06.1_quantile_RF.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Assess robustness of optimized RF model
+# Purpose: Fit and evaluate Quantile Random Forest model
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

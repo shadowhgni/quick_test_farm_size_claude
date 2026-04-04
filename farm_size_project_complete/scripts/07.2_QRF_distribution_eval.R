@@ -1,5 +1,5 @@
 # ==============================================================================
-# Script: 06.4_cropland_sensitivity.R
+# Script: 07.2_QRF_distribution_eval.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
 # Purpose: Analyze RF sensitivity to cropland correlation
 #

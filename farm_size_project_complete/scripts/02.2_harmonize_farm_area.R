@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 02.1_compile_LSMS.R
+# Script: 02.2_harmonize_farm_area.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Compile and standardize LSMS survey data across 16 SSA countries
+# Purpose: Harmonize farm area calculations across countries and integrate Zambia data
 #
 # Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026

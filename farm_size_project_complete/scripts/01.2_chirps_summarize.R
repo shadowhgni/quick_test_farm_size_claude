@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 01.1_chirps_download.R
+# Script: 01.2_chirps_summarize.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Download CHIRPS dekadal rainfall data for Africa (1981-2024)
+# Purpose: Aggregate dekadal CHIRPS rainfall to monthly and yearly totals
 #
 # Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026

@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 10.2_external_validation.R
+# Script: F01_main_figure1.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: External validation at GADM1 level
+# Purpose: Generate Main Figure 1 - External validation at GADM1 level
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026

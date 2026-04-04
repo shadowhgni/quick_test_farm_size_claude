@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 01.3_chirps_trends.R
+# Script: 01.4_prepare_spatial_layers.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Calculate long-term rainfall statistics from yearly CHIRPS data
+# Purpose: Prepare all spatial predictor layers for machine learning models
 #
 # Authors: Deo, Joao, Robert, Fred 
 # Documentation: Claude (Anthropic) - February 2026

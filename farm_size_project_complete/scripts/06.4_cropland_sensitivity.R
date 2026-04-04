@@ -1,7 +1,7 @@
 # ==============================================================================
-# Script: 06.3_prediction_maps.R
+# Script: 06.4_cropland_sensitivity.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Generate predicted farm size maps
+# Purpose: Generate predicted farm size maps across SSA
 #
 # Authors: Deo, Joao, Robert, Fred
 # Code documentation: Claude (Anthropic) - February 2026
