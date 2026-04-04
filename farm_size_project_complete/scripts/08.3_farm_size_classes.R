@@ -91,13 +91,14 @@ n_grid <- 15 # distance (arbitrary) between points to select. Increase n_grid to
 x_coords <- seq(-10, 40, 10); y_coords <- seq(-30, 10, 10)
 regular_sample_coords <- expand.grid(x = x_coords, y = y_coords)
 
-selected_theor_app <- theor_farms |>
-  ungroup() |> 
+# theor_farms_application is already unnested (linear_farm_size_ha per farm row)
+# Filter to the regular sample coordinates directly — no unnest needed
+selected_theor_app <- theor_farms_application |>
+  ungroup() |>
   filter(round(x, 1) %in% round(regular_sample_coords$x, 1),
          round(y, 1) %in% round(regular_sample_coords$y, 1)) |>
-  mutate(unique_coords = paste0(round(x, 0), '_', round(y, 0)) ) |>
-  distinct(unique_coords, .keep_all = T) |>
-  unnest_longer(linear_farm_size_ha)  # renamed from virt_farms_fixed in 08.2
+  mutate(unique_coords = paste0(round(x, 0), '_', round(y, 0))) |>
+  distinct(unique_coords, .keep_all = TRUE)
 
 theor_farms |>
   filter(round(x, 1) %in% round(regular_sample_coords$x, 1),
