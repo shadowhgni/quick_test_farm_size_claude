@@ -340,7 +340,7 @@ PHASE 3: Analysis Preparation (03.x)
 [03.3_descriptive_stats.R]   cropland: r = -0.02
 [03.3_descriptive_stats.R] 
 [03.3_descriptive_stats.R] === Analysis Complete ===
-  ✓ PASS  03.3_descriptive_stats.R                       ( 18.1s)  
+  ✓ PASS  03.3_descriptive_stats.R                       ( 18.3s)  
 ----------------------------------------------------------------------
 PHASE 4: ML Model Training (04.x)
 ----------------------------------------------------------------------
@@ -1331,7 +1331,7 @@ Report: ../output/reports/full_pipeline_test_report.md
 | 04.2 | `04.2_RF_within_country.R` | ✅ PASS | 48.5s |  |
 | 04.3 | `04.3_RF_between_countries.R` | ✅ PASS | 72.2s |  |
 | 04.5 | `04.5_cross_country_graphs.R` | ✅ PASS | 0.2s |  |
-| 05.1 | `05.1_RF_optimization.R` | ✅ PASS | 3.7s |  |
+| 05.1 | `05.1_RF_optimization.R` | ✅ PASS | 3.8s |  |
 | 05.3 | `05.3_RF_robustness.R` | ✅ PASS | 0.2s |  |
 | 06.1 | `06.1_quantile_RF.R` | ✅ PASS | 3.2s |  |
 | 06.3 | `06.3_prediction_maps.R` | ✅ PASS | 5.3s |  |
