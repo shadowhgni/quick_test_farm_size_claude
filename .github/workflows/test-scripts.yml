@@ -194,6 +194,10 @@ jobs:
         run: touch ${{ steps.find-scripts.outputs.project_dir }}/.here
 
       # ── Run full pipeline test (always capture output) ───────────────────
+      - name: Install Python dependencies
+        run: |
+          pip install --break-system-packages -q             scikit-learn pandas numpy quantile-forest pyreadr
+
       - name: Run full sequential pipeline test
         run: |
           mkdir -p ${{ steps.find-scripts.outputs.project_dir }}/ci-logs

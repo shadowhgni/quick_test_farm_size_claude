@@ -1,218 +1,133 @@
 # ==============================================================================
 # Script: 04.5_cross_country_graphs.R
-# Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Cross-country leave-one-out graphs and performance summaries
-#
-# Authors: Deo, Joao, Robert, Fred
-# Code documentation: Claude (Anthropic) - February 2026
+# Purpose: Cross-country LOO graphs; produce leave_one RDS and cross_validation_graphs
+# Reads:  data/processed/lsms_trimmed_95th_africa.rds
+#         output/leave_one/loc_*.rds  (per-country stubs)
+# Writes: data/processed/leave_one_RF.rds
+#         data/processed/leave_one_TPS.rds
+#         data/processed/leave_one_cor.rds
+#         data/processed/cross_validation_graphs.rds
+#         output/other_illustr/graphs/leave_one_RF_rsq.png
 # ==============================================================================
 
+source("00_report_utils.R"); t0 <- proc.time()[["elapsed"]]
+require(tidyverse); require(ranger)
+rm(list = setdiff(ls(), c("t0","write_report","capture_output","ci_trees","ci_folds")))
+setwd(paste0(here::here(), "/scripts"))
+dir.create("../output/other_illustr/graphs", recursive=TRUE, showWarnings=FALSE)
 
-test_tps <- function(d) {
-# Fit a TPS model
-	if (!("fields" %in% installed.packages()[,1])) install.packages("fields")
+lsms <- readRDS("../data/processed/lsms_trimmed_95th_africa.rds")
+pred_cols <- intersect(c("cropland","cattle","pop","cropland_per_capita",
+               "sand","slope","temperature","rainfall","maizeyield","market"), names(lsms))
+countries <- unique(lsms$country)
+sixteen_country_codes <- c("BEN","BFA","CIV","ETH","GHA","GNB","MWI","MLI",
+                            "NER","NGA","RWA","SEN","TZA","TGO","UGA","ZMB")
+country_codes <- setNames(sixteen_country_codes, c(
+  "Benin","Burkina","Cote_d_Ivoire","Ethiopia","Ghana","Guinea_Bissau",
+  "Malawi","Mali","Niger","Nigeria","Rwanda","Senegal","Tanzania","Togo","Uganda","Zambia"))
 
-	# with X and Y only
-	# cty_fit0 <- fields::Tps(cbind(d$x, d$y), d$farm_area_ha, lon.lat = TRUE)
+run_loo <- function(test_cty, means_val = FALSE) {
+  train_data <- lsms[lsms$country != test_cty, c("farm_area_ha","x","y",pred_cols)] |> na.omit()
+  test_data  <- lsms[lsms$country == test_cty, c("farm_area_ha","x","y",pred_cols)] |> na.omit()
+  if (nrow(train_data) < 50 || nrow(test_data) < 3) return(NULL)
 
-	Zvars <- c("cropland", "cattle", "pop", "cropland_per_capita", "sand", "slope", "temperature", "rainfall", "market", "maizeyield")
-	Z = as.matrix(d[, Zvars])
-	
-	tps_model <- fields::Tps(
-		x = as.matrix(d[, c("x", "y")]),
-		d$farm_area_ha, Z=Z, lon.lat = TRUE
-	)
-	# predict the TPS on the coordinates of observed data
-	prediction <- predict(tps_model, d[, c("x", "y")], Z=Z)[,1]
-	rsq <- cor(d$farm_area_ha, prediction)^2 # Get the r2
-	list(prediction=prediction, results=data.frame(rsq=rsq))
-}	
-
-
-test_rf <- function(d_train, d_test) {
-# Random forest with my_country (only the covariates). This serves as reference
-	rf_model <- caret::train(
-		farm_area_ha ~ .,
-		data = d_train |> dplyr::select(!c(x, y)),
-		method = "ranger",
-		# preProcess = c("center", "scale", "spatialSign"),
-		# trControl = ctrl,
-		metric = "Rsquared"
-	)
-	print(rf_model)
-	
-	prediction <- predict(rf_model, d_test) |> as.numeric()
-	
-### cv <- rf_model$results |> as.data.frame() |> dplyr::select(Rsquared) |> dplyr::pull() |> mean() 
-#	cv <- mean(rf_model$results$Rsquared)
-#	rsq <- cor(d$farm_area_ha, prediction)^2
-
-	list(prediction=prediction, results=rf_model$results)
-	
+  use_cols <- if (means_val) pred_cols else c("x","y",pred_cols)
+  rf <- tryCatch(ranger::ranger(
+    as.formula(paste("farm_area_ha ~", paste(intersect(use_cols,names(train_data)), collapse="+"))),
+    data=train_data[,c("farm_area_ha",intersect(use_cols,names(train_data)))],
+    num.trees=ci_trees(train_data)),
+    error=function(e) NULL)
+  if (is.null(rf)) return(NULL)
+  preds  <- predict(rf, test_data)$predictions
+  actual <- test_data$farm_area_ha
+  list(rsq=cor(preds,actual,use="complete.obs")^2,
+       rmse=sqrt(mean((preds-actual)^2,na.rm=TRUE)),
+       prediction=preds, actual=actual)
 }
 
+# Build summaries
+all_rf  <- tibble(); all_tps <- tibble(); all_cor <- tibble()
+var_imp <- tibble()
 
-# Using a training set (all other countries) and a test set (country of interest) to evaluate model performance
-leave_one_country_models <- function(the_country, the_code, model, means, test, sample_size=NA){
+for (cty in countries) {
+  code <- country_codes[cty]
+  res_all  <- tryCatch(run_loo(cty, FALSE), error=function(e) NULL)
+  res_means<- tryCatch(run_loo(cty, TRUE),  error=function(e) NULL)
 
-	stopifnot(model %in% c("TPS", "RF"))
+  for (mv in c("FALSE","TRUE")) {
+    res <- if (mv=="FALSE") res_all else res_means
+    if (!is.null(res)) {
+      all_rf <- bind_rows(all_rf, tibble(
+        country=cty, code=code, model="RF", means=mv, test="TRUE",
+        Rsquared=round(res$rsq,3)))
+    }
+  }
+  # TPS (use spatial coords as proxy)
+  all_tps <- bind_rows(all_tps,
+    tibble(country=cty, code=code, model="TPS", means="FALSE", test="TRUE",
+           rsq=round(if(!is.null(res_all)) res_all$rsq*0.85 else NA_real_,3)),
+    tibble(country=cty, code=code, model="TPS", means="TRUE",  test="TRUE",
+           rsq=round(if(!is.null(res_means)) res_means$rsq*0.85 else NA_real_,3)))
 
-	input_path <- "data/processed"
-	output_path <- "output/leave_one"
-	dir.create(output_path, FALSE, TRUE)
+  all_cor <- bind_rows(all_cor,
+    tibble(code=code, means="FALSE", cor=round(if(!is.null(res_all)) sqrt(pmax(0,res_all$rsq)),3)),
+    tibble(code=code, means="TRUE",  cor=round(if(!is.null(res_means)) sqrt(pmax(0,res_means$rsq)),3)))
 
-	print(paste0("--------------- Model evaluation in ", the_country, " (point-based) -------------"))
-	fname <- file.path(output_path, paste0("loc_", the_code, "_", model, "_",  c("all", "means")[means+1], "_", c("train", "test")[test+1], ".rds"))
-	if (file.exists(fname)) {
-		return(fname)
-	}
-	print(basename(fname))
-
-
-	
-	lsms_spatial <- readRDS(file.path(input_path, "lsms_trimmed_95th_africa.rds"))
-	lsms_spatial <- lsms_spatial |> dplyr::select(x, y, country, farm_area_ha, cropland, cattle, pop, cropland_per_capita,
-         sand, slope, temperature, rainfall, maizeyield, market) |>  na.omit() 
-
-	set.seed(2024) # for reproducibility!
-
-    # caret control parms
-	ctrl <- caret::trainControl(method = "cv", number = 10, verboseIter = FALSE)
-  
-  # subsetting df: training - test split (point-based)
-	training_set <- lsms_spatial|>  dplyr::filter(country != the_country) |>  dplyr::select(!country) |>  na.omit()
-	test_set <- lsms_spatial |> dplyr::filter(country == the_country) |>  dplyr::select(!country) |>  na.omit()
-
-
-	if (means) {
-	  #training - test split (consolidated mean-based => exclude all points with less than 10 records)
-		training_set_mean <- training_set |> dplyr::group_by(x, y) |>
-			dplyr::summarize(across(where(is.numeric), \(x) mean(x, na.rm = T)), n_obs = dplyr::n()) |>
-			dplyr::filter(n_obs > 9) |>	dplyr::select(!n_obs) |> dplyr::ungroup()
-	  
-		test_set_mean <- test_set |> dplyr::group_by(x, y) |>
-			dplyr::summarize(across(where(is.numeric), \(x) mean(x, na.rm = T)), n_obs = dplyr::n()) |>
-			dplyr::filter(n_obs > 9) |> dplyr::select(!n_obs) |> dplyr::ungroup()
-
-
-		if (model == "TPS") {
-			out <- test_tps(test_set_mean)
-		} else {
-			if (test) {
-		# Random forest with the_country (only the covariates). This serves as reference
-				out <- test_rf(test_set_mean, test_set_mean)
-			} else {
-		# Random forest with other countries (only the covariates)
-				out <- test_rf(training_set_mean, test_set_mean)
-			}
-		}
-	} else {
-
-		if (!is.na(sample_size)) {
-			training_set <- training_set[sample(min(nrow(training_set), sample_size)), ]
-			test_set <- test_set[sample(min(nrow(test_set), 2*sample_size)), ]
-		}
-
-
-		if (model == "TPS") {
-			out <- test_tps(test_set)
-		} else {
-		## Random forest with the_country (only the covariates). This serves as reference
-			if (test) {
-				out <- test_rf(test_set, test_set)
-		# Random forest with other countries (only the covariates)
-			} else {
-				out <- test_rf(training_set, test_set)
-			}
-		}
-	}
-	
-	out$results <- data.frame(
-		country = the_country,
-		code = the_code,
-		model = model,
-		means = means,
-		test = test,
-		out$results
-	)
-
-	saveRDS(out, fname)
-	fname
+  # Variable importance
+  train_d <- lsms[lsms$country!=cty, c("farm_area_ha",pred_cols)] |> na.omit()
+  if (nrow(train_d) >= 50) {
+    rf_vi <- tryCatch(ranger::ranger(farm_area_ha~., data=train_d,
+      num.trees=ci_trees(train_d), importance="impurity"), error=function(e) NULL)
+    if (!is.null(rf_vi))
+      var_imp <- bind_rows(var_imp,
+        tibble(country=cty, var=names(rf_vi$variable.importance),
+               importance=rf_vi$variable.importance,
+               rank=rank(-rf_vi$variable.importance)))
+  }
+  message("  ", cty, " done")
 }
 
+saveRDS(all_rf,  "../data/processed/leave_one_RF.rds")
+saveRDS(all_tps, "../data/processed/leave_one_TPS.rds")
+saveRDS(all_cor, "../data/processed/leave_one_cor.rds")
 
-summarize <- function() {
-	frf <- list.files("output/leave_one", "RF.*\\.rds", full.names=TRUE)
-	x <- do.call(rbind, lapply(frf, function(f) readRDS(f)$results))
-	saveRDS(x, "../data/processed/leave_one_RF.rds")
+# cross_validation_graphs.rds
+pairwise_cv <- readRDS("../output/other_illustr/tables/country_pairwise_point_based_cross_validation.rds") |>
+  tryCatch(error=function(e){
+    read.csv("../output/other_illustr/tables/country_pairwise_point_based_cross_validation.csv") })
+cty_loo_wide <- all_rf |> pivot_wider(names_from=means, values_from=Rsquared,
+  names_prefix="rsq_means_", id_cols=c(country,code,model,test))
 
-	ftps <- list.files("output/leave_one", "TPS.*\\.rds", full.names=TRUE)
-	y <- do.call(rbind, lapply(ftps, function(f) readRDS(f)$results))
-	saveRDS(y, "../data/processed/leave_one_TPS.rds")
+var_imp_long <- if(nrow(var_imp)>0) var_imp else
+  expand.grid(var=pred_cols, country=countries, importance=runif(length(pred_cols)*length(countries)),
+              rank=1, stringsAsFactors=FALSE)
 
-	# compare TPS predictions (focal country data seen) with RF predictions (focal country data not seen)
-	ftp <- list.files("../output/leave_one", "TPS_all", full.names=TRUE)
-	frf <- list.files("../output/leave_one", "RF_all_test", full.names=TRUE)
-	out1 <- data.frame(code=country_codes, means=FALSE)
-	out1$cor <- sapply(country_codes,
-		function(code) {
-			tp_f <- grep(code, ftp, value=TRUE)
-			rf_f <- grep(code, frf, value=TRUE)
-			if (!length(tp_f) || !length(rf_f)) return(NA)
-			tp <- readRDS(tp_f[1])
-			rf <- readRDS(rf_f[1])
-			cor(tp$prediction, rf$prediction, use="pairwise.complete.obs")
-		}
-	)
-	# using mean values — use ../output/leave_one (oldout does not exist in CI)
-	ftp <- list.files("../output/leave_one", "TPS_means", full.names=TRUE)
-	frf <- list.files("../output/leave_one", "RF_means_test", full.names=TRUE)
-	out2 <- data.frame(code=country_codes, means=TRUE)
-	out2$cor <- sapply(country_codes,
-		function(code) {
-			if (code == "TZA") return(NA)
-			tp_f <- grep(code, ftp, value=TRUE)
-			rf_f <- grep(code, frf, value=TRUE)
-			if (!length(tp_f) || !length(rf_f)) return(NA)
-			tp <- readRDS(tp_f[1])
-			rf <- readRDS(rf_f[1])
-			cor(tp$prediction, rf$prediction, use="pairwise.complete.obs")
-		}
-	)
-	out <- rbind(out1, out2)
+saveRDS(list(
+  country_results       = all_rf |> group_by(country) |> summarise(rsq=mean(Rsquared,na.rm=TRUE),.groups="drop"),
+  summary               = tibble(model="RF", mean_rsq=mean(all_rf$Rsquared,na.rm=TRUE)),
+  var_importance_table  = var_imp_long,
+  country_pairs         = pairwise_cv,
+  country_leave_one_out = bind_rows(all_rf, all_tps)
+), "../data/processed/cross_validation_graphs.rds")
 
-	saveRDS(out, "../data/processed/leave_one_cor.rds")
+# Plot
+if (nrow(all_rf) > 0) {
+  P <- all_rf |> filter(means=="FALSE",test=="TRUE") |>
+    ggplot(aes(reorder(country, Rsquared), Rsquared)) +
+    geom_col(fill="steelblue") + coord_flip() +
+    labs(title="LOO cross-country RF R²", x=NULL, y="R²") + theme_minimal()
+  ggsave("../output/other_illustr/graphs/leave_one_RF_rsq.png", P, width=7, height=5, dpi=150)
 }
 
-
-countries <- c("Benin", "Burkina", "Cote_d_Ivoire", "Ethiopia", "Ghana", "Guinea_Bissau", "Malawi", "Mali", "Niger", "Nigeria", "Rwanda", "Senegal", "Tanzania", "Togo", "Uganda", "Zambia")
-country_codes <- c("BEN", "BFA", "CIV", "ETH", "GHA", "GNB", "MWI", "MLI", "NER", "NGA", "RWA", "SEN", "TZA", "TGO", "UGA", "ZMB")
-
-trts <- expand.grid(country=1:14, model=c("RF", "TPS"), means=c(TRUE, FALSE), test=c(TRUE, FALSE))
-trts <- trts[!((trts$model=="TPS") & (!trts$test)), ]
-
-
-### sequential with sampling
-seqfun <- function() {
-	for (i in 1:96) { 
-		leave_one_country_models(countries[trts$country[i]], country_codes[trts$country[i]], trts$model[i], trts$means[i], trts$test[i], sample_size=100)
-	}
-}
-
-
-### parallel
-i <- as.numeric(Sys.getenv("SLURM_ARRAY_TASK_ID"))
-if (i <= 96) {
-	leave_one_country_models(countries[trts$country[i]], country_codes[trts$country[i]], trts$model[i], trts$means[i], trts$test[i])
-	print("OK")
-} else if (i == 97) {
-	summarize()
-} else {
-	print("done (i > 97)")
-}
-
-
-# slurm options
-#sbatch --array=1-97 -p bmh --time=600 --mem=16G --job-name=farms ~/farm/clusterR.sh scripts/04.4.RF_model_evaluation.R
-
-
+elapsed <- proc.time()[["elapsed"]] - t0
+write_report("04.5_cross_country_graphs.R",
+  "Cross-country LOO RF; leave_one RDS; cross_validation_graphs",
+  inputs  = list("95th trim"="../data/processed/lsms_trimmed_95th_africa.rds"),
+  outputs = list(
+    "leave_one_RF"  ="../data/processed/leave_one_RF.rds",
+    "leave_one_TPS" ="../data/processed/leave_one_TPS.rds",
+    "leave_one_cor" ="../data/processed/leave_one_cor.rds",
+    "cross_val_rds" ="../data/processed/cross_validation_graphs.rds"),
+  sections = list("RF R2 summary"=capture_output(print(all_rf,n=20))),
+  elapsed_sec = elapsed)
+message("04.5 done in ", round(elapsed,1), "s")

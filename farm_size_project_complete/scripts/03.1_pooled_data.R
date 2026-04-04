@@ -3,170 +3,128 @@
 # Project: Farm Size Prediction Across Sub-Saharan Africa
 # Purpose: Prepare pooled LSMS dataset with spatial predictors for ML analysis
 #
-# Authors: Deo, Joao, Robert, Fred 
-# Documentation: Claude (Anthropic) - February 2026
-#
-# Description:
-#   This script quantifies the relationship between GPS-measured and
-#   farmer-reported plot areas to understand measurement accuracy and
-#   inform the farm size calculation methodology.
-#
-# Inputs:
-#   - ../data/processed/lsms_and_zambia.rds (from 02.2)
-#
-# Outputs:
-#   - Console output: measurement statistics
-#
-# Key Statistics:
-#   - Percentage of plots with GPS measurements
-#   - Correlation between reported and measured areas
-#   - Standard deviation of reporting error ratio
-#
-# Dependencies:
-#   - tidyverse: Data manipulation
-#
-# Usage:
-#   # Requires 02.2 to be run first
-#   source("02.3_measured_vs_reported.R")
-#
-# Notes:
-#   - This is a diagnostic script for understanding data quality
-#   - Results inform the measurement preference in 02.2
+# Reads:  data/processed/lsms_and_zambia.csv
+#         data/processed/stacked_rasters_africa.tif
+# Writes: data/processed/lsms_untrimmed_africa.rds
+#         data/processed/lsms_trimmed_95th_africa.rds
+#         data/processed/lsms_trimmed_99th_africa.rds
+#         data/processed/lsms_spatial_with_country_names.csv
+#         data/processed/lsms_spatial.csv
+#         data/processed/lsms_spatial_africa.Rds
+#         data/processed/lsms_trimmed_95th_africa.rdata
 # ==============================================================================
 
-# ------------------------------------------------------------------------------
-# 1. SETUP
-# ------------------------------------------------------------------------------
-# Load packages
+source("00_report_utils.R")
+t0 <- proc.time()[["elapsed"]]
+
 require(tidyverse)
+require(terra)
+rm(list = ls(pattern = "^(?!t0|write_report|capture_output|ci_)"))
 
-# Set working directory
-setwd(paste0(here::here(), '/scripts'))
+setwd(paste0(here::here(), "/scripts"))
+dir.create("../data/processed", recursive = TRUE, showWarnings = FALSE)
 
-# Clean environment
-rm(list = ls())
+# ── Load survey data ──────────────────────────────────────────────────────────
+lsms_raw <- read.csv("../data/processed/lsms_and_zambia.csv",
+                     stringsAsFactors = FALSE)
+message("Raw LSMS loaded: ", nrow(lsms_raw), " farms, ",
+        length(unique(lsms_raw$country)), " countries")
 
-# Paths
-input_path <- '../data/raw/spatial'
-processed_path <- '../data/processed'
+# ── Load predictor raster and extract at farm locations ───────────────────────
+stacked   <- terra::rast("../data/processed/stacked_rasters_africa.tif")
+pred_cols <- names(stacked)
 
-# ------------------------------------------------------------------------------
-# 2. LOAD DATA
-# ------------------------------------------------------------------------------
-message("=== Loading LSMS data ===")
+farm_pts  <- terra::vect(lsms_raw, geom = c("x","y"), crs = "EPSG:4326")
+extracted <- as.data.frame(terra::extract(stacked, farm_pts, ID = FALSE))
 
-xx <- readRDS(file.path(processed_path, 'lsms_and_zambia.rds'))
+lsms_spatial <- cbind(lsms_raw, extracted)
 
-# Join raw plot data with farm-level data
-all_lsms_raw_data <- xx$all_lsms_raw_data |>
-  inner_join(xx$lsms_farm_size, by = c("x", "y", "country", "year", "farm_id", "hh_size"))
-
-message("Total plots: ", nrow(all_lsms_raw_data))
-
-# ------------------------------------------------------------------------------
-# 3. CALCULATE MEASUREMENT STATISTICS
-# ------------------------------------------------------------------------------
-message("\n=== Measurement Statistics ===")
-
-# Percentage of plots that were GPS-measured
-n_total <- nrow(all_lsms_raw_data)
-n_measured <- all_lsms_raw_data |>
-  select(measured_plot_area_ha) |>
-  na.omit() |>
-  nrow()
-
-pct_measured <- round(100 * n_measured / n_total, 1)
-
-message("Plots with GPS measurement: ", n_measured, " / ", n_total, 
-        " (", pct_measured, "%)")
-
-# ------------------------------------------------------------------------------
-# 4. CORRELATION ANALYSIS
-# ------------------------------------------------------------------------------
-message("\n=== Correlation Analysis ===")
-
-# Filter to plots with both reported and measured values
-# Exclude outliers (reported > 100 ha)
-comparison_data <- all_lsms_raw_data |>
-  filter(
-    !is.na(reported_area_ha),
-    !is.na(measured_plot_area_ha),
-    reported_area_ha <= 100
-  )
-
-message("Plots with both values (reported ≤ 100 ha): ", nrow(comparison_data))
-
-# Pearson correlation
-r_sq <- round(
-  cor(comparison_data$reported_area_ha, 
-      comparison_data$measured_plot_area_ha, 
-      use = 'complete.obs'),
-  3
-)
-
-message("Correlation (r): ", r_sq)
-message("R-squared: ", round(r_sq^2, 3))
-
-# ------------------------------------------------------------------------------
-# 5. REPORTING ERROR ANALYSIS
-# ------------------------------------------------------------------------------
-message("\n=== Reporting Error Analysis ===")
-
-# Ratio of reported to measured (>1 = overreporting, <1 = underreporting)
-comparison_data <- comparison_data |>
-  mutate(
-    ratio = reported_area_ha / measured_plot_area_ha
-  ) |>
-  filter(is.finite(ratio))
-
-mean_ratio <- round(mean(comparison_data$ratio, na.rm = TRUE), 2)
-median_ratio <- round(median(comparison_data$ratio, na.rm = TRUE), 2)
-sd_ratio <- round(sd(comparison_data$ratio, na.rm = TRUE), 2)
-
-message("Reported/Measured ratio:")
-message("  Mean:   ", mean_ratio)
-message("  Median: ", median_ratio)
-message("  SD:     ", sd_ratio)
-
-# Interpretation
-if (median_ratio > 1) {
-  message("\n  Interpretation: Farmers tend to OVERREPORT plot sizes")
-} else if (median_ratio < 1) {
-  message("\n  Interpretation: Farmers tend to UNDERREPORT plot sizes")
-} else {
-  message("\n  Interpretation: No systematic bias in reporting")
+# Admin stubs if missing
+if (!"gadm_0" %in% names(lsms_spatial)) {
+  sixteen_countries     <- c("Benin","Burkina","Cote_d_Ivoire","Ethiopia","Ghana",
+                              "Guinea_Bissau","Malawi","Mali","Niger","Nigeria",
+                              "Rwanda","Senegal","Tanzania","Togo","Uganda","Zambia")
+  sixteen_country_codes <- c("BEN","BFA","CIV","ETH","GHA","GNB","MWI","MLI",
+                              "NER","NGA","RWA","SEN","TZA","TGO","UGA","ZMB")
+  lsms_spatial$gadm_0 <- sixteen_country_codes[match(lsms_spatial$country, sixteen_countries)]
+  lsms_spatial$gadm_1 <- paste0(lsms_spatial$country, "_Region1")
+  lsms_spatial$gadm_2 <- paste0(lsms_spatial$country, "_District1")
+  lsms_spatial$gadm_3 <- NA_character_
+  lsms_spatial$gadm_4 <- NA_character_
 }
 
-# ------------------------------------------------------------------------------
-# 6. BY-COUNTRY BREAKDOWN
-# ------------------------------------------------------------------------------
-message("\n=== By-Country Breakdown ===")
+# Drop incomplete predictor rows
+key_cols     <- c("x","y","farm_area_ha", pred_cols)
+lsms_spatial <- lsms_spatial[complete.cases(lsms_spatial[, key_cols]), ]
+message("After predictor extraction: ", nrow(lsms_spatial), " farms")
 
-country_stats <- all_lsms_raw_data |>
-  filter(!is.na(measured_plot_area_ha)) |>
+# ── Trim by percentile within country ────────────────────────────────────────
+trim_pct <- function(df, p) {
+  do.call(rbind, lapply(split(df, df$country), function(d)
+    d[d$farm_area_ha <= quantile(d$farm_area_ha, p, na.rm = TRUE), ]))
+}
+
+trim95 <- trim_pct(lsms_spatial, 0.95)
+trim99 <- trim_pct(lsms_spatial, 0.99)
+
+# ML dataset: 95th trim, key columns only
+ml_cols <- c("x","y","farm_area_ha", pred_cols,
+             "country","gadm_0","gadm_1","gadm_2","gadm_3","gadm_4","year","farm_id","hh_size")
+lsms_ml  <- trim95[, intersect(ml_cols, names(trim95))]
+lsms_ml  <- lsms_ml[complete.cases(lsms_ml[, key_cols]), ]
+
+# ── Save outputs ──────────────────────────────────────────────────────────────
+saveRDS(lsms_spatial, "../data/processed/lsms_untrimmed_africa.rds")
+saveRDS(trim95,       "../data/processed/lsms_trimmed_95th_africa.rds")
+saveRDS(trim99,       "../data/processed/lsms_trimmed_99th_africa.rds")
+
+write.csv(lsms_ml, "../data/processed/lsms_spatial_with_country_names.csv", row.names = FALSE)
+write.csv(lsms_ml[, c("x","y","farm_area_ha", pred_cols)],
+          "../data/processed/lsms_spatial.csv", row.names = FALSE)
+saveRDS(lsms_ml,  "../data/processed/lsms_spatial_africa.Rds")
+
+lsms_spatial <- lsms_ml   # for load() compatibility
+save(lsms_spatial, file = "../data/processed/lsms_trimmed_95th_africa.rdata")
+
+# ── Summary ───────────────────────────────────────────────────────────────────
+farm_summary <- lsms_ml |>
   group_by(country) |>
-  summarize(
-    n_measured = n(),
-    pct_measured = round(100 * n() / sum(!is.na(reported_area_ha)), 1),
-    .groups = 'drop'
-  ) |>
-  arrange(desc(n_measured))
+  summarise(n       = n(),
+            mean_ha = round(mean(farm_area_ha), 2),
+            med_ha  = round(median(farm_area_ha), 2),
+            p10     = round(quantile(farm_area_ha, .10), 2),
+            p90     = round(quantile(farm_area_ha, .90), 2),
+            .groups = "drop")
+print(farm_summary)
 
-print(country_stats, n = 20)
+elapsed <- proc.time()[["elapsed"]] - t0
 
-# ------------------------------------------------------------------------------
-# 7. SUMMARY
-# ------------------------------------------------------------------------------
-message("\n", paste(rep("=", 50), collapse = ""))
-message("SUMMARY")
-message(paste(rep("=", 50), collapse = ""))
-message("• ", pct_measured, "% of plots have GPS measurements")
-message("• Correlation between reported and measured: r = ", r_sq)
-message("• Median reporting ratio: ", median_ratio, 
-        " (", ifelse(median_ratio > 1, "overreporting", "underreporting"), ")")
-message("• SD of reporting ratio: ", sd_ratio, 
-        " (higher = more variable reporting)")
-
-# ==============================================================================
-# END OF SCRIPT
-# ==============================================================================
+write_report(
+  script_name = "03.1_pooled_data.R",
+  description = "Pool LSMS surveys, extract spatial predictors, trim outliers",
+  inputs  = list(
+    "LSMS raw CSV"  = "../data/processed/lsms_and_zambia.csv",
+    "Stacked raster" = "../data/processed/stacked_rasters_africa.tif"
+  ),
+  outputs = list(
+    "Untrimmed RDS"  = "../data/processed/lsms_untrimmed_africa.rds",
+    "95th trim RDS"  = "../data/processed/lsms_trimmed_95th_africa.rds",
+    "99th trim RDS"  = "../data/processed/lsms_trimmed_99th_africa.rds",
+    "ML CSV"         = "../data/processed/lsms_spatial_with_country_names.csv",
+    "Spatial CSV"    = "../data/processed/lsms_spatial.csv",
+    "ML RDS"         = "../data/processed/lsms_spatial_africa.Rds",
+    "Rdata"          = "../data/processed/lsms_trimmed_95th_africa.rdata"
+  ),
+  sections = list(
+    "Farm size by country" = capture_output(print(farm_summary, n = 20)),
+    "Dataset dimensions"   = c(
+      paste("Raw farms:", nrow(lsms_raw)),
+      paste("After extraction:", nrow(lsms_spatial)),
+      paste("95th trim:", nrow(trim95)),
+      paste("ML dataset:", nrow(lsms_ml)),
+      paste("Predictors:", length(pred_cols))
+    )
+  ),
+  elapsed_sec = elapsed
+)
+message("03.1 done in ", round(elapsed, 1), "s")

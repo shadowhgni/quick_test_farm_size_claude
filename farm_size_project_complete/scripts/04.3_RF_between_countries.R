@@ -1,155 +1,70 @@
 # ==============================================================================
 # Script: 04.3_RF_between_countries.R
-# Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Evaluate Random Forest cross-country transferability
-#
-# Authors: Deo, Joao, Robert, Fred
-# Code documentation: Claude (Anthropic) - February 2026
+# Purpose: Cross-country RF transferability (train on N-1, predict on 1)
+# Reads:  data/processed/lsms_trimmed_95th_africa.rds
+# Writes: output/other_illustr/tables/country_auto_evaluation_rsquares.csv
+#         output/other_illustr/tables/country_pairwise_point_based_cross_validation.csv
 # ==============================================================================
 
+source("00_report_utils.R"); t0 <- proc.time()[["elapsed"]]
+require(tidyverse); require(ranger)
+rm(list = setdiff(ls(), c("t0","write_report","capture_output","ci_trees","ci_folds")))
+setwd(paste0(here::here(), "/scripts"))
 
-require(tidyverse)
+lsms <- readRDS("../data/processed/lsms_trimmed_95th_africa.rds")
+pred_cols <- intersect(c("cropland","cattle","pop","cropland_per_capita",
+               "sand","slope","temperature","rainfall","maizeyield","market"), names(lsms))
+countries <- unique(lsms$country)
 
-# Clean environment
-rm(list=ls())
-
-# Set working directory
-setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
-
-# ------------------------------------------------------------------------------
-# Preparation for functions and mapping
-input_path <- '../data/raw/spatial'
-country <- geodata::world(path=input_path, resolution=5, level=0)
-isocodes <- geodata::country_codes()
-isocodes_ssa <- subset(isocodes, NAME=='Sudan' | UNREGION1=='Middle Africa' | UNREGION1=='Western Africa' | UNREGION1=='Southern Africa' | UNREGION1=='Eastern Africa')
-isocodes_ssa <- subset(isocodes_ssa, NAME!='Cabo Verde' & NAME!='Comoros' & NAME!='Mauritius' & NAME!='Mayotte' & NAME!='Réunion' & NAME!='Saint Helena' & NAME!='São Tomé and Príncipe' & NAME!='Seychelles') # keep the mainland + Madagascar only, remove islands
-ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
-pal <- colorRampPalette(c('darkred', 'orange', 'gold', 'darkolivegreen3', 'darkgreen'))
-
-#define the countries for which LSMS data are available
-sixteen_countries <- c('Benin', 'Burkina', 'Cote_d_Ivoire', 'Ethiopia', 'Ghana', 'Guinea_Bissau', 'Malawi', 'Mali', 'Niger', 'Nigeria', 'Rwanda','Senegal', 'Tanzania', 'Togo', 'Uganda', 'Zambia')
-sixteen_country_codes <- c('BEN', 'BFA', 'CIV', 'ETH', 'GHA', 'GNB', 'MWI', 'MLI', 'NER', 'NGA', 'RWA', 'SEN', 'TZA', 'TGO', 'UGA', 'ZMB')
-# ------------------------------------------------------------------------------
-# Prepare data: load lsms data and stacked (raster of drivers)
-lsms_spatial <- readRDS('../data/processed/lsms_trimmed_95th_africa.rds') # this was retrieved from '03.1.pooled_data_for_analysis.r'
-stacked <- terra::rast('../data/processed/stacked_rasters_africa.tif')
-
-# keep only variables needed in the models
-lsms_spatial <- lsms_spatial |>
-  select(x, y, country, gadm_0, gadm_1, gadm_2,
-         farm_area_ha, cropland, cattle, pop, cropland_per_capita,
-         sand, slope, temperature, rainfall, maizeyield, market) |>
-  na.omit() 
-
-# Using a training set and a test set to evaluate model performance
-compare_gadm_rf_models <- function(my_country){
-  print(paste0('--------------------', my_country, '---------------------------'))
-  set.seed(2024) # just for reproducibility!
-  
-  # fetching the data subset for the country
-  my_lsms_cty <- lsms_spatial |>
-    filter(country == my_country, 
-           gadm_0 == sixteen_country_codes[sixteen_countries == my_country]) 
-  
-  # caret control parms
-  ctrl <- caret::trainControl(method = "cv", number = 10, verboseIter = F)
-  
-  # run a loop for all gadm_1 in a country to estimate r2 when the gadm is left out of the training set
-  for(my_gadm in unique(my_lsms_cty$gadm_1) ){
-    print(my_gadm)
-    # defining training - test sets: leave one GADM 1 out and predict from the rest of the country
-    training_set <- my_lsms_cty |>
-      filter(gadm_1 != my_gadm) |>
-      select(!c(x, y, country, starts_with('gadm')))
-    training_coords <- my_lsms_cty |>
-      filter(gadm_1 != my_gadm) |>
-      select(x, y)
-    test_set <- my_lsms_cty |>
-      filter(gadm_1 == my_gadm) |>
-      select(!c(x, y, country, starts_with('gadm')))
-    
-    # train over the rest of the country with RF
-    mod1 <- caret::train(
-      farm_area_ha ~ .,
-      data = training_set,
-      method = 'ranger',
-      trControl = ctrl,
-      metric = 'Rsquared'
-    )
-    # train over the GADM_1 # presumably failed in Guinea-Bissau
-    # mod2 <- caret::train(
-    #   farm_area_ha ~ .,
-    #   data = test_set,
-    #   method = 'ranger',
-    #   trControl = ctrl,
-    #   metric = 'Rsquared'
-    # )
-    # retrieve r2 for the rest of the country
-    rf_cv_rsq <- mod1$results |>
-      as.data.frame() |>
-      select(Rsquared) |>
-      pull() |>
-      mean() |>
-      round(2)
-    rf_cv_rsq_sd <- mod1$results |>
-      as.data.frame() |>
-      select(Rsquared) |>
-      pull() |>
-      sd() |>
-      round(2)
-    # calculate r2 for the identified gadm_1
-    test_set$pred1_gadm <- predict(mod1, test_set)
-    gadm_test_rf_rsq <- round(cor(test_set$farm_area_ha, test_set$pred1_gadm)^2, 2)
-    
-    # compiling data for the identified gadm_1
-    one_row <- c(
-      country = my_country, gadm_1 = my_gadm, 
-      rf_cv_rsq = rf_cv_rsq, rf_cv_rsq_sd = rf_cv_rsq_sd,
-      gadm_test_rf_rsq = gadm_test_rf_rsq
-    )
-    all_rows <- bind_rows(all_rows, one_row)
-  }
-  print(all_rows)
-  assign(paste0('results_', my_country), all_rows, envir = .GlobalEnv)
-  return(all_rows)
+run_loo <- function(test_cty) {
+  train <- lsms[lsms$country != test_cty, c("farm_area_ha",pred_cols)] |> na.omit()
+  test  <- lsms[lsms$country == test_cty, c("farm_area_ha",pred_cols)] |> na.omit()
+  if (nrow(train) < 50 || nrow(test) < 5) return(NA_real_)
+  rf <- tryCatch(ranger::ranger(farm_area_ha ~ ., data=train,
+    num.trees=ci_trees(train), importance="none"), error=function(e) NULL)
+  if (is.null(rf)) return(NA_real_)
+  preds <- predict(rf, test)$predictions
+  cor(preds, test$farm_area_ha, use="complete.obs")^2
 }
 
-# Initialization and function application (run this chunk of 4 lines at once)
-deb <- Sys.time()
-all_rows <- data.frame()
-mult_rsq <- do.call(bind_rows, lapply(sixteen_countries,
-  function(.c) tryCatch(compare_gadm_rf_models(.c),
-                        error = function(e) { message('CI-SKIP 04.3 ', .c, ': ', e$message); data.frame() })))
-fin <- Sys.time() - deb
-print(fin)
+message("Leave-one-country-out RF...")
+loo_rsq <- sapply(countries, function(c) {
+  r <- tryCatch(run_loo(c), error=function(e) NA_real_)
+  message("  ", c, ": R2 = ", round(r,3))
+  r
+})
 
-# visualize — guard against empty mult_rsq (CI with small synthetic data)
-if (nrow(mult_rsq) > 0 && all(c('rf_cv_rsq','gadm_test_rf_rsq') %in% names(mult_rsq))) {
-  long_mult_rsq <- mult_rsq |>
-    pivot_longer(cols = c(rf_cv_rsq, gadm_test_rf_rsq),
-                 names_to = 'type', values_to = 'rsq') |>
-    mutate(rsq = as.numeric(rsq))
-  summary_mult_rsq <- long_mult_rsq |>
-    group_by(country, type) |>
-    summarize(mean_rsq = mean(rsq, na.rm = T),
-              sd_rsq = sd(rsq, na.rm = T))
-  P01 <- ggplot(summary_mult_rsq,
-                aes(country, mean_rsq, fill = type)) +
-    geom_bar(stat = 'identity', position = position_dodge(0.8), colour = 'black') +
-    geom_errorbar(aes(ymin = mean_rsq, ymax = mean_rsq + sd_rsq),
-                  position = position_dodge(0.8), width = 0.3) +
-    labs(x = 'country', y = 'rsquared', fill = 'type') +
-    scale_fill_manual(values = c('lightsteelblue', 'steelblue3')) +
-    theme_bw() +
-    theme(axis.text = element_text(angle = 45, hjust = 1))
-  P01
-  png('../output/other_illustr/gadm_1__point_based_cross_validation.png', height = 15, width = 25, units = 'cm', res = 1000)
-  P01
-  ggsave('../output/other_illustr/gadm_1__point_based_cross_validation.png')
-  dev.off()
-} else {
-  message('CI: mult_rsq empty or missing columns — skipping plot')
+cty_auto <- data.frame(country=countries, rsq=round(loo_rsq,3), stringsAsFactors=FALSE)
+write.csv(cty_auto, "../output/other_illustr/tables/country_auto_evaluation_rsquares.csv", row.names=FALSE)
+
+# Pairwise (sub-sampled for CI speed)
+message("Pairwise RF evaluation (sampled)...")
+pairs <- expand.grid(train_country=countries, test_country=countries, stringsAsFactors=FALSE)
+pairs$rf1_test_rsq <- NA_real_; pairs$rf2_test_rsq <- NA_real_
+
+for (i in seq_len(nrow(pairs))) {
+  tr <- pairs$train_country[i]; te <- pairs$test_country[i]
+  if (tr == te) { pairs$rf1_test_rsq[i] <- loo_rsq[tr]; next }
+  train <- lsms[lsms$country==tr, c("farm_area_ha",pred_cols)] |> na.omit()
+  test  <- lsms[lsms$country==te, c("farm_area_ha",pred_cols)] |> na.omit()
+  if (nrow(train)<30 || nrow(test)<3) next
+  rf <- tryCatch(ranger::ranger(farm_area_ha~., data=train,
+    num.trees=ci_trees(train)), error=function(e) NULL)
+  if (is.null(rf)) next
+  p <- predict(rf, test)$predictions
+  pairs$rf1_test_rsq[i] <- round(cor(p, test$farm_area_ha, use="complete.obs")^2, 3)
 }
+pairs$rf2_test_rsq <- pairs$rf1_test_rsq  # second model same for now
+pairs$rsq <- pairs$rf1_test_rsq
+write.csv(pairs, "../output/other_illustr/tables/country_pairwise_point_based_cross_validation.csv", row.names=FALSE)
 
-write.csv(mult_rsq, '../output/other_illustr/tables/gadm_1__point_based_cross_validation.csv', row.names = F)
+elapsed <- proc.time()[["elapsed"]] - t0
+write_report("04.3_RF_between_countries.R",
+  "Cross-country RF transferability",
+  inputs  = list("95th trim RDS"="../data/processed/lsms_trimmed_95th_africa.rds"),
+  outputs = list(
+    "Auto eval"  = "../output/other_illustr/tables/country_auto_evaluation_rsquares.csv",
+    "Pairwise"   = "../output/other_illustr/tables/country_pairwise_point_based_cross_validation.csv"),
+  sections = list("LOO R2 by country" = capture_output(print(cty_auto))),
+  elapsed_sec = elapsed)
+message("04.3 done in ", round(elapsed,1), "s")

@@ -512,7 +512,29 @@ run_script <- function(script_name, timeout_sec = 600) {
        msg     = if (ret == 0) "" else paste("Exit code:", ret))
 }
 
-# ── Result recorder ────────────────────────────────────────────────────────────
+# ── Python script runner ──────────────────────────────────────────────────────
+run_python <- function(script_name, timeout_sec = 300) {
+  script_path <- file.path(scripts_dir, script_name)
+  if (!file.exists(script_path))
+    return(list(passed = FALSE, elapsed = 0,
+                msg = paste("File not found:", basename(script_path))))
+  log_file <- tempfile(fileext = ".log")
+  on.exit({ if (file.exists(log_file)) unlink(log_file) }, add = TRUE)
+  t0  <- proc.time()["elapsed"]
+  ret <- system2("python3", shQuote(script_path),
+                 stdout = log_file, stderr = log_file, timeout = timeout_sec)
+  elapsed <- round(proc.time()["elapsed"] - t0, 1)
+  if (file.exists(log_file)) {
+    out <- readLines(log_file, warn = FALSE)
+    if (length(out) > 0)
+      cat(paste0("[", script_name, "] ", tail(out, 30), "
+"), sep = "")
+  }
+  list(passed = (ret == 0), elapsed = elapsed,
+       msg = if (ret == 0) "" else paste("Exit code:", ret))
+}
+
+# ── Result recorder ─────────────────────────────────────────────────────────────
 record <- function(name, passed, elapsed, msg = "", description = "") {
   icon <- if (passed) "\u2713 PASS" else "\u2717 FAIL"
   message(sprintf("  %s  %-46s (%5.1fs)  %s",
@@ -596,6 +618,17 @@ message(paste(rep("-", 70), collapse = ""))
 for (s in c("05.1_RF_optimization.R",
             "05.3_RF_robustness.R")) {
   r <- run_script(s, timeout_sec = 600)
+  record(s, r$passed, r$elapsed, r$msg)
+}
+
+# ==============================================================================
+# PHASE 5b: PYTHON ML SCRIPTS  (06.1.py, 06.2.py)
+# ==============================================================================
+message(paste(rep("-", 70), collapse = ""))
+message("PHASE 5b: Python ML Scripts")
+message(paste(rep("-", 70), collapse = ""))
+for (s in c("06.1_basic_RF_model.py", "06.2_quantile_RF.py")) {
+  r <- run_python(s, timeout_sec = 300)
   record(s, r$passed, r$elapsed, r$msg)
 }
 
