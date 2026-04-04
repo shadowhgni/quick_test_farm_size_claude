@@ -196,7 +196,7 @@ jobs:
       # ── Run full pipeline test (always capture output) ───────────────────
       - name: Install Python dependencies
         run: |
-          pip install --break-system-packages -q             scikit-learn pandas numpy quantile-forest pyreadr rasterio matplotlib seaborn
+          pip install -q scikit-learn pandas numpy quantile-forest pyreadr rasterio matplotlib seaborn
 
       - name: Run full sequential pipeline test
         run: |
