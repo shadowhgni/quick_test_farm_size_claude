@@ -50,15 +50,15 @@ sixteen_countries <- c('Benin', 'Burkina', 'Cote_d_Ivoire', 'Ethiopia', 'Ghana',
 sixteen_country_codes <- c('BEN', 'BFA', 'CIV', 'ETH', 'GHA', 'GNB', 'MWI', 'MLI', 'NER', 'NGA', 'RWA', 'SEN', 'TZA', 'TGO', 'UGA', 'ZMB')
 # ------------------------------------------------------------------------------
 # Prepare data rasters: lsms and predictions + virtual list of farm sizes
-stacked <- terra::rast('../../data/processed/stacked_rasters_africa.tif')
-rf_model_predictions <- terra::rast('../../data/processed/rf_model_predictions_SSA.tif')
+stacked <- terra::rast('../data/processed/stacked_rasters_africa.tif')
+rf_model_predictions <- terra::rast('../data/processed/rf_model_predictions_SSA.tif')
 names(rf_model_predictions) <- 'pred_farm_area_ha'
-qrf_model_predictions <- terra::rast('../../data/processed/qrf_100quantiles_predictions_africa.tif')
+qrf_model_predictions <- terra::rast('../data/processed/qrf_100quantiles_predictions_africa.tif')
 names(qrf_model_predictions) <- paste0('qrf_q', sprintf('%03g', 1:100))
-mask_forest_ssa <- terra::rast('../../data/processed/mask_forest_ssa.tif')
-mask_drylands_ssa <- terra::rast('../../data/processed/mask_drylands_ssa.tif')
+mask_forest_ssa <- terra::rast('../data/processed/mask_forest_ssa.tif')
+mask_drylands_ssa <- terra::rast('../data/processed/mask_drylands_ssa.tif')
 
-xx <- readRDS('../../data/processed/fsize_distribution_resample_long.rds')
+xx <- readRDS('../data/processed/fsize_distribution_resample_long.rds')
 theor_farms <- xx$theor_farms
 theor_farms_application <- xx$theor_farms_application; rm(xx)
 
@@ -68,13 +68,13 @@ theor_rast <- theor_farms |>
          ks_trunc_D, ks_trunc_pval, 
          adjusted_logn_mean, adjusted_logn_sd) |>
   terra::rast()
-gini <- terra::rast('../../data/processed/gini_raster.tif')
+gini <- terra::rast('../data/processed/gini_raster.tif')
 terra::crs(gini) <- terra::crs(theor_farms)
 
-back_avg <- terra::rast('../../data/processed/back_transf_trunc_adj_mean.tif')
+back_avg <- terra::rast('../data/processed/back_transf_trunc_adj_mean.tif')
 terra::crs(back_avg) <- terra::crs(theor_farms)
 
-back_sd <- terra::rast('../../data/processed/back_transf_trunc_adj_sd.tif')
+back_sd <- terra::rast('../data/processed/back_transf_trunc_adj_sd.tif')
 terra::crs(back_sd) <- terra::crs(theor_farms)
 
 selected_rast <- c(theor_rast$skew, gini, 
@@ -84,7 +84,7 @@ names(selected_rast) <- c('skew', 'gini',
                           'adjusted_logn_mean', 'adjusted_logn_sd', 
                           'ks_trunc_D', 'ks_trunc_pval')
 # Prepare lsms data
-lsms_spatial <-  readRDS('../../data/processed/lsms_trimmed_95th_africa.rds') # this was retrieved from '03.1.pooled_data_for_analysis.r'
+lsms_spatial <-  readRDS('../data/processed/lsms_trimmed_95th_africa.rds') # this was retrieved from '03.1.pooled_data_for_analysis.r'
 
 # ------------------------------------------------------------------------------
 # Initialize plot list

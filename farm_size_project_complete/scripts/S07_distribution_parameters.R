@@ -9,12 +9,12 @@
 
 
 source("00_report_utils.R")
-t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
 require(patchwork)
 
 # Clean environment
 rm(list=ls())
+t0 <- proc.time()[["elapsed"]]
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))

@@ -429,7 +429,7 @@ saveRDS(rbind(fig2c_small,fig2c_medium,fig2c_large), "fig2c.rds")
 qrf_q010_r <- make_rast("qrf_q010", 1.5, 0.8, r_res=res_pred)
 qrf_q090_r <- make_rast("qrf_q090", 4.0, 1.5, r_res=res_pred)
 terra::writeRaster(qrf_q010_r, "fig.2a_quantile_10_fsizes.tif",    overwrite=TRUE)
-terra::writeRaster(qrf_q090_r, "fig.2b_quantile_10_fsizes.tif",    overwrite=TRUE)
+terra::writeRaster(qrf_q090_r, "fig.2b_quantile_90_fsizes.tif",    overwrite=TRUE)
 terra::writeRaster(qrf_q010_r, "../fig.2a_quantile_10_fsizes.tif", overwrite=TRUE)
 terra::writeRaster(qrf_q090_r, "../fig.2b_quantile_90_fsizes.tif", overwrite=TRUE)
 
@@ -510,6 +510,42 @@ lsms_oob$gadm_3 <- NA_character_; lsms_oob$gadm_4 <- NA_character_
 lsms_oob$oob_pred      <- pmax(.01, lsms_oob$farm_area_ha*runif(nrow(lsms_oob),.6,1.4))
 lsms_oob$in_sample_pred <- pmax(.01, lsms_oob$farm_area_ha*runif(nrow(lsms_oob),.8,1.2))
 saveRDS(lsms_oob, file.path(processed_path,"lsms_oob.rds"))
+
+# fsize_distribution_resample_long.rds — stub needed because 08.2 does NOT produce it in CI
+# (08.3 reads it; on local this comes from the real 08.3 computation)
+n_theor <- nrow(lsms_ml); fa <- pmax(0.01, lsms_ml$farm_area_ha)
+pred_farm_sizes_list <- lapply(fa, function(mu) {
+  v <- sort(qlnorm(seq(0.01,0.99,length.out=100), meanlog=log(mu), sdlog=0.8))
+  setNames(v, paste0("qrf_q", sprintf("%03d",1:100)))
+})
+fitted_trunc_logn_list <- lapply(fa, function(mu)
+  sort(pmax(0.01, rlnorm(9, meanlog=log(mu), sdlog=0.6))))
+theor_farms <- data.frame(
+  x=lsms_ml$x, y=lsms_ml$y, cell=seq_len(n_theor), nb_farms=9L,
+  country=lsms_ml$country, farm_area_ha=fa,
+  skew=runif(n_theor,.5,4), kurt=runif(n_theor,2,8), gini=runif(n_theor,.3,.6),
+  ks_trunc_D=runif(n_theor,.05,.4), ks_trunc_pval=runif(n_theor,.01,.99),
+  ks_D=runif(n_theor,.05,.4), ks_pval=runif(n_theor,.01,.99),
+  adjusted_logn_mean=log(fa/sqrt(1.5)), adjusted_logn_sd=sqrt(log(1.5)),
+  logn_mean=log(fa), logn_sd=0.8,
+  sample_mean=fa*runif(n_theor,.8,1.2), sample_sd=fa*runif(n_theor,.2,.5),
+  sd_sample_mean=runif(n_theor,.05,.3), sd_sample_sd=runif(n_theor,.02,.2),
+  stringsAsFactors=FALSE)
+theor_farms$pred_farm_sizes        <- pred_farm_sizes_list
+theor_farms$fitted_trunc_logn      <- fitted_trunc_logn_list
+theor_farms$fitted_logn            <- fitted_trunc_logn_list
+theor_farms$virt_farms             <- fitted_trunc_logn_list
+theor_farms$virt_farms_fixed       <- fitted_trunc_logn_list
+theor_farms$virt_farms_f_max_trunc <- fitted_trunc_logn_list
+theor_farms_application <- data.frame(
+  x=lsms_ml$x, y=lsms_ml$y, cell=seq_len(n_theor), nb_farms=9L,
+  country=lsms_ml$country,
+  linear_farm_size_ha    = pmax(0.01,rlnorm(n_theor,log(fa),0.6)),
+  trunc_log_farm_size_ha = pmax(0.01,rlnorm(n_theor,log(fa),0.5)),
+  stringsAsFactors=FALSE)
+saveRDS(list(theor_farms=theor_farms, theor_farms_application=theor_farms_application),
+        file.path(processed_path, "fsize_distribution_resample_long.rds"))
+message("   fsize_distribution_resample_long.rds stub written.")
 
 # RF model stub (pre-trained, used by some scripts before 06.1 runs)
 if (requireNamespace("ranger", quietly=TRUE)) {

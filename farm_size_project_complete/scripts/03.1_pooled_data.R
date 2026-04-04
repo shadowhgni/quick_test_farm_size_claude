@@ -19,7 +19,7 @@ t0 <- proc.time()[["elapsed"]]
 
 require(tidyverse)
 require(terra)
-rm(list = ls(pattern = "^(?!t0|write_report|capture_output|ci_)"))
+rm(list = setdiff(ls(), c("t0","write_report","capture_output","ci_trees","ci_folds")))
 
 setwd(paste0(here::here(), "/scripts"))
 dir.create("../data/processed", recursive = TRUE, showWarnings = FALSE)

@@ -74,7 +74,7 @@ kenya_aggregated <- as.data.frame(
   )
 )
 ken_gadm1 <- kenya_aggregated |>
-  slice(-1) |>
+  dplyr::slice(-1) |>
   mutate(across(matches('_\\w{2,}'), ~ as.numeric(gsub('\\-', 0, gsub(',', '', .)))), # I interpret NA as 0 (farms of this size are unavailable)
          avg_farm_area_ha = 0.4047 * (0.5 * acres_0001 + 1.5 * acres_0002 + 3.5 * acres_0005 + 7.5 * acres_0010 +
                                         15 * acres_0020 + 35 * acres_0050 + 75 * acres_0100 + 300 * acres_0500 + 

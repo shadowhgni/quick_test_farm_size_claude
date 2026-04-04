@@ -25,7 +25,7 @@ fourteen_country_codes <- c('BEN','BFA','CIV','ETH','GNB','MWI','MLI','NER','NGA
 # ------------------------------------------------------------------------------
 # 1. Load survey data
 # ------------------------------------------------------------------------------
-load('../data/processed/lsms_trimmed_95th_africa.rdata')
+tryCatch(load('../data/processed/lsms_trimmed_95th_africa.rdata'), error=function(e){ message('CI: rdata not found, loading RDS instead'); lsms_spatial <<- readRDS('../data/processed/lsms_trimmed_95th_africa.rds') })
 stacked <- terra::rast('../data/processed/stacked_rasters_africa.tif')
 
 lsms_spatial <- lsms_spatial |>
