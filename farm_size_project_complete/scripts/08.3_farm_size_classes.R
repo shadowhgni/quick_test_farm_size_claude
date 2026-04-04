@@ -130,7 +130,7 @@ dev.off()
 
 # ------------------------------------------------------------------------------
 gc()
-grouped_theor_app <- if ('pred_farm_sizes' %in% names(theor_farms)) theor_farms |>
+grouped_theor_app <- theor_farms |>
   ungroup() |>
   mutate(avg = unlist(map(pred_farm_sizes, \(x) unlist(mean(x, na.rm = T)))),
          avg_grp = case_when(avg <= 0.5 ~ '< 0.5 ha',
@@ -141,9 +141,7 @@ grouped_theor_app <- if ('pred_farm_sizes' %in% names(theor_farms)) theor_farms 
                              .default = NA)) |>
   filter(avg_grp %in% c('< 0.5 ha', '1 - 2 ha', '> 5 ha')) |>
   group_by(x, y, avg_grp) |>
-  unnest_longer(pred_farm_sizes) else tibble(x=numeric(),y=numeric(),cell=integer(),
-    nb_farms=integer(),avg=numeric(),avg_grp=character(),pred_farm_sizes=numeric(),
-    pred_farm_sizes_id=character())
+  unnest_longer(pred_farm_sizes)
 grouped_theor_app$avg_grp <- factor(grouped_theor_app$avg_grp, levels = c('< 0.5 ha', '1 - 2 ha', '> 5 ha') )
   
 
@@ -175,48 +173,46 @@ P02
 ggsave(paste0('../output/other_illustr/africa_ECDF_3selected_groups_ugly.png'))
 dev.off()
 
-if (nrow(grouped_theor_app) > 0) {
-  P02_data <- ggplot_build(P02)$data
-  P02_ribbon <- P02_data[[1]] |>
-    filter(!is.infinite(x)) |>
-    mutate(farm_class = case_when(colour == '#8B0000' ~ '< 0.5 ha',
-                                  colour == '#FFCB00' ~ '1 - 2 ha',
-                                  colour == '#489228' ~ '> 5 ha',
-                                  .default = NA)) |>
-    group_by(farm_class, x) |>
-    summarize(min = min(y, na.rm = T), max = max(y, na.rm = T))
-  P02_central <- P02_data[[2]] |>
-    filter(!is.infinite(x)) |>
-    mutate(farm_class = case_when(colour == '#8B0000' ~ '< 0.5 ha',
-                                  colour == '#FFCB00' ~ '1 - 2 ha',
-                                  colour == '#489228' ~ '> 5 ha',
-                                  .default = NA)) |>
-    select(x, y, farm_class)
-  P02_failed <- ggplot() +
-    geom_ribbon(data = P02_ribbon |>
-                  mutate(x = round(x, 3)) |>
-                  group_by(farm_class, x) |>
-                  summarize(min = mean(min, na.rm = T), max = mean(max, na.rm = T)),
-                aes(x = x, ymin = min, ymax = max, fill = farm_class), alpha = 0.05) +
-    geom_line(data = P02_central |>
+P02_data <- ggplot_build(P02)$data
+P02_ribbon <- P02_data[[1]] |>
+  filter(!is.infinite(x)) |>
+  mutate(farm_class = case_when(colour == '#8B0000' ~ '< 0.5 ha',
+                                colour == '#FFCB00' ~ '1 - 2 ha',
+                                colour == '#489228' ~ '> 5 ha',
+                                .default = NA)) |>
+  group_by(farm_class, x) |>
+  summarize(min = min(y, na.rm = T), max = max(y, na.rm = T))
+P02_central <- P02_data[[2]] |>
+  filter(!is.infinite(x)) |>
+  mutate(farm_class = case_when(colour == '#8B0000' ~ '< 0.5 ha',
+                                colour == '#FFCB00' ~ '1 - 2 ha',
+                                colour == '#489228' ~ '> 5 ha',
+                                .default = NA)) |>
+  select(x, y, farm_class)
+P02_failed <- ggplot() +
+  geom_ribbon(data = P02_ribbon |>
                 mutate(x = round(x, 3)) |>
                 group_by(farm_class, x) |>
-                summarize(y = mean(y, na.rm = T)),
-              aes(x = x, y = y, colour = farm_class), linewidth = 0.8) +
-    labs(x= 'Predicted individual farm sizes per grid cell, ha', y = 'ECDF',
-         title = NULL, colour = 'Farm size class') +
-    scale_x_continuous(expand = c(0, 0), limits = c(0, 15)) +
-    scale_y_continuous(expand = c(0, 0), limits = c(0, 1)) +
-    scale_fill_manual(values = c('#8B0000', '#FFCB00', '#489228')) +
-    scale_colour_manual(values = c('#8B0000', '#FFCB00', '#489228')) +
-    theme_test() +
-    theme(legend.position = c(0.8, 0.35))
-  P02_failed
-  png(paste0('../output/other_illustr/africa_ECDF_3selected_groups_of_farm_sizes.png'), height = 5, width = 7.5, units = 'in', res = 600)
-  P02_failed
-  ggsave(paste0('../output/other_illustr/africa_ECDF_3selected_groups_of_farm_sizes.png'))
-  dev.off()
-} else { message('CI: P02_ribbon/P02_failed skipped — grouped_theor_app empty') }
+                summarize(min = mean(min, na.rm = T), max = mean(max, na.rm = T)),
+              aes(x = x, ymin = min, ymax = max, fill = farm_class), alpha = 0.05) +
+  geom_line(data = P02_central |>
+              mutate(x = round(x, 3)) |>
+              group_by(farm_class, x) |>
+              summarize(y = mean(y, na.rm = T)),
+            aes(x = x, y = y, colour = farm_class), linewidth = 0.8) +
+  labs(x= 'Predicted individual farm sizes per grid cell, ha', y = 'ECDF',
+       title = NULL, colour = 'Farm size class') +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 15)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1)) +
+  scale_fill_manual(values = c('#8B0000', '#FFCB00', '#489228')) +
+  scale_colour_manual(values = c('#8B0000', '#FFCB00', '#489228')) +
+  theme_test() +
+  theme(legend.position = c(0.8, 0.35))
+P02_failed
+png(paste0('../output/other_illustr/africa_ECDF_3selected_groups_of_farm_sizes.png'), height = 5, width = 7.5, units = 'in', res = 600)
+P02_failed
+ggsave(paste0('../output/other_illustr/africa_ECDF_3selected_groups_of_farm_sizes.png'))
+dev.off()
 
 saveRDS(list(grouped_theor_app = grouped_theor_app, grp_avg_theor_app = grp_avg_theor_app, P02 = P02),
         file = '../output/plot_data/ECDF_3groups.rds')
@@ -406,9 +402,7 @@ ggsave(paste0('../output/other_illustr/africa_predicted_mean_cv.png'))
 dev.off() 
 
 P03 <- ggplot(theor_farms |>
-                mutate(gini = if ('fitted_trunc_logn' %in% names(theor_farms))
-                         unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))
-                       else rep(NA_real_, n())),
+                mutate(gini = unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))),
               aes(exp(adjusted_logn_mean + (adjusted_logn_sd^2 / 2)), gini)) +
   geom_point(colour = 'skyblue1') +
   scale_x_continuous(expand = c(0, 0), limits = c(0, 10)) +
@@ -509,9 +503,7 @@ dev.off()
 P02d <- ggplot(lsms_mean_sd, aes(mean, gini)) +
   geom_point() + 
   geom_point(data = theor_farms |>
-               mutate(gini = if ('fitted_trunc_logn' %in% names(theor_farms))
-                        unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))
-                      else rep(NA_real_, n())),
+               mutate(gini = unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))),
              aes(exp(adjusted_logn_mean + (adjusted_logn_sd^2 / 2)), gini),
              alpha = 0.05, colour = 'skyblue1') +
   geom_polygon(data = farm_size_triangle, aes(x = x, y = y), group = 1,
@@ -525,9 +517,7 @@ P02d
 P02d <- ggplot(lsms_mean_sd, aes(mean, gini)) +
   geom_point() + 
   geom_point(data = theor_farms |>
-               mutate(gini = if ('fitted_trunc_logn' %in% names(theor_farms))
-                        unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))
-                      else rep(NA_real_, n())),
+               mutate(gini = unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))),
              aes(exp(adjusted_logn_mean + (adjusted_logn_sd^2 / 2)), gini),
              alpha = 0.05, colour = 'skyblue1') +
   # geom_polygon(data = farm_size_triangle, aes(x = x, y = y), group = 1, 
@@ -548,12 +538,10 @@ P02e <- P02d +
 P02e
 
 # with linear reg
-theor_bound_line <- if ('pred_farm_sizes' %in% names(theor_farms)) theor_farms |>
+theor_bound_line <- theor_farms |>
   mutate(avg = unlist(map(pred_farm_sizes, \(x) mean(unlist(x), na.rm = T))),
-         gini = if ('fitted_trunc_logn' %in% names(theor_farms))
-                  unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))
-                else rep(NA_real_, n())) |>
-  select(x, y, avg, gini) else tibble(x=numeric(),y=numeric(),avg=numeric(),gini=numeric())
+         gini = unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))) |>
+  select(x, y, avg, gini)
 avg_bin <- seq(0, 10, 0.1)
 avg_bin_table <- tibble()
 
