@@ -107,11 +107,11 @@ selected_theor_app <- theor_farms_application |>
   mutate(unique_coords = paste0(round(x, 0), '_', round(y, 0))) |>
   distinct(unique_coords, .keep_all = TRUE)
 
-theor_farms |>
-  filter(round(x, 1) %in% round(regular_sample_coords$x, 1),
-         round(y, 1) %in% round(regular_sample_coords$y, 1)) |>
-  distinct(paste0(round(x, 0), '_', round(y, 0)), .keep_all = T) |>
-  View() # 11 grid cells were picked
+# theor_farms |>
+#   filter(round(x, 1) %in% round(regular_sample_coords$x, 1),
+#          round(y, 1) %in% round(regular_sample_coords$y, 1)) |>
+#   distinct(paste0(round(x, 0), '_', round(y, 0)), .keep_all = T) |>
+#   View() # 11 grid cells were picked
 
 P01 <- ggplot(selected_theor_app, aes(linear_farm_size_ha, colour = paste0(x, ', ', y))) + 
   stat_ecdf(geom = 'line', linewidth = 0.8) +
@@ -130,8 +130,8 @@ dev.off()
 
 # ------------------------------------------------------------------------------
 gc()
-grouped_theor_app <- theor_farms |>
-  ungroup() |> 
+grouped_theor_app <- if ('pred_farm_sizes' %in% names(theor_farms)) theor_farms |>
+  ungroup() |>
   mutate(avg = unlist(map(pred_farm_sizes, \(x) unlist(mean(x, na.rm = T)))),
          avg_grp = case_when(avg <= 0.5 ~ '< 0.5 ha',
                              avg > 0.5  & avg <= 1 ~ '0.5 - 1 ha',
@@ -141,7 +141,9 @@ grouped_theor_app <- theor_farms |>
                              .default = NA)) |>
   filter(avg_grp %in% c('< 0.5 ha', '1 - 2 ha', '> 5 ha')) |>
   group_by(x, y, avg_grp) |>
-  unnest_longer(pred_farm_sizes) 
+  unnest_longer(pred_farm_sizes) else tibble(x=numeric(),y=numeric(),cell=integer(),
+    nb_farms=integer(),avg=numeric(),avg_grp=character(),pred_farm_sizes=numeric(),
+    pred_farm_sizes_id=character())
 grouped_theor_app$avg_grp <- factor(grouped_theor_app$avg_grp, levels = c('< 0.5 ha', '1 - 2 ha', '> 5 ha') )
   
 
@@ -287,7 +289,7 @@ legend(-18, -10, bty = 'y', cex = 0.7, ncol = 1, box.col = "white",
 terra::plot(ssa, axes = F, add = T)
 dev.off()
 
-sk <- terra::rast(theor_farms |> ungroup() |> select(x, y, skew))
+sk <- tryCatch(terra::rast(theor_farms |> ungroup() |> select(x, y, skew)), error = function(e) { message('CI: skew rast skipped'); NULL })
 terra::writeRaster(sk, file = '../data/processed/skewness.tif', overwrite = T)
 png('../output/other_illustr/maps/predicted_skeweness_farm_size_africa.png', units = "in", width = 5.5, height = 5.5, res = 1000)
 terra::plot(ssa, col = 'azure', main = "Skewness of the local farm size distribution \nacross sub-Saharan Africa",
@@ -403,7 +405,9 @@ ggsave(paste0('../output/other_illustr/africa_predicted_mean_cv.png'))
 dev.off() 
 
 P03 <- ggplot(theor_farms |>
-                mutate(gini = unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T))) ),
+                mutate(gini = if ('fitted_trunc_logn' %in% names(theor_farms))
+                         unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))
+                       else rep(NA_real_, n())),
               aes(exp(adjusted_logn_mean + (adjusted_logn_sd^2 / 2)), gini)) +
   geom_point(colour = 'skyblue1') +
   scale_x_continuous(expand = c(0, 0), limits = c(0, 10)) +
@@ -418,6 +422,14 @@ ggsave(paste0('../output/other_illustr/africa_predicted_mean_gini.png'))
 dev.off()
 
 # Actual mean and SD truncated to the next 0.1 deg (which is about 10 by 10 km at the eq), with at least 10 datapoints
+lsms_spatial <- readRDS('../data/processed/lsms_trimmed_95th_africa.rds')
+qrf_model_predictions <- terra::rast('../data/processed/qrf_100quantiles_predictions_africa.tif')
+names(qrf_model_predictions) <- paste0('qrf_q', sprintf('%03g', 1:100))
+my_points <- terra::as.data.frame(qrf_model_predictions, xy = T)
+my_points_cells <- bind_cols(
+  cell = terra::cellFromXY(terra::rast(my_points), my_points[, c('x', 'y')]),
+  my_points)
+cell_id <- as_tibble(terra::cellFromXY(terra::rast(my_points), lsms_spatial[, c('x', 'y')]))
 lsms_mean_sd <- lsms_spatial |>
   bind_cols(cell_id |>
               rename(cell = value)) |>
@@ -496,7 +508,9 @@ dev.off()
 P02d <- ggplot(lsms_mean_sd, aes(mean, gini)) +
   geom_point() + 
   geom_point(data = theor_farms |>
-               mutate(gini = unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T))) ),
+               mutate(gini = if ('fitted_trunc_logn' %in% names(theor_farms))
+                        unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))
+                      else rep(NA_real_, n())),
              aes(exp(adjusted_logn_mean + (adjusted_logn_sd^2 / 2)), gini),
              alpha = 0.05, colour = 'skyblue1') +
   geom_polygon(data = farm_size_triangle, aes(x = x, y = y), group = 1,
@@ -510,7 +524,9 @@ P02d
 P02d <- ggplot(lsms_mean_sd, aes(mean, gini)) +
   geom_point() + 
   geom_point(data = theor_farms |>
-               mutate(gini = unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T))) ),
+               mutate(gini = if ('fitted_trunc_logn' %in% names(theor_farms))
+                        unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))
+                      else rep(NA_real_, n())),
              aes(exp(adjusted_logn_mean + (adjusted_logn_sd^2 / 2)), gini),
              alpha = 0.05, colour = 'skyblue1') +
   # geom_polygon(data = farm_size_triangle, aes(x = x, y = y), group = 1, 
@@ -531,10 +547,12 @@ P02e <- P02d +
 P02e
 
 # with linear reg
-theor_bound_line <- theor_farms |>
+theor_bound_line <- if ('pred_farm_sizes' %in% names(theor_farms)) theor_farms |>
   mutate(avg = unlist(map(pred_farm_sizes, \(x) mean(unlist(x), na.rm = T))),
-         gini = unlist(map(linear_farm_size_ha, function(x) ineq::Gini(unlist(x), na.rm = T))) ) |>
-  select(x, y, avg, gini)
+         gini = if ('fitted_trunc_logn' %in% names(theor_farms))
+                  unlist(map(fitted_trunc_logn, function(x) ineq::Gini(unlist(x), na.rm = T)))
+                else rep(NA_real_, n())) |>
+  select(x, y, avg, gini) else tibble(x=numeric(),y=numeric(),avg=numeric(),gini=numeric())
 avg_bin <- seq(0, 10, 0.1)
 avg_bin_table <- tibble()
 

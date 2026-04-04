@@ -156,8 +156,7 @@ patch_script <- function(lines) {
   lines <- gsub("filter(n > 9)",  "filter(n > 0)", lines, fixed = TRUE)
   # 5l2. 08.3: filter(nb_farms > 9) removes all rows in synthetic data (nb_farms == 9)
   lines <- gsub("filter(nb_farms > 9)", "filter(nb_farms > 0)", lines, fixed = TRUE)
-  # 5l4. View() crashes in headless CI — comment out the whole call
-  lines <- gsub("View(", "# CI: View(", lines, fixed = TRUE)
+  # 5l4. View() calls in 08.3 already commented out in source
   # 5l5. S04: text() on empty sbt subset crashes with zero-length labels
   lines <- gsub(
     "  text(sbt$farm_area_ha, sbt$mean_pred + 0.06, labels = sbt$gadm_0",
