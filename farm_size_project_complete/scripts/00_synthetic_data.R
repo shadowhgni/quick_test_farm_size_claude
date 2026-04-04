@@ -457,8 +457,10 @@ n_theor <- nrow(lsms_ml)
 fa      <- pmax(0.01, lsms_ml$farm_area_ha)
 
 # list-columns: 100-quantile vectors and 9-sample fitted distributions
-pred_farm_sizes_list   <- lapply(fa, function(mu)
-  sort(qlnorm(seq(0.01, 0.99, length.out = 100), meanlog = log(mu), sdlog = 0.8)))
+pred_farm_sizes_list   <- lapply(fa, function(mu) {
+  v <- sort(qlnorm(seq(0.01, 0.99, length.out = 100), meanlog = log(mu), sdlog = 0.8))
+  setNames(v, paste0('qrf_q', sprintf('%03d', 1:100)))  # names -> pred_farm_sizes_id
+})
 fitted_trunc_logn_list <- lapply(fa, function(mu)
   sort(pmax(0.01, rlnorm(9, meanlog = log(mu), sdlog = 0.6))))
 
@@ -490,8 +492,8 @@ theor_farms_application <- data.frame(
   country = lsms_ml$country,
   linear_farm_size_ha     = pmax(0.01, rlnorm(n_theor, log(fa), 0.6)),
   trunc_log_farm_size_ha  = pmax(0.01, rlnorm(n_theor, log(fa), 0.5)),
-  individual_farm_size_ha = pmax(0.01, rlnorm(n_theor, log(fa), 0.6)),
   stringsAsFactors = FALSE
+  # individual_farm_size_ha omitted: scripts derive it via rename(individual_farm_size_ha = linear_farm_size_ha)
 )
 saveRDS(list(theor_farms = theor_farms,
              theor_farms_application = theor_farms_application),
