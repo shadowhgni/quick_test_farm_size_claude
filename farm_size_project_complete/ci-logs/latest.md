@@ -4,6 +4,9 @@ Run: 23982358621  Commit: 53d4b9abba3a84ba730d016f5248e3a7d6bdf268  Time: Sat Ap
 ## Raw Output
 ```
 
+Cleaning output/ and data/processed/ from previous run...
+  Done. Directories recreated.
+
 ======================================================================
 FARM SIZE PREDICTION - FULL SEQUENTIAL PIPELINE TEST
 ======================================================================
@@ -97,7 +100,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [01.1_chirps_download.R] ======================================================================
 [01.1_chirps_download.R] 
 [01.1_chirps_download.R] Generated files:
-[01.1_chirps_download.R]   Processed data: 110
+[01.1_chirps_download.R]   Processed data: 109
 [01.1_chirps_download.R]   Output tables:  0
 [01.1_chirps_download.R] 
 [01.1_chirps_download.R] Data summary:
@@ -108,7 +111,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [01.1_chirps_download.R] 
 [01.1_chirps_download.R] Finished: 2026-04-04 16:00:05.137436
 [01.1_chirps_download.R] ======================================================================
-  ✓ PASS  01.1_chirps_download.R                         (  1.8s)  
+  ✓ PASS  01.1_chirps_download.R                         (  2.0s)  
 [01.3_chirps_trends.R] Loading required package: terra
 [01.3_chirps_trends.R] terra 1.9.11
 [01.3_chirps_trends.R] Loading required package: geodata
@@ -123,7 +126,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [01.3_chirps_trends.R] 
 [01.3_chirps_trends.R] === Processing CHIRPS data ===
 [01.3_chirps_trends.R] CI: No CHIRPS tifs found — skipping 01.3
-  ✓ PASS  01.3_chirps_trends.R                           (  4.3s)  
+  ✓ PASS  01.3_chirps_trends.R                           (  3.7s)  
 [01.4_prepare_spatial_layers.R] Loading required package: terra
 [01.4_prepare_spatial_layers.R] terra 1.9.11
 [01.4_prepare_spatial_layers.R] === Loading yearly rainfall data ===
@@ -177,7 +180,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [02.2_harmonize_farm_area.R] ======================================================================
 [02.2_harmonize_farm_area.R] LSMS COMPILATION COMPLETE
 [02.2_harmonize_farm_area.R] ======================================================================
-  ✓ PASS  02.2_harmonize_farm_area.R                     (  3.8s)  
+  ✓ PASS  02.2_harmonize_farm_area.R                     (  4.1s)  
 [02.3_measured_vs_reported.R] 
 [02.3_measured_vs_reported.R] === Calculating harmonized plot area ===
 [02.3_measured_vs_reported.R] 
@@ -218,7 +221,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [02.3_measured_vs_reported.R] Saved: lsms_and_zambia.rds
 [02.3_measured_vs_reported.R] 
 [02.3_measured_vs_reported.R] === Processing Complete ===
-  ✓ PASS  02.3_measured_vs_reported.R                    (  2.0s)  
+  ✓ PASS  02.3_measured_vs_reported.R                    (  2.3s)  
 ----------------------------------------------------------------------
 PHASE 3: Analysis Preparation (03.x)
 ----------------------------------------------------------------------
@@ -458,44 +461,51 @@ PHASE 5: RF Optimisation (05.x)
 [05.1_RF_optimization.R] `geom_smooth()` using formula = 'y ~ x'
 [05.1_RF_optimization.R] `geom_smooth()` using formula = 'y ~ x'
 [05.1_RF_optimization.R] `geom_smooth()` using formula = 'y ~ x'
-  ✓ PASS  05.1_RF_optimization.R                         (  3.7s)  
+  ✓ PASS  05.1_RF_optimization.R                         (  4.1s)  
 [05.3_RF_robustness.R] No RFoptim files - skipping (needs 05.1 outputs)
   ✓ PASS  05.3_RF_robustness.R                           (  0.2s)  
 ----------------------------------------------------------------------
 PHASE 5b: Python ML Scripts
 ----------------------------------------------------------------------
-[06.1_basic_RF_model.py] [1] Loading LSMS data from /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/farm_size_project_complete/scripts/../data/processed/lsms_trimmed_95th_africa.rds
-[06.1_basic_RF_model.py]     3,363 farms, 16 countries
-[06.1_basic_RF_model.py] [2] Fitting ExtraTrees (300 trees, 3,363 obs, 10 features)
-[06.1_basic_RF_model.py]     OOB R² = -0.247
+[06.1_basic_RF_model.py] [1] Loading LSMS data
+[06.1_basic_RF_model.py]     3,363 farms, 10 features
+[06.1_basic_RF_model.py]     Mode: CI (fast), n_trees=50, cv=3
+[06.1_basic_RF_model.py] [2] Fitting ExtraTreesRegressor with GridSearchCV
+[06.1_basic_RF_model.py] Fitting 3 folds for each of 1 candidates, totalling 3 fits
+[06.1_basic_RF_model.py]     Best params:  {'max_features': 4, 'min_samples_leaf': 10, 'min_samples_split': 5, 'n_estimators': 50}
+[06.1_basic_RF_model.py]     CV R²:        -0.0158
+[06.1_basic_RF_model.py]     OOB R²:       -0.0189
 [06.1_basic_RF_model.py] [3] Variable importance saved
 [06.1_basic_RF_model.py]            Variable  Importance
-[06.1_basic_RF_model.py]          maizeyield    0.109581
-[06.1_basic_RF_model.py]                sand    0.106413
-[06.1_basic_RF_model.py]               slope    0.104586
-[06.1_basic_RF_model.py]            rainfall    0.103607
-[06.1_basic_RF_model.py]              cattle    0.100896
-[06.1_basic_RF_model.py]         temperature    0.100750
-[06.1_basic_RF_model.py]              market    0.097957
-[06.1_basic_RF_model.py]            cropland    0.095441
-[06.1_basic_RF_model.py]                 pop    0.095398
-[06.1_basic_RF_model.py] cropland_per_capita    0.085369
-[06.1_basic_RF_model.py] [4] Generating OOB predictions
-[06.1_basic_RF_model.py]     lsms_oob.rds saved (3,363 rows)
-[06.1_basic_RF_model.py] [5] Predicting over SSA raster grid
-[06.1_basic_RF_model.py]     Prediction rasters written  (valid pixels: 10,278)
+[06.1_basic_RF_model.py]          maizeyield    0.118051
+[06.1_basic_RF_model.py]              cattle    0.111592
+[06.1_basic_RF_model.py]                 pop    0.111216
+[06.1_basic_RF_model.py]         temperature    0.110829
+[06.1_basic_RF_model.py]               slope    0.105916
+[06.1_basic_RF_model.py]                sand    0.102487
+[06.1_basic_RF_model.py]            cropland    0.100325
+[06.1_basic_RF_model.py]            rainfall    0.099001
+[06.1_basic_RF_model.py]              market    0.097961
+[06.1_basic_RF_model.py] cropland_per_capita    0.042622
+[06.1_basic_RF_model.py] [4] Saving OOB predictions
+[06.1_basic_RF_model.py] [5] Model saved to rf_best_model.pkl
+[06.1_basic_RF_model.py] [6] Predicting over raster
+[06.1_basic_RF_model.py]     Raster predictions written (10,278 valid pixels)
 [06.1_basic_RF_model.py] 
 [06.1_basic_RF_model.py] 06.1 done in 1.7s
   ✓ PASS  06.1_basic_RF_model.py                         (  2.2s)  
 [06.2_quantile_RF.py] [1] Loading LSMS data
-[06.2_quantile_RF.py]     3,363 obs, 10 features
-[06.2_quantile_RF.py] [2] Fitting Quantile Random Forest
-[06.2_quantile_RF.py]     Fitted QRF (200 trees)
-[06.2_quantile_RF.py] [3] Predicting 100 quantiles over SSA raster grid
-[06.2_quantile_RF.py]     Raster prediction failed: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
-[06.2_quantile_RF.py]     Using pre-existing stub.
-[06.2_quantile_RF.py] 06.2 done in 2.7s
-  ✓ PASS  06.2_quantile_RF.py                            (  3.1s)  
+[06.2_quantile_RF.py]     Loaded CSV: 3,363 rows
+[06.2_quantile_RF.py]     3,363 farms, 10 features
+[06.2_quantile_RF.py]     Mode: CI (fast), n_trees=50
+[06.2_quantile_RF.py] [2] Fitting ExtraTreesQuantileRegressor
+[06.2_quantile_RF.py]     OOB R²: -0.0246
+[06.2_quantile_RF.py] [3] Predicting 100 quantiles over raster
+[06.2_quantile_RF.py]     Valid pixels: 10,278 / 14,000
+[06.2_quantile_RF.py]     Written: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/farm_size_project_complete/scripts/../data/processed/qrf_100quantiles_predictions_africa.tif
+[06.2_quantile_RF.py] 
+[06.2_quantile_RF.py] 06.2 done in 0.5s
+  ✓ PASS  06.2_quantile_RF.py                            (  1.6s)  
 ----------------------------------------------------------------------
 PHASE 6: Quantile RF & Prediction Maps (06.x)
 ----------------------------------------------------------------------
@@ -543,11 +553,11 @@ PHASE 6: Quantile RF & Prediction Maps (06.x)
 [06.3_prediction_maps.R] Saved: africa_log_pred_obs.png
 [06.3_prediction_maps.R] Saved: africa_sq_pred_obs.png
 [06.3_prediction_maps.R] Warning messages:
-[06.3_prediction_maps.R] 1: Removed 1315 rows containing non-finite outside the scale range
+[06.3_prediction_maps.R] 1: Removed 904 rows containing non-finite outside the scale range
 [06.3_prediction_maps.R] (`stat_density2d_filled()`). 
-[06.3_prediction_maps.R] 2: Removed 1315 rows containing non-finite outside the scale range
+[06.3_prediction_maps.R] 2: Removed 904 rows containing non-finite outside the scale range
 [06.3_prediction_maps.R] (`stat_density2d_filled()`). 
-[06.3_prediction_maps.R] 3: Removed 1315 rows containing non-finite outside the scale range
+[06.3_prediction_maps.R] 3: Removed 904 rows containing non-finite outside the scale range
 [06.3_prediction_maps.R] (`stat_density2d_filled()`). 
 [06.3_prediction_maps.R] 06.3_prediction_maps.R complete.
   ✓ PASS  06.3_prediction_maps.R                         (  5.2s)  
@@ -585,13 +595,19 @@ PHASE 6: Quantile RF & Prediction Maps (06.x)
 [06.4_cropland_sensitivity.R] Saving 7.5 x 5 in image
 [06.4_cropland_sensitivity.R] pdf 
 [06.4_cropland_sensitivity.R]   2 
+[06.4_cropland_sensitivity.R] Warning message:
+[06.4_cropland_sensitivity.R] In e1@pntr$arith_rast(e2@pntr, oper, FALSE, opt) :
+[06.4_cropland_sensitivity.R]   GDAL Message 1: /tmp/RtmpGOe8hB/spat_3d894b818291_15753_Py3ptIw2UFUXKtt.tif: Metadata exceeding 32000 bytes cannot be written into GeoTIFF. Transferred to PAM instead.
+[06.4_cropland_sensitivity.R] Warning message:
+[06.4_cropland_sensitivity.R] In e1@pntr$arith_rast(e2@pntr, oper, FALSE, opt) :
+[06.4_cropland_sensitivity.R]   GDAL Message 1: /tmp/RtmpGOe8hB/spat_3d892cd5c6ad_15753_8UwxxeZk3QEYL3o.tif: Metadata exceeding 32000 bytes cannot be written into GeoTIFF. Transferred to PAM instead.
 [06.4_cropland_sensitivity.R] pdf 
 [06.4_cropland_sensitivity.R]   2 
 [06.4_cropland_sensitivity.R] pdf 
 [06.4_cropland_sensitivity.R]   2 
 [06.4_cropland_sensitivity.R] pdf 
 [06.4_cropland_sensitivity.R]   2 
-  ✓ PASS  06.4_cropland_sensitivity.R                    ( 15.7s)  
+  ✓ PASS  06.4_cropland_sensitivity.R                    ( 16.6s)  
 ----------------------------------------------------------------------
 PHASE 7: Predictions & Validation (07.x – 10.x)
 ----------------------------------------------------------------------
@@ -827,7 +843,7 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [10.2_external_validation.R] NULL
 [10.2_external_validation.R] 
 [10.2_external_validation.R] There were 24 warnings (use warnings() to see them)
-  ✓ PASS  10.2_external_validation.R                     (  9.6s)  
+  ✓ PASS  10.2_external_validation.R                     ( 10.0s)  
 ----------------------------------------------------------------------
 PHASE 8: Figures & Supplementary (F/S/T)
 ----------------------------------------------------------------------
@@ -877,8 +893,8 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [F02_main_figure2.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 [F02_main_figure2.R] null device 
 [F02_main_figure2.R]           1 
-[F02_main_figure2.R] F02 done in 4.2s
-  ✓ PASS  F02_main_figure2.R                             (  4.5s)  
+[F02_main_figure2.R] F02 done in 4.3s
+  ✓ PASS  F02_main_figure2.R                             (  4.6s)  
 [F03_main_figure3.R] Loading required package: tidyverse
 [F03_main_figure3.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [F03_main_figure3.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -989,8 +1005,8 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S04_RF_hyperparameters.R]   "line" is not a graphical parameter
 [S04_RF_hyperparameters.R] null device 
 [S04_RF_hyperparameters.R]           1 
-[S04_RF_hyperparameters.R] S04_RF_hyperparameters.R done in 7.6s
-  ✓ PASS  S04_RF_hyperparameters.R                       (  7.9s)  
+[S04_RF_hyperparameters.R] S04_RF_hyperparameters.R done in 8s
+  ✓ PASS  S04_RF_hyperparameters.R                       (  8.3s)  
 [S05_RF_unseen_performance.R] ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
 [S05_RF_unseen_performance.R] ✔ purrr     1.2.1     
 [S05_RF_unseen_performance.R] ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -1185,7 +1201,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [T01_area_production_tables.R] 17 TOTAL           96 2010-…  4291          10.7          35.9  0.49  1.32  1.83
 [T01_area_production_tables.R] # ℹ 1 more variable: q90 <dbl>
 [T01_area_production_tables.R] Saved: ../output/main_fig/T01_summary_descriptive_stats_survey.csv
-  ✓ PASS  T01_area_production_tables.R                   (  1.2s)  
+  ✓ PASS  T01_area_production_tables.R                   (  1.4s)  
 [T02_heterogeneity_drivers.R] ✔ forcats   1.0.1     ✔ stringr   1.6.0
 [T02_heterogeneity_drivers.R] ✔ ggplot2   4.0.2     ✔ tibble    3.3.1
 [T02_heterogeneity_drivers.R] ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
@@ -1226,7 +1242,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [T02_heterogeneity_drivers.R] #   `prop_prop_farms_0.5 - 1 ha` <dbl>, `prop_prop_farms_1 - 2 ha` <dbl>,
 [T02_heterogeneity_drivers.R] #   `prop_prop_farms_2 - 5 ha` <dbl>, `prop_prop_farms_> 5 ha` <dbl>
 [T02_heterogeneity_drivers.R] Saved T02_heterogeneity_by_aez.csv and T02_heterogeneity_by_region.csv
-  ✓ PASS  T02_heterogeneity_drivers.R                    (  1.2s)  
+  ✓ PASS  T02_heterogeneity_drivers.R                    (  1.3s)  
 
 ======================================================================
 TEST SUMMARY
