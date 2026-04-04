@@ -14,7 +14,7 @@ require(tidyverse)
 require(patchwork)
 
 # Clean environment
-rm(list=ls())
+rm(list = setdiff(ls(), c("t0","write_report","capture_output","ci_trees","ci_folds")))
 
 # # Set working directory
 # setwd(paste0(here::here(), '/scripts'))

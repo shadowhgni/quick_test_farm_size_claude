@@ -573,6 +573,27 @@ saveRDS(list(theor_farms=theor_farms, theor_farms_application=theor_farms_applic
         file.path(processed_path, "fsize_distribution_resample_long.rds"))
 message("   fsize_distribution_resample_long.rds stub written.")
 
+# farm_size_distribution_parms.tif — rasterised theor_farms params, read by 08.3
+# Produced by 08.3 on local from theor_farms; in CI 08.3 reads it as input
+{
+  farm_dist_parms <- terra::rast(lapply(
+    c("adjusted_logn_mean","adjusted_logn_sd","ks_trunc_D","ks_trunc_pval","logn_mean"),
+    function(nm) make_rast(nm, 1, 0.5, r_res = res_pred)))
+  names(farm_dist_parms) <- c("adjusted_logn_mean","adjusted_logn_sd",
+                               "ks_trunc_D","ks_trunc_pval","logn_mean")
+  terra::writeRaster(farm_dist_parms,
+    file.path(processed_path, "farm_size_distribution_parms.tif"), overwrite = TRUE)
+}
+
+# gini_raster.tif — computed by 08.3; read by S08
+{
+  gini_r  <- terra::rast(ssa_ext, res = res_pred, crs = "EPSG:4326")
+  xy_g    <- terra::xyFromCell(gini_r, seq_len(terra::ncell(gini_r)))
+  gini_v  <- pmin(pmax(0.35 + 0.20*(xy_g[,2]+10)/25 + rnorm(nrow(xy_g),0,.04), .2), .8)
+  terra::values(gini_r) <- gini_v; names(gini_r) <- "gini"
+  terra::writeRaster(gini_r, file.path(processed_path,"gini_raster.tif"), overwrite=TRUE)
+}
+
 # RF model stub (pre-trained, used by some scripts before 06.1 runs)
 if (requireNamespace("ranger", quietly=TRUE)) {
   mini <- lsms_ml[sample(nrow(lsms_ml),min(200,nrow(lsms_ml))),]

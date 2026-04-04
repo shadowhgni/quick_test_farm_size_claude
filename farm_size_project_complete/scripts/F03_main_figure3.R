@@ -86,9 +86,15 @@ title(xlab = "Average farm size (ha)",   cex.lab = 1.4, line = 2)
 box()
 
 # ── Panels C–F: maize/sorghum/millet/cassava per AEZ ─────────────────────────
-panel_aez   <- c("tropical highlands","humid","sub-humid","semi-arid")
-panel_label <- c("C)","D)","E)","F)")
-panel_title <- c("Tropical\nhighlands","Humid","Sub-humid","Semi-arid")
+# Panels C–F: one per AEZ with hardcoded expression() titles (bquote + \n not supported)
+panel_aez    <- c("tropical highlands","humid","sub-humid","semi-arid")
+panel_label  <- c("C)","D)","E)","F)")
+panel_titles <- list(
+  expression(bold("Tropical\nhighlands")),
+  expression(bold("Humid")),
+  expression(bold("Sub-humid")),
+  expression(bold("Semi-arid"))
+)
 crops4 <- c("maize","sorghum","millet","cassava")
 
 for (j in seq_along(panel_aez)) {
@@ -104,7 +110,7 @@ for (j in seq_along(panel_aez)) {
             col = viridis::viridis(4, direction=1)[k], lwd = 3.5, lty = 1)
   }
   legend("bottomright", bty = "n", bg = "whitesmoke", cex = 1.1, lty = 1, lwd = 3,
-         title = bquote(bold(.(panel_title[j]))),
+         title = panel_titles[[j]],
          legend = c("Maize","Sorghum","Millet","Cassava"),
          col = viridis::viridis(4, direction=1))
   text(0.8, 93, panel_label[j], cex = 1.5)

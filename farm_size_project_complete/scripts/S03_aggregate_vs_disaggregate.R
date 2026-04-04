@@ -13,7 +13,7 @@ require(tidyverse)
 require(patchwork)
 
 # Clean environment
-rm(list=ls())
+rm(list = setdiff(ls(), c("t0","write_report","capture_output","ci_trees","ci_folds")))
 t0 <- proc.time()[["elapsed"]]
 
 # # Set working directory
