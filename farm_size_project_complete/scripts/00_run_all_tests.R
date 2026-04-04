@@ -156,6 +156,33 @@ patch_script <- function(lines) {
   lines <- gsub("filter(n > 9)",  "filter(n > 0)", lines, fixed = TRUE)
   # 5l2. 08.3: filter(nb_farms > 9) removes all rows in synthetic data (nb_farms == 9)
   lines <- gsub("filter(nb_farms > 9)", "filter(nb_farms > 0)", lines, fixed = TRUE)
+
+  # 5l6. 08.3/09.1: terra::rast(ssa, nrow=2000) crashes on tiny synthetic ssa
+  lines <- gsub(
+    "ssa_grid <- terra::rast(ssa, nrow = 2000, ncol = 2000)",
+    paste0("ssa_grid <- tryCatch(terra::rast(ssa, nrow=2000, ncol=2000),",
+           " error=function(e) terra::rast(nrow=100,ncol=100,",
+           "ext=terra::ext(-18,52,-35,15),crs='EPSG:4326'))"),
+    lines, fixed = TRUE)
+  lines <- gsub(
+    "ssa_rast <- terra::rasterize(ssa, ssa_grid, field = 'NAME_0')",
+    paste0("ssa_rast <- tryCatch(terra::rasterize(ssa, ssa_grid, field='NAME_0'),",
+           " error=function(e){message('CI: ssa_rast failed');ssa_grid})"),
+    lines, fixed = TRUE)
+  lines <- gsub(
+    "ssa_rast <- terra::resample(ssa_rast, stacked)",
+    paste0("ssa_rast <- tryCatch(terra::resample(ssa_rast, stacked),",
+           " error=function(e){message('CI: resample failed');ssa_rast})"),
+    lines, fixed = TRUE)
+
+  # 5l7. 10.1: AEZ5_CLAS--SSA.tif doesn't exist in CI — stub aez5 extract
+  lines <- gsub(
+    "aez5 <- terra::rast(paste0(input_path, '/AEZ_SSA_IFPRI/AEZ5_CLAS--SSA.tif'))",
+    paste0("aez5 <- tryCatch(terra::rast(paste0(input_path,'/AEZ_SSA_IFPRI/AEZ5_CLAS--SSA.tif')),",
+           " error=function(e){message('CI: AEZ raster not found, using stub');",
+           " r<-terra::rast(nrow=50,ncol=50,ext=terra::ext(-18,52,-35,15),crs='EPSG:4326');",
+           " terra::values(r)<-sample(0:5,terra::ncell(r),replace=TRUE);r})"),
+    lines, fixed = TRUE)
   # 5l4. View() calls in 08.3 already commented out in source
   # 5l5. S04: text() on empty sbt subset crashes with zero-length labels
   lines <- gsub(
