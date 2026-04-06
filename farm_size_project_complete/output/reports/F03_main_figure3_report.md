@@ -1,7 +1,7 @@
 # Report: F03_main_figure3.R
 
-**Generated:** 2026-04-06 09:56:48 UTC
-**Elapsed:** 1.2s
+**Generated:** 2026-04-06 10:26:48 UTC
+**Elapsed:** 1.3s
 **Purpose:** Main Figure 3: 6-panel cumulative crop area / herd size by AEZ
 
 ## Inputs
