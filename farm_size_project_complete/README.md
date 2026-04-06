@@ -30,7 +30,7 @@ git clone https://github.com/shadowhgni/quick_test_farm_size_claude.git
 cd quick_test_farm_size_claude/farm_size_project_complete/scripts
 
 # Generate synthetic stubs and run the full pipeline
-Rscript 00_run_all_tests.R
+Rscript 00.4_run_all_tests.R
 ```
 
 ### Option 3: Full Pipeline with Real Data
@@ -42,6 +42,7 @@ Running with actual LSMS surveys and spatial layers requires downloading several
 ```
 farm_size_project_complete/
 ├── scripts/                       # R and Python scripts
+│   ├── 00_report_utils.R          # Shared logging utility (sourced by other scripts)
 │   ├── 00.1_install_packages.R    # Package installation
 │   ├── 00.2_download_spatial_data.R  # Spatial data downloads
 │   ├── 00.3_synthetic_data.R      # Synthetic stub generator (CI/local testing)
@@ -49,10 +50,10 @@ farm_size_project_complete/
 │   ├── 01.1–01.4_*.R              # CHIRPS rainfall & spatial layer prep
 │   ├── 02.1–02.3_*.R              # LSMS data compilation & harmonization
 │   ├── 03.1–03.3_*.R              # Data pooling & descriptive stats
-│   ├── 04.1–04.6_*.R              # ML algorithm comparison & evaluation
+│   ├── 04.1–04.5_*.R              # ML algorithm comparison & evaluation
 │   ├── 05.1–05.3_*.R              # Random Forest optimization & robustness
 │   ├── 06.1–06.4_*.R              # Quantile RF models & prediction maps
-│   ├── 07.1–07.2_*.R              # Distribution fitting & evaluation
+│   ├── 07.1_*.R                   # Distribution evaluation
 │   ├── 08.1–08.3_*.R              # Country-level predictions & farm size classes
 │   ├── 09.1_*.R                   # AEZ characterization
 │   ├── 10.1–10.2_*.R              # External validation

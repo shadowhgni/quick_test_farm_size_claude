@@ -1,5 +1,5 @@
 # ==============================================================================
-# Script: 00_synthetic_data.R
+# Script: 00.3_synthetic_data.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
 # Purpose: Generate ALL synthetic files needed for full CI pipeline testing
 #

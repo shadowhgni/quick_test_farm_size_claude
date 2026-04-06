@@ -1,5 +1,5 @@
 # ==============================================================================
-# Script: 00_download_spatial_data.R
+# Script: 00.2_download_spatial_data.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
 # Purpose: Download all spatial data layers that can be auto-downloaded
 #

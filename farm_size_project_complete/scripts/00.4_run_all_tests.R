@@ -1,5 +1,5 @@
 # ==============================================================================
-# Script: 00_run_all_tests.R
+# Script: 00.4_run_all_tests.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
 # Purpose: Run ALL 48 pipeline scripts in sequential order for CI testing
 #
@@ -254,7 +254,7 @@ patch_script <- function(lines) {
     lines, fixed = TRUE
   )
 
-  # 5p. 07.2: dplyr 1.2 forbids non-scalar in summarize — use reframe
+  # 5p. 07.1: dplyr 1.2 forbids non-scalar in summarize — use reframe
   lines <- gsub(
     "summarize(rank = rev(rank(cropland)), NAME_0 = NAME_0)",
     "reframe(rank = rev(rank(cropland)), NAME_0 = NAME_0)",
@@ -581,7 +581,7 @@ record <- function(name, passed, elapsed, msg = "", description = "") {
 message(paste(rep("-", 70), collapse = ""))
 message("PHASE 0: Synthetic Data Generation")
 message(paste(rep("-", 70), collapse = ""))
-r <- run_script("00_synthetic_data.R", timeout_sec = 300)
+r <- run_script("00.3_synthetic_data.R", timeout_sec = 300)
 record("00_synthetic_data", r$passed, r$elapsed, r$msg)
 if (!r$passed) {
   message("\nFATAL: synthetic data generation failed — cannot continue.")
@@ -594,7 +594,7 @@ if (!r$passed) {
 message(paste(rep("-", 70), collapse = ""))
 message("PHASE 1: Install/Download Scripts (skipped in CI)")
 message(paste(rep("-", 70), collapse = ""))
-for (s in c("00_install_packages.R", "00_download_spatial_data.R",
+for (s in c("00.1_install_packages.R", "00.2_download_spatial_data.R",
                "01.2_chirps_summarize.R", "02.1_compile_LSMS.R",
                "05.2_RF_optimization_summary.R",   # 620s SLURM array job
                "08.1_predictions_by_country.R",
@@ -681,7 +681,7 @@ for (s in c("06.1_quantile_RF.R", "06.3_prediction_maps.R",
 message(paste(rep("-", 70), collapse = ""))
 message("PHASE 7: Predictions & Validation (07.x – 10.x)")
 message(paste(rep("-", 70), collapse = ""))
-for (s in c("07.2_QRF_distribution_eval.R",
+for (s in c("07.1_QRF_distribution_eval.R",
             "08.2_generate_virtual_farms.R",
             "08.3_farm_size_classes.R",       "09.1_AEZ_characterization.R",
             "10.1_prepare_validation_data.R", "10.2_external_validation.R")) {

@@ -1,5 +1,5 @@
 # ==============================================================================
-# Script: 00_install_packages.R
+# Script: 00.1_install_packages.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
 # Purpose: Install all R packages required by the project
 #
