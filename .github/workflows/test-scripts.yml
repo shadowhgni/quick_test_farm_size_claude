@@ -202,7 +202,7 @@ jobs:
         run: |
           mkdir -p ${{ steps.find-scripts.outputs.project_dir }}/ci-logs
           cd ${{ steps.find-scripts.outputs.scripts_dir }}
-          Rscript --vanilla 00_run_all_tests.R             2>&1 | tee ../ci-logs/raw-output.txt || true
+          Rscript --vanilla 00.4_run_all_tests.R             2>&1 | tee ../ci-logs/raw-output.txt || true
         timeout-minutes: 100
 
       # ── Commit log back so it can be retrieved via git pull ───────────────
