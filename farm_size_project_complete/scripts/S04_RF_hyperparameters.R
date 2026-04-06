@@ -210,7 +210,7 @@ yy <- xx |>
   ) |>
   as.data.frame()
 #-------------------------------------------------------------------------------
-png('../output/other_illustr/graphs/Suppl.Fig03.png', width = 9, height = 4.5, units = 'in', res = 200)
+png('../output/other_illustr/graphs/Suppl.Fig04.png', width = 9, height = 4.5, units = 'in', res = 200)
 # par(mfrow=c(1, 2), mar = c(3.5, 3.5, 1, 1), xaxs='i', yaxs='i')
 layout(matrix(c(1, 2, 3), nrow = 1, ncol = 3), widths = c(1, 1, 0.85))
 
@@ -326,7 +326,7 @@ elapsed <- proc.time()[["elapsed"]] - t0
 write_report(
   "S04_RF_hyperparameters.R",
   "Supp Fig 4: RF hyperparameter sensitivity",
-  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig03.png"),
+  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig04.png"),
   elapsed_sec = elapsed
 )
 message("S04_RF_hyperparameters.R done in ", round(elapsed,1), "s")

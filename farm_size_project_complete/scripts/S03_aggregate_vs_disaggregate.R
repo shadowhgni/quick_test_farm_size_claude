@@ -196,15 +196,15 @@ P01 <-  patchwork::wrap_plots(patchwork::wrap_elements(GGally::ggmatrix_gtable(P
                                 (patchwork::wrap_plots(patchwork::wrap_elements(GGally::ggmatrix_gtable(P00b)),
                                                       P00c) +  patchwork::plot_layout(ncol = 2, widths = c(2, 1))) +
                                 patchwork::plot_layout(nrow =  2, widths = c(3, 2))) # ugly
-ggsave('../output/other_illustr/graphs/Suppl.Fig02.png', P00e , height = 9, width = 8.8, units = 'in', dpi = 300)
-ggsave('../output/other_illustr/graphs/Suppl.Fig02b.png', P01 , height = 9, width = 8.8, units = 'in', dpi = 150)
+ggsave('../output/other_illustr/graphs/Suppl.Fig03.png', P00e , height = 9, width = 8.8, units = 'in', dpi = 300)
+ggsave('../output/other_illustr/graphs/Suppl.Fig03b.png', P01 , height = 9, width = 8.8, units = 'in', dpi = 150)
 
 # ── Report ────────────────────────────────────────────────────────────────────
 elapsed <- proc.time()[["elapsed"]] - t0
 write_report(
   "S03_aggregate_vs_disaggregate.R",
   "Supp Fig 3: country vs GADM1 aggregation comparison",
-  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig02.png"),
+  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig03.png"),
   elapsed_sec = elapsed
 )
 message("S03_aggregate_vs_disaggregate.R done in ", round(elapsed,1), "s")

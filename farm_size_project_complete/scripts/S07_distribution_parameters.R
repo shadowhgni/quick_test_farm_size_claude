@@ -118,7 +118,7 @@ P01
 
 P02 <- P00 / P01 + patchwork::plot_layout(ncol = 1)
 
-ggsave('../output/other_illustr/graphs/Suppl.Fig08.png', P02, width = 9, height = 9, units = 'in', dpi = 200)
+ggsave('../output/other_illustr/graphs/Suppl.Fig07.png', P02, width = 9, height = 9, units = 'in', dpi = 200)
 
 # ways of displaying the farm size class (but too small to be legible)
 # P01 <- ggplot(comp_fsize_classes_ha |>
@@ -181,7 +181,7 @@ elapsed <- proc.time()[["elapsed"]] - t0
 write_report(
   "S07_distribution_parameters.R",
   "Supp Fig 7: distribution fitting parameters",
-  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig08.png"),
+  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig07.png"),
   elapsed_sec = elapsed
 )
 message("S07_distribution_parameters.R done in ", round(elapsed,1), "s")
