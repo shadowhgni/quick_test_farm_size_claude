@@ -1,7 +1,7 @@
 # Farm Size Prediction Across Sub-Saharan Africa
 
-[![Test R Scripts](https://github.com/YOUR_USERNAME/farm-size-ssa/actions/workflows/test-scripts.yml/badge.svg)](https://github.com/YOUR_USERNAME/farm-size-ssa/actions/workflows/test-scripts.yml)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![Test R Scripts](https://github.com/shadowhgni/quick_test_farm_size_claude/actions/workflows/test-scripts.yml/badge.svg)](https://github.com/shadowhgni/quick_test_farm_size_claude/actions/workflows/test-scripts.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15652768.svg)](https://doi.org/10.5281/zenodo.15652768)
 
 Machine learning models for predicting farm sizes across Sub-Saharan Africa using LSMS survey data and spatial predictors.
 
@@ -9,7 +9,7 @@ Machine learning models for predicting farm sizes across Sub-Saharan Africa usin
 
 This project develops Random Forest and Quantile Regression Forest models to predict farm sizes across 16 Sub-Saharan African countries using:
 
-- **Survey Data:** Living Standards Measurement Study (LSMS) household surveys (~100,000 farms)
+- **Survey Data:** Living Standards Measurement Study (LSMS) household surveys (~180,000 farms)
 - **Spatial Predictors:** Cropland, population density, climate, soil, market access, and more
 
 ## 🚀 Quick Start
@@ -17,96 +17,107 @@ This project develops Random Forest and Quantile Regression Forest models to pre
 ### Option 1: Run with GitHub Actions (No Local Setup)
 
 1. Fork this repository
-2. GitHub Actions will automatically run tests on push
-3. View results in the Actions tab
+2. Push any change to trigger the workflow (or use the **Run workflow** button in the Actions tab)
+3. The pipeline runs on **synthetic stub data** — small, fast stand-ins that exercise every script end-to-end without requiring real survey or spatial data
 
-### Option 2: Run with Synthetic Data
+### Option 2: Run Locally with Synthetic Data
+
+The test suite uses synthetic stubs (randomly generated data that mimic the structure of real inputs). This is the fastest way to verify that the code runs correctly on your machine. It does **not** reproduce the actual scientific results.
 
 ```r
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/farm-size-ssa.git
-cd farm-size-ssa/scripts
+git clone https://github.com/shadowhgni/quick_test_farm_size_claude.git
+cd quick_test_farm_size_claude/farm_size_project_complete/scripts
 
-# Generate synthetic data and run tests
+# Generate synthetic stubs and run the full pipeline
 Rscript 00_run_all_tests.R
 ```
 
 ### Option 3: Full Pipeline with Real Data
 
-See [Data Requirements](#-data-requirements) below.
+Running with actual LSMS surveys and spatial layers requires downloading several large datasets (see [Data Requirements](#-data-requirements)) and is best done on an HPC cluster. See [Installation](#-installation) and the individual script headers for details.
 
 ## 📁 Project Structure
 
 ```
-farm-size-ssa/
-├── scripts/                    # R and Python scripts
-│   ├── 00_install_packages.R   # Package installation
-│   ├── 00_download_spatial_data.R  # Data downloads
-│   ├── 00_synthetic_data.R     # Synthetic data generator
-│   ├── 00_run_all_tests.R      # Test runner
-│   ├── 01.1-01.4_*.R           # Spatial data preparation
-│   ├── 02.1-02.3_*.R           # LSMS data compilation
-│   ├── 03.1-03.3_*.R           # Data pooling & stats
-│   ├── 04.x_*.R                # ML algorithm comparison
-│   ├── 05.x_*.R                # Random Forest evaluation
-│   ├── 06.x_*.R                # Quantile RF models
-│   ├── 07.x-10.x_*.R           # Predictions & validation
-│   ├── F01-F03_*.R             # Main figures
-│   └── S01-S08_*.R             # Supplementary figures
+farm_size_project_complete/
+├── scripts/                       # R and Python scripts
+│   ├── 00.1_install_packages.R    # Package installation
+│   ├── 00.2_download_spatial_data.R  # Spatial data downloads
+│   ├── 00.3_synthetic_data.R      # Synthetic stub generator (CI/local testing)
+│   ├── 00.4_run_all_tests.R       # Test runner
+│   ├── 01.1–01.4_*.R              # CHIRPS rainfall & spatial layer prep
+│   ├── 02.1–02.3_*.R              # LSMS data compilation & harmonization
+│   ├── 03.1–03.3_*.R              # Data pooling & descriptive stats
+│   ├── 04.1–04.6_*.R              # ML algorithm comparison & evaluation
+│   ├── 05.1–05.3_*.R              # Random Forest optimization & robustness
+│   ├── 06.1–06.4_*.R              # Quantile RF models & prediction maps
+│   ├── 07.1–07.2_*.R              # Distribution fitting & evaluation
+│   ├── 08.1–08.3_*.R              # Country-level predictions & farm size classes
+│   ├── 09.1_*.R                   # AEZ characterization
+│   ├── 10.1–10.2_*.R              # External validation
+│   ├── F01–F03_*.R                # Main manuscript figures
+│   └── S01–S08_*.R / T01–T02_*.R # Supplementary figures & tables
 ├── data/
 │   ├── raw/
-│   │   ├── spatial/            # Spatial predictor layers
-│   │   └── web_scrapped/       # Survey data, FAOSTAT
-│   └── processed/              # Analysis-ready datasets
+│   │   ├── spatial/               # Spatial predictor layers
+│   │   └── web_scrapped/          # Survey data, FAOSTAT
+│   └── processed/                 # Analysis-ready datasets
 ├── output/
-│   ├── figures/{main,supplementary}/
-│   ├── tables/{main,supplementary}/
-│   ├── maps/
-│   └── reports/
-├── .github/workflows/          # CI/CD pipelines
-├── renv.lock                   # Package versions
+│   ├── main_fig/                  # Main manuscript figures
+│   ├── other_illustr/graphs/      # Supplementary figures
+│   ├── other_illustr/maps/        # Maps
+│   ├── other_illustr/tables/      # Tables
+│   └── reports/                   # Per-script run reports
+├── .github/workflows/             # CI pipeline
 └── README.md
 ```
+
+> **Note on script numbering:** scripts are numbered in execution order. Gaps (e.g. no 07.1) reflect intermediate scripts that are not part of this public release.
 
 ## 📊 Data Requirements
 
 ### Auto-Downloaded (via `geodata` package)
+
 | Data | Source | Script |
 |------|--------|--------|
-| GADM boundaries | GADM | `00_download_spatial_data.R` |
-| SPAM 2010/2017 cropland | IFPRI | `00_download_spatial_data.R` |
-| Population density | GPW v4 | `00_download_spatial_data.R` |
-| Soil (SoilGrids) | ISRIC | `00_download_spatial_data.R` |
-| Elevation | WorldClim | `00_download_spatial_data.R` |
-| Temperature | WorldClim | `00_download_spatial_data.R` |
-| Travel time | Malaria Atlas | `00_download_spatial_data.R` |
+| GADM boundaries | GADM | `00.2_download_spatial_data.R` |
+| SPAM 2010/2017 cropland | IFPRI | `00.2_download_spatial_data.R` |
+| Population density | GPW v4 | `00.2_download_spatial_data.R` |
+| Soil (SoilGrids / iSDA) | ISRIC / iSDA | `00.2_download_spatial_data.R` |
+| Elevation | WorldClim | `00.2_download_spatial_data.R` |
+| Climate (temp, precip) | WorldClim | `00.2_download_spatial_data.R` |
+| Travel time to cities/ports | Nelson et al. (2019) via `geodata` | `00.2_download_spatial_data.R` |
 | CHIRPS rainfall | UCSB | `01.1_chirps_download.R` |
 
+Travel time data are from: Nelson A., Weiss D.J., van Etten J., Cattaneo A., McMenomy T.S. & Koo J. (2019). A suite of global accessibility indicators. *Scientific Data* 6: 266. https://doi.org/10.1038/s41597-019-0265-5
+
 ### Manual Downloads Required
-| Data | Source | Size | Path |
-|------|--------|------|------|
-| SPAM 2020 | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/SWPENT) | ~2 GB | `data/raw/spatial/spam/spam2020/` |
-| Cattle density | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GIVQ75) | ~500 MB | `data/raw/spatial/cattle-density/` |
-| Wealth index | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/5OGWYM) | ~200 MB | `data/raw/spatial/poverty/` |
-| Du et al. 2025 Livestock | [Zenodo](https://zenodo.org/records/17128483) | 17.6 GB | `data/raw/spatial/livestock-du2025/` |
-| LSMS surveys | [World Bank](https://www.worldbank.org/en/programs/lsms) | ~10 GB | `data/raw/web_scrapped/survey_data/` |
+
+| Data | Source | Path |
+|------|--------|------|
+| SPAM 2020 | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/SWPENT) | `data/raw/spatial/spam/spam2020/` |
+| Cattle density | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GIVQ75) | `data/raw/spatial/cattle-density/` |
+| Wealth index | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/5OGWYM) | `data/raw/spatial/poverty/` |
+| Du et al. 2025 Livestock | [Zenodo](https://zenodo.org/records/17128483) | `data/raw/spatial/livestock-du2025/` |
+| LSMS surveys | [World Bank](https://www.worldbank.org/en/programs/lsms) | `data/raw/web_scrapped/survey_data/` |
+| Lowder et al. 2021 census data | [FAO / Lowder et al. 2021](https://doi.org/10.1016/j.worlddev.2021.105455) | `data/raw/web_scrapped/` |
+
+> You do not need to download entire datasets — a country-level subset is sufficient for most scripts.
 
 ## 🔧 Installation
 
 ### Using renv (Recommended)
 
 ```r
-# Install renv if needed
 install.packages("renv")
-
-# Restore exact package versions
 renv::restore()
 ```
 
 ### Manual Installation
 
 ```r
-source("scripts/00_install_packages.R")
+source("scripts/00.1_install_packages.R")
 ```
 
 ## 🧪 Testing
@@ -114,77 +125,80 @@ source("scripts/00_install_packages.R")
 ### Run Full Test Suite
 
 ```bash
-Rscript scripts/00_run_all_tests.R
+Rscript scripts/00.4_run_all_tests.R
 ```
 
-### Run Individual Tests
+### Run Individual Scripts
 
 ```r
-setwd("scripts")
-source("00_synthetic_data.R")  # Generate test data
-source("03.3_descriptive_stats.R")  # Run specific script
+setwd("farm_size_project_complete/scripts")
+source("00.3_synthetic_data.R")   # generate stubs first
+source("03.3_descriptive_stats.R") # then any downstream script
 ```
 
 ### GitHub Actions
 
 Tests run automatically on:
 - Push to `main` or `develop`
-- Pull requests
-- Weekly schedule (Mondays 6 AM UTC)
-- Manual trigger
+- Pull requests to `main`
+- Manual trigger (Actions tab → **Run workflow**)
+
+The workflow always uses **synthetic stub data**, not real survey data. It verifies that all scripts execute without error and produce the expected output files.
 
 ## 📈 Key Outputs
 
 | Output | Description |
 |--------|-------------|
-| `stacked_rasters_africa.tif` | 10-layer predictor stack |
-| `lsms_trimmed_95th_africa.rds` | Analysis-ready farm data |
-| `drivers_correlation_matrix.png` | Predictor correlations |
-| `summary_descriptive_stats_survey.csv` | Farm size statistics |
+| `stacked_rasters_africa.tif` | 10-layer spatial predictor stack |
+| `lsms_trimmed_95th_africa.rds` | Analysis-ready farm-level data (95th-percentile trimmed) |
+| `rf_model_predictions_SSA.tif` | RF median farm size predictions across SSA |
+| `qrf_100quantiles_predictions_africa.tif` | QRF predictions at 100 quantiles across SSA |
 
 ## 🌍 Country Coverage
 
-| Country | Surveys | Years |
-|---------|---------|-------|
-| Ethiopia | 5 | 2011-2021 |
-| Malawi | 5 | 2004-2019 |
-| Nigeria | 4 | 2010-2018 |
-| Tanzania | 6 | 2008-2020 |
-| Uganda | 8 | 2005-2019 |
-| + 11 more | ... | ... |
+The models are trained on LSMS surveys from **16 countries**:
 
-**Total: ~43 country-year combinations, ~100,000 farms**
+Benin, Burkina Faso, Côte d'Ivoire, Ethiopia, Ghana, Guinea-Bissau, Malawi, Mali, Niger, Nigeria, Rwanda, Senegal, Tanzania, Togo, Uganda, Zambia
+
+> The survey wave counts and year ranges shown in the CI pipeline are synthetic stubs, not actual values. Refer to the original paper for the true survey inventory.
 
 ## 📚 Citation
 
-If you use this code or data, please cite:
+The original analysis scripts were developed by the authors of the following Zenodo record and should be cited for scientific use:
+
+> [Original authors]. (2026). *Farm Size Prediction Across Sub-Saharan Africa* [Code]. Zenodo. https://doi.org/10.5281/zenodo.15652768
+
+The documented and reorganized version of this repository (script headers, CI pipeline, synthetic data framework, README) was produced by D. Hougni (CGIAR) with assistance from Claude (Anthropic).
 
 ```bibtex
-@software{farm_size_ssa,
-  author = {[Authors]},
-  title = {Farm Size Prediction Across Sub-Saharan Africa},
-  year = {2026},
-  url = {https://github.com/YOUR_USERNAME/farm-size-ssa}
+@software{farm_size_ssa_2026,
+  title  = {Farm Size Prediction Across Sub-Saharan Africa},
+  year   = {2026},
+  doi    = {10.5281/zenodo.15652768},
+  url    = {https://zenodo.org/records/15652768}
 }
 ```
 
 ## 📄 License
 
-This project is licensed under the MIT License - see [LICENSE](LICENSE) file.
+This repository is released under the **GNU General Public License v3.0 (GPL-3.0)**. You are free to use, modify, and distribute this code provided that any derivative work is also released under the same license.  
+See the [LICENSE](LICENSE) file for full terms.
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch (`git checkout -b feature/my-fix`)
+3. Commit your changes (`git commit -m 'Describe the fix'`)
+4. Push to your fork and open a Pull Request
+
+Bug reports and questions are welcome via [GitHub Issues](https://github.com/shadowhgni/quick_test_farm_size_claude/issues) — the issue tracker is active and monitored.
 
 ## 📞 Contact
 
-- **Issues:** [GitHub Issues](https://github.com/YOUR_USERNAME/farm-size-ssa/issues)
-- **Email:** [your.email@institution.org]
+- **D. Hougni (CGIAR):** d.hougni@cgiar.org
+- **Personal:** shadowhgni@yahoo.fr
+- **Issues:** [github.com/shadowhgni/quick_test_farm_size_claude/issues](https://github.com/shadowhgni/quick_test_farm_size_claude/issues)
 
 ---
 
-*Last updated: February 2026*
+*Last updated: April 2026*
