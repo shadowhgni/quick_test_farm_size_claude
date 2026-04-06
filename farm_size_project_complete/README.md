@@ -154,6 +154,7 @@ The workflow always uses **synthetic stub data**, not real survey data. It verif
 | `lsms_trimmed_95th_africa.rds` | Analysis-ready farm-level data (95th-percentile trimmed) |
 | `rf_model_predictions_SSA.tif` | RF median farm size predictions across SSA |
 | `qrf_100quantiles_predictions_africa.tif` | QRF predictions at 100 quantiles across SSA |
+| `nb_farms_per_grid_cell.tif` | Estimated number of farms per 10×10 km grid cell |
 
 ## 🌍 Country Coverage
 
