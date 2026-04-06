@@ -7,7 +7,7 @@ Machine learning models for predicting farm sizes across Sub-Saharan Africa usin
 
 ## 📋 Overview
 
-This project develops Random Forest and Quantile Regression Forest models to predict farm sizes across 16 Sub-Saharan African countries using:
+This project develops Random Forest and Quantile Regression Forest models to predict farm sizes across Sub-Saharan Africa, trained on household survey data from 16 countries and applied continent-wide.
 
 - **Survey Data:** Living Standards Measurement Study (LSMS) household surveys (~180,000 farms)
 - **Spatial Predictors:** Cropland, population density, climate, soil, market access, and more
