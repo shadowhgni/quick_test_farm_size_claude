@@ -1,12 +1,12 @@
 # Report: F01_main_figure1.R
 
-**Generated:** 2026-04-06 07:19:20 UTC
-**Elapsed:** 4.4s
+**Generated:** 2026-04-06 09:22:28 UTC
+**Elapsed:** 4.5s
 **Purpose:** External GADM1 validation: predicted vs census farm size (BWA, KEN, MOZ, ZWE)
 
 ## Inputs
 
-- **RF predictions**: `../data/processed/rf_model_predictions_SSA.tif` ✅ (36,167 B)
+- **RF predictions**: `../data/processed/rf_model_predictions_SSA.tif` ✅ (36,248 B)
 - **Validation stubs**: `../validation/` ✅ (4,096 B)
 
 ## Outputs
