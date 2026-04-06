@@ -241,7 +241,11 @@ compare_pred_measured_gadm1 <- tryCatch(.cpm_tmp |>
          # !(grepl('west', NAME_1.x, ignore.case = T) & !grepl('west', NAME_1.y, ignore.case = T)),
          # !(grepl('west', NAME_1.x, ignore.case = T) & !grepl('west', NAME_1.y, ignore.case = T)),
          !(grepl('west', NAME_1.x, ignore.case = T) & !grepl('west', NAME_1.y, ignore.case = T))) |>
-  rename(NAME_0 = NAME_0.x, NAME_1 = NAME_1.x), error=function(e){ message('CI: F01 filter skipped: ',e$message); .cpm_tmp }) |>
+  tryCatch({
+      .tmp <- .cpm_tmp
+      if ("NAME_0.x" %in% names(.tmp)) .tmp <- dplyr::rename(.tmp, NAME_0=NAME_0.x, NAME_1=NAME_1.x)
+      .tmp
+    }, error=function(e){ message('CI: F01 rename skipped: ',e$message); .cpm_tmp }) |>
   group_by(NAME_0, NAME_1) |>
   summarize(across(starts_with('avg_'), ~ mean(., na.rm =  T)))
 

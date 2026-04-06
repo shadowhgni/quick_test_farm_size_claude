@@ -24,13 +24,20 @@ cor_mat <- round(cor(num_data, use = "pairwise.complete.obs"), 3)
 write.csv(as.data.frame(cor_mat),
           "../output/other_illustr/tables/correlation_matrix.csv")
 
-# Plot
-png("../output/other_illustr/graphs/correlation_matrix.png",
-    width = 8, height = 7, units = "in", res = 150)
-corrplot::corrplot(cor_mat, method = "color", type = "lower",
-  tl.cex = 0.8, addCoef.col = "black", number.cex = 0.6,
-  title = "Predictor correlation matrix", mar = c(0,0,2,0))
-dev.off()
+# Plot — ggplot2 tile (corrplot not required)
+cor_long <- as.data.frame(as.table(cor_mat)) |>
+  setNames(c("Var1","Var2","r")) |>
+  dplyr::filter(as.integer(Var1) >= as.integer(Var2))
+P <- ggplot(cor_long, aes(Var1, Var2, fill = r)) +
+  geom_tile(colour = "white") +
+  geom_text(aes(label = round(r, 2)), size = 2.5) +
+  scale_fill_gradient2(low = "#B2182B", mid = "white", high = "#2166AC",
+                       midpoint = 0, limits = c(-1,1)) +
+  theme_minimal(base_size = 9) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Predictor correlation matrix", x = NULL, y = NULL, fill = "r")
+ggsave("../output/other_illustr/graphs/correlation_matrix.png",
+       P, width = 8, height = 7, units = "in", dpi = 150)
 
 elapsed <- proc.time()[["elapsed"]] - t0
 write_report("03.2_correlation_drivers.R", "Predictor correlation analysis",
