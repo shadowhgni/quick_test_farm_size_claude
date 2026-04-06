@@ -24,21 +24,10 @@ rm(list = setdiff(ls(), c("t0","write_report","capture_output","ci_trees","ci_fo
 setwd(paste0(here::here(), "/scripts"))
 dir.create("../output/other_illustr/graphs", recursive = TRUE, showWarnings = FALSE)
 
-# ── SSA boundary — for GID_0 join ─────────────────────────────────────────────
-# PRODUCTION: used to attach GID_0 to comp tables (join on NAME_0)
-# CI: geodata caches to ../data/raw/spatial
-input_path <- "../data/raw/spatial"
-country    <- geodata::world(path = input_path, resolution = 5, level = 0)
-isocodes   <- geodata::country_codes()
-isocodes_ssa <- subset(isocodes,
-  NAME == "Sudan" | UNREGION1 %in% c("Middle Africa","Western Africa",
-                                      "Southern Africa","Eastern Africa"))
-isocodes_ssa <- subset(isocodes_ssa,
-  !NAME %in% c("Cabo Verde","Comoros","Mauritius","Mayotte","Réunion",
-               "Saint Helena","São Tomé and Príncipe","Seychelles"))
-ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
-
 # ── Load data ─────────────────────────────────────────────────────────────────
+# NOTE: geodata::world() was removed — ssa was only used to attach GID_0 via
+# NAME_0, but both comp tables already carry GID_0 from 00_synthetic_data.R /
+# production pipeline. The join is done directly on GID_0 below.
 xx                  <- readRDS("../data/processed/summarized_farm_area_ha_per_class_vs_sarah.rds")
 comp_fsize_classes_ha <- xx$comp_fsize_classes_ha
 comp_fsize_classes_nb <- xx$comp_fsize_classes_nb
