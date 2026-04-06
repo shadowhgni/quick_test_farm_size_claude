@@ -1,17 +1,17 @@
 # Report: S06_size_class_comparison.R
 
-**Generated:** 2026-04-06 12:49:12 UTC
-**Elapsed:** 2.1s
+**Generated:** 2026-04-06 18:26:02 UTC
+**Elapsed:** 2.2s
 **Purpose:** Supp Fig 6: predicted vs census farm count and cropland ha by country and size class
 
 ## Inputs
 
-- **Sarah comparison RDS**: `../data/processed/summarized_farm_area_ha_per_class_vs_sarah.rds` ✅ (711,541 B)
+- **Sarah comparison RDS**: `../data/processed/summarized_farm_area_ha_per_class_vs_sarah.rds` ✅ (711,104 B)
 - **Divergence table**: `Suppl.Fig06_divergence_table.rds` ✅ (554 B)
 
 ## Outputs
 
-- **Suppl.Fig06.png**: `../output/other_illustr/graphs/Suppl.Fig06.png` ✅ written (177,518 B)
+- **Suppl.Fig06.png**: `../output/other_illustr/graphs/Suppl.Fig06.png` ✅ written (177,499 B)
 
 ## Data dimensions
 

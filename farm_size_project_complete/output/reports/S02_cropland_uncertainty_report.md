@@ -1,7 +1,7 @@
 # Report: S02_cropland_uncertainty.R
 
-**Generated:** 2026-04-06 12:48:23 UTC
-**Elapsed:** 11.1s
+**Generated:** 2026-04-06 18:25:12 UTC
+**Elapsed:** 11.3s
 **Purpose:** Supp Fig 2: cropland data uncertainties
 
 ## Inputs

@@ -1,7 +1,7 @@
 # Report: S07_distribution_parameters.R
 
-**Generated:** 2026-04-06 12:49:18 UTC
-**Elapsed:** 4.3s
+**Generated:** 2026-04-06 18:26:08 UTC
+**Elapsed:** 4.4s
 **Purpose:** Supp Fig 7: distribution fitting parameters
 
 ## Inputs
@@ -10,4 +10,4 @@ _No file inputs._
 
 ## Outputs
 
-- **PNG**: `../output/other_illustr/graphs/Suppl.Fig07.png` ✅ written (171,391 B)
+- **PNG**: `../output/other_illustr/graphs/Suppl.Fig07.png` ✅ written (171,374 B)

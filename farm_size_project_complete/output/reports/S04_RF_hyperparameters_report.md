@@ -1,7 +1,7 @@
 # Report: S04_RF_hyperparameters.R
 
-**Generated:** 2026-04-06 12:49:05 UTC
-**Elapsed:** 7.6s
+**Generated:** 2026-04-06 18:25:55 UTC
+**Elapsed:** 7.9s
 **Purpose:** Supp Fig 4: RF hyperparameter sensitivity
 
 ## Inputs
@@ -10,4 +10,4 @@ _No file inputs._
 
 ## Outputs
 
-- **PNG**: `../output/other_illustr/graphs/Suppl.Fig04.png` ✅ written (192,627 B)
+- **PNG**: `../output/other_illustr/graphs/Suppl.Fig04.png` ✅ written (192,016 B)
