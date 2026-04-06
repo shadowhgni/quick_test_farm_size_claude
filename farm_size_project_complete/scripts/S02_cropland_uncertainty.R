@@ -362,7 +362,7 @@ for(i in names(six_crop_masks)[c(3, 4, 6)]){
 combined_plot <- tmap::tmap_arrange(tmap_list, ncol = 4)
 
 # Save combined plot
-tmap::tmap_save(combined_plot, '../output/other_illustr/graphs/Suppl.Fig01.png', 
+tmap::tmap_save(combined_plot, '../output/other_illustr/graphs/Suppl.Fig02.png', 
                 width = 10, height = 7, units = 'in', dpi = 150)
 # No PDF conversion (ImageMagick policy blocked) — PNG is the final output; message('CI: PDF write skipped (ImageMagick policy), PNG available')
 

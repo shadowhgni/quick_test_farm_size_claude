@@ -177,7 +177,7 @@ for(i in names(selected_rast)){
 combined_plot <- tmap::tmap_arrange(tmap_list, ncol = 2)
 
 # Save combined plot
-tmap::tmap_save(combined_plot, '../output/other_illustr/graphs/Suppl.Fig07.png', 
+tmap::tmap_save(combined_plot, '../output/other_illustr/graphs/Suppl.Fig08.png', 
                 width = 7, height = 10, units = 'in', dpi = 150)
 # No PDF conversion (ImageMagick policy blocked) — PNG is the final output; message('CI: PDF write skipped (ImageMagick policy), PNG available')
 

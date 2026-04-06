@@ -238,6 +238,13 @@ P07
 ggsave('../output/other_illustr/country_compare_sarah_farm_size_cropland_classes.png')
 dev.off()
 
+# Add GID_0 (ISO3) to comp tables — needed by S06/S07 for x-axis labels
+ssa_iso <- terra::as.data.frame(ssa) |> dplyr::select(NAME_0, GID_0) |> dplyr::distinct()
+comp_fsize_classes_nb <- comp_fsize_classes_nb |>
+  dplyr::left_join(ssa_iso, by = "NAME_0")
+comp_fsize_classes_ha <- comp_fsize_classes_ha |>
+  dplyr::left_join(ssa_iso, by = "NAME_0")
+
 saveRDS(list(six_classes_croplands = six_classes_croplands, 
              comp_fsize_classes_ha = comp_fsize_classes_ha, comp_fsize_classes_nb = comp_fsize_classes_nb,
              P04 = P04, P05 = P05, P06 = P06, P07 = P07),

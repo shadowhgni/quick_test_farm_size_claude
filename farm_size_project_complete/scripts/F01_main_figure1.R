@@ -12,6 +12,7 @@ t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
 setwd(paste0(here::here(), '/scripts'))
 dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
+dir.create('../output/main_fig',             recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # Preparation for functions and mapping
@@ -279,6 +280,11 @@ png(paste0('../output/other_illustr/graphs/external_validation_GADM1.2_for_4coun
 P01
 dev.off()
 
+# Save to main_fig as Fig.01
+png('../output/main_fig/Fig.01.png', height = 5, width = 7.5, units = 'in', res = 200)
+P01
+dev.off()
+
 # ── Report ────────────────────────────────────────────────────────────────────
 elapsed <- proc.time()[["elapsed"]] - t0
 write_report(
@@ -289,6 +295,7 @@ write_report(
     "Validation stubs" = "../validation/"
   ),
   outputs = list(
+    "Fig.01.png"           = "../output/main_fig/Fig.01.png",
     "External validation PNG" = "../output/other_illustr/graphs/external_validation_GADM1.2_for_4countries.png"
   ),
   sections = list(
