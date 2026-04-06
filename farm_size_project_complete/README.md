@@ -164,25 +164,35 @@ Benin, Burkina Faso, Côte d'Ivoire, Ethiopia, Ghana, Guinea-Bissau, Malawi, Mal
 
 ## 📚 Citation
 
-The original analysis scripts were developed by the authors of the following Zenodo record and should be cited for scientific use:
+The original analysis scripts and data were developed by the following authors and are the primary work to cite:
 
-> [Original authors]. (2026). *Farm Size Prediction Across Sub-Saharan Africa* [Code]. Zenodo. https://doi.org/10.5281/zenodo.15652768
+> Hougni D.G.J.M., Chamberlin J., Hijmans R., Baudron F., Giller K. & Silva J.V. (2025). *Dataset: A third of sub-Saharan Africa's farms cultivate less than half an hectare of land*. Zenodo. https://doi.org/10.5281/zenodo.15652768
 
-The documented and reorganized version of this repository (script headers, CI pipeline, synthetic data framework, README) was produced by D. Hougni (CGIAR) with assistance from Claude (Anthropic).
+The documented and reorganized version of this repository (script headers, CI pipeline, synthetic data framework, README) was produced by D. Hougni (CGIAR) with assistance from Claude (Anthropic, 2025–2026).
 
 ```bibtex
-@software{farm_size_ssa_2026,
-  title  = {Farm Size Prediction Across Sub-Saharan Africa},
-  year   = {2026},
-  doi    = {10.5281/zenodo.15652768},
-  url    = {https://zenodo.org/records/15652768}
+@dataset{hougni_etal_2025_farmsize,
+  author    = {Hougni, Deo-Gratias Judrita Mawugnon and Chamberlin, Jordan and
+               Hijmans, Robert and Baudron, Fr{\'e}d{\'e}ric and
+               Giller, Ken and Silva, Jo{\~a}o Vasco},
+  title     = {{Dataset: A third of sub-Saharan Africa's farms cultivate
+                less than half an hectare of land}},
+  year      = {2025},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.15652768},
+  url       = {https://doi.org/10.5281/zenodo.15652768}
 }
 ```
 
 ## 📄 License
 
-This repository is released under the **GNU General Public License v3.0 (GPL-3.0)**. You are free to use, modify, and distribute this code provided that any derivative work is also released under the same license.  
-See the [LICENSE](LICENSE) file for full terms.
+This repository is released under the **Creative Commons Attribution 4.0 International (CC BY 4.0)** license, consistent with the original Zenodo record.
+
+You are free to share and adapt this material for any purpose, provided appropriate credit is given to the original authors (see [Citation](#-citation) above).
+
+[![CC BY 4.0](https://licensebuttons.net/l/by/4.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
+
+Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
 
 ## 🤝 Contributing
 
