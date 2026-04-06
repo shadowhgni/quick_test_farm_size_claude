@@ -106,14 +106,14 @@ P00 <- ggplot(summ_hpc, aes(val)) +
   guides(fill = 'none')
 P00
 
-ggsave('../output/other_illustr/graphs/Suppl.Fig05.png', P00, width = 9, height = 5, dpi = 200)
+ggsave('../output/other_illustr/graphs/Suppl.Fig04.png', P00, width = 9, height = 5, dpi = 200)
 
 # ── Report ────────────────────────────────────────────────────────────────────
 elapsed <- proc.time()[["elapsed"]] - t0
 write_report(
   "S05_RF_unseen_performance.R",
   "Supp Fig 5: RF performance on holdout data",
-  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig05.png"),
+  outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig04.png"),
   elapsed_sec = elapsed
 )
 message("S05_RF_unseen_performance.R done in ", round(elapsed,1), "s")

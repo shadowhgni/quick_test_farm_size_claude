@@ -138,25 +138,6 @@ patch_script <- function(lines) {
   lines <- gsub('"output/leave_one"', '"../output/leave_one"', lines, fixed = TRUE)
   lines <- gsub("'output/leave_one'", "'../output/leave_one'", lines, fixed = TRUE)
 
-  # 5h. F01: tabulapdf not on CRAN — replace extract_tables call with stub list
-  lines <- gsub(
-    "bwa_messy_data <- tabulapdf::extract_tables(",
-    "bwa_messy_data <- list(data.frame(`...1`=c('header','Central','Southern','Northern','Gaborone'),`...2`=c('nb_male',200,150,120,80),`...3`=c('nb_female',100,90,70,50),`Total...4`=c('total',300,240,190,130),`...5`=c('area_m',50000,42000,33000,23000),`...6`=c('area_f',30000,25000,20000,15000))) #tabulapdf::extract_tables(",
-    lines, fixed = TRUE
-  )
-
-  # 5i. 04.8/F01: Kenya web-scraping may fail → catch and create stub ken_gadm1
-  lines <- gsub(
-    "kenya_aggregated <- rvest::read_html(",
-    "kenya_aggregated <- tryCatch(rvest::read_html(",
-    lines, fixed = TRUE
-  )
-  lines <- gsub(
-    "rvest::html_table()",
-    "rvest::html_table()), error=function(e) data.frame(X1=c('h','Nairobi'), nb_farms=c('nb_farms',500), acres_0001=c('a',100), acres_0002=c('a',100), acres_0005=c('a',50), acres_0010=c('a',30), acres_0020=c('a',20), acres_0050=c('a',10), acres_0100=c('a',5), acres_0500=c('a',2), acres_1000=c('a',1), acres_plus=c('a',1), acres_unknown=c('a',0)))",
-    lines, fixed = TRUE
-  )
-
   # 5j. F03/S02: geodata::country_codes() may lack UNREGION1 column in newer versions
   lines <- gsub(
     "isocodes <- geodata::country_codes()",
@@ -326,14 +307,6 @@ patch_script <- function(lines) {
     "label = paste0('R2=',round(r2,2))", lines, fixed = TRUE)
   lines <- gsub("label = bquote(R^2 == .(r2))",
     "label = paste0('R2=',round(r2,2))", lines, fixed = TRUE)
-  # 5w. F01: tabulapdf patch left dangling continuation lines
-  lines <- gsub(
-    "area = list(c(70, 35, 380, 565)), pages = 93, output = 'tibble')",
-    "# CI: area/pages/output args skipped (tabulapdf unavailable)",
-    lines, fixed = TRUE
-  )
-  lines <- gsub("area = list(c(70, 35, 380, 565)),",
-    "# area = list(c(70, 35, 380, 565)),", lines, fixed = TRUE)
   # 5x. F02/F03/S02: terra::plot(ssa) crashes when ssa is empty
   # F02/F03/S02: guard ssa plot calls - if(nrow(ssa)>0) avoids syntax breakage
   lines <- gsub("terra::plot(ssa, ",

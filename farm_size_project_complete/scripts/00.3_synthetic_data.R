@@ -497,6 +497,36 @@ div_table <- data.frame(
 )
 saveRDS(div_table, "Suppl.Fig06_divergence_table.rds")
 
+# ── F01 stubs: fig.1a raster, fig.1c Lowder, fig.1d OOB ─────────────────────
+# fig.1a: 2-layer SpatRaster (spam_2017 cropland ha, pred_farm_area_ha)
+ssa_ext <- terra::ext(-18, 52, -35, 15)
+r_stub  <- terra::rast(ssa_ext, res = 1, crs = "EPSG:4326")
+fig1a_stub <- c(
+  setNames(terra::init(r_stub, function(n) runif(n, 100, 5000)), "spam_2017"),
+  setNames(terra::init(r_stub, function(n) runif(n, 0.3, 8)),    "pred_farm_area_ha")
+)
+terra::writeRaster(fig1a_stub, "../data/processed/fig1a_stub.tif", overwrite = TRUE)
+
+# fig.1c: list with comp_nb_farms and r2_sarah
+ssa_countries <- c("Angola","Benin","Botswana","Ethiopia","Kenya","Malawi",
+                   "Niger","Nigeria","Rwanda","Tanzania","Uganda","Zambia")
+comp_nb_farms <- data.frame(
+  country        = ssa_countries,
+  nb_farms       = round(runif(12, 1e4, 5e6)),
+  estim_nb_farms = round(runif(12, 1e4, 5e6)),
+  census_year    = sample(c(1975,1985,1995,2005,2015), 12, replace = TRUE),
+  stringsAsFactors = FALSE
+)
+saveRDS(list(comp_nb_farms = comp_nb_farms, r2_sarah = 0.72),
+        "../data/processed/fig1c_stub.rds")
+
+# fig.1d: list with lsms_spatial (farm_area_ha, pred_oob)
+n_obs <- 500
+saveRDS(list(lsms_spatial = data.frame(
+  farm_area_ha = pmin(3, abs(rnorm(n_obs, 1.2, 0.8))),
+  pred_oob     = pmin(3, abs(rnorm(n_obs, 1.2, 0.9)))
+)), "../data/processed/fig1d_stub.rds")
+
 message("   Figure stubs done.")
 
 # ==============================================================================
