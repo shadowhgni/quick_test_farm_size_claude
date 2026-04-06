@@ -40,11 +40,13 @@ message("\nCleaning output/ and data/processed/ from previous run...")
   )
   for (d in dirs_to_clean) {
     if (dir.exists(d)) {
-      # Remove all files (not subdirs) — preserves directory structure
-      files <- list.files(d, full.names = TRUE, recursive = FALSE)
-      invisible(file.remove(files[file.info(files)$isdir == FALSE]))
+      # Delete all files recursively but keep every directory intact
+      all_files <- list.files(d, full.names = TRUE, recursive = TRUE)
+      file_only <- all_files[!file.info(all_files)$isdir]
+      if (length(file_only) > 0) invisible(file.remove(file_only))
+    } else {
+      dir.create(d, recursive = TRUE, showWarnings = FALSE)
     }
-    dir.create(d, recursive = TRUE, showWarnings = FALSE)
   }
   message("  Done. Directories recreated.")
 }
@@ -532,7 +534,7 @@ run_script <- function(script_name, timeout_sec = 600) {
   if (file.exists(log_file)) {
     out <- readLines(log_file, warn = FALSE)
     if (length(out) > 0)
-      cat(paste0("[", script_name, "] ", tail(out, 40), "
+      cat(paste0("[", script_name, "] ", tail(out, 100), "
 "), sep = "")
   }
 

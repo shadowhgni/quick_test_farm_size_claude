@@ -20,10 +20,7 @@ write_report <- function(script_name,
                          elapsed_sec   = NULL,
                          warnings_vec  = character(0)) {
 
-  reports_dir <- tryCatch(
-    file.path(here::here(), "output", "reports"),
-    error = function(e) "../output/reports"
-  )
+  reports_dir <- "../output/reports"
   dir.create(reports_dir, recursive = TRUE, showWarnings = FALSE)
 
   slug    <- sub("\\.R$|\\.py$", "", script_name)
