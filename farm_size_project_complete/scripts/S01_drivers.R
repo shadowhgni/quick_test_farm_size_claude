@@ -1,179 +1,178 @@
 # ==============================================================================
 # Script: S01_drivers.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Supplementary Figure 1 — Spatial distributions of predictor variables
-#          9 panels: cattle, pop, sand, slope, temperature, rainfall,
-#                    maize yield, market access, cropland (SPAM 2017)
-#          + 3 alternative cropland layers (SPAM 2020, ESA 2020, GEOSURVEY 2015)
+# Purpose: Supplementary Figure 1 - Predictor variable distributions
 #
-# PRODUCTION inputs:
-#   ../data/processed/stacked_rasters_africa.tif  — 10-layer predictor stack
-#   <input_path>/landuse/landuse/all_cropland_mask.tif — 6 cropland products
+# Authors: Deo, Joao, Robert, Fred
+# Code documentation: Claude (Anthropic) - February 2026
 #
-# CI: stacked_rasters_africa.tif stub from 00.3_synthetic_data.R
-#     all_cropland_mask.tif fallback to duplicated SPAM layer
-# Output: ../output/other_illustr/graphs/Suppl.Fig01.png
+# Data Sources:
+#   - Cattle density: Du et al. 2025 (cattle-du2025/)
+#     DOI: 10.5281/zenodo.17128483
+#     Annual livestock maps 1961-2021 at 5km resolution
+#     NOTE: This script uses Du et al. 2025 for temporal livestock trends,
+#           NOT the GLW 2010 data used in ML models (cattle-glw2010/)
 # ==============================================================================
+
 
 source("00_report_utils.R")
 t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
-setwd(paste0(here::here(), "/scripts"))
-dir.create("../output/other_illustr/graphs", recursive = TRUE, showWarnings = FALSE)
+china_file <- '2026-01-24.CHINA_croplands_per_crop_per_aez.rds'
+if (!file.exists(china_file)) { message('China cropland RDS not found - skipping S01'); quit(save='no', status=0L) }
+fig3 <- readRDS(china_file)
+fig3a <- fig3$df_rel_long |> filter(product %in% c('all_crops', 'cattle'), aez != 'all_aez')
+fig3b <- fig3$df_rel_long |> 
+  filter(product %in% c('maize', 'sorghum', 'millet', 'cassava', 'legumes', 'non_food'), 
+         aez == 'all_aez') |>
+  mutate(product = if_else(product == 'non_food', 'cash crops', product))
+fig3c <- fig3$df_rel_long |> filter(product %in% c('maize', 'sorghum', 'millet', 'cassava'), aez != 'all_aez')
 
-# ── SSA boundary ──────────────────────────────────────────────────────────────
-input_path <- "../data/raw/spatial"
-country    <- geodata::world(path = input_path, resolution = 5, level = 0)
-isocodes   <- geodata::country_codes()
-if (!"UNREGION1" %in% names(isocodes)) {
-  ssa_i3 <- c("AGO","CMR","CAF","TCD","COD","COG","GAB","GNQ","STP",
-               "BWA","LSO","MWI","MOZ","NAM","ZAF","SWZ","ZMB","ZWE",
-               "BDI","COM","DJI","ERI","ETH","KEN","MDG","MUS","RWA","SDN","SSD","SOM","TZA","UGA",
-               "BEN","BFA","CPV","CIV","GMB","GHA","GIN","GNB","LBR","MLI","MRT","NER","NGA",
-               "SEN","SLE","TGO","SDN")
-  isocodes_ssa <- subset(isocodes, ISO3 %in% ssa_i3)
-} else {
-  isocodes_ssa <- subset(isocodes,
-    NAME == "Sudan" |
-    UNREGION1 %in% c("Middle Africa","Western Africa","Southern Africa","Eastern Africa"))
-  isocodes_ssa <- subset(isocodes_ssa,
-    !NAME %in% c("Cabo Verde","Comoros","Mauritius","Mayotte","Réunion",
-                 "Saint Helena","São Tomé and Príncipe","Seychelles"))
+dir.create("../output/main_fig", recursive = TRUE, showWarnings = FALSE)
+png("../output/other_illustr/graphs/Suppl.Fig01.png", width = 9, height = 8.8, units = "in", res = 200)
+layout(matrix(c(1,1,2,2,3,4,5,6), nrow=2, byrow=TRUE))
+par(mar=c(3.5,3.5,1,1), xaxs='i', yaxs='i')
+
+# plot 1
+plot(0, 0, xlim=c(0,8), ylim=c(0,100), xlab='', ylab='', cex.axis=1.2, cex.lab=1.4, las=0, mgp=c(2,0.75,0), col='white')
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "whitesmoke")
+grid(nx=8, ny=10, lty=1, col='lightgrey')
+i <- 1
+for(aez1 in c('tropical highlands', 'humid', 'sub-humid', 'semi-arid')){
+  subst1 <- subset(fig3a, aez == aez1)
+  lty <- 1
+  col <- viridis::viridis(4, direction=1)[i]
+  for(ct in c('all_crops', 'cattle')){
+    subst <- subset(subst1, product==ct)
+    lines(subst$pred_farm_area_ha, subst$value*100, col=col, lwd=3.5, lty=lty)
+    lty <- lty + 1
+  }
+  i <- i + 1
 }
-ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
+legend('bottomright', bty='n', bg='whitesmoke', cex=1.1, lty=c(1,1,1,1,1,2), lwd=3,
+       legend=c('Tropical highlands', 'Humid', 'Sub-humid', 'Semi-arid', 'Cropland', 'Cattle'), 
+       col=c(viridis::viridis(4, direction=1),1,1))
+text(0.5, 93, 'A)', cex=1.5)
+title(ylab="Cumulative cultivated area or herd size (%)", cex.lab=1.4, line=2)
+title(xlab="Average farm size (ha)", cex.lab=1.4, line=2)
+box()
 
-# ── Palettes ──────────────────────────────────────────────────────────────────
-pal  <- colorRampPalette(c("darkred","orange","gold","darkolivegreen3","darkgreen"))
-pal3 <- colorRampPalette(c("lightskyblue1","blue4"))
-pal4 <- colorRampPalette(c("#A1D99B","#00441B"))
-pal5 <- colorRampPalette(c("#FFFFCC","#800026"))
-pal7 <- colorRampPalette(c("#C7EAE5","#01665E"))
-pal9 <- colorRampPalette(c("#F1605DFF","#FD9567FF","#FEC98DFF","#FCFDBFFF"))
-
-terra::terraOptions(memfrac = 0.5, todisk = TRUE)
-
-# ── Load predictor stack ──────────────────────────────────────────────────────
-stacked <- terra::rast("../data/processed/stacked_rasters_africa.tif")
-stacked$slope <- 100 * stacked$slope
-
-# ── Load cropland mask (CI fallback: duplicate SPAM layer) ───────────────────
-cropland_mask_path <- file.path(input_path, "landuse/landuse/all_cropland_mask.tif")
-six_crop_masks <- tryCatch(
-  terra::rast(cropland_mask_path),
-  error = function(e) {
-    message("CI: all_cropland_mask.tif not found — using SPAM stub")
-    r <- stacked[["cropland"]]
-    r2 <- c(r, r, r)
-    names(r2) <- c("SPAM 2020", "ESA 2020", "GEOSURVEY 2015")
-    r2
-  })
-
-# ── Build tmap list ───────────────────────────────────────────────────────────
-tmap::tmap_mode("plot")
-tmap::tmap_options(component.autoscale = FALSE, asp = 1)
-tmap_list <- list()
-
-for (i in names(stacked)[c(2, 3, 5:10, 1)]) {
-  my_range <- switch(i,
-    cropland           = c(0, 5000),
-    cattle             = c(0, 3000),
-    pop                = c(0, 400),
-    cropland_per_capita= c(0, 1000),
-    sand               = c(0, 90),
-    slope              = c(0, 3),
-    temperature        = c(15, 40),
-    rainfall           = c(0, 2000),
-    maizeyield         = c(0, 15000),
-    market             = c(0, 1000),
-    c(0, 1000))
-
-  my_tag <- switch(i,
-    cropland = "I)", cattle = "A)", pop = "B)",
-    sand = "C)", slope = "D)", temperature = "E)",
-    rainfall = "F)", maizeyield = "G)", market = "H)",
-    "?)")
-
-  my_col <- switch(i,
-    cropland            = pal4(10),
-    cattle              = pal5(10),
-    pop                 = pal7(10),
-    cropland_per_capita = pal3(10),
-    sand                = rev(pal(10)),
-    slope               = rev(pal(10)),
-    temperature         = rev(pal9(10)),
-    rainfall            = pal3(10),
-    maizeyield          = pal(10),
-    market              = rev(pal(10)),
-    pal(10))
-
-  p <- tmap::tm_shape(stacked[[i]]) +
-    tmap::tm_raster(
-      col.scale = tmap::tm_scale_continuous(
-        values = my_col, limits = my_range,
-        outliers.trunc = c(TRUE, TRUE), labels = my_range),
-      col.legend = tmap::tm_legend(
-        title = "", frame = FALSE, text.size = 1,
-        title.size = 0.01, title.align = "left")) +
-    tmap::tm_shape(sf::st_as_sf(ssa)) +
-    tmap::tm_borders(col = "black", lwd = 0.5) +
-    tmap::tm_graticules(
-      x = seq(-20, 60, by = 10), y = seq(-40, 20, by = 10),
-      col = "gray70", lwd = 0.3, alpha = 0.7,
-      labels.size = 0.6, labels.col = "gray50") +
-    tmap::tm_layout(
-      frame = FALSE, bg.color = "azure",
-      legend.position = c(0, 0.7), legend.frame = FALSE,
-      legend.bg.color = "transparent", legend.frame.lwd = 0,
-      legend.width = 4.2, legend.height = 9) +
-    tmap::tm_credits(my_tag,
-      position = tmap::tm_pos_in("right", "top"), size = 1.5)
-
-  tmap_list[[i]] <- p
+# plot 2
+plot(0, 0, xlim=c(0,8), ylim=c(0,100), xlab='', ylab='', cex.axis=1.2, cex.lab=1.4, las=0, mgp=c(2,0.75,0), col='white')
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "whitesmoke")
+grid(nx=8, ny=10, lty=1, col='lightgrey')
+i <- 1
+for(aez1 in c("maize", "sorghum", "millet", "cassava", "legumes", "cash crops")){
+  subst1 <- subset(fig3b, product == aez1)
+  lty <- 1
+  col <- viridis::viridis(6, direction=1)[i]
+  lines(subst1$pred_farm_area_ha, subst1$value*100, col=col, lwd=3.5, lty=lty)
+  i <- i + 1
 }
+legend('bottomright', bty='n', bg='whitesmoke', cex=1.1, lty=1, lwd=3,
+       legend=c("Maize", "Sorghum", "Millet", "Cassava", "Legumes", "Non-food crops"), 
+       col=viridis::viridis(6, direction=1))
+text(0.5, 93, 'B)', cex=1.5)
+title(ylab="Cumulative crop area (%)", cex.lab=1.4, line=2)
+title(xlab="Average farm size (ha)", cex.lab=1.4, line=2)
+box()
 
-# ── Alternative cropland layers ───────────────────────────────────────────────
-for (i in names(six_crop_masks)[
-    pmin(c(3, 4, 6), terra::nlyr(six_crop_masks))]) {
-  my_tag <- switch(i,
-    "SPAM 2020" = "J)", "ESA 2020" = "K)",
-    "GEOSURVEY 2015" = "L)", "?)")
-
-  p <- tmap::tm_shape(six_crop_masks[[i]]) +
-    tmap::tm_raster(
-      col.scale = tmap::tm_scale_continuous(
-        values = pal4(10), limits = c(0, 5000),
-        outliers.trunc = c(TRUE, TRUE), labels = c(0, 5000)),
-      col.legend = tmap::tm_legend(
-        title = "", frame = FALSE, text.size = 1,
-        title.size = 0.01, title.align = "left")) +
-    tmap::tm_shape(sf::st_as_sf(ssa)) +
-    tmap::tm_borders(col = "black", lwd = 0.5) +
-    tmap::tm_graticules(
-      x = seq(-20, 60, by = 10), y = seq(-40, 20, by = 10),
-      col = "gray70", lwd = 0.3, alpha = 0.7,
-      labels.size = 0.6, labels.col = "gray50") +
-    tmap::tm_layout(
-      frame = FALSE, bg.color = "azure",
-      legend.position = c(0, 0.7), legend.frame = FALSE,
-      legend.bg.color = "transparent", legend.frame.lwd = 0,
-      legend.width = 4.2, legend.height = 9) +
-    tmap::tm_credits(my_tag,
-      position = tmap::tm_pos_in("right", "top"), size = 1.5)
-
-  tmap_list[[i]] <- p
+# plot 3
+fig3c_1 <- subset(fig3c, aez=='tropical highlands')
+plot(0, 0, xlim=c(0,8), ylim=c(0,100), xlab='', ylab='', cex.axis=1.2, cex.lab=1.4, las=0, mgp=c(2,0.75,0), col='white')
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "whitesmoke")
+grid(nx=8, ny=10, lty=1, col='lightgrey')
+i <- 1
+for(aez1 in c("maize", "sorghum", "millet", "cassava")){
+  subst1 <- subset(fig3c_1, product == aez1)
+  lty <- 1
+  col <- viridis::viridis(4, direction=1)[i]
+  lines(subst1$pred_farm_area_ha, subst1$value*100, col=col, lwd=3.5, lty=lty)
+  i <- i + 1
 }
+legend('bottomright', bty='n', bg='whitesmoke', cex=1.1, lty=1, lwd=3,
+       title=expression(bold("Tropical\nhighlands")),
+       legend=c("Maize", "Sorghum", "Millet", "Cassava"), 
+       col=viridis::viridis(4, direction=1))
+text(0.8, 93, 'C)', cex=1.5)
+title(ylab="Cumulative crop area (%)", cex.lab=1.4, line=2)
+title(xlab="Average farm size (ha)", cex.lab=1.4, line=2)
+box()
 
-# ── Save ──────────────────────────────────────────────────────────────────────
-combined_plot <- tmap::tmap_arrange(tmap_list, ncol = 4)
-tmap::tmap_save(combined_plot, "../output/other_illustr/graphs/Suppl.Fig01.png",
-                width = 10, height = 7, units = "in", dpi = 150)
+# plot 4
+fig3c_1 <- subset(fig3c, aez=='humid')
+plot(0, 0, xlim=c(0,8), ylim=c(0,100), xlab='', ylab='', cex.axis=1.2, cex.lab=1.4, las=0, mgp=c(2,0.75,0), col='white')
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "whitesmoke")
+grid(nx=8, ny=10, lty=1, col='lightgrey')
+i <- 1
+for(aez1 in c("maize", "sorghum", "millet", "cassava")){
+  subst1 <- subset(fig3c_1, product == aez1)
+  lty <- 1
+  col <- viridis::viridis(4, direction=1)[i]
+  lines(subst1$pred_farm_area_ha, subst1$value*100, col=col, lwd=3.5, lty=lty)
+  i <- i + 1
+}
+legend('bottomright', bty='n', bg='whitesmoke', cex=1.1, lty=1, lwd=3,
+       title=expression(bold("Humid")),
+       legend=c("Maize", "Sorghum", "Millet", "Cassava"), 
+       col=viridis::viridis(4, direction=1))
+text(0.8, 93, 'D)', cex=1.5)
+title(ylab="Cumulative crop area (%)", cex.lab=1.4, line=2)
+title(xlab="Average farm size (ha)", cex.lab=1.4, line=2)
+box()
+
+# plot 5
+fig3c_1 <- subset(fig3c, aez=='sub-humid')
+plot(0, 0, xlim=c(0,8), ylim=c(0,100), xlab='', ylab='', cex.axis=1.2, cex.lab=1.4, las=0, mgp=c(2,0.75,0), col='white')
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "whitesmoke")
+grid(nx=8, ny=10, lty=1, col='lightgrey')
+i <- 1
+for(aez1 in c("maize", "sorghum", "millet", "cassava")){
+  subst1 <- subset(fig3c_1, product == aez1)
+  lty <- 1
+  col <- viridis::viridis(4, direction=1)[i]
+  lines(subst1$pred_farm_area_ha, subst1$value*100, col=col, lwd=3.5, lty=lty)
+  i <- i + 1
+}
+legend('bottomright', bty='n', bg='whitesmoke', cex=1.1, lty=1, lwd=3,
+       title=expression(bold("Sub-humid")),
+       legend=c("Maize", "Sorghum", "Millet", "Cassava"), 
+       col=viridis::viridis(4, direction=1))
+text(0.8, 93, 'E)', cex=1.5)
+title(ylab="Cumulative crop area (%)", cex.lab=1.4, line=2)
+title(xlab="Average farm size (ha)", cex.lab=1.4, line=2)
+box()
+
+# plot 6
+fig3c_1 <- subset(fig3c, aez=='semi-arid')
+plot(0, 0, xlim=c(0,8), ylim=c(0,100), xlab='', ylab='', cex.axis=1.2, cex.lab=1.4, las=0, mgp=c(2,0.75,0), col='white')
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "whitesmoke")
+grid(nx=8, ny=10, lty=1, col='lightgrey')
+i <- 1
+for(aez1 in c("maize", "sorghum", "millet", "cassava")){
+  subst1 <- subset(fig3c_1, product == aez1)
+  lty <- 1
+  col <- viridis::viridis(4, direction=1)[i]
+  lines(subst1$pred_farm_area_ha, subst1$value*100, col=col, lwd=3.5, lty=lty)
+  i <- i + 1
+}
+legend('bottomright', bty='n', bg='whitesmoke', cex=1.1, lty=1, lwd=3,
+       title=expression(bold("Semi-arid")),
+       legend=c("Maize", "Sorghum", "Millet", "Cassava"), 
+       col=viridis::viridis(4, direction=1))
+text(0.8, 93, 'F)', cex=1.5)
+title(ylab="Cumulative crop area (%)", cex.lab=1.4, line=2)
+title(xlab="Average farm size (ha)", cex.lab=1.4, line=2)
+box()
+
+dev.off()
 
 # ── Report ────────────────────────────────────────────────────────────────────
 elapsed <- proc.time()[["elapsed"]] - t0
 write_report(
   "S01_drivers.R",
-  "Supp Fig 1: spatial distributions of predictor variables (9 predictors + 3 cropland layers)",
-  inputs  = list("Stacked rasters" = "../data/processed/stacked_rasters_africa.tif"),
+  "Supp Fig 1: predictor variable distributions",
   outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig01.png"),
-  elapsed_sec = elapsed)
-message("S01_drivers.R done in ", round(elapsed, 1), "s")
+  elapsed_sec = elapsed
+)
+message("S01_drivers.R done in ", round(elapsed,1), "s")
