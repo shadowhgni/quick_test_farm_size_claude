@@ -1,6 +1,6 @@
 # Report: F02_main_figure2.R
 
-**Generated:** 2026-04-07 11:40:56 UTC
+**Generated:** 2026-04-07 17:16:24 UTC
 **Elapsed:** 4.3s
 **Purpose:** Main Figure 2: Q10 map | Q90 map | ECDF by farm class | Gini scatter
 

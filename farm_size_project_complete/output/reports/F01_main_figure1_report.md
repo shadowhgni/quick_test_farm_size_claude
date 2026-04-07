@@ -1,6 +1,6 @@
 # Report: F01_main_figure1.R
 
-**Generated:** 2026-04-07 11:40:51 UTC
+**Generated:** 2026-04-07 17:16:20 UTC
 **Elapsed:** 4.5s
 **Purpose:** Main Figure 1: farm density map | farm size map | Lowder nb-farms scatter | OOB density
 

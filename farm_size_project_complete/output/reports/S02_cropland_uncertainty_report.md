@@ -1,13 +1,14 @@
 # Report: S02_cropland_uncertainty.R
 
-**Generated:** 2026-04-07 11:41:19 UTC
-**Elapsed:** 10.8s
-**Purpose:** Supp Fig 2: cropland data uncertainties
+**Generated:** 2026-04-07 17:16:54 UTC
+**Elapsed:** 16.4s
+**Purpose:** Supp Fig 2: predictor correlations, cropland source correlations, cropland totals by source
 
 ## Inputs
 
-_No file inputs._
+- **plot_suppl_01 RDS**: `../output/plot_data/plot_suppl_01_effect_of_source_of_cropland_masks.rds` ✅ (513,028 B)
+- **LSMS 95th**: `../data/processed/lsms_trimmed_95th_africa.rds` ✅ (194,741 B)
 
 ## Outputs
 
-- **PNG**: `../output/other_illustr/graphs/Suppl.Fig02.png` ✅ written (663,204 B)
+- **PNG**: `../output/other_illustr/graphs/Suppl.Fig02.png` ✅ written (372,587 B)
