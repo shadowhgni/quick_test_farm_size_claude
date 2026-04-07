@@ -1,5 +1,5 @@
 # CI Run Log
-Run: 24071236511  Commit: fd5dd5a8fc49e8fe2ed60c8c62e51deb656b0266  Time: Tue Apr  7 08:18:59 UTC 2026
+Run: 24078021142  Commit: f6e2acc40adfec1a105329de0e5e3b72be38853a  Time: Tue Apr  7 11:12:20 UTC 2026
 
 ## Raw Output
 ```
@@ -10,7 +10,7 @@ Cleaning output/ and data/processed/ from previous run...
 ======================================================================
 FARM SIZE PREDICTION - FULL SEQUENTIAL PIPELINE TEST
 ======================================================================
-Started: 2026-04-07 08:12:07.799489
+Started: 2026-04-07 11:05:26.756526
 
 Scripts dir: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/farm_size_project_complete/scripts
 
@@ -83,7 +83,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [01.1_chirps_download.R] ======================================================================
 [01.1_chirps_download.R] SYNTHETIC DATA GENERATION (Base R)
 [01.1_chirps_download.R] ======================================================================
-[01.1_chirps_download.R] Started: 2026-04-07 08:12:17.668309
+[01.1_chirps_download.R] Started: 2026-04-07 11:05:36.6273
 [01.1_chirps_download.R] 
 [01.1_chirps_download.R] [1/6] Creating directory structure...
 [01.1_chirps_download.R]   Created 20 directories
@@ -123,7 +123,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [01.1_chirps_download.R]   Farm size range:0.1-21.18ha
 [01.1_chirps_download.R]   Median farm:    1.33ha
 [01.1_chirps_download.R] 
-[01.1_chirps_download.R] Finished: 2026-04-07 08:12:19.295169
+[01.1_chirps_download.R] Finished: 2026-04-07 11:05:38.213576
 [01.1_chirps_download.R] ======================================================================
   ✓ PASS  01.1_chirps_download.R                         (  1.8s)  
 [01.3_chirps_trends.R] Loading required package: terra
@@ -140,7 +140,7 @@ PHASE 2: Raw Data Compilation (01.x – 02.x)
 [01.3_chirps_trends.R] 
 [01.3_chirps_trends.R] === Processing CHIRPS data ===
 [01.3_chirps_trends.R] CI: No CHIRPS tifs found — skipping 01.3
-  ✓ PASS  01.3_chirps_trends.R                           (  4.2s)  
+  ✓ PASS  01.3_chirps_trends.R                           (  4.3s)  
 [01.4_prepare_spatial_layers.R] Loading required package: terra
 [01.4_prepare_spatial_layers.R] terra 1.9.11
 [01.4_prepare_spatial_layers.R] === Loading yearly rainfall data ===
@@ -353,8 +353,8 @@ PHASE 3: Analysis Preparation (03.x)
 [03.2_correlation_drivers.R] ✖ dplyr::filter() masks stats::filter()
 [03.2_correlation_drivers.R] ✖ dplyr::lag()    masks stats::lag()
 [03.2_correlation_drivers.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[03.2_correlation_drivers.R] 03.2 done in 1.4s
-  ✓ PASS  03.2_correlation_drivers.R                     (  1.6s)  
+[03.2_correlation_drivers.R] 03.2 done in 1.5s
+  ✓ PASS  03.2_correlation_drivers.R                     (  1.7s)  
 [03.3_descriptive_stats.R] Loading required package: tidyverse
 [03.3_descriptive_stats.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [03.3_descriptive_stats.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -394,8 +394,8 @@ PHASE 4: ML Model Training (04.x)
 [04.1_comparing_ML_algorithms.R] 
 [04.1_comparing_ML_algorithms.R]     lift
 [04.1_comparing_ML_algorithms.R] 
-[04.1_comparing_ML_algorithms.R] 04.1 done in 12.6s
-  ✓ PASS  04.1_comparing_ML_algorithms.R                 ( 12.9s)  
+[04.1_comparing_ML_algorithms.R] 04.1 done in 12.7s
+  ✓ PASS  04.1_comparing_ML_algorithms.R                 ( 13.0s)  
 [04.2_RF_within_country.R] Loading required package: tidyverse
 [04.2_RF_within_country.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [04.2_RF_within_country.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -409,24 +409,24 @@ PHASE 4: ML Model Training (04.x)
 [04.2_RF_within_country.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 [04.2_RF_within_country.R] Loading required package: ranger
 [04.2_RF_within_country.R] Running per-country RF CV...
-[04.2_RF_within_country.R]   Benin: R2 = 0.006
-[04.2_RF_within_country.R]   Burkina: R2 = 0.018
-[04.2_RF_within_country.R]   Cote_d_Ivoire: R2 = 0.016
-[04.2_RF_within_country.R]   Ethiopia: R2 = 0.017
+[04.2_RF_within_country.R]   Benin: R2 = 0.009
+[04.2_RF_within_country.R]   Burkina: R2 = 0.021
+[04.2_RF_within_country.R]   Cote_d_Ivoire: R2 = 0.018
+[04.2_RF_within_country.R]   Ethiopia: R2 = 0.022
 [04.2_RF_within_country.R]   Ghana: R2 = 0.01
-[04.2_RF_within_country.R]   Guinea_Bissau: R2 = 0.036
+[04.2_RF_within_country.R]   Guinea_Bissau: R2 = 0.046
 [04.2_RF_within_country.R]   Malawi: R2 = 0.013
-[04.2_RF_within_country.R]   Mali: R2 = 0.163
-[04.2_RF_within_country.R]   Niger: R2 = 0.308
-[04.2_RF_within_country.R]   Nigeria: R2 = 0.035
-[04.2_RF_within_country.R]   Rwanda: R2 = 0.036
-[04.2_RF_within_country.R]   Senegal: R2 = 0.036
-[04.2_RF_within_country.R]   Tanzania: R2 = 0.025
-[04.2_RF_within_country.R]   Togo: R2 = 0.018
-[04.2_RF_within_country.R]   Uganda: R2 = 0.018
-[04.2_RF_within_country.R]   Zambia: R2 = 0.035
+[04.2_RF_within_country.R]   Mali: R2 = 0.189
+[04.2_RF_within_country.R]   Niger: R2 = 0.255
+[04.2_RF_within_country.R]   Nigeria: R2 = 0.047
+[04.2_RF_within_country.R]   Rwanda: R2 = 0.043
+[04.2_RF_within_country.R]   Senegal: R2 = 0.062
+[04.2_RF_within_country.R]   Tanzania: R2 = 0.022
+[04.2_RF_within_country.R]   Togo: R2 = 0.022
+[04.2_RF_within_country.R]   Uganda: R2 = 0.032
+[04.2_RF_within_country.R]   Zambia: R2 = 0.04
 [04.2_RF_within_country.R] 04.2 done in 2.4s
-  ✓ PASS  04.2_RF_within_country.R                       (  2.6s)  
+  ✓ PASS  04.2_RF_within_country.R                       (  2.7s)  
 [04.3_RF_between_countries.R] Loading required package: tidyverse
 [04.3_RF_between_countries.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [04.3_RF_between_countries.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -440,25 +440,25 @@ PHASE 4: ML Model Training (04.x)
 [04.3_RF_between_countries.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 [04.3_RF_between_countries.R] Loading required package: ranger
 [04.3_RF_between_countries.R] Leave-one-country-out RF...
-[04.3_RF_between_countries.R]   Benin: R2 = 0.013
-[04.3_RF_between_countries.R]   Burkina: R2 = 0.001
+[04.3_RF_between_countries.R]   Benin: R2 = 0.012
+[04.3_RF_between_countries.R]   Burkina: R2 = 0.002
 [04.3_RF_between_countries.R]   Cote_d_Ivoire: R2 = 0.004
-[04.3_RF_between_countries.R]   Ethiopia: R2 = 0.001
+[04.3_RF_between_countries.R]   Ethiopia: R2 = 0.002
 [04.3_RF_between_countries.R]   Ghana: R2 = 0
-[04.3_RF_between_countries.R]   Guinea_Bissau: R2 = 0.009
-[04.3_RF_between_countries.R]   Malawi: R2 = 0.014
-[04.3_RF_between_countries.R]   Mali: R2 = 0.041
-[04.3_RF_between_countries.R]   Niger: R2 = 0.04
-[04.3_RF_between_countries.R]   Nigeria: R2 = 0.007
-[04.3_RF_between_countries.R]   Rwanda: R2 = 0.004
-[04.3_RF_between_countries.R]   Senegal: R2 = 0.006
+[04.3_RF_between_countries.R]   Guinea_Bissau: R2 = 0.01
+[04.3_RF_between_countries.R]   Malawi: R2 = 0.012
+[04.3_RF_between_countries.R]   Mali: R2 = 0.024
+[04.3_RF_between_countries.R]   Niger: R2 = 0.049
+[04.3_RF_between_countries.R]   Nigeria: R2 = 0.006
+[04.3_RF_between_countries.R]   Rwanda: R2 = 0.003
+[04.3_RF_between_countries.R]   Senegal: R2 = 0.005
 [04.3_RF_between_countries.R]   Tanzania: R2 = 0
 [04.3_RF_between_countries.R]   Togo: R2 = 0.005
-[04.3_RF_between_countries.R]   Uganda: R2 = 0.01
-[04.3_RF_between_countries.R]   Zambia: R2 = 0.004
+[04.3_RF_between_countries.R]   Uganda: R2 = 0.011
+[04.3_RF_between_countries.R]   Zambia: R2 = 0.005
 [04.3_RF_between_countries.R] Pairwise RF evaluation (sampled)...
-[04.3_RF_between_countries.R] 04.3 done in 23.7s
-  ✓ PASS  04.3_RF_between_countries.R                    ( 24.0s)  
+[04.3_RF_between_countries.R] 04.3 done in 23.8s
+  ✓ PASS  04.3_RF_between_countries.R                    ( 24.1s)  
 [04.5_cross_country_graphs.R] Loading required package: tidyverse
 [04.5_cross_country_graphs.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [04.5_cross_country_graphs.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -490,8 +490,8 @@ PHASE 4: ML Model Training (04.x)
 [04.5_cross_country_graphs.R] Warning message:
 [04.5_cross_country_graphs.R] In gzfile(file, "rb") :
 [04.5_cross_country_graphs.R]   cannot open compressed file '../output/other_illustr/tables/country_pairwise_point_based_cross_validation.rds', probable reason 'No such file or directory'
-[04.5_cross_country_graphs.R] 04.5 done in 64.7s
-  ✓ PASS  04.5_cross_country_graphs.R                    ( 64.9s)  
+[04.5_cross_country_graphs.R] 04.5 done in 65s
+  ✓ PASS  04.5_cross_country_graphs.R                    ( 65.2s)  
 ----------------------------------------------------------------------
 PHASE 5: RF Optimisation (05.x)
 ----------------------------------------------------------------------
@@ -627,7 +627,7 @@ PHASE 5b: Python ML Scripts
 [06.1_basic_RF_model.py]     Raster predictions written (10,278 valid pixels)
 [06.1_basic_RF_model.py] 
 [06.1_basic_RF_model.py] 06.1 done in 1.6s
-  ✓ PASS  06.1_basic_RF_model.py                         (  3.1s)  
+  ✓ PASS  06.1_basic_RF_model.py                         (  2.9s)  
 [06.2_quantile_RF.py] [1] Loading LSMS data
 [06.2_quantile_RF.py]     Loaded CSV: 3,363 rows
 [06.2_quantile_RF.py]     3,363 farms, 10 features
@@ -669,7 +669,7 @@ PHASE 6: Quantile RF & Prediction Maps (06.x)
 [06.1_quantile_RF.R] ℹ Do you need to adjust the group aesthetic?
 [06.1_quantile_RF.R] pdf 
 [06.1_quantile_RF.R]   2 
-  ✓ PASS  06.1_quantile_RF.R                             (  3.6s)  
+  ✓ PASS  06.1_quantile_RF.R                             (  3.3s)  
 [06.3_prediction_maps.R] Loading required package: tidyverse
 [06.3_prediction_maps.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [06.3_prediction_maps.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -723,7 +723,7 @@ PHASE 6: Quantile RF & Prediction Maps (06.x)
 [06.4_cropland_sensitivity.R] resolution  : 0.5, 0.5  (x, y)
 [06.4_cropland_sensitivity.R] extent      : -18, 52, -35, 15  (xmin, xmax, ymin, ymax)
 [06.4_cropland_sensitivity.R] coord. ref. : lon/lat WGS 84 (EPSG:4326) 
-[06.4_cropland_sensitivity.R] source      : spat_3af6322f5d38_15094_rG2neQku8ByG59H.tif 
+[06.4_cropland_sensitivity.R] source      : spat_3ac44482be25_15044_rG2neQku8ByG59H.tif 
 [06.4_cropland_sensitivity.R] varname     : rf_predictions_africa 
 [06.4_cropland_sensitivity.R] name        : rf_predictions_africa 
 [06.4_cropland_sensitivity.R] min value   :              1.234877 
@@ -740,14 +740,14 @@ PHASE 6: Quantile RF & Prediction Maps (06.x)
 [06.4_cropland_sensitivity.R] null device 
 [06.4_cropland_sensitivity.R]           1 
 [06.4_cropland_sensitivity.R] Warning message:
-[06.4_cropland_sensitivity.R] Removed 1450 rows containing non-finite outside the scale range
+[06.4_cropland_sensitivity.R] Removed 1442 rows containing non-finite outside the scale range
 [06.4_cropland_sensitivity.R] (`stat_density2d_filled()`). 
 [06.4_cropland_sensitivity.R] Warning message:
-[06.4_cropland_sensitivity.R] Removed 1450 rows containing non-finite outside the scale range
+[06.4_cropland_sensitivity.R] Removed 1442 rows containing non-finite outside the scale range
 [06.4_cropland_sensitivity.R] (`stat_density2d_filled()`). 
 [06.4_cropland_sensitivity.R] Saving 7.5 x 5 in image
 [06.4_cropland_sensitivity.R] Warning message:
-[06.4_cropland_sensitivity.R] Removed 1450 rows containing non-finite outside the scale range
+[06.4_cropland_sensitivity.R] Removed 1442 rows containing non-finite outside the scale range
 [06.4_cropland_sensitivity.R] (`stat_density2d_filled()`). 
 [06.4_cropland_sensitivity.R] pdf 
 [06.4_cropland_sensitivity.R]   2 
@@ -756,10 +756,10 @@ PHASE 6: Quantile RF & Prediction Maps (06.x)
 [06.4_cropland_sensitivity.R]   2 
 [06.4_cropland_sensitivity.R] Warning message:
 [06.4_cropland_sensitivity.R] In e1@pntr$arith_rast(e2@pntr, oper, FALSE, opt) :
-[06.4_cropland_sensitivity.R]   GDAL Message 1: /tmp/Rtmpw8gHyT/spat_3af6dd15a75_15094_Py3ptIw2UFUXKtt.tif: Metadata exceeding 32000 bytes cannot be written into GeoTIFF. Transferred to PAM instead.
+[06.4_cropland_sensitivity.R]   GDAL Message 1: /tmp/RtmpM3ppFv/spat_3ac419a5bf1e_15044_Py3ptIw2UFUXKtt.tif: Metadata exceeding 32000 bytes cannot be written into GeoTIFF. Transferred to PAM instead.
 [06.4_cropland_sensitivity.R] Warning message:
 [06.4_cropland_sensitivity.R] In e1@pntr$arith_rast(e2@pntr, oper, FALSE, opt) :
-[06.4_cropland_sensitivity.R]   GDAL Message 1: /tmp/Rtmpw8gHyT/spat_3af666b373f2_15094_8UwxxeZk3QEYL3o.tif: Metadata exceeding 32000 bytes cannot be written into GeoTIFF. Transferred to PAM instead.
+[06.4_cropland_sensitivity.R]   GDAL Message 1: /tmp/RtmpM3ppFv/spat_3ac4599f7dbe_15044_8UwxxeZk3QEYL3o.tif: Metadata exceeding 32000 bytes cannot be written into GeoTIFF. Transferred to PAM instead.
 [06.4_cropland_sensitivity.R] pdf 
 [06.4_cropland_sensitivity.R]   2 
 [06.4_cropland_sensitivity.R] pdf 
@@ -837,7 +837,7 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [07.1_QRF_distribution_eval.R] Saving 7.87 x 5.91 in image
 [07.1_QRF_distribution_eval.R] pdf 
 [07.1_QRF_distribution_eval.R]   2 
-  ✓ PASS  07.1_QRF_distribution_eval.R                   ( 17.8s)  
+  ✓ PASS  07.1_QRF_distribution_eval.R                   ( 17.7s)  
 [08.2_generate_virtual_farms.R] `summarise()` has regrouped the output.
 [08.2_generate_virtual_farms.R] ℹ Summaries were computed grouped by country and region.
 [08.2_generate_virtual_farms.R] ℹ Output is grouped by country.
@@ -867,13 +867,13 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [08.2_generate_virtual_farms.R] # A tibble: 1 × 2
 [08.2_generate_virtual_farms.R]   estim_nb_farms nb_farms
 [08.2_generate_virtual_farms.R]            <dbl>    <dbl>
-[08.2_generate_virtual_farms.R] 1           721. 78900000
+[08.2_generate_virtual_farms.R] 1           729. 78900000
 [08.2_generate_virtual_farms.R] # A tibble: 1 × 2
 [08.2_generate_virtual_farms.R]   estim_nb_farms nb_farms
 [08.2_generate_virtual_farms.R]            <dbl>    <dbl>
-[08.2_generate_virtual_farms.R] 1           721. 78900000
-[08.2_generate_virtual_farms.R] [1] 0.74
-[08.2_generate_virtual_farms.R] [1] 0.05
+[08.2_generate_virtual_farms.R] 1           729. 78900000
+[08.2_generate_virtual_farms.R] [1] 0.73
+[08.2_generate_virtual_farms.R] [1] 0.04
 [08.2_generate_virtual_farms.R] Warning message:
 [08.2_generate_virtual_farms.R] Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 [08.2_generate_virtual_farms.R] ℹ Please use `linewidth` instead. 
@@ -937,8 +937,8 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [08.2_generate_virtual_farms.R] pdf 
 [08.2_generate_virtual_farms.R]   2 
 [08.2_generate_virtual_farms.R] Joining with `by = join_by(country)`
-[08.2_generate_virtual_farms.R] [1] 0.994872
-  ✓ PASS  08.2_generate_virtual_farms.R                  ( 36.3s)  
+[08.2_generate_virtual_farms.R] [1] 0.9945723
+  ✓ PASS  08.2_generate_virtual_farms.R                  ( 37.6s)  
 [08.3_farm_size_classes.R] 1: Removed 147 rows containing non-finite outside the scale range (`stat_ecdf()`). 
 [08.3_farm_size_classes.R] 2: Removed 5 rows containing non-finite outside the scale range (`stat_ecdf()`). 
 [08.3_farm_size_classes.R] pdf 
@@ -1067,108 +1067,108 @@ PHASE 7: Predictions & Validation (07.x – 10.x)
 [09.1_AEZ_characterization.R] Saving 7.5 x 5 in image
 [09.1_AEZ_characterization.R] pdf 
 [09.1_AEZ_characterization.R]   2 
-  ✓ PASS  09.1_AEZ_characterization.R                    (  9.4s)  
+  ✓ PASS  09.1_AEZ_characterization.R                    (  9.5s)  
 [10.1_prepare_validation_data.R]   2 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 8170 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 8232 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 8170 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 8232 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Saving 7.5 x 5 in image
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 8170 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 8232 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] pdf 
 [10.1_prepare_validation_data.R]   2 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 5180 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 5212 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 5180 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 5212 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Saving 7.5 x 5 in image
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 5180 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 5212 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] pdf 
 [10.1_prepare_validation_data.R]   2 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 2590 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 2606 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 2590 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 2606 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Saving 7.5 x 5 in image
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 2590 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 2606 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] pdf 
 [10.1_prepare_validation_data.R]   2 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 4084 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 4115 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 4084 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 4115 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Saving 7.5 x 5 in image
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 4084 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 4115 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] pdf 
 [10.1_prepare_validation_data.R]   2 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 12252 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 12345 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 12252 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 12345 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 12252 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 12345 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Saving 7.5 x 5 in image
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 12252 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 12345 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] pdf 
 [10.1_prepare_validation_data.R]   2 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 7770 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 7818 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 7770 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 7818 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Saving 7.5 x 5 in image
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 7770 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 7818 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] pdf 
 [10.1_prepare_validation_data.R]   2 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 12252 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 12345 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 12252 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 12345 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Saving 7.5 x 5 in image
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 12252 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 12345 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] pdf 
 [10.1_prepare_validation_data.R]   2 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 7770 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 7818 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 7770 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 7818 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] Saving 7.5 x 5 in image
 [10.1_prepare_validation_data.R] Warning message:
-[10.1_prepare_validation_data.R] Removed 7770 rows containing missing values or values outside the scale range
+[10.1_prepare_validation_data.R] Removed 7818 rows containing missing values or values outside the scale range
 [10.1_prepare_validation_data.R] (`geom_line()`). 
 [10.1_prepare_validation_data.R] pdf 
 [10.1_prepare_validation_data.R]   2 
-  ✓ PASS  10.1_prepare_validation_data.R                 ( 18.4s)  
+  ✓ PASS  10.1_prepare_validation_data.R                 ( 18.6s)  
 [10.2_external_validation.R] $`Democratic Republic of the Congo`
 [10.2_external_validation.R] NULL
 [10.2_external_validation.R] 
@@ -1327,8 +1327,8 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [F03_main_figure3.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 [F03_main_figure3.R] null device 
 [F03_main_figure3.R]           1 
-[F03_main_figure3.R] F03 done in 1.1s
-  ✓ PASS  F03_main_figure3.R                             (  1.4s)  
+[F03_main_figure3.R] F03 done in 1.2s
+  ✓ PASS  F03_main_figure3.R                             (  1.5s)  
 [S01_drivers.R] Loading required package: tidyverse
 [S01_drivers.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [S01_drivers.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1342,7 +1342,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S01_drivers.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 [S01_drivers.R] null device 
 [S01_drivers.R]           1 
-[S01_drivers.R] S01_drivers.R done in 1.2s
+[S01_drivers.R] S01_drivers.R done in 1.1s
   ✓ PASS  S01_drivers.R                                  (  1.4s)  
 [S02_cropland_uncertainty.R] Loading required package: tidyverse
 [S02_cropland_uncertainty.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
@@ -1385,8 +1385,8 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S02_cropland_uncertainty.R] Map saved to ../output/other_illustr/graphs/Suppl.Fig02.png
 [S02_cropland_uncertainty.R] Resolution: 1500 by 1050 pixels
 [S02_cropland_uncertainty.R] Size: 10 by 7 inches (150 dpi)
-[S02_cropland_uncertainty.R] S02_cropland_uncertainty.R done in 10.6s
-  ✓ PASS  S02_cropland_uncertainty.R                     ( 10.9s)  
+[S02_cropland_uncertainty.R] S02_cropland_uncertainty.R done in 10.8s
+  ✓ PASS  S02_cropland_uncertainty.R                     ( 11.0s)  
 [S03_aggregate_vs_disaggregate.R] Loading required package: tidyverse
 [S03_aggregate_vs_disaggregate.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [S03_aggregate_vs_disaggregate.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1403,8 +1403,8 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S03_aggregate_vs_disaggregate.R] Ncells 1796300 96.0    2824790 150.9  2824790 150.9
 [S03_aggregate_vs_disaggregate.R] Vcells 2530932 19.4    8388608  64.0  4371051  33.4
 [S03_aggregate_vs_disaggregate.R] Joining with `by = join_by(source)`
-[S03_aggregate_vs_disaggregate.R] S03_aggregate_vs_disaggregate.R done in 31.6s
-  ✓ PASS  S03_aggregate_vs_disaggregate.R                ( 32.8s)  
+[S03_aggregate_vs_disaggregate.R] S03_aggregate_vs_disaggregate.R done in 31.7s
+  ✓ PASS  S03_aggregate_vs_disaggregate.R                ( 32.9s)  
 [S04_RF_hyperparameters.R] Loading required package: tidyverse
 [S04_RF_hyperparameters.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [S04_RF_hyperparameters.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1426,8 +1426,8 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S04_RF_hyperparameters.R]   "line" is not a graphical parameter
 [S04_RF_hyperparameters.R] null device 
 [S04_RF_hyperparameters.R]           1 
-[S04_RF_hyperparameters.R] S04_RF_hyperparameters.R done in 7.7s
-  ✓ PASS  S04_RF_hyperparameters.R                       (  7.9s)  
+[S04_RF_hyperparameters.R] S04_RF_hyperparameters.R done in 7.5s
+  ✓ PASS  S04_RF_hyperparameters.R                       (  7.7s)  
 [S05_RF_unseen_performance.R] Loading required package: tidyverse
 [S05_RF_unseen_performance.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [S05_RF_unseen_performance.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1489,7 +1489,7 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S06_size_class_comparison.R] Warning messages:
 [S06_size_class_comparison.R] 1: `position_dodge()` requires non-overlapping x intervals. 
 [S06_size_class_comparison.R] 2: `position_dodge()` requires non-overlapping x intervals. 
-[S06_size_class_comparison.R] S06 done in 2s
+[S06_size_class_comparison.R] S06 done in 2.1s
   ✓ PASS  S06_size_class_comparison.R                    (  2.3s)  
 [S07_distribution_parameters.R] Loading required package: tidyverse
 [S07_distribution_parameters.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
@@ -1538,8 +1538,8 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S08_variable_importance.R] ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 [S08_variable_importance.R] Loading required package: patchwork
 [S08_variable_importance.R]           used (Mb) gc trigger  (Mb) max used  (Mb)
-[S08_variable_importance.R] Ncells 1795660 95.9    2824800 150.9  2824800 150.9
-[S08_variable_importance.R] Vcells 2529846 19.4    8388608  64.0  4371053  33.4
+[S08_variable_importance.R] Ncells 1795660 95.9    2824802 150.9  2824802 150.9
+[S08_variable_importance.R] Vcells 2529846 19.4    8388608  64.0  4371054  33.4
 [S08_variable_importance.R] Warning message:
 [S08_variable_importance.R] [rast] CRS do not match 
 [S08_variable_importance.R] ℹ tmap modes "plot" - "view"
@@ -1568,8 +1568,8 @@ PHASE 8: Figures & Supplementary (F/S/T)
 [S08_variable_importance.R] Map saved to ../output/other_illustr/graphs/Suppl.Fig08.png
 [S08_variable_importance.R] Resolution: 1050 by 1500 pixels
 [S08_variable_importance.R] Size: 7 by 10 inches (150 dpi)
-[S08_variable_importance.R] S08_variable_importance.R done in 8.3s
-  ✓ PASS  S08_variable_importance.R                      (  8.6s)  
+[S08_variable_importance.R] S08_variable_importance.R done in 8.5s
+  ✓ PASS  S08_variable_importance.R                      (  8.7s)  
 [T01_area_production_tables.R] Loading required package: tidyverse
 [T01_area_production_tables.R] ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 [T01_area_production_tables.R] ✔ dplyr     1.2.0     ✔ readr     2.2.0
@@ -1668,46 +1668,46 @@ TEST SUMMARY
   ✓ PASS  08.1_predictions_by_country.R                     0.0    SKIPPED (download/SLURM/timeout script)
   ✓ PASS  04.4_RF_model_evaluation.R                        0.0    SKIPPED (download/SLURM/timeout script)
   ✓ PASS  01.1_chirps_download.R                            1.8    
-  ✓ PASS  01.3_chirps_trends.R                              4.2    
+  ✓ PASS  01.3_chirps_trends.R                              4.3    
   ✓ PASS  01.4_prepare_spatial_layers.R                     3.1    
   ✓ PASS  02.2_harmonize_farm_area.R                        3.7    
   ✓ PASS  02.3_measured_vs_reported.R                       2.0    
   ✓ PASS  03.1_pooled_data.R                                4.1    
-  ✓ PASS  03.2_correlation_drivers.R                        1.6    
+  ✓ PASS  03.2_correlation_drivers.R                        1.7    
   ✓ PASS  03.3_descriptive_stats.R                          1.6    
-  ✓ PASS  04.1_comparing_ML_algorithms.R                   12.9    
-  ✓ PASS  04.2_RF_within_country.R                          2.6    
-  ✓ PASS  04.3_RF_between_countries.R                      24.0    
-  ✓ PASS  04.5_cross_country_graphs.R                      64.9    
+  ✓ PASS  04.1_comparing_ML_algorithms.R                   13.0    
+  ✓ PASS  04.2_RF_within_country.R                          2.7    
+  ✓ PASS  04.3_RF_between_countries.R                      24.1    
+  ✓ PASS  04.5_cross_country_graphs.R                      65.2    
   ✓ PASS  05.1_RF_optimization.R                            3.6    
   ✓ PASS  05.3_RF_robustness.R                              0.2    
-  ✓ PASS  06.1_basic_RF_model.py                            3.1    
+  ✓ PASS  06.1_basic_RF_model.py                            2.9    
   ✓ PASS  06.2_quantile_RF.py                               1.4    
-  ✓ PASS  06.1_quantile_RF.R                                3.6    
+  ✓ PASS  06.1_quantile_RF.R                                3.3    
   ✓ PASS  06.3_prediction_maps.R                            5.2    
   ✓ PASS  06.4_cropland_sensitivity.R                      15.9    
-  ✓ PASS  07.1_QRF_distribution_eval.R                     17.8    
-  ✓ PASS  08.2_generate_virtual_farms.R                    36.3    
+  ✓ PASS  07.1_QRF_distribution_eval.R                     17.7    
+  ✓ PASS  08.2_generate_virtual_farms.R                    37.6    
   ✓ PASS  08.3_farm_size_classes.R                         63.1    
-  ✓ PASS  09.1_AEZ_characterization.R                       9.4    
-  ✓ PASS  10.1_prepare_validation_data.R                   18.4    
+  ✓ PASS  09.1_AEZ_characterization.R                       9.5    
+  ✓ PASS  10.1_prepare_validation_data.R                   18.6    
   ✓ PASS  10.2_external_validation.R                        9.5    
   ✓ PASS  F01_main_figure1.R                                4.6    
   ✓ PASS  F02_main_figure2.R                                4.4    
-  ✓ PASS  F03_main_figure3.R                                1.4    
+  ✓ PASS  F03_main_figure3.R                                1.5    
   ✓ PASS  S01_drivers.R                                     1.4    
-  ✓ PASS  S02_cropland_uncertainty.R                       10.9    
-  ✓ PASS  S03_aggregate_vs_disaggregate.R                  32.8    
-  ✓ PASS  S04_RF_hyperparameters.R                          7.9    
+  ✓ PASS  S02_cropland_uncertainty.R                       11.0    
+  ✓ PASS  S03_aggregate_vs_disaggregate.R                  32.9    
+  ✓ PASS  S04_RF_hyperparameters.R                          7.7    
   ✓ PASS  S05_RF_unseen_performance.R                       5.1    
   ✓ PASS  S06_size_class_comparison.R                       2.3    
   ✓ PASS  S07_distribution_parameters.R                     5.4    
-  ✓ PASS  S08_variable_importance.R                         8.6    
+  ✓ PASS  S08_variable_importance.R                         8.7    
   ✓ PASS  T01_area_production_tables.R                      1.2    
   ✓ PASS  T02_heterogeneity_drivers.R                       1.2    
 
 ======================================================================
-Total: 46   Passed: 46   Failed: 0   Time: 411s
+Total: 46   Passed: 46   Failed: 0   Time: 414s
 
 Report: ../output/reports/full_pipeline_test_report.md
 
@@ -1717,7 +1717,7 @@ Report: ../output/reports/full_pipeline_test_report.md
 ## Pipeline Report
 # Farm Size Prediction — Full Pipeline CI Report
 
-**Generated:** 2026-04-07 08:18:59 UTC
+**Generated:** 2026-04-07 11:12:20 UTC
 **R Version:** R version 4.3.3 (2024-02-29)
 
 ## Summary
@@ -1727,7 +1727,7 @@ Report: ../output/reports/full_pipeline_test_report.md
 | Total Scripts  | 46 |
 | Passed         | 46 |
 | Failed         | 0 |
-| Total Time     | 411.4s |
+| Total Time     | 413.6s |
 
 ## Per-Script Results
 
@@ -1742,40 +1742,40 @@ Report: ../output/reports/full_pipeline_test_report.md
 | 08.1 | `08.1_predictions_by_country.R` | ✅ PASS | 0s | SKIPPED (download/SLURM/timeout script) |
 | 04.4 | `04.4_RF_model_evaluation.R` | ✅ PASS | 0s | SKIPPED (download/SLURM/timeout script) |
 | 01.1 | `01.1_chirps_download.R` | ✅ PASS | 1.8s |  |
-| 01.3 | `01.3_chirps_trends.R` | ✅ PASS | 4.2s |  |
+| 01.3 | `01.3_chirps_trends.R` | ✅ PASS | 4.3s |  |
 | 01.4 | `01.4_prepare_spatial_layers.R` | ✅ PASS | 3.1s |  |
 | 02.2 | `02.2_harmonize_farm_area.R` | ✅ PASS | 3.7s |  |
 | 02.3 | `02.3_measured_vs_reported.R` | ✅ PASS | 2s |  |
 | 03.1 | `03.1_pooled_data.R` | ✅ PASS | 4.1s |  |
-| 03.2 | `03.2_correlation_drivers.R` | ✅ PASS | 1.6s |  |
+| 03.2 | `03.2_correlation_drivers.R` | ✅ PASS | 1.7s |  |
 | 03.3 | `03.3_descriptive_stats.R` | ✅ PASS | 1.6s |  |
-| 04.1 | `04.1_comparing_ML_algorithms.R` | ✅ PASS | 12.9s |  |
-| 04.2 | `04.2_RF_within_country.R` | ✅ PASS | 2.6s |  |
-| 04.3 | `04.3_RF_between_countries.R` | ✅ PASS | 24s |  |
-| 04.5 | `04.5_cross_country_graphs.R` | ✅ PASS | 64.9s |  |
+| 04.1 | `04.1_comparing_ML_algorithms.R` | ✅ PASS | 13s |  |
+| 04.2 | `04.2_RF_within_country.R` | ✅ PASS | 2.7s |  |
+| 04.3 | `04.3_RF_between_countries.R` | ✅ PASS | 24.1s |  |
+| 04.5 | `04.5_cross_country_graphs.R` | ✅ PASS | 65.2s |  |
 | 05.1 | `05.1_RF_optimization.R` | ✅ PASS | 3.6s |  |
 | 05.3 | `05.3_RF_robustness.R` | ✅ PASS | 0.2s |  |
-| 06.1 | `06.1_basic_RF_model.py` | ✅ PASS | 3.1s |  |
+| 06.1 | `06.1_basic_RF_model.py` | ✅ PASS | 2.9s |  |
 | 06.2 | `06.2_quantile_RF.py` | ✅ PASS | 1.4s |  |
-| 06.1 | `06.1_quantile_RF.R` | ✅ PASS | 3.6s |  |
+| 06.1 | `06.1_quantile_RF.R` | ✅ PASS | 3.3s |  |
 | 06.3 | `06.3_prediction_maps.R` | ✅ PASS | 5.2s |  |
 | 06.4 | `06.4_cropland_sensitivity.R` | ✅ PASS | 15.9s |  |
-| 07.1 | `07.1_QRF_distribution_eval.R` | ✅ PASS | 17.8s |  |
-| 08.2 | `08.2_generate_virtual_farms.R` | ✅ PASS | 36.3s |  |
+| 07.1 | `07.1_QRF_distribution_eval.R` | ✅ PASS | 17.7s |  |
+| 08.2 | `08.2_generate_virtual_farms.R` | ✅ PASS | 37.6s |  |
 | 08.3 | `08.3_farm_size_classes.R` | ✅ PASS | 63.1s |  |
-| 09.1 | `09.1_AEZ_characterization.R` | ✅ PASS | 9.4s |  |
-| 10.1 | `10.1_prepare_validation_data.R` | ✅ PASS | 18.4s |  |
+| 09.1 | `09.1_AEZ_characterization.R` | ✅ PASS | 9.5s |  |
+| 10.1 | `10.1_prepare_validation_data.R` | ✅ PASS | 18.6s |  |
 | 10.2 | `10.2_external_validation.R` | ✅ PASS | 9.5s |  |
 | F01 | `F01_main_figure1.R` | ✅ PASS | 4.6s |  |
 | F02 | `F02_main_figure2.R` | ✅ PASS | 4.4s |  |
-| F03 | `F03_main_figure3.R` | ✅ PASS | 1.4s |  |
+| F03 | `F03_main_figure3.R` | ✅ PASS | 1.5s |  |
 | S01 | `S01_drivers.R` | ✅ PASS | 1.4s |  |
-| S02 | `S02_cropland_uncertainty.R` | ✅ PASS | 10.9s |  |
-| S03 | `S03_aggregate_vs_disaggregate.R` | ✅ PASS | 32.8s |  |
-| S04 | `S04_RF_hyperparameters.R` | ✅ PASS | 7.9s |  |
+| S02 | `S02_cropland_uncertainty.R` | ✅ PASS | 11s |  |
+| S03 | `S03_aggregate_vs_disaggregate.R` | ✅ PASS | 32.9s |  |
+| S04 | `S04_RF_hyperparameters.R` | ✅ PASS | 7.7s |  |
 | S05 | `S05_RF_unseen_performance.R` | ✅ PASS | 5.1s |  |
 | S06 | `S06_size_class_comparison.R` | ✅ PASS | 2.3s |  |
 | S07 | `S07_distribution_parameters.R` | ✅ PASS | 5.4s |  |
-| S08 | `S08_variable_importance.R` | ✅ PASS | 8.6s |  |
+| S08 | `S08_variable_importance.R` | ✅ PASS | 8.7s |  |
 | T01 | `T01_area_production_tables.R` | ✅ PASS | 1.2s |  |
 | T02 | `T02_heterogeneity_drivers.R` | ✅ PASS | 1.2s |  |
