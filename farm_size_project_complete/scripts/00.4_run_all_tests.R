@@ -311,11 +311,6 @@ patch_script <- function(lines) {
   # F02/F03/S02: guard ssa plot calls - if(nrow(ssa)>0) avoids syntax breakage
   lines <- gsub("terra::plot(ssa, ",
     "if(nrow(ssa)>0) terra::plot(ssa, ", lines, fixed = TRUE)
-  # 5y. S02: tmap legend NA crash
-  lines <- gsub("tmap::tm_layout(",
-    "tmap::tm_layout(legend.show=FALSE, ", lines, fixed = TRUE)
-  lines <- gsub("+ tm_layout(",
-    "+ tm_layout(legend.show=FALSE, ", lines, fixed = TRUE)
   # 5z. S08: terra::crs() on data.frame theor_farms
   lines <- gsub("terra::crs(gini) <- terra::crs(theor_farms)",
     "terra::crs(gini) <- 'EPSG:4326'; gini <- tryCatch(terra::resample(gini, theor_rast), error=function(e) gini)", lines, fixed = TRUE)

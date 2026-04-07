@@ -624,6 +624,19 @@ message("   fsize_distribution_resample_long.rds stub written.")
   terra::writeRaster(gini_r, file.path(processed_path,"gini_raster.tif"), overwrite=TRUE)
 }
 
+# back_transf_trunc_adj_mean/sd.tif — read by S07
+{
+  r_base <- terra::rast(ssa_ext, res = res_pred, crs = "EPSG:4326")
+  n_cells <- terra::ncell(r_base)
+  back_avg_r <- r_base; terra::values(back_avg_r) <- pmax(0.3, rnorm(n_cells, 1.5, 0.8))
+  names(back_avg_r) <- "adjusted_logn_mean"
+  terra::writeRaster(back_avg_r, file.path(processed_path,"back_transf_trunc_adj_mean.tif"), overwrite=TRUE)
+  back_sd_r <- r_base; terra::values(back_sd_r) <- pmax(0.5, rnorm(n_cells, 2.5, 0.6))
+  names(back_sd_r) <- "adjusted_logn_sd"
+  terra::writeRaster(back_sd_r, file.path(processed_path,"back_transf_trunc_adj_sd.tif"), overwrite=TRUE)
+  message("   back_transf raster stubs done.")
+}
+
 # RF model stub (pre-trained, used by some scripts before 06.1 runs)
 if (requireNamespace("ranger", quietly=TRUE)) {
   mini <- lsms_ml[sample(nrow(lsms_ml),min(200,nrow(lsms_ml))),]
