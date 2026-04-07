@@ -1,7 +1,7 @@
 # Report: S01_drivers.R
 
-**Generated:** 2026-04-07 21:38:32 UTC
-**Elapsed:** 10.8s
+**Generated:** 2026-04-07 21:58:38 UTC
+**Elapsed:** 11.2s
 **Purpose:** Supp Fig 1: spatial distributions of predictor variables (9 predictors + 3 cropland layers)
 
 ## Inputs

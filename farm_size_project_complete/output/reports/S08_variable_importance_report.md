@@ -1,13 +1,14 @@
 # Report: S08_variable_importance.R
 
-**Generated:** 2026-04-07 21:39:52 UTC
-**Elapsed:** 8.6s
-**Purpose:** Supp Fig 8: RF variable importance
+**Generated:** 2026-04-07 21:59:54 UTC
+**Elapsed:** 1.9s
+**Purpose:** Supp Fig 8: RF variable importance — lollipop (ExtraTrees) + per-country rank heatmap
 
 ## Inputs
 
-_No file inputs._
+- **cross_validation_graphs**: `../data/processed/cross_validation_graphs.rds` ✅ (3,396 B)
+- **etr_variable_importance**: `../output/other_illustr/tables/etr_variable_importance.csv` ✅ (311 B)
 
 ## Outputs
 
-- **PNG**: `../output/other_illustr/graphs/Suppl.Fig08.png` ✅ written (271,901 B)
+- **PNG**: `../output/other_illustr/graphs/Suppl.Fig08.png` ✅ written (201,058 B)
