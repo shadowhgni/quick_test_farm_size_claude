@@ -228,10 +228,7 @@ jobs:
           git config user.name "CI Bot"
           # Commit ci-logs AND all output figures/tables so they appear in the repo
           git add ${PROJECT}/ci-logs/
-          git add ${PROJECT}/output/main_fig/ 2>/dev/null || true
-          git add ${PROJECT}/output/suppl_fig/ 2>/dev/null || true
-          git add ${PROJECT}/output/other_illustr/ 2>/dev/null || true
-          git add ${PROJECT}/output/reports/ 2>/dev/null || true
+          git add -A ${PROJECT}/output/
           git diff --cached --quiet || \
             git commit -m "ci: update test log [skip ci]"
           # Stash any remaining unstaged output files before rebase
