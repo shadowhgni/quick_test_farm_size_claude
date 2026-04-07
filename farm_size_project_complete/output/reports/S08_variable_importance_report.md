@@ -1,7 +1,7 @@
 # Report: S08_variable_importance.R
 
-**Generated:** 2026-04-07 11:12:17 UTC
-**Elapsed:** 8.5s
+**Generated:** 2026-04-07 11:42:24 UTC
+**Elapsed:** 8.7s
 **Purpose:** Supp Fig 8: RF variable importance
 
 ## Inputs
@@ -10,4 +10,4 @@ _No file inputs._
 
 ## Outputs
 
-- **PNG**: `../output/other_illustr/graphs/Suppl.Fig08.png` ✅ written (259,857 B)
+- **PNG**: `../output/other_illustr/graphs/Suppl.Fig08.png` ✅ written (257,970 B)
