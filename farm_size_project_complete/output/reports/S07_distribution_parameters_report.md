@@ -1,7 +1,7 @@
 # Report: S07_distribution_parameters.R
 
-**Generated:** 2026-04-07 07:53:07 UTC
-**Elapsed:** 4.2s
+**Generated:** 2026-04-07 08:18:48 UTC
+**Elapsed:** 4.3s
 **Purpose:** Supp Fig 7: distribution fitting parameters
 
 ## Inputs

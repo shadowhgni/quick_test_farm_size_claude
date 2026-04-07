@@ -1,7 +1,7 @@
 # Report: S03_aggregate_vs_disaggregate.R
 
-**Generated:** 2026-04-07 07:52:46 UTC
-**Elapsed:** 31.2s
+**Generated:** 2026-04-07 08:18:27 UTC
+**Elapsed:** 31.6s
 **Purpose:** Supp Fig 3: country vs GADM1 aggregation comparison
 
 ## Inputs
