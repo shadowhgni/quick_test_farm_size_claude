@@ -1,192 +1,106 @@
 # ==============================================================================
 # Script: S08_variable_importance.R
 # Project: Farm Size Prediction Across Sub-Saharan Africa
-# Purpose: Supplementary Figure 8 - RF variable importance analysis
+# Purpose: Supplementary Figure 8 — RF variable importance
+#          Panel A: lollipop chart — overall relative importance (ExtraTrees)
+#          Panel B: heatmap — per-country importance rank (LOO RF)
 #
-# Authors: Deo, Joao, Robert, Fred
-# Code documentation: Claude (Anthropic) - February 2026
+# PRODUCTION inputs:
+#   ../data/processed/cross_validation_graphs.rds  ($var_importance_table)
+#   ../output/other_illustr/tables/etr_variable_importance.csv
+#
+# CI: stubs from 04.5 and 06.1.py
+# Output: ../output/other_illustr/graphs/Suppl.Fig08.png
 # ==============================================================================
-
 
 source("00_report_utils.R")
 t0 <- proc.time()[["elapsed"]]
 require(tidyverse)
 require(patchwork)
+setwd(paste0(here::here(), "/scripts"))
+dir.create("../output/other_illustr/graphs", recursive = TRUE, showWarnings = FALSE)
 
-# Clean environment
-rm(list = setdiff(ls(), c("t0","write_report","capture_output","ci_trees","ci_folds")))
+sixteen_countries    <- c("Benin","Burkina","Cote_d_Ivoire","Ethiopia","Ghana","Guinea_Bissau",
+                           "Malawi","Mali","Niger","Nigeria","Rwanda","Senegal",
+                           "Tanzania","Togo","Uganda","Zambia")
+sixteen_country_codes <- c("BEN","BFA","CIV","ETH","GHA","GNB","MWI","MLI",
+                            "NER","NGA","RWA","SEN","TZA","TGO","UGA","ZMB")
 
-# # Set working directory
-# setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
+var_labels <- c(cropland            = "Cropland",
+                cattle              = "Cattle density",
+                pop                 = "Population density",
+                cropland_per_capita = "Cropland per capita",
+                sand                = "Sand content",
+                slope               = "Terrain slope",
+                temperature         = "Temperature",
+                rainfall            = "Precipitation",
+                maizeyield          = "Water-limited maize yield",
+                market              = "Distance to nearest town")
 
-# # Set working directory
-# setwd(paste0(here::here(), '/scripts'))
-dir.create('../output/other_illustr/graphs', recursive = TRUE, showWarnings = FALSE)
+# ── Load data ─────────────────────────────────────────────────────────────────
+xx <- readRDS("../data/processed/cross_validation_graphs.rds")
+var_importance_table <- xx$var_importance_table |>
+  mutate(var = dplyr::recode(var, !!!var_labels)) |>
+  inner_join(tibble(country = sixteen_countries, GID_0 = sixteen_country_codes),
+             by = "country")
+rm(xx)
 
-# ------------------------------------------------------------------------------
-# Preparation for functions and mapping
-input_path <- '../data/raw/spatial'
-country <- geodata::world(path=input_path, resolution=5, level=0)
-isocodes <- geodata::country_codes()
-isocodes_ssa <- subset(isocodes, NAME=='Sudan' | UNREGION1=='Middle Africa' | UNREGION1=='Western Africa' | UNREGION1=='Southern Africa' | UNREGION1=='Eastern Africa')
-isocodes_ssa <- subset(isocodes_ssa, NAME!='Cabo Verde' & NAME!='Comoros' & NAME!='Mauritius' & NAME!='Mayotte' & NAME!='Réunion' & NAME!='Saint Helena' & NAME!='São Tomé and Príncipe' & NAME!='Seychelles') # keep the mainland + Madagascar only, remove islands
-ssa <- subset(country, country$GID_0 %in% isocodes_ssa$ISO3)
-pal1 <- colorRampPalette(c('darkred', 'orange', 'gold', 'darkolivegreen3', 'darkgreen'))
-pal2 <- colorRampPalette(c('#c6dbef','#6baed6','#3182bd', '#08519c', '#08306b'))
-pal3 <- colorRampPalette(c('lightskyblue1', 'blue4'))
-pal4 <- colorRampPalette(c('#A1D99B', '#00441B')) # RColorBrewer::brewer.pal(9,'Greens')
-pal5 <- colorRampPalette(c('#FFFFCC', '#800026'))
-pal6 <- colorRampPalette(c('#F0F921FF', '#0D0887FF'))
-pal7 <- colorRampPalette(c('#C7EAE5', '#01665E'))
-pal8 <- viridis::plasma(6)
-pal9 <- colorRampPalette(c('#F1605DFF', '#FD9567FF', '#FEC98DFF', '#FCFDBFFF'))
-# force terra to use disk-based processing and 50% of RAM (Use this if R crashes because of limited memory)
-terra::terraOptions(memfrac = 0.5, todisk = T)
-gc()
-# ------------------------------------------------------------------------------
-#define the countries for which LSMS data are available
-sixteen_countries <- c('Benin', 'Burkina', 'Cote_d_Ivoire', 'Ethiopia', 'Ghana', 'Guinea_Bissau', 'Malawi', 'Mali', 'Niger', 'Nigeria', 'Rwanda','Senegal', 'Tanzania', 'Togo', 'Uganda', 'Zambia')
-sixteen_country_codes <- c('BEN', 'BFA', 'CIV', 'ETH', 'GHA', 'GNB', 'MWI', 'MLI', 'NER', 'NGA', 'RWA', 'SEN', 'TZA', 'TGO', 'UGA', 'ZMB')
-# ------------------------------------------------------------------------------
-# Prepare data rasters: lsms and predictions + virtual list of farm sizes
-stacked <- terra::rast('../data/processed/stacked_rasters_africa.tif')
-rf_model_predictions <- terra::rast('../data/processed/rf_model_predictions_SSA.tif')
-names(rf_model_predictions) <- 'pred_farm_area_ha'
-qrf_model_predictions <- terra::rast('../data/processed/qrf_100quantiles_predictions_africa.tif')
-names(qrf_model_predictions) <- paste0('qrf_q', sprintf('%03g', 1:100))
-mask_forest_ssa <- terra::rast('../data/processed/mask_forest_ssa.tif')
-mask_drylands_ssa <- terra::rast('../data/processed/mask_drylands_ssa.tif')
+var_imp <- read.csv("../output/other_illustr/tables/etr_variable_importance.csv") |>
+  mutate(Variable = dplyr::recode(Variable, !!!var_labels)) |>
+  arrange(-Importance)
 
-xx <- readRDS('../data/processed/fsize_distribution_resample_long.rds')
-theor_farms <- xx$theor_farms
-theor_farms_application <- xx$theor_farms_application; rm(xx)
+# ── Panel A: lollipop — overall importance ────────────────────────────────────
+P00 <- ggplot(var_imp, aes(reorder(Variable, Importance), 100 * Importance)) +
+  geom_segment(y = 0, aes(yend = 100 * Importance)) +
+  geom_point() +
+  labs(x = "Feature", y = "Relative importance (%)") +
+  coord_flip() +
+  geom_text(x = 1.5, y = 19, label = "A)", size = 8) +
+  theme_test() +
+  theme(axis.title   = element_text(size = 17),
+        axis.text    = element_text(size = 13, colour = "grey25"),
+        axis.ticks.y = element_blank(),
+        title        = element_text(size = 14),
+        plot.margin  = margin(3, 5, 20, 3))
 
-theor_rast <- theor_farms |>
-  ungroup() |>
-  select(x, y, skew, kurt, 
-         ks_trunc_D, ks_trunc_pval, 
-         adjusted_logn_mean, adjusted_logn_sd) |>
-  terra::rast()
-gini <- terra::rast('../data/processed/gini_raster.tif')
-terra::crs(gini) <- terra::crs(theor_farms)
+# ── Panel B: heatmap — per-country rank ───────────────────────────────────────
+P01 <- ggplot(var_importance_table, aes(GID_0, var, fill = rank)) +
+  geom_raster() +
+  geom_text(aes(label = rank), size = 6) +
+  geom_hline(yintercept = seq(0.5, 9.5, by = 1)) +
+  geom_vline(xintercept = seq(0.5, 15.5, by = 1)) +
+  geom_text(x = 1, y = 11.5, label = "B)", size = 8) +
+  labs(x = "Country", y = "Feature", fill = "Rank  ") +
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0)) +
+  scale_fill_continuous(low = "steelblue1", high = "grey95", breaks = c(1, 5, 10)) +
+  coord_cartesian(clip = "off") +
+  theme_test() +
+  theme(axis.title        = element_text(size = 17),
+        axis.text         = element_text(size = 13, colour = "grey25"),
+        axis.text.x       = element_text(angle = -90, hjust = 1),
+        axis.ticks        = element_blank(),
+        legend.text       = element_text(size = 14),
+        legend.title      = element_text(size = 15),
+        legend.key.width  = unit(0.5, "in"),
+        legend.position   = "top",
+        legend.justification = "right",
+        legend.direction  = "horizontal",
+        title             = element_text(size = 14),
+        plot.margin       = margin(20, 5, 3, 3))
 
-back_avg <- terra::rast('../data/processed/back_transf_trunc_adj_mean.tif')
-terra::crs(back_avg) <- terra::crs(theor_farms)
-
-back_sd <- terra::rast('../data/processed/back_transf_trunc_adj_sd.tif')
-terra::crs(back_sd) <- terra::crs(theor_farms)
-
-selected_rast <- c(theor_rast$skew, gini, 
-                   back_avg, back_sd,
-                   theor_rast$ks_trunc_D, theor_rast$ks_trunc_pval)
-names(selected_rast) <- c('skew', 'gini', 
-                          'adjusted_logn_mean', 'adjusted_logn_sd', 
-                          'ks_trunc_D', 'ks_trunc_pval')
-# Prepare lsms data
-lsms_spatial <-  readRDS('../data/processed/lsms_trimmed_95th_africa.rds') # this was retrieved from '03.1.pooled_data_for_analysis.r'
-
-# ------------------------------------------------------------------------------
-# Initialize plot list
-tmap_list <- list()
-
-# Set tmap to plot mode
-tmap::tmap_mode('plot')
-tmap::tmap_options(component.autoscale = FALSE, asp = 1)
-
-for(i in names(selected_rast)){
-  my_range <- case_when(i == 'skew' ~ c(0, 6),
-                        i == 'gini' ~ c(0.4, 0.6),
-                        i == 'ks_trunc_D' ~ c(0, 0.16),
-                        i == 'ks_trunc_pval' ~ c(0.05, 1),
-                        i == 'adjusted_logn_mean' ~ c(0, 5),
-                        i == 'adjusted_logn_sd' ~ c(1, 5) )
-  
-  my_label <- case_when(i == 'skew' ~ 'Skewness of empirical\nfarm size distribution',
-                        i == 'gini' ~ 'Gini coef of empirical\nfarm size distribution',
-                        i == 'ks_trunc_D' ~ "Goodness of fit\nKolmogorov's D distance",
-                        i == 'ks_trunc_pval' ~ 'Goodness of fit\nP-value',
-                        i == 'adjusted_logn_mean' ~ 'Average (back-transformed)\nfarm size (ha)',
-                        i == 'adjusted_logn_sd' ~ 'Standard deviation (back-transformed)\nof farm size (ha)' )
-  
-  my_tag <- case_when(i == 'skew' ~ 'A',
-                      i == 'gini' ~ 'B',
-                      i == 'ks_trunc_D' ~ 'E',
-                      i == 'ks_trunc_pval' ~ 'F',
-                      i == 'adjusted_logn_mean' ~ 'C',
-                      i == 'adjusted_logn_sd' ~ 'D' )
-  
-  my_col <- case_when(i == 'skew' ~ rev(pal1(10)),
-                      i == 'gini' ~ rev(pal1(10)),
-                      i == 'ks_trunc_D' ~ rev(pal1(10)),
-                      i == 'ks_trunc_pval' ~ pal1(10),
-                      i == 'adjusted_logn_mean' ~ pal1(10),
-                      i == 'adjusted_logn_sd' ~ rev(pal1(10)) )
-  
-  # Create tmap with continuous legend and capped colors
-  p <- tmap::tm_shape(selected_rast[[i]]) +
-    tmap::tm_raster(
-      col.scale = tmap::tm_scale_continuous(
-        values = my_col,
-        limits = my_range,               # Values above my_range[2] get same color as max
-        outliers.trunc = c(TRUE, TRUE),  # Truncate low/high outliers to threshold values
-        n = 3
-        # ticks = my_range,
-        # labels = my_range
-      ),
-      col.legend = tmap::tm_legend(
-        title = my_label,
-        # width = 5,
-        # height = 4,
-        frame = FALSE,
-        text.size = 1,
-        title.size = 0.01,
-        title.align = 'left'
-        )
-    ) +
-    tmap::tm_shape(sf::st_as_sf(ssa), crs = terra::crs(ssa)) +
-    tmap::tm_borders(col = "black", lwd = 0.5) +
-    tmap::tm_graticules(
-      x = seq(-20, 60, by = 10),   # Longitude lines every 10 degrees
-      y = seq(-40, 20, by = 10),   # Latitude lines every 10 degrees
-      col = "gray70",
-      lwd = 0.3,
-      alpha = 0.7,
-      labels.size = 0.6,
-      labels.col = "gray50"
-    ) +
-    tmap::tm_layout(
-      frame = FALSE,
-      bg.color = 'whitesmoke',
-      legend.position = c('left', 'bottom'),
-      legend.frame = FALSE,
-      legend.bg.color = 'transparent',
-      legend.frame.lwd = 0,
-      legend.width = 4.2,
-      legend.height = 9
-    ) +
-    tmap::tm_credits(my_tag, 
-                     position = tmap::tm_pos_in("right", "top"),
-                     size = 1.5)
-  
-  # Store the tmap plot
-  tmap_list[[i]] <- p
-}
-
-# Combine all plots in a grid
-combined_plot <- tmap::tmap_arrange(tmap_list, ncol = 2)
-
-# Save combined plot
-tmap::tmap_save(combined_plot, '../output/other_illustr/graphs/Suppl.Fig08.png', 
-                width = 7, height = 10, units = 'in', dpi = 150)
-# No PDF conversion (ImageMagick policy blocked) — PNG is the final output; message('CI: PDF write skipped (ImageMagick policy), PNG available')
+P02 <- P00 / P01 + patchwork::plot_layout(ncol = 1, heights = c(1, 2))
+ggsave("../output/other_illustr/graphs/Suppl.Fig08.png",
+       P02, width = 9, height = 9, units = "in", dpi = 200)
 
 # ── Report ────────────────────────────────────────────────────────────────────
 elapsed <- proc.time()[["elapsed"]] - t0
 write_report(
   "S08_variable_importance.R",
-  "Supp Fig 8: RF variable importance",
+  "Supp Fig 8: RF variable importance — lollipop (ExtraTrees) + per-country rank heatmap",
+  inputs  = list(
+    "cross_validation_graphs" = "../data/processed/cross_validation_graphs.rds",
+    "etr_variable_importance" = "../output/other_illustr/tables/etr_variable_importance.csv"),
   outputs = list("PNG" = "../output/other_illustr/graphs/Suppl.Fig08.png"),
-  elapsed_sec = elapsed
-)
-message("S08_variable_importance.R done in ", round(elapsed,1), "s")
+  elapsed_sec = elapsed)
+message("S08_variable_importance.R done in ", round(elapsed, 1), "s")
