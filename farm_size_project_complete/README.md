@@ -7,20 +7,14 @@ Machine learning models for predicting farm sizes across Sub-Saharan Africa usin
 
 ## 📋 Overview
 
-This project develops Random Forest and Quantile Regression Forest models to predict farm sizes across Sub-Saharan Africa, trained on household survey data from 16 countries and applied continent-wide.
+This project develops Random Forest and Quantile Regression Forest models to predict farm size distributions and number of farms across Sub-Saharan Africa, trained on household survey data from 16 countries and applied continent-wide.
 
 - **Survey Data:** Living Standards Measurement Study (LSMS) household surveys (~180,000 farms)
 - **Spatial Predictors:** Cropland, population density, climate, soil, market access, and more
 
 ## 🚀 Quick Start
 
-### Option 1: Run with GitHub Actions (No Local Setup)
-
-1. Fork this repository
-2. Push any change to trigger the workflow (or use the **Run workflow** button in the Actions tab)
-3. The pipeline runs on **synthetic stub data** — small, fast stand-ins that exercise every script end-to-end without requiring real survey or spatial data
-
-### Option 2: Run Locally with Synthetic Data
+### Option 1: Run Locally with Synthetic Data
 
 The test suite uses synthetic stubs (randomly generated data that mimic the structure of real inputs). This is the fastest way to verify that the code runs correctly on your machine. It does **not** reproduce the actual scientific results.
 
@@ -32,6 +26,12 @@ cd quick_test_farm_size_claude/farm_size_project_complete/scripts
 # Generate synthetic stubs and run the full pipeline
 Rscript 00.4_run_all_tests.R
 ```
+
+### Option 2: Run with GitHub Actions (No Local Setup)
+
+1. Fork this repository
+2. Push any change to trigger the workflow (or use the **Run workflow** button in the Actions tab)
+3. The pipeline runs on **synthetic stub data** — small, fast stand-ins that exercise every script end-to-end without requiring real survey or spatial data
 
 ### Option 3: Full Pipeline with Real Data
 
@@ -74,8 +74,6 @@ farm_size_project_complete/
 └── README.md
 ```
 
-> **Note on script numbering:** scripts are numbered in execution order. Gaps (e.g. no 07.1) reflect intermediate scripts that are not part of this public release.
-
 ## 📊 Data Requirements
 
 ### Auto-Downloaded (via `geodata` package)
@@ -99,12 +97,9 @@ Travel time data are from: Nelson A., Weiss D.J., van Etten J., Cattaneo A., McM
 |------|--------|------|
 | SPAM 2020 | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/SWPENT) | `data/raw/spatial/spam/spam2020/` |
 | Cattle density | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GIVQ75) | `data/raw/spatial/cattle-density/` |
-| Wealth index | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/5OGWYM) | `data/raw/spatial/poverty/` |
 | Du et al. 2025 Livestock | [Zenodo](https://zenodo.org/records/17128483) | `data/raw/spatial/livestock-du2025/` |
 | LSMS surveys | [World Bank](https://www.worldbank.org/en/programs/lsms) | `data/raw/web_scrapped/survey_data/` |
 | Lowder et al. 2021 census data | [FAO / Lowder et al. 2021](https://doi.org/10.1016/j.worlddev.2021.105455) | `data/raw/web_scrapped/` |
-
-> You do not need to download entire datasets — a country-level subset is sufficient for most scripts.
 
 ## 🔧 Installation
 
