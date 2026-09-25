@@ -20,8 +20,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_1,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_1,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_1,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_1,BEN,Benin,Africa,10867427.42887114,285.500293838861,0.06281681160315439,73645.47875615754
-2015,cities_1,BFA,Burkina Faso,Africa,4523037.127977063,945.2009273177491,0.0,10028.252431389818
+2015,cities_1,BEN,Benin,Africa,10896444.14114283,262.29713120931547,0.18250215797041214,44628.76648446717
+2015,cities_1,BFA,Burkina Faso,Africa,4529248.939294505,920.0706130105108,0.0,3816.44111394597
 2015,cities_1,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_1,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_1,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -86,7 +86,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_1,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_1,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_1,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_1,GHA,Ghana,Africa,13909866.05237951,522.6638388027402,0.0,167936.0195445848
+2015,cities_1,GHA,Ghana,Africa,13928650.068264222,501.1217445291826,0.0,149152.00365987245
 2015,cities_1,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_1,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_1,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -163,9 +163,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_1,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_1,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_1,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_1,NER,Niger,Africa,2680599.6870040265,889.843349517557,0.0,11973.466681458056
+2015,cities_1,NER,Niger,Africa,2682150.73959392,861.2562654379376,0.0,10422.414091564715
 2015,cities_1,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_1,NGA,Nigeria,Africa,27319060.321504727,139.8257541063555,0.5909820597018793,44892.816184935196
+2015,cities_1,NGA,Nigeria,Africa,27346452.044691764,114.86157859225663,0.6060830087713891,17501.092997901644
 2015,cities_1,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_1,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_1,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -222,7 +222,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_1,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_1,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_1,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_1,TGO,Togo,Africa,7440709.179396702,397.97685755622007,0.0,11085.178784229181
+2015,cities_1,TGO,Togo,Africa,7446342.32149036,371.01452324336685,0.0,5452.036690570734
 2015,cities_1,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_1,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_1,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -277,8 +277,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_10,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_10,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_10,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_10,BEN,Benin,Africa,10867427.42887114,27.228817987074986,0.8593935718898369,73645.47875615754
-2015,cities_10,BFA,Burkina Faso,Africa,4523037.127977063,78.49568398588771,0.5980084864460843,10028.252431389818
+2015,cities_10,BEN,Benin,Africa,10896444.14114283,15.5225614036196,0.9221237245565479,44628.76648446717
+2015,cities_10,BFA,Burkina Faso,Africa,4529248.939294505,59.68076788404891,0.6503486680495182,3816.44111394597
 2015,cities_10,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_10,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_10,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -343,7 +343,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_10,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_10,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_10,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_10,GHA,Ghana,Africa,13909866.05237951,11.661245539451526,0.961790341360559,167936.0195445848
+2015,cities_10,GHA,Ghana,Africa,13928650.068264222,10.356422029723955,0.9689780697344086,149152.00365987245
 2015,cities_10,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_10,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_10,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -420,9 +420,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_10,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_10,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_10,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_10,NER,Niger,Africa,2680599.6870040265,68.30935982831045,0.5653256060422703,11973.466681458056
+2015,cities_10,NER,Niger,Africa,2682150.73959392,52.971217634875586,0.6449299447836999,10422.414091564715
 2015,cities_10,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_10,NGA,Nigeria,Africa,27319060.321504727,18.02324710563185,0.9241313769200126,44892.816184935196
+2015,cities_10,NGA,Nigeria,Africa,27346452.044691764,5.869666902110895,0.97004964300628,17501.092997901644
 2015,cities_10,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_10,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_10,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -479,7 +479,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_10,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_10,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_10,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_10,TGO,Togo,Africa,7440709.179396702,29.578863640897847,0.8488300272120632,11085.178784229181
+2015,cities_10,TGO,Togo,Africa,7446342.32149036,15.47559649923538,0.9127109546147583,5452.036690570734
 2015,cities_10,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_10,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_10,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -534,8 +534,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_11,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_11,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_11,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_11,BEN,Benin,Africa,10867427.42887114,35.104892547376465,0.7966025176455186,73645.47875615754
-2015,cities_11,BFA,Burkina Faso,Africa,4523037.127977063,108.39140922386038,0.4199633978888552,10028.252431389818
+2015,cities_11,BEN,Benin,Africa,10896444.14114283,22.887262544955085,0.8551416603588761,44628.76648446717
+2015,cities_11,BFA,Burkina Faso,Africa,4529248.939294505,89.80416540410991,0.46252396106618493,3816.44111394597
 2015,cities_11,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_11,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_11,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -600,7 +600,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_11,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_11,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_11,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_11,GHA,Ghana,Africa,13909866.05237951,18.201934324459252,0.9200779105338417,167936.0195445848
+2015,cities_11,GHA,Ghana,Africa,13928650.068264222,16.87001481159138,0.926746779848584,149152.00365987245
 2015,cities_11,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_11,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_11,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -677,9 +677,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_11,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_11,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_11,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_11,NER,Niger,Africa,2680599.6870040265,98.59148088377556,0.44022271978182653,11973.466681458056
+2015,cities_11,NER,Niger,Africa,2682150.73959392,79.18314838028877,0.47691081610092306,10422.414091564715
 2015,cities_11,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_11,NGA,Nigeria,Africa,27319060.321504727,22.286617847728493,0.9075855299028939,44892.816184935196
+2015,cities_11,NGA,Nigeria,Africa,27346452.044691764,8.041338236203021,0.9547490052199884,17501.092997901644
 2015,cities_11,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_11,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_11,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -736,7 +736,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_11,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_11,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_11,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_11,TGO,Togo,Africa,7440709.179396702,35.49859255701978,0.8079604911306123,11085.178784229181
+2015,cities_11,TGO,Togo,Africa,7446342.32149036,20.885888164376844,0.8674022107901743,5452.036690570734
 2015,cities_11,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_11,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_11,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -791,8 +791,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_12,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_12,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_12,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_12,BEN,Benin,Africa,10867427.42887114,18.020602131353538,0.9028789583973192,73645.47875615754
-2015,cities_12,BFA,Burkina Faso,Africa,4523037.127977063,47.1633759643298,0.7372493418058306,10028.252431389818
+2015,cities_12,BEN,Benin,Africa,10896444.14114283,8.726780927281863,0.9639199984676684,44628.76648446717
+2015,cities_12,BFA,Burkina Faso,Africa,4529248.939294505,33.57888541461123,0.8007718913013976,3816.44111394597
 2015,cities_12,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_12,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_12,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -857,7 +857,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_12,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_12,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_12,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_12,GHA,Ghana,Africa,13909866.05237951,7.841466808134843,0.9743770655614729,167936.0195445848
+2015,cities_12,GHA,Ghana,Africa,13928650.068264222,6.588552340324341,0.9800897993692942,149152.00365987245
 2015,cities_12,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_12,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_12,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -934,9 +934,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_12,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_12,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_12,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_12,NER,Niger,Africa,2680599.6870040265,43.84325225755205,0.7225640162352174,11973.466681458056
+2015,cities_12,NER,Niger,Africa,2682150.73959392,34.230118103917476,0.7833441067161184,10422.414091564715
 2015,cities_12,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_12,NGA,Nigeria,Africa,27319060.321504727,10.361443644310857,0.9528590144739572,44892.816184935196
+2015,cities_12,NGA,Nigeria,Africa,27346452.044691764,3.295507398704744,0.9850821758996234,17501.092997901644
 2015,cities_12,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_12,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_12,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -993,7 +993,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_12,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_12,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_12,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_12,TGO,Togo,Africa,7440709.179396702,19.344188612919588,0.896131145615497,11085.178784229181
+2015,cities_12,TGO,Togo,Africa,7446342.32149036,8.851254713489928,0.9617947357008787,5452.036690570734
 2015,cities_12,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_12,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_12,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -1048,8 +1048,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_2,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_2,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_2,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_2,BEN,Benin,Africa,10867427.42887114,183.80777458121918,0.3221302333179396,73645.47875615754
-2015,cities_2,BFA,Burkina Faso,Africa,4523037.127977063,448.59122750202727,0.0,10028.252431389818
+2015,cities_2,BEN,Benin,Africa,10896444.14114283,169.07564770252046,0.3475348275041952,44628.76648446717
+2015,cities_2,BFA,Burkina Faso,Africa,4529248.939294505,431.27002969360365,0.0,3816.44111394597
 2015,cities_2,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_2,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_2,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -1114,7 +1114,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_2,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_2,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_2,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_2,GHA,Ghana,Africa,13909866.05237951,189.46720099284755,0.4943044689159157,167936.0195445848
+2015,cities_2,GHA,Ghana,Africa,13928650.068264222,183.44947356772096,0.49757207609886556,149152.00365987245
 2015,cities_2,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_2,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_2,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -1191,9 +1191,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_2,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_2,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_2,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_2,NER,Niger,Africa,2680599.6870040265,182.30878101546827,0.2029798582747768,11973.466681458056
+2015,cities_2,NER,Niger,Africa,2682150.73959392,163.68701390160538,0.20515064917228934,10422.414091564715
 2015,cities_2,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_2,NGA,Nigeria,Africa,27319060.321504727,118.36749632121717,0.24900196439000907,44892.816184935196
+2015,cities_2,NGA,Nigeria,Africa,27346452.044691764,92.3560512610094,0.31334168330232076,17501.092997901644
 2015,cities_2,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_2,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_2,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -1250,7 +1250,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_2,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_2,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_2,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_2,TGO,Togo,Africa,7440709.179396702,207.8468707980587,0.38327093584495503,11085.178784229181
+2015,cities_2,TGO,Togo,Africa,7446342.32149036,190.70938383198686,0.39735363124171413,5452.036690570734
 2015,cities_2,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_2,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_2,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -1305,8 +1305,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_3,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_3,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_3,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_3,BEN,Benin,Africa,10867427.42887114,227.81296000361093,0.2636233089549094,73645.47875615754
-2015,cities_3,BFA,Burkina Faso,Africa,4523037.127977063,871.0158331759347,0.0,10028.252431389818
+2015,cities_3,BEN,Benin,Africa,10896444.14114283,210.35681160581473,0.2912013085357791,44628.76648446717
+2015,cities_3,BFA,Burkina Faso,Africa,4529248.939294505,842.3333717692145,0.0,3816.44111394597
 2015,cities_3,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_3,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_3,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -1371,7 +1371,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_3,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_3,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_3,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_3,GHA,Ghana,Africa,13909866.05237951,482.0450962335648,0.0,167936.0195445848
+2015,cities_3,GHA,Ghana,Africa,13928650.068264222,470.57675834994666,0.0,149152.00365987245
 2015,cities_3,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_3,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_3,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -1448,9 +1448,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_3,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_3,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_3,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_3,NER,Niger,Africa,2680599.6870040265,809.8620347052613,0.0,11973.466681458056
+2015,cities_3,NER,Niger,Africa,2682150.73959392,775.406253914862,0.0,10422.414091564715
 2015,cities_3,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_3,NGA,Nigeria,Africa,27319060.321504727,129.91870900598545,0.4952564016017968,44892.816184935196
+2015,cities_3,NGA,Nigeria,Africa,27346452.044691764,107.95828050645846,0.5729899732839148,17501.092997901644
 2015,cities_3,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_3,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_3,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -1507,7 +1507,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_3,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_3,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_3,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_3,TGO,Togo,Africa,7440709.179396702,353.87313585410794,0.0,11085.178784229181
+2015,cities_3,TGO,Togo,Africa,7446342.32149036,335.4502742569795,0.0,5452.036690570734
 2015,cities_3,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_3,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_3,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -1562,8 +1562,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_4,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_4,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_4,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_4,BEN,Benin,Africa,10867427.42887114,114.04886627527723,0.2481431201811296,73645.47875615754
-2015,cities_4,BFA,Burkina Faso,Africa,4523037.127977063,296.7713718842894,0.03265011382206213,10028.252431389818
+2015,cities_4,BEN,Benin,Africa,10896444.14114283,99.17559809778574,0.27458978142130275,44628.76648446717
+2015,cities_4,BFA,Burkina Faso,Africa,4529248.939294505,276.4265217871002,0.03809684854872828,3816.44111394597
 2015,cities_4,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_4,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_4,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -1628,7 +1628,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_4,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_4,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_4,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_4,GHA,Ghana,Africa,13909866.05237951,106.16249814190287,0.26665119683039196,167936.0195445848
+2015,cities_4,GHA,Ghana,Africa,13928650.068264222,100.33630624411202,0.27229252999949566,149152.00365987245
 2015,cities_4,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_4,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_4,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -1705,9 +1705,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_4,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_4,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_4,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_4,NER,Niger,Africa,2680599.6870040265,158.0953416383703,0.13860095869455832,11973.466681458056
+2015,cities_4,NER,Niger,Africa,2682150.73959392,138.18971630108595,0.15505087514156043,10422.414091564715
 2015,cities_4,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_4,NGA,Nigeria,Africa,27319060.321504727,127.25756338094149,0.19981689890535262,44892.816184935196
+2015,cities_4,NGA,Nigeria,Africa,27346452.044691764,96.42886646185981,0.323618640344718,17501.092997901644
 2015,cities_4,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_4,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_4,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -1764,7 +1764,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_4,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_4,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_4,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_4,TGO,Togo,Africa,7440709.179396702,76.21202770350938,0.5931901900226785,11085.178784229181
+2015,cities_4,TGO,Togo,Africa,7446342.32149036,59.83952057682607,0.6429493122229165,5452.036690570734
 2015,cities_4,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_4,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_4,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -1819,8 +1819,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_5,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_5,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_5,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_5,BEN,Benin,Africa,10867427.42887114,93.16684050104375,0.4783447345183203,73645.47875615754
-2015,cities_5,BFA,Burkina Faso,Africa,4523037.127977063,171.9236240717701,0.22820212902588527,10028.252431389818
+2015,cities_5,BEN,Benin,Africa,10896444.14114283,78.30438956099394,0.5504395314650992,44628.76648446717
+2015,cities_5,BFA,Burkina Faso,Africa,4529248.939294505,151.7399972352256,0.23330209659402074,3816.44111394597
 2015,cities_5,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_5,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_5,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -1885,7 +1885,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_5,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_5,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_5,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_5,GHA,Ghana,Africa,13909866.05237951,79.75599002548545,0.686207520340351,167936.0195445848
+2015,cities_5,GHA,Ghana,Africa,13928650.068264222,74.12455801231773,0.6925417007234435,149152.00365987245
 2015,cities_5,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_5,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_5,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -1962,9 +1962,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_5,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_5,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_5,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_5,NER,Niger,Africa,2680599.6870040265,245.60593072171213,0.07863962895932454,11973.466681458056
+2015,cities_5,NER,Niger,Africa,2682150.73959392,216.06253067819412,0.09468937937999998,10422.414091564715
 2015,cities_5,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_5,NGA,Nigeria,Africa,27319060.321504727,69.29887343568727,0.7340607619414521,44892.816184935196
+2015,cities_5,NGA,Nigeria,Africa,27346452.044691764,43.053111376185164,0.8807249797453799,17501.092997901644
 2015,cities_5,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_5,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_5,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -2021,7 +2021,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_5,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_5,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_5,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_5,TGO,Togo,Africa,7440709.179396702,76.74136678160858,0.5544100426344447,11085.178784229181
+2015,cities_5,TGO,Togo,Africa,7446342.32149036,61.19179598644044,0.5915685463817347,5452.036690570734
 2015,cities_5,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_5,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_5,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -2076,8 +2076,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_6,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_6,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_6,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_6,BEN,Benin,Africa,10867427.42887114,57.04549258530028,0.6754354798151019,73645.47875615754
-2015,cities_6,BFA,Burkina Faso,Africa,4523037.127977063,123.44744982738354,0.34683168678470805,10028.252431389818
+2015,cities_6,BEN,Benin,Africa,10896444.14114283,42.57472668209112,0.7605751000121239,44628.76648446717
+2015,cities_6,BFA,Burkina Faso,Africa,4529248.939294505,104.6817677248597,0.3824910782909507,3816.44111394597
 2015,cities_6,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_6,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_6,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -2142,7 +2142,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_6,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_6,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_6,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_6,GHA,Ghana,Africa,13909866.05237951,47.956363835027354,0.7473576776421961,167936.0195445848
+2015,cities_6,GHA,Ghana,Africa,13928650.068264222,46.33381991480717,0.7637789206187449,149152.00365987245
 2015,cities_6,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_6,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_6,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -2219,9 +2219,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_6,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_6,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_6,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_6,NER,Niger,Africa,2680599.6870040265,175.65080911704803,0.19716514165529653,11973.466681458056
+2015,cities_6,NER,Niger,Africa,2682150.73959392,151.76640532606262,0.21566081107438123,10422.414091564715
 2015,cities_6,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_6,NGA,Nigeria,Africa,27319060.321504727,69.15909610933709,0.7235465570446618,44892.816184935196
+2015,cities_6,NGA,Nigeria,Africa,27346452.044691764,45.509419887906034,0.836370553017606,17501.092997901644
 2015,cities_6,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_6,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_6,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -2278,7 +2278,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_6,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_6,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_6,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_6,TGO,Togo,Africa,7440709.179396702,61.97565296287484,0.6251975183140818,11085.178784229181
+2015,cities_6,TGO,Togo,Africa,7446342.32149036,46.812376718764874,0.6684831795104259,5452.036690570734
 2015,cities_6,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_6,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_6,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -2333,8 +2333,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_7,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_7,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_7,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_7,BEN,Benin,Africa,10867427.42887114,56.595759590730985,0.6927778799913368,73645.47875615754
-2015,cities_7,BFA,Burkina Faso,Africa,4523037.127977063,103.02690934661334,0.44533678049028996,10028.252431389818
+2015,cities_7,BEN,Benin,Africa,10896444.14114283,41.86716269389888,0.7806662804962209,44628.76648446717
+2015,cities_7,BFA,Burkina Faso,Africa,4529248.939294505,83.03615358598114,0.4821999529733262,3816.44111394597
 2015,cities_7,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_7,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_7,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -2399,7 +2399,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_7,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_7,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_7,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_7,GHA,Ghana,Africa,13909866.05237951,56.59054613472162,0.5048818876170124,167936.0195445848
+2015,cities_7,GHA,Ghana,Africa,13928650.068264222,54.897533897740466,0.5154969360122685,149152.00365987245
 2015,cities_7,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_7,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_7,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -2476,9 +2476,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_7,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_7,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_7,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_7,NER,Niger,Africa,2680599.6870040265,94.44802057814498,0.4208529238369295,11973.466681458056
+2015,cities_7,NER,Niger,Africa,2682150.73959392,77.90669966625593,0.4692160106016331,10422.414091564715
 2015,cities_7,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_7,NGA,Nigeria,Africa,27319060.321504727,63.75818051887479,0.7513540613311149,44892.816184935196
+2015,cities_7,NGA,Nigeria,Africa,27346452.044691764,42.330651072852405,0.8649954823441255,17501.092997901644
 2015,cities_7,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_7,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_7,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -2535,7 +2535,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_7,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_7,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_7,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_7,TGO,Togo,Africa,7440709.179396702,56.74221919028602,0.7629671640571876,11085.178784229181
+2015,cities_7,TGO,Togo,Africa,7446342.32149036,41.41579612539389,0.8299988452741784,5452.036690570734
 2015,cities_7,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_7,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_7,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -2590,8 +2590,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_8,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_8,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_8,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_8,BEN,Benin,Africa,10867427.42887114,50.15883325397551,0.7782068230959782,73645.47875615754
-2015,cities_8,BFA,Burkina Faso,Africa,4523037.127977063,100.49839767868309,0.474184247708043,10028.252431389818
+2015,cities_8,BEN,Benin,Africa,10896444.14114283,36.4528634068002,0.8890937157330889,44628.76648446717
+2015,cities_8,BFA,Burkina Faso,Africa,4529248.939294505,79.64312845655961,0.5139767103581776,3816.44111394597
 2015,cities_8,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_8,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_8,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -2656,7 +2656,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_8,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_8,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_8,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_8,GHA,Ghana,Africa,13909866.05237951,37.03981379792082,0.9141163998047405,167936.0195445848
+2015,cities_8,GHA,Ghana,Africa,13928650.068264222,35.24944353498708,0.9249639524844417,149152.00365987245
 2015,cities_8,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_8,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_8,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -2733,9 +2733,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_8,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_8,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_8,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_8,NER,Niger,Africa,2680599.6870040265,107.41737700709417,0.3337038265278296,11973.466681458056
+2015,cities_8,NER,Niger,Africa,2682150.73959392,85.45860074778075,0.38034094597905416,10422.414091564715
 2015,cities_8,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_8,NGA,Nigeria,Africa,27319060.321504727,57.17167931925027,0.7468283210883725,44892.816184935196
+2015,cities_8,NGA,Nigeria,Africa,27346452.044691764,34.76656883789267,0.9490854502667918,17501.092997901644
 2015,cities_8,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_8,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_8,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -2792,7 +2792,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_8,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_8,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_8,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_8,TGO,Togo,Africa,7440709.179396702,50.18334014816733,0.7589455113444508,11085.178784229181
+2015,cities_8,TGO,Togo,Africa,7446342.32149036,35.36719484489905,0.8430905988467605,5452.036690570734
 2015,cities_8,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_8,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_8,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -2847,8 +2847,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_9,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,cities_9,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,cities_9,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,cities_9,BEN,Benin,Africa,10867427.42887114,43.926910039934754,0.8128747960024082,73645.47875615754
-2015,cities_9,BFA,Burkina Faso,Africa,4523037.127977063,81.60493342624827,0.5637050316769868,10028.252431389818
+2015,cities_9,BEN,Benin,Africa,10896444.14114283,29.87687714517507,0.9152207545477654,44628.76648446717
+2015,cities_9,BFA,Burkina Faso,Africa,4529248.939294505,63.62765220519106,0.6148247469918132,3816.44111394597
 2015,cities_9,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,cities_9,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,cities_9,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -2913,7 +2913,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_9,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,cities_9,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,cities_9,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,cities_9,GHA,Ghana,Africa,13909866.05237951,33.3848174649586,0.9230614769171882,167936.0195445848
+2015,cities_9,GHA,Ghana,Africa,13928650.068264222,31.729226384352987,0.9323075347440026,149152.00365987245
 2015,cities_9,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,cities_9,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,cities_9,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -2990,9 +2990,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_9,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,cities_9,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,cities_9,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,cities_9,NER,Niger,Africa,2680599.6870040265,71.44578452694613,0.6085854019066149,11973.466681458056
+2015,cities_9,NER,Niger,Africa,2682150.73959392,57.966284309168636,0.6684954245039412,10422.414091564715
 2015,cities_9,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,cities_9,NGA,Nigeria,Africa,27319060.321504727,61.03470460337769,0.7736343426843426,44892.816184935196
+2015,cities_9,NGA,Nigeria,Africa,27346452.044691764,37.918070975277836,0.9401621844990109,17501.092997901644
 2015,cities_9,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,cities_9,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,cities_9,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -3049,7 +3049,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,cities_9,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,cities_9,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,cities_9,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,cities_9,TGO,Togo,Africa,7440709.179396702,44.852028919748044,0.8300052499097396,11085.178784229181
+2015,cities_9,TGO,Togo,Africa,7446342.32149036,30.953133752374264,0.9208940885309198,5452.036690570734
 2015,cities_9,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,cities_9,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,cities_9,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -3104,8 +3104,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_1,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,ports_1,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,ports_1,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,ports_1,BEN,Benin,Africa,10867427.42887114,389.8403104303841,0.0,73645.47875615754
-2015,ports_1,BFA,Burkina Faso,Africa,4523037.127977063,1046.394716803024,0.0,10028.252431389818
+2015,ports_1,BEN,Benin,Africa,10896444.14114283,322.4767300810339,0.0,44628.76648446717
+2015,ports_1,BFA,Burkina Faso,Africa,4529248.939294505,974.6828117473303,0.0,3816.44111394597
 2015,ports_1,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,ports_1,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,ports_1,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -3170,7 +3170,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_1,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,ports_1,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,ports_1,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,ports_1,GHA,Ghana,Africa,13909866.05237951,630.1914174663593,0.0,167936.0195445848
+2015,ports_1,GHA,Ghana,Africa,13928650.068264222,565.9661428514531,0.0,149152.00365987245
 2015,ports_1,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,ports_1,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,ports_1,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -3247,9 +3247,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_1,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,ports_1,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,ports_1,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,ports_1,NER,Niger,Africa,2680599.6870040265,993.4703550309043,0.0,11973.466681458056
+2015,ports_1,NER,Niger,Africa,2682150.73959392,914.4484087054826,0.0,10422.414091564715
 2015,ports_1,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,ports_1,NGA,Nigeria,Africa,27319060.321504727,224.30962146341196,0.06686114927010327,44892.816184935196
+2015,ports_1,NGA,Nigeria,Africa,27346452.044691764,154.47458479633423,0.44454056230771943,17501.092997901644
 2015,ports_1,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,ports_1,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,ports_1,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -3306,7 +3306,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_1,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,ports_1,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,ports_1,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,ports_1,TGO,Togo,Africa,7440709.179396702,504.0493162300375,0.0,11085.178784229181
+2015,ports_1,TGO,Togo,Africa,7446342.32149036,434.6681776194168,0.0,5452.036690570734
 2015,ports_1,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,ports_1,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,ports_1,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -3361,8 +3361,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_2,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,ports_2,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,ports_2,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,ports_2,BEN,Benin,Africa,10867427.42887114,263.0987971775572,0.253166712797609,73645.47875615754
-2015,ports_2,BFA,Burkina Faso,Africa,4523037.127977063,867.7771682293591,0.0,10028.252431389818
+2015,ports_2,BEN,Benin,Africa,10896444.14114283,247.31278476091083,0.28319248834290417,44628.76648446717
+2015,ports_2,BFA,Burkina Faso,Africa,4529248.939294505,842.9899597353702,0.0,3816.44111394597
 2015,ports_2,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,ports_2,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,ports_2,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -3427,7 +3427,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_2,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,ports_2,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,ports_2,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,ports_2,GHA,Ghana,Africa,13909866.05237951,332.9157450213649,0.02765681315989268,167936.0195445848
+2015,ports_2,GHA,Ghana,Africa,13928650.068264222,314.80226557022917,0.028583577223610615,149152.00365987245
 2015,ports_2,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,ports_2,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,ports_2,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -3504,9 +3504,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_2,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,ports_2,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,ports_2,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,ports_2,NER,Niger,Africa,2680599.6870040265,947.495862404886,0.0,11973.466681458056
+2015,ports_2,NER,Niger,Africa,2682150.73959392,919.5264966110883,0.0,10422.414091564715
 2015,ports_2,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,ports_2,NGA,Nigeria,Africa,27319060.321504727,269.84386044678894,0.0009711851319410646,44892.816184935196
+2015,ports_2,NGA,Nigeria,Africa,27346452.044691764,222.83045838824023,0.0035603647554048197,17501.092997901644
 2015,ports_2,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,ports_2,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,ports_2,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -3563,7 +3563,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_2,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,ports_2,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,ports_2,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,ports_2,TGO,Togo,Africa,7440709.179396702,235.90100513415163,0.34651399698702207,11085.178784229181
+2015,ports_2,TGO,Togo,Africa,7446342.32149036,219.03289303207137,0.3535142353056376,5452.036690570734
 2015,ports_2,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,ports_2,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,ports_2,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -3618,8 +3618,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_3,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,ports_3,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,ports_3,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,ports_3,BEN,Benin,Africa,10867427.42887114,336.18492251927245,0.0,73645.47875615754
-2015,ports_3,BFA,Burkina Faso,Africa,4523037.127977063,900.5884115261413,0.0,10028.252431389818
+2015,ports_3,BEN,Benin,Africa,10896444.14114283,312.2818608333867,0.0,44628.76648446717
+2015,ports_3,BFA,Burkina Faso,Africa,4529248.939294505,877.5022844422846,0.0,3816.44111394597
 2015,ports_3,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,ports_3,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,ports_3,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -3684,7 +3684,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_3,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,ports_3,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,ports_3,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,ports_3,GHA,Ghana,Africa,13909866.05237951,230.42793078921017,0.3554463925590967,167936.0195445848
+2015,ports_3,GHA,Ghana,Africa,13928650.068264222,224.71023937994278,0.35809240806916814,149152.00365987245
 2015,ports_3,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,ports_3,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,ports_3,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -3761,9 +3761,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_3,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,ports_3,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,ports_3,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,ports_3,NER,Niger,Africa,2680599.6870040265,942.0069455630179,0.0,11973.466681458056
+2015,ports_3,NER,Niger,Africa,2682150.73959392,906.9021423286649,0.0,10422.414091564715
 2015,ports_3,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,ports_3,NGA,Nigeria,Africa,27319060.321504727,172.72082425923395,0.44986524912558895,44892.816184935196
+2015,ports_3,NGA,Nigeria,Africa,27346452.044691764,146.2151278777463,0.4629265072592463,17501.092997901644
 2015,ports_3,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,ports_3,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,ports_3,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -3820,7 +3820,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_3,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,ports_3,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,ports_3,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,ports_3,TGO,Togo,Africa,7440709.179396702,367.7201120352014,0.0,11085.178784229181
+2015,ports_3,TGO,Togo,Africa,7446342.32149036,350.19386667511606,0.0,5452.036690570734
 2015,ports_3,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,ports_3,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,ports_3,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -3875,8 +3875,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_4,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,ports_4,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,ports_4,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,ports_4,BEN,Benin,Africa,10867427.42887114,327.3214474040238,0.0044657599911906804,73645.47875615754
-2015,ports_4,BFA,Burkina Faso,Africa,4523037.127977063,904.0349243674874,0.0,10028.252431389818
+2015,ports_4,BEN,Benin,Africa,10896444.14114283,311.48808741601783,0.004675436218431715,44628.76648446717
+2015,ports_4,BFA,Burkina Faso,Africa,4529248.939294505,879.0168329380875,0.0,3816.44111394597
 2015,ports_4,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,ports_4,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,ports_4,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -3941,7 +3941,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_4,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,ports_4,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,ports_4,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,ports_4,GHA,Ghana,Africa,13909866.05237951,370.65929902902855,0.004751539966549681,167936.0195445848
+2015,ports_4,GHA,Ghana,Africa,13928650.068264222,352.6529363291066,0.00484720993307894,149152.00365987245
 2015,ports_4,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,ports_4,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,ports_4,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -4018,9 +4018,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_4,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,ports_4,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,ports_4,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,ports_4,NER,Niger,Africa,2680599.6870040265,1000.9373537922855,0.0,11973.466681458056
+2015,ports_4,NER,Niger,Africa,2682150.73959392,972.5318141204816,0.0,10422.414091564715
 2015,ports_4,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,ports_4,NGA,Nigeria,Africa,27319060.321504727,382.18591808203206,0.0,44892.816184935196
+2015,ports_4,NGA,Nigeria,Africa,27346452.044691764,346.63994718018773,0.0,17501.092997901644
 2015,ports_4,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,ports_4,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,ports_4,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -4077,7 +4077,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_4,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,ports_4,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,ports_4,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,ports_4,TGO,Togo,Africa,7440709.179396702,266.8918548552356,0.30119352595503457,11085.178784229181
+2015,ports_4,TGO,Togo,Africa,7446342.32149036,249.6325366242545,0.31325908325709567,5452.036690570734
 2015,ports_4,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,ports_4,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,ports_4,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
@@ -4132,8 +4132,8 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_5,AZE,Azerbaijan,Asia,0.0,0.0,0.0,0.0
 2015,ports_5,BDI,Burundi,Africa,0.0,0.0,0.0,0.0
 2015,ports_5,BEL,Belgium,Europe,0.0,0.0,0.0,0.0
-2015,ports_5,BEN,Benin,Africa,10867427.42887114,257.8134502426178,0.2549092928253533,73645.47875615754
-2015,ports_5,BFA,Burkina Faso,Africa,4523037.127977063,866.2851864740388,0.0,10028.252431389818
+2015,ports_5,BEN,Benin,Africa,10896444.14114283,241.28110363441345,0.28512865982758223,44628.76648446717
+2015,ports_5,BFA,Burkina Faso,Africa,4529248.939294505,842.8358855345782,0.0,3816.44111394597
 2015,ports_5,BGD,Bangladesh,Asia,0.0,0.0,0.0,0.0
 2015,ports_5,BGR,Bulgaria,Europe,0.0,0.0,0.0,0.0
 2015,ports_5,BHR,Bahrain,Asia,0.0,0.0,0.0,0.0
@@ -4198,7 +4198,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_5,GBR,United Kingdom,Europe,0.0,0.0,0.0,0.0
 2015,ports_5,GEO,Georgia,Asia,0.0,0.0,0.0,0.0
 2015,ports_5,GGY,Guernsey,Europe,0.0,0.0,0.0,0.0
-2015,ports_5,GHA,Ghana,Africa,13909866.05237951,226.25121749548222,0.3831032057189893,167936.0195445848
+2015,ports_5,GHA,Ghana,Africa,13928650.068264222,220.35954197874742,0.38667598529277875,149152.00365987245
 2015,ports_5,GIB,Gibraltar,Europe,0.0,0.0,0.0,0.0
 2015,ports_5,GIN,Guinea,Africa,0.0,0.0,0.0,0.0
 2015,ports_5,GMB,Gambia,Africa,0.0,0.0,0.0,0.0
@@ -4275,9 +4275,9 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_5,MYS,Malaysia,Asia,0.0,0.0,0.0,0.0
 2015,ports_5,NAM,Namibia,Africa,0.0,0.0,0.0,0.0
 2015,ports_5,NCL,New Caledonia,Oceania,0.0,0.0,0.0,0.0
-2015,ports_5,NER,Niger,Africa,2680599.6870040265,939.8232961660632,0.0,11973.466681458056
+2015,ports_5,NER,Niger,Africa,2682150.73959392,905.332859580915,0.0,10422.414091564715
 2015,ports_5,NFK,Norfolk Island,Oceania,0.0,0.0,0.0,0.0
-2015,ports_5,NGA,Nigeria,Africa,27319060.321504727,171.6321307032505,0.45084982920256483,44892.816184935196
+2015,ports_5,NGA,Nigeria,Africa,27346452.044691764,145.91575117171254,0.4650791602599988,17501.092997901644
 2015,ports_5,NIC,Nicaragua,North America,0.0,0.0,0.0,0.0
 2015,ports_5,NIU,Niue,Oceania,0.0,0.0,0.0,0.0
 2015,ports_5,NLD,Netherlands,Europe,0.0,0.0,0.0,0.0
@@ -4334,7 +4334,7 @@ year,layer,iso3,NAME,CONTINENT,population,pop_weighted_mean_min,share_within_60m
 2015,ports_5,SYR,Syria,Asia,0.0,0.0,0.0,0.0
 2015,ports_5,TCA,Turks and Caicos Is.,North America,0.0,0.0,0.0,0.0
 2015,ports_5,TCD,Chad,Africa,0.0,0.0,0.0,0.0
-2015,ports_5,TGO,Togo,Africa,7440709.179396702,234.30899447875302,0.3619354862758346,11085.178784229181
+2015,ports_5,TGO,Togo,Africa,7446342.32149036,217.8584318223217,0.3730287507460302,5452.036690570734
 2015,ports_5,THA,Thailand,Asia,0.0,0.0,0.0,0.0
 2015,ports_5,TJK,Tajikistan,Asia,0.0,0.0,0.0,0.0
 2015,ports_5,TKM,Turkmenistan,Asia,0.0,0.0,0.0,0.0
