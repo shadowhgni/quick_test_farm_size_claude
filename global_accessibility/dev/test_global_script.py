@@ -415,7 +415,8 @@ def test_geofabrik_plan_falls_back_to_next_snapshot(tmp_path, monkeypatch):
         for n in names) + "\n</table>"
     pages = {base + "europe/": apache(["france-150101.osm.pbf", "france-260101.osm.pbf", "france-latest.osm.pbf"]),
              base + "russia/": table(["ural-260101.osm.pbf", "ural-latest.osm.pbf"]),
-             base: "<html>Geofabrik home page, not a raw listing</html>"}
+             base: '<html>Geofabrik home page <a href="europe-latest.osm.pbf">Europe</a> '
+                   '<a href="russia-latest.osm.pbf">Russia</a> <a href="mars-latest.osm.pbf">x</a></html>'}
     root_files = {base + "russia-160101.osm.pbf": 3_900_000_000}
     calls = []
 
@@ -429,6 +430,7 @@ def test_geofabrik_plan_falls_back_to_next_snapshot(tmp_path, monkeypatch):
     monkeypatch.setattr(ga, "download", lambda url, dest, sess: idx)
     monkeypatch.setattr(ga, "http_request", fake)
     grid = ga.Grid((0, 40, 70, 60), 0.5)
+    monkeypatch.setattr(ga, "OSM_MAX_MISSING_REGIONS", 1)                # mars has no data at all
     plan = ga.geofabrik_plan(tmp_path, grid, [2015, 2026], None)
     p15 = {r["region"]: r for r in plan[2015]}
     assert set(p15) == {"france", "russia"}
@@ -438,11 +440,15 @@ def test_geofabrik_plan_falls_back_to_next_snapshot(tmp_path, monkeypatch):
     p26 = {r["region"]: r for r in plan[2026]}
     assert set(p26) == {"france", "ural"} and p26["ural"]["bytes"] == int(1.5 * 2**30)   # mars: no data
     assert any("no snapshot for 1 regions" in m and "mars" in m for m in ga.LOG)
+    assert ("HEAD", base + "russia-150101.osm.pbf") in calls              # root: asked, not assumed absent
     gets = [u for m, u in calls if m == "GET"]
     assert len(gets) == len(set(gets)) == 3                              # one request per folder
     n = len(calls); ga.geofabrik_plan(tmp_path, grid, [2015], None)
     assert not [c for c in calls[n:] if c[0] == "GET"]                   # listings cached on disk
 
+    monkeypatch.setattr(ga, "OSM_MAX_MISSING_REGIONS", 0)
+    with pytest.raises(SystemExit, match="mars"):
+        ga.geofabrik_plan(tmp_path, grid, [2015], None)
     # a server that keeps failing stops the run instead of planning a world without roads
     def down(url, sess, method="HEAD", tries=6, **kw):
         raise ga.RemoteUnavailable(f"{url}: ConnectionError after 6 attempts")

@@ -30,7 +30,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "2.0.3"
+__version__ = "2.0.4"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -113,6 +113,7 @@ NELSON_LAYERS = None            # None = all 17; or e.g. ["cities_11", "ports_5"
 #     OSM 2015 has none there, Weiss 2015 shows a transport network (>= WEISS_NETWORK_KMH)
 #     and OSM END_YEAR has a road there (this excludes Weiss rivers, sea lanes, railways).
 WEISS2015_AUGMENT = True        # used only when START_YEAR == 2015
+OSM_MAX_MISSING_REGIONS = 0     # regions allowed to have no extract at all (they get no roads)
 OSM_SNAPSHOT_MAX_LAG = 1        # years: a region with no 1 January snapshot of the year (e.g. Russia
                                 # before 2016) uses the next available one, at most this much later
 WEISS_NETWORK_KMH = 10.0
@@ -514,7 +515,7 @@ def geofabrik_listing(dir_url, cache_dir, sess, max_age_days=7):
                 tail = re.sub(r"<[^>]+>", " ", line[m.end():])
                 sm = re.search(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}\s+([\d.]+)\s*([KMGT]?)\b", tail)
                 found[m.group(2)] = int(float(sm.group(1)) * _UNITS[sm.group(2)]) if sm else 0
-        files = found if any(n.endswith("-latest.osm.pbf") for n in found) else None
+        files = found if any(re.search(r"-\d{6}\.osm\.pbf$", n) for n in found) else None   # dated files: a raw index
         f.write_text(json.dumps({"url": dir_url, "files": files}))   # cache successful reads only
     elif r.status_code not in (403, 404):
         raise RemoteUnavailable(f"{dir_url}: HTTP {r.status_code}")
@@ -862,8 +863,9 @@ def _geofabrik_plan(work, grid, years, sess):
                 if d not in listings:
                     listings[d] = geofabrik_listing(d, work / "downloads" / "geofabrik_listing", sess)
             lst = listings[d]
-            if lst is not None:
-                return name in lst, lst.get(name, 0)
+            region = re.sub(r"-(latest|\d{6})\.osm\.pbf$", "", name)
+            if lst is not None and any(re.fullmatch(re.escape(region) + r"-\d{6}\.osm\.pbf", n) for n in lst):
+                return name in lst, lst.get(name, 0)     # the listing shows this region's snapshots
             return head_ok(url, sess)
 
         def available(rid, yy):
@@ -909,12 +911,13 @@ def _geofabrik_plan(work, grid, years, sess):
                 p = parents.get(p)
             return False
         chosen = {k: v for k, v in chosen.items() if not has_chosen_ancestor(k)}
-        if not chosen or len(missing) > 0.5 * len(leaves):
-            raise SystemExit(f"OSM {y}: no Geofabrik extract found for {len(missing)} of {len(leaves)} regions. "
-                             "This is not plausible for OSM, so Geofabrik was probably not reachable or "
-                             "blocked the requests: check `curl -I https://download.geofabrik.de/africa/` "
-                             "from this node, wait, and rerun (listings are cached in "
-                             "WORK_DIR/downloads/geofabrik_listing).")
+        if not chosen or len(missing) > OSM_MAX_MISSING_REGIONS:
+            raise SystemExit(f"OSM {y}: no Geofabrik extract found for {len(missing)} of {len(leaves)} regions "
+                             f"{missing[:20]}; these would have no roads. Geofabrik has continent snapshots "
+                             "since 2014, so this usually means the server was not reachable or refused "
+                             "requests: check `curl -I https://download.geofabrik.de/africa/` from this node, "
+                             "delete WORK_DIR/downloads/geofabrik_listing, wait, and rerun. To accept the gaps, "
+                             "raise OSM_MAX_MISSING_REGIONS in the configuration.")
         for k, v in chosen.items():            # sizes from the listing (2 digits); HEAD where it has none
             if not v[2]:
                 chosen[k] = (v[0], v[1], head_ok(v[1], sess)[1], v[3])
