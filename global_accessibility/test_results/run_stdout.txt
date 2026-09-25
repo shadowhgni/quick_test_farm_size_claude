@@ -1,0 +1,63 @@
+[bootstrap] installing into /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/ga_work/pylib: pandas>=2.0 geopandas>=1.0 pyogrio>=0.9 shapely>=2.0 rasterio>=1.4 pyproj>=3.6 numba>=0.60 psutil>=5.9 matplotlib>=3.8 requests>=2.28 pyarrow>=14
+[2026-09-25 07:25:54] global_accessibility: years [2020, 2026], GHSL epochs {2020: 2020, 2026: 2025}, grid {'bbox': [-1.0, 5.5, 4.5, 13.5], 'res_deg': 0.008333333333333333, 'width': 660, 'height': 960, 'wrap': False}
+[2026-09-25 07:25:54] cpus 2, available memory 7 GB
+[2026-09-25 07:25:54] --- stage download ...
+[2026-09-25 07:25:57] OSM 2020: 6 extracts, 0.4 GB
+[2026-09-25 07:25:57] OSM 2026: 6 extracts, 1.0 GB
+[2026-09-25 07:25:58] downloads: 24 files (OSM 1.4 GB + others)
+[2026-09-25 07:30:13] WorldCover 2021: 2651 tiles listed
+[2026-09-25 07:30:13] --- stage download: 4.3 min
+[2026-09-25 07:30:13] --- stage grids ...
+[2026-09-25 07:30:13] --- land cover (WorldCover 2021) ...
+[2026-09-25 07:30:14] land cover: 12/12 WorldCover tiles read
+[2026-09-25 07:30:14] --- land cover (WorldCover 2021): 0.0 min
+[2026-09-25 07:30:14] --- slope (Copernicus GLO-90) ...
+[2026-09-25 07:30:18] slope: 52/52 Copernicus GLO-90 tiles read
+[2026-09-25 07:30:18] --- slope (Copernicus GLO-90): 0.1 min
+[2026-09-25 07:30:18] --- countries and African borders ...
+[2026-09-25 07:30:18] countries: 257; African land-border segments: 111
+[2026-09-25 07:30:18] --- countries and African borders: 0.0 min
+[2026-09-25 07:30:18] --- settlements GHSL 2020 ...
+[2026-09-25 07:30:19] GHSL 2020: 1282 settlements, 74 M people in settlements, 0.08 bn people on the grid
+[2026-09-25 07:30:19] --- settlements GHSL 2020: 0.0 min
+[2026-09-25 07:30:19] --- settlements GHSL 2025 ...
+[2026-09-25 07:30:20] GHSL 2025: 1369 settlements, 83 M people in settlements, 0.08 bn people on the grid
+[2026-09-25 07:30:20] --- settlements GHSL 2025: 0.0 min
+[2026-09-25 07:30:20] --- stage grids: 0.1 min
+[2026-09-25 07:30:20] --- stage roads ...
+[2026-09-25 07:30:20] roads 2020: 6 tasks, up to 1 workers, memory budget 5 GB, largest task ~3.0 GB
+[2026-09-25 07:30:57] roads 2026: 6 tasks, up to 1 workers, memory budget 4 GB, largest task ~6.1 GB
+[2026-09-25 07:31:58] --- Microsoft ML roads ...
+[2026-09-25 07:31:58] Microsoft ML roads: 1 workers
+[2026-09-25 07:33:47] Microsoft ML roads: 1,084,450 segments, 220,227 km inside the grid
+[2026-09-25 07:33:47] --- Microsoft ML roads: 1.8 min
+[2026-09-25 07:33:47] --- stage roads: 3.5 min
+[2026-09-25 07:33:47] --- stage friction ...
+[2026-09-25 07:33:47] friction 2020: {'road_cells': 182898, 'ml_cells': 0, 'passable_cells': 577415, 'checkpoints': 73}
+[2026-09-25 07:33:47] friction 2026: {'road_cells': 252849, 'ml_cells': 29911, 'passable_cells': 577721, 'checkpoints': 87}
+[2026-09-25 07:33:47] --- stage friction: 0.0 min
+[2026-09-25 07:33:47] --- stage traveltime ...
+[2026-09-25 07:33:47] Traceback (most recent call last):
+  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/global_accessibility/global_accessibility.py", line 1762, in main
+    funcs[s](ctx)
+    ~~~~~~~~^^^^^
+  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/global_accessibility/global_accessibility.py", line 1322, in stage_traveltime
+    sel &= pr >= 0
+ValueError: output array is read-only
+
+[2026-09-25 07:33:48] --- stage traveltime: 0.0 min
+Traceback (most recent call last):
+  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/global_accessibility/global_accessibility.py", line 1775, in <module>
+    main()
+    ~~~~^^
+  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/global_accessibility/global_accessibility.py", line 1762, in main
+    funcs[s](ctx)
+    ~~~~~~~~^^^^^
+  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/global_accessibility/global_accessibility.py", line 1322, in stage_traveltime
+    sel &= pr >= 0
+ValueError: output array is read-only
+  /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/global_accessibility/global_accessibility.py:1440: PendingDeprecationWarning: The set_bad function will be deprecated in a future version. Use cmap.with_extremes(bad=...) or Colormap(bad=...) instead.
+    cmap.set_bad("#ffffff")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+17 passed, 18 warnings in 20.96s

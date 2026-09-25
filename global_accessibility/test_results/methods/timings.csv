@@ -1,0 +1,11 @@
+step,seconds,rss_gb
+stage download,259.1,0.39
+land cover (WorldCover 2021),0.9,0.43
+slope (Copernicus GLO-90),3.5,0.82
+countries and African borders,0.5,0.85
+settlements GHSL 2020,1.1,0.87
+settlements GHSL 2025,1.0,0.87
+stage grids,7.0,0.87
+Microsoft ML roads,109.7,2.26
+stage roads,207.1,2.25
+stage friction,0.1,2.25
