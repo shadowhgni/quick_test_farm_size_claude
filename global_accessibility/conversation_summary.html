@@ -53,12 +53,12 @@ ol.timeline li { margin-bottom: 8px; }
 <body>
 <main>
 <h1>Updating travel-time-to-cities maps: conversation log</h1>
-<p class="sub">From testing a road-merge script on Benin and Togo to a stand-alone global HPC script, a regional test, and a manuscript. Repository <code>shadowhgni/quick_test_farm_size_claude</code>, branch <code>claude/roaddetections-fork-test-m1plof</code>. Last commit described: <code>f875fdd</code> (25 Sep 2026).</p>
+<p class="sub">From testing a road-merge script on Benin and Togo to a stand-alone global HPC script, a regional test, and a manuscript. Repository <code>shadowhgni/quick_test_farm_size_claude</code>, branch <code>claude/roaddetections-fork-test-m1plof</code>. Last commit described: <code>e7624b8</code> (25 Sep 2026).</p>
 
 <p class="note">How to read the claims below: <span class="tag v">verified</span> means taken from files produced by the GitHub Actions run of the regional test and committed to the repository; <span class="tag i">inference</span> means an interpretation not checked directly. Everything else describes what was built or decided.</p>
 
 <div class="grid">
-  <div class="card"><b>2.0.1</b><span>version of <code>global_accessibility_v2.py</code> to run on the HPC</span></div>
+  <div class="card"><b>2.0.2</b><span>version of <code>global_accessibility_v2.py</code> to run on the HPC</span></div>
   <div class="card"><b>22.0 → 19.0 min</b><span>pop.-weighted travel time to cities ≥50k, 2015 → 2026, test domain <span class="tag v">verified</span></span></div>
   <div class="card"><b>−4%</b><span>pop.-weighted bias vs Nelson et al. 2019 (2015, cities ≥50k) <span class="tag v">verified</span></span></div>
   <div class="card"><b>0.98</b><span>median ratio to OSRM car times, 105 pairs, 2026 <span class="tag v">verified</span></span></div>
@@ -78,6 +78,7 @@ ol.timeline li { margin-bottom: 8px; }
   <li><b>Manuscript</b> with Methods, Results, Discussion and Supplementary material in one Word file; the HPC script shared.</li>
   <li><b>v2: sensitivity analysis</b> of K ∈ {0, 0.05, 0.10, 0.20} and border delay ∈ {0, 15, 30, 60} min → <code>global_accessibility_v2.py</code>.</li>
   <li><b>What are “mean diff” and “mean abs diff”; express them relative to Nelson.</b> Added relative bias, relative mean absolute difference and median per-cell % difference; Table 3 rebuilt. This led to two bug fixes (section 5) and version 2.0.1.</li>
+  <li><b>Dry run on the HPC node</b> (90 cores, 533 GB) showed a PROJ error and no 2015 snapshot for Russia → version 2.0.2 (section 5).</li>
 </ol>
 
 <h2>2. Method in brief</h2>
@@ -147,7 +148,7 @@ ol.timeline li { margin-bottom: 8px; }
 <h2>4. Files</h2>
 <div class="wrap"><table>
 <tr><th class="l">File</th><th class="l">What it is</th></tr>
-<tr><td><code>global_accessibility/global_accessibility_v2.py</code></td><td class="l"><b>The script to run on the HPC</b> (version 2.0.1)</td></tr>
+<tr><td><code>global_accessibility/global_accessibility_v2.py</code></td><td class="l"><b>The script to run on the HPC</b> (version 2.0.2)</td></tr>
 <tr><td><code>global_accessibility/README.md</code></td><td class="l">Usage, stages, resources, method choices, outputs, licences</td></tr>
 <tr><td><code>global_accessibility/manuscript/Manuscript_v2_Methods_Results_Discussion_Suppl.docx</code></td><td class="l">Methods, Results, Discussion, Supplementary material, References (built by <code>build.js</code>)</td></tr>
 <tr><td><code>global_accessibility/test_results/</code></td><td class="l">Latest regional CI outputs: COGs, PNGs, tables, methods, Nelson comparison, routing validation, sensitivity</td></tr>
@@ -162,16 +163,18 @@ ol.timeline li { margin-bottom: 8px; }
 python global_accessibility_v2.py             # full run; rerun the same command to resume after a crash</pre>
 <p>Options: <code>--start --end --bbox W S E N --stages --max-workers --no-cleanup --no-ml --no-weiss --no-routing --no-sensitivity --sens-design oat|full --routing-cities N --work-dir --results-dir</code>. The README gives rough needs for a global run: about 170 GB of OSM downloads, about 150 GB of intermediate grids, and peak RAM of about 8 GB per parallel travel-time task plus 15 GB. These are estimates, not measured on a global run.</p>
 
-<h2>5. Bugs found in this last round (fixed in 2.0.1)</h2>
+<h2>5. Bugs found in the last rounds (fixed in 2.0.1 and 2.0.2)</h2>
 <ul>
   <li><b>Empty inputs manifest on resumed runs.</b> A rerun without the download stage wrote an empty <code>methods/inputs_manifest.csv</code> and then crashed reading it. This caused the failed Actions job you reported.</li>
   <li><b>Stale travel times after a friction rebuild.</b> A resumed run reused finished travel-time layers even when the friction grid had been rebuilt, for example after changing K or the speeds. A layer is now reused only if it is newer than its friction grid. A new test fails on the old code and passes on the new.</li>
+  <li><b>Broken PROJ setting on the HPC node</b> (2.0.2). <code>PROJ_LIB=/opt/conda/share/proj</code> pointed to a missing folder, so rasterio could not read EPSG:4326. At start-up the script now tests the PROJ settings in a subprocess (EPSG:4326, ESRI:54009, a GeoPackage round trip) and uses the first that works.</li>
+  <li><b>Russia had no 2015 roads</b> (2.0.2). Geofabrik's first Russia snapshot is <code>russia-160101</code>. A region with no snapshot for the year now uses the next 1 January snapshot, at most <code>OSM_SNAPSHOT_MAX_LAG</code> = 1 year later, recorded as <code>snapshot_year</code> in <code>osm_plan.json</code>.</li>
 </ul>
-<p>After both fixes, the regional CI run finished with no traceback and 21 of 21 tests passed <span class="tag v">verified</span>.</p>
+<p>The regional CI run of 2.0.2 was deliberately given the broken <code>PROJ_LIB</code> value. It recovered, finished with no traceback, reproduced the same results, and passed 22 of 22 tests <span class="tag v">verified</span>.</p>
 
 <h2>6. Still open</h2>
 <ul>
-  <li>Run 2.0.1 globally on the HPC and replace the [global] placeholders in the manuscript.</li>
+  <li>Run 2.0.2 globally on the HPC and replace the [global] placeholders in the manuscript.</li>
   <li>The off-road walking speeds by land-cover class are placeholders to calibrate.</li>
   <li>The ports bias should be re-examined on the global run, where there are no domain-edge effects.</li>
   <li>Check whether the weak border-delay effect comes from bypass paths, for example by tracing least-cost paths across a few checkpoints.</li>
