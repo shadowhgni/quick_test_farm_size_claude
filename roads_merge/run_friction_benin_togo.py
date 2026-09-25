@@ -86,9 +86,18 @@ def main():
     titles = ["OSM 2020-01-01", "OSM 2026-09-01", "OSM 2026 + ML roads"]
     quicklook(tifs, titles, RES / "friction_maps.png", norm=norm,
               label="friction (min/m, log)")
-    quicklook([OUT / "speed_change_t2_minus_t1_kmh.tif"], ["speed change 2026 - 2020"],
-              RES / "speed_change.png", cmap="RdBu", step=10, label="km/h (block max)",
-              how="max", norm=TwoSlopeNorm(0, vmin=-20, vmax=20))
+    # gains and losses in separate panels: one pooled value per block would hide one of them
+    chg = OUT / "speed_change_t2_minus_t1_kmh.tif"
+    fig, axes = plt.subplots(1, 2, figsize=(10, 7))
+    with rasterio.open(chg) as r:
+        a = r.read(1, masked=True)
+    for ax, how, title in zip(axes, ["max", "min"], ["faster in 2026 (block max)",
+                                                      "slower in 2026 (block min)"]):
+        im = ax.imshow(pool(a, 10, how), cmap="RdBu", interpolation="nearest",
+                       norm=TwoSlopeNorm(0, vmin=-20, vmax=20))
+        ax.set_title(title); ax.set_xticks([]); ax.set_yticks([])
+    fig.colorbar(im, ax=axes, shrink=0.6, label="speed change 2026 - 2020 (km/h)")
+    fig.savefig(RES / "speed_change.png", dpi=100, bbox_inches="tight"); plt.close(fig)
     for name, ll in ZOOMS.items():
         zoom(tifs, titles, ll, RES / f"zoom_{name}.png", norm)
     print(f"done in {elapsed:.0f}s")

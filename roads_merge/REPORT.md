@@ -77,6 +77,37 @@ Dapaong (each window is centred on the town).
 - Roads new in OSM since 2020 (blue) are mostly rural tracks around Dapaong, and
   new neighbourhood streets around Kandi.
 
+### 2.5 Friction maps 2020 and 2026 (`friction.py`)
+
+Run #1 of `.github/workflows/friction.yml` (352 s, tiles read remotely). 100 m grid,
+4,441 × 7,256 cells, EPSG:32631, masked to the Geofabrik outlines of Benin and Togo
+(slightly buffered, hence 176,597 km² of valid cells). Land cover: ESA WorldCover 2021
+for both dates, so only roads differ. Two Copernicus DEM tiles over the sea
+(N05 E002, N05 E003) do not exist and were skipped, as expected.
+
+| | 2020 (OSM) | 2026 (OSM) | 2026 (OSM + ML) |
+|---|---:|---:|---:|
+| Road cells | 1,053,788 | 1,279,894 (+21%) | 1,387,214 (+32%) |
+| Cells faster than 2020 | – | 361,556 | 467,806 |
+| Cells slower than 2020 | – | 70,846 | 70,550 |
+| Mean speed (km/h) | 4.25 | 4.48 | 4.56 |
+| Mean friction (min/m) | 0.02061 | 0.02040 (−1.0%) | 0.02030 (−1.5%) |
+
+- About 2% of the area got faster. The mean friction barely moves because most cells
+  are off-road; the effect on travel time is concentrated along the new roads and
+  has to be measured with a cost-distance run (not done yet).
+- The 70,846 slower cells had a road in 2020 and not in 2026 at the same place, or a
+  road that was downgraded (class or surface). This matches the "gone" roads in 2.2,
+  i.e. mostly roads re-drawn elsewhere or deleted; treat them as map edits, not as
+  roads that disappeared on the ground.
+- Visual checks (`results_friction_benin_togo/`): the country-wide maps and the
+  20 × 20 km zooms around Dapaong and Kandi show the new 2026 roads as expected, and
+  the reservoir west of Dapaong as impassable. At 100 m with `all_touched`, roads
+  are 1–3 cells wide.
+- `landcover_speed.csv` holds placeholder walking speeds, so the absolute friction
+  values off-road are not calibrated; the 2020 vs 2026 difference on roads does not
+  depend on them.
+
 ## 3. Findings to act on
 
 1. **The "new since 2020" flag over-counts in Benin, much less in Togo.**
@@ -179,14 +210,30 @@ Outputs: `roads_merged.gpkg` (layer `roads`; columns `source`, `highway`, `speed
 `road_length_summary.csv`. Open the GeoPackage in QGIS and style it by `source` and
 `new_since_t1` to review the result.
 
+Friction maps for 2020 and 2026 (add the country outlines to `data/` first:
+`https://download.geofabrik.de/africa/benin.poly` and `.../togo.poly`). Land cover and
+elevation are streamed from the public ESA / Copernicus S3 buckets unless you pass
+local tiles with `--landcover-t1` and `--dem`:
+
+```bash
+python run_friction_benin_togo.py          # Benin + Togo, as in section 2.5
+python friction.py \
+  --osm-pbf-t1 data/benin-200101.osm.pbf data/togo-200101.osm.pbf \
+  --osm-pbf-t2 data/benin-260901.osm.pbf data/togo-260901.osm.pbf \
+  --boundary data/benin.poly data/togo.poly --out-dir output_friction
+# to update an existing friction map instead: add --base-friction existing.tif
+```
+
 Resources: on the GitHub runner (4 CPU, 16 GB RAM) the full test took a few minutes;
 most of the time is the v00 comparison and the sensitivity loop in `run_benin_togo.py`,
 which `merge_roads.py` does not do. I did not measure peak memory.
 
 ### 4.4 GitHub Actions (optional)
 
-`.github/workflows/roads_merge.yml` re-runs the tests and the Benin + Togo run on
-every push that changes `roads_merge/`, and commits `results_benin_togo/` back.
+`.github/workflows/roads_merge.yml` re-runs the tests and the Benin + Togo roads run
+when the roads-merge files change, and commits `results_benin_togo/` back.
+`.github/workflows/friction.yml` does the same for the friction maps
+(`results_friction_benin_togo/`). Both can also be started by hand ("Run workflow").
 GitHub only runs workflows from `.github/workflows/`, not from other folders.
 On a fork, Actions are disabled until you enable them in the repository's
 **Actions** tab. You do not need the workflow to run anything on your computer.
