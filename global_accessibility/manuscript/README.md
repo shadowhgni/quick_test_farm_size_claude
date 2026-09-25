@@ -1,6 +1,6 @@
 # Manuscript drafts
 
-- `Methods_Results.docx`: Methods (full global workflow) and Results (regional test,
+- `Methods_Results.docx`: Methods (full global workflow), Results and Discussion (regional test,
   1°W–4.5°E, 5.5–13.5°N, 2015 vs 2026). Values marked **[global]** are to be replaced
   after the global run.
 - `Supplementary_Material.docx`: Text S1 (implementation), Tables S1–S10, Figures S1–S2.
