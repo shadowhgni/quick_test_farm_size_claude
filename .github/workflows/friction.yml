@@ -1,27 +1,32 @@
-name: Roads merge (Benin + Togo)
+name: Friction maps 2020 / 2026 (Benin + Togo)
 
 on:
   push:
-    branches: [main, 'claude/roaddetections-fork-test-*']
+    branches: [main, 'claude/**']
     paths:
-      - 'roads_merge/merge_roads.py'
-      - 'roads_merge/run_benin_togo.py'
-      - 'roads_merge/tests/test_merge_roads.py'
-      - 'roads_merge/tests/test_run_benin_togo.py'
+      - 'roads_merge/friction.py'
+      - 'roads_merge/run_friction_benin_togo.py'
+      - 'roads_merge/landcover_speed.csv'
       - 'roads_merge/speed_table.csv'
-      - 'roads_merge/requirements.txt'
-      - '.github/workflows/roads_merge.yml'
+      - 'roads_merge/tests/test_friction.py'
+      - '.github/workflows/friction.yml'
   workflow_dispatch:
 
 jobs:
-  benin-togo:
+  friction:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     permissions:
       contents: write   # commit results back
     defaults:
       run:
         working-directory: roads_merge
+    env:
+      # fewer HTTP requests when GDAL reads the WorldCover / Copernicus COGs remotely
+      GDAL_DISABLE_READDIR_ON_OPEN: EMPTY_DIR
+      CPL_VSIL_CURL_ALLOWED_EXTENSIONS: .tif
+      GDAL_HTTP_MAX_RETRY: '5'
+      GDAL_HTTP_RETRY_DELAY: '2'
 
     steps:
       - uses: actions/checkout@v4
@@ -42,9 +47,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: roads_merge/data
-          key: roads-data-200101-260901-ms20250428
+          key: roads-data-200101-260901-ms20250428-poly
 
-      - name: Download OSM snapshots + Microsoft roads
+      - name: Download OSM snapshots, outlines, Microsoft roads
         run: |
           mkdir -p data && cd data
           get() { [ -s "$2" ] || curl -fsSL --retry 3 -o "$2" "$1"; }
@@ -52,28 +57,22 @@ jobs:
             for t in 200101 260901; do
               get "https://download.geofabrik.de/africa/$c-$t.osm.pbf" "$c-$t.osm.pbf"
             done
+            get "https://download.geofabrik.de/africa/$c.poly" "$c.poly"
           done
           get "https://usaminedroads.z19.web.core.windows.net/drops/2025.04.28/Western_Africa.zip" Western_Africa.zip
           ls -lh
 
-      - name: Copy RoadDetections images (reference only)
-        run: |
-          mkdir -p roaddetections_images && cd roaddetections_images
-          for f in ARMP.Heatmap-v.2025.01.01.01.00.00.png scheme.png; do
-            curl -fsSL --retry 3 -o "$f" "https://raw.githubusercontent.com/microsoft/RoadDetections/main/images/$f" || true
-          done
+      - name: Friction maps
+        run: python run_friction_benin_togo.py 2>&1 | tee run_friction_stdout.txt
 
-      - name: Run Benin + Togo
-        run: python run_benin_togo.py 2>&1 | tee run_stdout.txt
-
-      - name: Upload large outputs
+      - name: Upload rasters
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: roads-benin-togo-run${{ github.run_number }}
+          name: friction-benin-togo-run${{ github.run_number }}
           path: |
-            roads_merge/output_benin_togo/
-            roads_merge/results_benin_togo/
+            roads_merge/output_friction_benin_togo/
+            roads_merge/results_friction_benin_togo/
           retention-days: 30
 
       - name: Commit small results back
@@ -81,7 +80,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add results_benin_togo/ run_stdout.txt roaddetections_images/ 2>/dev/null || true
+          git add results_friction_benin_togo/ run_friction_stdout.txt 2>/dev/null || true
           git diff --cached --quiet && exit 0
-          git commit -m "ci: roads merge Benin+Togo run #${{ github.run_number }} [skip ci]"
+          git commit -m "ci: friction maps Benin+Togo run #${{ github.run_number }} [skip ci]"
           for i in 1 2 3; do git pull --rebase origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && break; sleep 5; done

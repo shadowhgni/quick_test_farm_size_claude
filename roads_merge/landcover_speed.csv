@@ -1,0 +1,16 @@
+# Off-road walking speed (km/h) on flat ground by ESA WorldCover class.
+# PLACEHOLDER values within the 1-5 km/h range suggested for rural Africa;
+# calibrate, or replace with the land-cover speeds of the friction map you update.
+# speed_kmh = 0 -> impassable (friction nodata); roads and bridges still cross it.
+class,name,speed_kmh
+10,Tree cover,2.5
+20,Shrubland,3.0
+30,Grassland,4.0
+40,Cropland,4.0
+50,Built-up,5.0
+60,Bare / sparse vegetation,3.0
+70,Snow and ice,1.0
+80,Permanent water bodies,0
+90,Herbaceous wetland,1.5
+95,Mangroves,1.0
+100,Moss and lichen,3.0

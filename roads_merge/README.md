@@ -12,6 +12,9 @@ Builds the road layer of an accessibility (travel-time-to-city) friction surface
 |---|---|
 | `merge_roads.py` | improved pipeline (CLI + importable functions) |
 | `speed_table.csv` | speed per OSM class, kept outside the code so it stays fixed across versions |
+| `friction.py` | friction maps (min/m) for two dates: road class speeds + land cover × Tobler slope factor |
+| `landcover_speed.csv` | off-road walking speed per ESA WorldCover class (placeholders, calibrate) |
+| `run_friction_benin_togo.py` | Benin + Togo 2020 / 2026 friction maps and quicklooks |
 | `REPORT.md` | Benin + Togo test results and local installation guide |
 | `run_benin_togo.py` | Benin + Togo test run: v00 comparison, sensitivity, QA maps |
 | `tests/` | offline tests on synthetic data (`pytest roads_merge/tests`) |
@@ -69,3 +72,38 @@ Data (checked 2026-09-25):
 - **Speeds** remain the largest source of error; calibrate them.
 - ML roads (15 km/h) are faster than unpaved OSM tracks (15 × 0.7 = 10.5 km/h), so
   where both overlap in one cell the ML value wins. Adjust `--ml-speed` if you calibrate.
+
+## Friction maps for two dates (`friction.py`)
+
+Speed per 100 m cell, fastest option wins:
+
+- **road cells:** class speed from `speed_table.csv` (unpaved factor included);
+- **off-road cells:** land-cover walking speed (`landcover_speed.csv`, flat terrain)
+  × Tobler factor `exp(-3.5 × tan(slope))`, slope from Copernicus GLO-30 averaged to
+  the grid. Water (WorldCover 80) is impassable unless a road crosses it.
+
+Friction = 60 / (1000 × speed) min/m, the unit of the Malaria Atlas Project surfaces.
+
+```bash
+python friction.py \
+  --osm-pbf-t1 data/benin-200101.osm.pbf data/togo-200101.osm.pbf \
+  --osm-pbf-t2 data/benin-260901.osm.pbf data/togo-260901.osm.pbf \
+  --boundary data/benin.poly data/togo.poly \
+  --ms-roads data/Western_Africa.zip --iso3 BEN TGO \
+  --out-dir output_friction
+```
+
+Outputs: `friction_t1.tif`, `friction_t2.tif`, `friction_t2_ml.tif` (with `--ms-roads`),
+`speed_change_t2_minus_t1_kmh.tif`, `friction_summary.csv`.
+
+- Land cover: by default ESA WorldCover **2021 for both dates**, so that only roads
+  change between the maps. WorldCover 2020 (v100) and 2021 (v200) were made with
+  different algorithms, so differencing them mixes real change with method change.
+  Pass `--landcover-t1` / `--landcover-t2` to override.
+- Tiles are read from the public S3 buckets by default; pass local files with
+  `--landcover-t1` and `--dem` to work offline.
+- **Updating an existing friction map:** `--base-friction existing.tif` keeps that
+  raster's grid and values off-road and burns only the roads of each date into it.
+  Roads already in the base map stay; roads absent at t1 cannot be removed.
+- Slope at 100 m is gentler than at 30 m, so the Tobler penalty is conservative.
+- `landcover_speed.csv` values are placeholders in the 1–5 km/h range; calibrate them.
