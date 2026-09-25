@@ -1,6 +1,6 @@
 # global_accessibility_v2.py — travel time to cities and ports, two reference years
 
-**Use `global_accessibility_v2.py`** (version 2.0.2: differences relative to Nelson et al.; safe resume after the friction is rebuilt; checks the PROJ database at start-up; Russia 2015 from the 2016 snapshot). It is version 1 (`global_accessibility.py`, kept
+**Use `global_accessibility_v2.py`** (version 2.0.3). It is version 1 (`global_accessibility.py`, kept
 for reference) plus a sensitivity analysis of the governance factor K and of the African
 border-crossing delay (stage `sensitivity`, see below).
 
@@ -28,6 +28,20 @@ python global_accessibility_v2.py               # full run (resumable: rerun aft
 Useful options: `--start 2015 --end 2026`, `--bbox W S E N` (regional run),
 `--stages download,grids` (run part of the chain), `--max-workers N`, `--no-cleanup`,
 `--no-ml`, `--no-weiss`, `--no-routing`, `--no-sensitivity`, `--sens-design oat|full`, `--routing-cities N`, `--work-dir`, `--results-dir`.
+
+### If something goes wrong at start-up or while planning downloads
+
+- **PROJ** (`ERROR 1: PROJ: ... Open of /opt/conda/share/proj failed`, or unknown EPSG codes):
+  at start-up the script tests the PROJ setting as it is, then without `PROJ_DATA`/`PROJ_LIB`,
+  then every `proj.db` folder shipped with the installed packages or the environment. It keeps
+  the first one that works with no PROJ error and prints `[bootstrap] PROJ data: ...`. To force
+  a folder, set `GA_PROJ_DATA=/path/to/folder/with/proj.db`.
+- **Geofabrik**: snapshots are found from each folder's directory listing (about 50 requests,
+  cached for 7 days in `WORK_DIR/downloads/geofabrik_listing`), not by probing each file.
+  Network errors, HTTP 429 and 5xx are retried with backoff; if the server stays unreachable, or
+  if more than half of the regions have no extract, the script stops with a message instead of
+  building maps without roads. Check `curl -I https://download.geofabrik.de/africa/` from the
+  node, wait, and rerun.
 
 No container tools are needed. Missing packages are installed with
 `pip install --target WORK_DIR/pylib`, so no administrator rights are required.

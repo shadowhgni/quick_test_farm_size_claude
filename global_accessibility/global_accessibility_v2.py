@@ -30,7 +30,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "2.0.2"
+__version__ = "2.0.3"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -165,6 +165,7 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 import time
 import traceback
 import zipfile
@@ -234,52 +235,74 @@ for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
 bootstrap(_WD)
 
 _PROJ_TEST = r"""
-import tempfile, os
+import os, tempfile
+import numpy, pandas, geopandas as gpd, pyogrio, rasterio, shapely   # same order as the script
 from rasterio.crs import CRS
 from rasterio.warp import transform
 assert CRS.from_epsg(4326).to_epsg() == 4326
 transform(CRS.from_epsg(4326), CRS.from_string("ESRI:54009"), [10.0], [10.0])
-import geopandas as gpd, shapely
 f = os.path.join(tempfile.mkdtemp(dir=os.environ.get("CPL_TMPDIR")), "t.gpkg")
 gpd.GeoDataFrame(geometry=[shapely.Point(0, 0)], crs=4326).to_file(f)
 assert gpd.read_file(f).crs.to_epsg() == 4326
 """
 
 
-def fix_proj_data():
-    """Make sure GDAL/PROJ find a proj.db before the geospatial libraries are imported.
+def _proj_dirs():
+    """Folders holding a proj.db: those shipped with the Python packages (any site-packages,
+    including ~/.local), then the environment's own share/proj."""
+    dirs = []
+    for sp in dict.fromkeys(p for p in sys.path if p and Path(p).is_dir()):
+        for pat in ("rasterio/proj_data", "pyogrio/proj_data", "fiona/proj_data", "pyproj/proj_dir/share/proj"):
+            dirs.append(Path(sp) / pat)
+    for pre in (os.environ.get("CONDA_PREFIX"), sys.prefix, sys.base_prefix):
+        if pre:
+            dirs.append(Path(pre) / "share" / "proj")
+    return [d for d in dict.fromkeys(dirs) if (d / "proj.db").is_file()]
 
-    A PROJ_DATA / PROJ_LIB variable pointing to a missing folder (e.g. set by a conda
-    activation script, "Open of /opt/conda/share/proj failed") breaks every CRS lookup.
-    Candidates are tried in a subprocess, first as is, then without the variables (pip
-    wheels use their bundled data), then the proj folders shipped with the packages.
+
+def fix_proj_data():
+    """Make sure GDAL/PROJ find a usable proj.db before the geospatial libraries are imported.
+
+    Conda activation scripts, other packages (e.g. a user-installed fiona) or a module
+    system can leave PROJ_DATA / PROJ_LIB pointing to a missing or incompatible database
+    ("PROJ: proj_create_from_database: Open of /opt/conda/share/proj failed"), which breaks
+    or silently degrades coordinate-system lookups. Each candidate setting is tested in a
+    subprocess that imports the libraries in the same order as this script: first the
+    environment as it is, then without the variables (pip wheels then use their bundled
+    data), then each proj.db folder found. A candidate counts only if it works AND PROJ
+    prints no error. GA_PROJ_DATA=<folder> forces a folder.
     """
     keys = ("PROJ_DATA", "PROJ_LIB")
-    dirs = []
-    for mod, sub in (("rasterio", "proj_data"), ("pyogrio", "proj_data"), ("pyproj", "proj_dir/share/proj")):
-        spec = importlib.util.find_spec(mod)
-        if spec and spec.submodule_search_locations:
-            dirs += [Path(d) / sub for d in spec.submodule_search_locations]
-    dirs += [Path(os.environ.get("CONDA_PREFIX", sys.prefix)) / "share" / "proj", Path(sys.prefix) / "share" / "proj"]
-    cands = [None, {}] + [{k: str(d) for k in keys} for d in dict.fromkeys(dirs) if (d / "proj.db").exists()]
+    old = {k: os.environ[k] for k in keys if os.environ.get(k)}
     base = {k: v for k, v in os.environ.items() if k not in keys}
+    if os.environ.get("GA_PROJ_DATA"):
+        cands = [("GA_PROJ_DATA", {k: os.environ["GA_PROJ_DATA"] for k in keys})]
+    else:
+        cands = [("as set", None), ("unset", {})] + [(str(d), {k: str(d) for k in keys}) for d in _proj_dirs()]
     pypath = os.pathsep.join([p for p in sys.path if p] + [os.environ.get("PYTHONPATH", "")]).strip(os.pathsep)
-    for c in cands:
+    tried, usable = [], None                   # tried: (label, returncode, PROJ error or "")
+    for label, c in cands:
         env = {**(os.environ.copy() if c is None else {**base, **c}), "PYTHONPATH": pypath}   # sees pylib
         r = subprocess.run([sys.executable, "-c", _PROJ_TEST], env=env, capture_output=True, text=True)
-        if r.returncode == 0:
-            if c is not None:
-                old = {k: os.environ.get(k) for k in keys if os.environ.get(k)}
-                for k in keys:
-                    os.environ.pop(k, None)
-                os.environ.update(c)
-                print(f"[bootstrap] PROJ data: {old or 'unset'} did not work; using "
-                      f"{c.get('PROJ_DATA', 'the data bundled with the packages')}", flush=True)
-            return
-        err = (r.stderr.strip().splitlines() or ["?"])[-1]
-    raise SystemExit("No working PROJ database (proj.db) was found, so coordinate systems cannot be "
-                     f"read. Last error: {err}. Set PROJ_DATA to a folder containing proj.db, or "
-                     "unset PROJ_DATA and PROJ_LIB, and rerun.")
+        noise = [ln.strip() for ln in r.stderr.splitlines() if "PROJ" in ln and "ERROR" in ln.upper()]
+        last = (noise or r.stderr.strip().splitlines() or [""])[-1][:200]
+        tried.append((label, r.returncode, last if (noise or r.returncode) else ""))
+        if r.returncode == 0 and (not noise or usable is None):
+            usable = (label, c, noise[-1][:200] if noise else "")
+            if not noise:
+                break                            # works and PROJ is silent
+    if usable is None:
+        raise SystemExit("No working PROJ database (proj.db) was found, so coordinate systems cannot be read.\n"
+                         + "\n".join(f"  {l}: {'works' if rc == 0 else 'fails'} {e}" for l, rc, e in tried)
+                         + "\nSet GA_PROJ_DATA to a folder containing proj.db (find / -name proj.db) and rerun.")
+    label, c, still = usable
+    if c is not None:
+        for k in keys:
+            os.environ.pop(k, None)
+        os.environ.update(c)
+    print(f"[bootstrap] PROJ data: {label}" + (f" (environment had {old})" if old else "")
+          + (f"; tried first: {[t[0] for t in tried[:-1]]}" if len(tried) > 1 else "")
+          + (f"; WARNING, PROJ still reports: {still}" if still else ""), flush=True)
 
 
 fix_proj_data()
@@ -438,14 +461,64 @@ def download(url, dest, sess=None, retries=5, record=True):
     raise RuntimeError(f"download failed: {url}")
 
 
-def head_ok(url, sess):
-    for _ in range(3):
+class RemoteUnavailable(RuntimeError):
+    """A server kept failing (network error, 429 or 5xx): stop instead of guessing."""
+
+
+def http_request(url, sess, method="HEAD", tries=6, **kw):
+    """Response of a HEAD/GET, retrying network errors, 429 and 5xx with backoff (5 s to
+    2 min). Any other status (200, 404, ...) is returned as is. Raises RemoteUnavailable."""
+    delay, last = 5, None
+    for i in range(tries):
         try:
-            h = sess.head(url, timeout=60, allow_redirects=True)
-            return h.ok, int(h.headers.get("Content-Length", 0) or 0)
-        except Exception:
-            time.sleep(3)
-    return False, 0
+            r = sess.request(method, url, timeout=60, allow_redirects=True, **kw)
+            if r.status_code != 429 and r.status_code < 500:
+                return r
+            last = f"HTTP {r.status_code}"
+            wait = r.headers.get("Retry-After", "")
+            delay = max(delay, int(wait)) if wait.isdigit() else delay
+        except requests.RequestException as e:
+            last = repr(e)
+        if i < tries - 1:
+            time.sleep(delay); delay = min(delay * 2, 120)
+    raise RemoteUnavailable(f"{url}: {last} after {tries} attempts")
+
+
+def head_ok(url, sess):
+    """(exists, bytes). A 404/410 means absent; other failures raise RemoteUnavailable."""
+    r = http_request(url, sess, "HEAD")
+    if r.status_code in (404, 410):
+        return False, 0
+    if not r.ok:
+        raise RemoteUnavailable(f"{url}: HTTP {r.status_code}")
+    return True, int(r.headers.get("Content-Length", 0) or 0)
+
+
+_UNITS = {"": 1, "K": 2**10, "M": 2**20, "G": 2**30, "T": 2**40}
+
+
+def geofabrik_listing(dir_url, cache_dir, sess, max_age_days=7):
+    """{file name: approximate bytes} of the .osm.pbf files in a Geofabrik folder, from its raw
+    directory index (one request per folder instead of one per file; cached on disk).
+    None if the page is not a raw index (e.g. the site root)."""
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    f = cache_dir / (re.sub(r"[^A-Za-z0-9]+", "_", dir_url).strip("_") + ".json")
+    if f.exists() and time.time() - f.stat().st_mtime < max_age_days * 86400:
+        return json.loads(f.read_text())["files"]
+    r = http_request(dir_url.rstrip("/") + "/", sess, "GET")
+    files = None
+    if r.ok:
+        found = {}
+        for line in r.text.splitlines():
+            for m in re.finditer(r'href="([^"?#]*?([^"/?#]+\.osm\.pbf))"', line):
+                tail = re.sub(r"<[^>]+>", " ", line[m.end():])
+                sm = re.search(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}\s+([\d.]+)\s*([KMGT]?)\b", tail)
+                found[m.group(2)] = int(float(sm.group(1)) * _UNITS[sm.group(2)]) if sm else 0
+        files = found if any(n.endswith("-latest.osm.pbf") for n in found) else None
+        f.write_text(json.dumps({"url": dir_url, "files": files}))   # cache successful reads only
+    elif r.status_code not in (403, 404):
+        raise RemoteUnavailable(f"{dir_url}: HTTP {r.status_code}")
+    return files
 
 
 def sha256(path, limit=200 * 2**20):
@@ -748,6 +821,15 @@ def warm_up_numba():
 # stage: download
 # =============================================================================
 def geofabrik_plan(work, grid, years, sess):
+    try:
+        return _geofabrik_plan(work, grid, years, sess)
+    except RemoteUnavailable as e:
+        raise SystemExit(f"Geofabrik is not reachable or refuses the requests ({e}). Nothing was "
+                         "planned. Check `curl -I https://download.geofabrik.de/africa/` from this "
+                         "node, wait (an hour if the server throttles), and rerun.") from None
+
+
+def _geofabrik_plan(work, grid, years, sess):
     """Per year, the Geofabrik extracts covering the grid: the smallest regions with a
     1 January snapshot of that year (falling back to parent regions when a region did
     not exist yet), and '-latest' for the current year if the snapshot is missing."""
@@ -763,8 +845,8 @@ def geofabrik_plan(work, grid, years, sess):
               and geoms[i].intersects(area)]
     today = dt.date.today()
     plan = {}
+    listings, listing_lock = {}, threading.Lock()
     for y in years:
-        stamp = f"{y % 100:02d}0101"
         chosen = {}
 
         def url_for(rid, yy):
@@ -773,12 +855,23 @@ def geofabrik_plan(work, grid, years, sess):
 
         cache = {}
 
+        def exists(url):
+            """(exists, bytes) from the folder listing, or a HEAD where there is none."""
+            d, name = url.rsplit("/", 1)
+            with listing_lock:
+                if d not in listings:
+                    listings[d] = geofabrik_listing(d, work / "downloads" / "geofabrik_listing", sess)
+            lst = listings[d]
+            if lst is not None:
+                return name in lst, lst.get(name, 0)
+            return head_ok(url, sess)
+
         def available(rid, yy):
             if (rid, yy) not in cache:
                 u, latest = url_for(rid, yy)
-                ok, size = head_ok(u, sess)
+                ok, size = exists(u)
                 if not ok and yy >= today.year:
-                    ok, size = head_ok(latest, sess)
+                    ok, size = exists(latest)
                     u = latest if ok else u
                 cache[(rid, yy)] = (ok, u, size)
             return cache[(rid, yy)]
@@ -816,6 +909,15 @@ def geofabrik_plan(work, grid, years, sess):
                 p = parents.get(p)
             return False
         chosen = {k: v for k, v in chosen.items() if not has_chosen_ancestor(k)}
+        if not chosen or len(missing) > 0.5 * len(leaves):
+            raise SystemExit(f"OSM {y}: no Geofabrik extract found for {len(missing)} of {len(leaves)} regions. "
+                             "This is not plausible for OSM, so Geofabrik was probably not reachable or "
+                             "blocked the requests: check `curl -I https://download.geofabrik.de/africa/` "
+                             "from this node, wait, and rerun (listings are cached in "
+                             "WORK_DIR/downloads/geofabrik_listing).")
+        for k, v in chosen.items():            # sizes from the listing (2 digits); HEAD where it has none
+            if not v[2]:
+                chosen[k] = (v[0], v[1], head_ok(v[1], sess)[1], v[3])
         plan[y] = [{"region": k, "url": v[1], "bytes": v[2], "snapshot_year": v[3],
                     "bounds": list(geoms[k].bounds) if geoms[k] else None}
                    for k, v in sorted(chosen.items())]

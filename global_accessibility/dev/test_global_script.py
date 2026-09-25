@@ -392,8 +392,11 @@ def test_block_mode_and_water():
 
 
 def test_geofabrik_plan_falls_back_to_next_snapshot(tmp_path, monkeypatch):
-    """Russia has no 2015 snapshot on Geofabrik (the first is russia-160101)."""
-    sq = lambda w, s, e, n: {"type": "Polygon", "coordinates": [[[w, s], [e, s], [e, n], [w, n], [w, s]]]}
+    """Snapshots are read from Geofabrik's folder listings (HEAD only where there is none,
+    e.g. the site root). Russia has no 2015 snapshot (the first is russia-160101)."""
+    import types
+    import pytest
+    sq = lambda w, s_, e, n: {"type": "Polygon", "coordinates": [[[w, s_], [e, s_], [e, n], [w, n], [w, s_]]]}
     base = "https://download.geofabrik.de/"
     feats = [
         {"properties": {"id": "europe", "urls": {"pbf": base + "europe-latest.osm.pbf"}}, "geometry": sq(0, 40, 30, 60)},
@@ -405,14 +408,89 @@ def test_geofabrik_plan_falls_back_to_next_snapshot(tmp_path, monkeypatch):
         {"properties": {"id": "mars", "urls": {"pbf": base + "mars-latest.osm.pbf"}}, "geometry": sq(60, 40, 70, 60)},
     ]
     idx = tmp_path / "idx.json"; idx.write_text(json.dumps({"features": feats}))
-    exist = {"europe/france-150101", "russia-160101", "europe/france-260101", "russia/ural-260101"}
+    apache = lambda names: "<pre>\n" + "\n".join(
+        f'<a href="{n}">{n}</a>   2026-01-02 00:25  46M' for n in names) + "\n</pre>"
+    table = lambda names: "<table>\n" + "\n".join(
+        f'<tr><td><a href="{n}">{n}</a></td><td align="right">2026-01-02 00:25  </td><td align="right">1.5G</td></tr>'
+        for n in names) + "\n</table>"
+    pages = {base + "europe/": apache(["france-150101.osm.pbf", "france-260101.osm.pbf", "france-latest.osm.pbf"]),
+             base + "russia/": table(["ural-260101.osm.pbf", "ural-latest.osm.pbf"]),
+             base: "<html>Geofabrik home page, not a raw listing</html>"}
+    root_files = {base + "russia-160101.osm.pbf": 3_900_000_000}
+    calls = []
+
+    def fake(url, sess, method="HEAD", tries=6, **kw):
+        calls.append((method, url))
+        if method == "GET":
+            return types.SimpleNamespace(status_code=200, ok=True, text=pages.get(url, ""), headers={})
+        n = root_files.get(url)
+        return types.SimpleNamespace(status_code=200 if n else 404, ok=bool(n), text="",
+                                     headers={"Content-Length": str(n or 0)})
     monkeypatch.setattr(ga, "download", lambda url, dest, sess: idx)
-    monkeypatch.setattr(ga, "head_ok", lambda u, sess: (u[len(base):].replace(".osm.pbf", "") in exist, 1000))
+    monkeypatch.setattr(ga, "http_request", fake)
     grid = ga.Grid((0, 40, 70, 60), 0.5)
     plan = ga.geofabrik_plan(tmp_path, grid, [2015, 2026], None)
     p15 = {r["region"]: r for r in plan[2015]}
     assert set(p15) == {"france", "russia"}
     assert p15["russia"]["url"].endswith("russia-160101.osm.pbf") and p15["russia"]["snapshot_year"] == 2016
-    assert p15["france"]["snapshot_year"] == 2015
-    assert {r["region"] for r in plan[2026]} == {"france", "ural"}        # mars: no data at all
+    assert p15["russia"]["bytes"] == 3_900_000_000                     # HEAD at the site root
+    assert p15["france"]["snapshot_year"] == 2015 and p15["france"]["bytes"] == 46 * 2**20
+    p26 = {r["region"]: r for r in plan[2026]}
+    assert set(p26) == {"france", "ural"} and p26["ural"]["bytes"] == int(1.5 * 2**30)   # mars: no data
     assert any("no snapshot for 1 regions" in m and "mars" in m for m in ga.LOG)
+    gets = [u for m, u in calls if m == "GET"]
+    assert len(gets) == len(set(gets)) == 3                              # one request per folder
+    n = len(calls); ga.geofabrik_plan(tmp_path, grid, [2015], None)
+    assert not [c for c in calls[n:] if c[0] == "GET"]                   # listings cached on disk
+
+    # a server that keeps failing stops the run instead of planning a world without roads
+    def down(url, sess, method="HEAD", tries=6, **kw):
+        raise ga.RemoteUnavailable(f"{url}: ConnectionError after 6 attempts")
+    monkeypatch.setattr(ga, "http_request", down)
+    with pytest.raises(SystemExit, match="not reachable"):
+        ga.geofabrik_plan(tmp_path / "fresh", grid, [2015], None)
+    # ... and so does a plan that is implausibly empty
+    monkeypatch.setattr(ga, "http_request", lambda url, sess, method="HEAD", tries=6, **kw: types.SimpleNamespace(
+        status_code=404, ok=False, text="", headers={}))
+    with pytest.raises(SystemExit, match="no Geofabrik extract found"):
+        ga.geofabrik_plan(tmp_path / "fresh2", grid, [2015], None)
+
+
+def test_http_request_retries_then_raises(monkeypatch):
+    import types
+    import pytest
+    monkeypatch.setattr(ga.time, "sleep", lambda s: None)
+    seq = iter([503, 429, 200])
+
+    class S:
+        def request(self, method, url, **kw):
+            return types.SimpleNamespace(status_code=next(seq), headers={})
+    assert ga.http_request("u", S()).status_code == 200
+    assert ga.head_ok.__doc__ and ga.http_request("u", types.SimpleNamespace(
+        request=lambda *a, **k: types.SimpleNamespace(status_code=404, headers={}))).status_code == 404
+
+    class Down:
+        def request(self, method, url, **kw):
+            raise ga.requests.ConnectionError("reset by peer")
+    with pytest.raises(ga.RemoteUnavailable):
+        ga.http_request("u", Down(), tries=3)
+
+
+def test_fix_proj_data_prefers_a_setting_without_proj_errors(monkeypatch):
+    """The HPC case: the environment 'works' but PROJ prints 'Open of /opt/conda/share/proj
+    failed'; the script must move on to a setting where PROJ is silent."""
+    import types
+    monkeypatch.setenv("PROJ_LIB", "/opt/conda/share/proj")
+    monkeypatch.delenv("PROJ_DATA", raising=False)
+    monkeypatch.delenv("GA_PROJ_DATA", raising=False)
+    seen = []
+
+    def run(cmd, env, **kw):
+        seen.append(env.get("PROJ_LIB"))
+        noisy = env.get("PROJ_LIB") == "/opt/conda/share/proj"
+        return types.SimpleNamespace(returncode=0, stderr="ERROR 1: PROJ: proj_create_from_database: "
+                                     "Open of /opt/conda/share/proj failed\n" if noisy else "")
+    monkeypatch.setattr(ga.subprocess, "run", run)
+    ga.fix_proj_data()
+    assert seen == ["/opt/conda/share/proj", None]                      # as set (noisy), then unset
+    assert "PROJ_LIB" not in ga.os.environ and "PROJ_DATA" not in ga.os.environ
