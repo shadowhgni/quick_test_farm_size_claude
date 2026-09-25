@@ -13,11 +13,12 @@ needed for the Methods section, then deletes the intermediate files.
 Usage (from a terminal or a Jupyter cell with "!"):
     python global_accessibility.py                     # full global run
     python global_accessibility.py --dry-run           # plan: downloads, memory, workers
-    python global_accessibility.py --bbox -1 5.5 4.5 13.5 --start 2020 --end 2026
+    python global_accessibility.py --bbox -1 5.5 4.5 13.5 --start 2015 --end 2026
     python global_accessibility.py --stages download   # one stage (others resume later)
 
 Stages (each resumes where it stopped; completed stages are skipped):
-    download -> grids -> roads -> friction -> traveltime -> outputs -> compare -> cleanup
+    download -> grids -> roads -> friction -> traveltime -> outputs -> compare -> validate
+    -> cleanup
 
 Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
     cities_1..9   travel time to settlements of one population class only
@@ -29,7 +30,7 @@ from __future__ import annotations
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
 # =============================================================================
-START_YEAR = 2020               # first reference year
+START_YEAR = 2015               # first reference year (2015 = year of Nelson et al. 2019)
 END_YEAR = 2026                 # second reference year
 WORK_DIR = "./ga_work"          # downloads and intermediate files (deleted at the end)
 RESULTS_DIR = "./ga_results"    # everything kept
@@ -86,9 +87,22 @@ HEADLINE_LAYER = "cities_11"    # >= 50,000 inhabitants
 URBAN_CODES = (21, 22, 23, 30)  # GHS-SMOD urban clusters and centres
 PORT_SNAP_KM = 5.0              # move ports on water to the nearest land cell
 
-# --- comparison with Nelson et al. (2019) -------------------------------------
+# --- comparison with Nelson et al. (2019), latest figshare version ----------------
 NELSON_COMPARE = True
+NELSON_ARTICLE = 7638134        # figshare article (v3 is cited by R geodata; v4 = same rasters)
 NELSON_LAYERS = None            # None = all 17; or e.g. ["cities_11", "ports_5"]
+
+# --- validation of the end year against a free routing engine (OSRM, OSM car) ---
+ROUTING_VALIDATION = True
+ROUTING_SERVERS = ["https://router.project-osrm.org",            # demo server, 1 req/s,
+                   "https://routing.openstreetmap.de/routed-car"]  # FOSSGIS, 1 req/s
+ROUTING_PROFILE = "driving"
+ROUTING_MIN_INTERVAL_S = 1.1    # both servers ask for at most 1 request per second
+ROUTING_CITIES = 250            # settlements >= ROUTING_MIN_POP sampled (by continent)
+ROUTING_MIN_POP = 5e4
+ROUTING_ORIGINS_PER_CITY = 10   # origins per city, population-weighted
+ROUTING_RADIUS_KM = (10, 150)   # great-circle distance of origins from the city
+ROUTING_MAX_SNAP_M = 1000       # drop pairs where OSRM moved a point further than this
 
 # --- resources (None = detect) --------------------------------------------------
 MAX_WORKERS = None              # cap on processes
@@ -233,7 +247,7 @@ URLS = {
             "key=16920959/SFH00000/UpdatedPub150.csv"),
     "naturalearth": "https://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_0_countries.zip",
     "wgi": "https://api.worldbank.org/v2/country/all/indicator/{ind}",
-    "nelson": "https://api.figshare.com/v2/articles/7638134",
+    "nelson": "https://api.figshare.com/v2/articles/{a}",
 }
 GHSL_EPOCHS = list(range(1975, 2031, 5))
 
@@ -371,15 +385,30 @@ class Grid:
 
     def __init__(self, bbox, res_deg):
         w, s, e, n = bbox
+        eps = 1e-6          # bounds that are already on the lattice must not move a cell
+        fl = lambda x: math.floor(x + eps)
+        ce = lambda x: math.ceil(x - eps)
         snap = lambda v, f: f((v + 180.0) / res_deg) * res_deg - 180.0
         snapy = lambda v, f: 90.0 - f((90.0 - v) / res_deg) * res_deg
-        self.west, self.east = snap(w, math.floor), snap(e, math.ceil)
-        self.north, self.south = snapy(n, math.floor), snapy(s, math.ceil)
+        math_floor, math_ceil = fl, ce
+        self.west, self.east = snap(w, math_floor), snap(e, math_ceil)
+        self.north, self.south = snapy(n, math_floor), snapy(s, math_ceil)
         self.res = res_deg
         self.width = int(round((self.east - self.west) / res_deg))
         self.height = int(round((self.north - self.south) / res_deg))
         self.transform = from_origin(self.west, self.north, res_deg, res_deg)
         self.wrap = (self.east - self.west) >= 360.0 - 1e-9
+
+    def subgrid(self, r0, c0, nr, nc):
+        """Exact window of this grid (no re-snapping)."""
+        g = object.__new__(Grid)
+        g.res = self.res
+        g.west, g.north = self.west + c0 * self.res, self.north - r0 * self.res
+        g.east, g.south = g.west + nc * self.res, g.north - nr * self.res
+        g.width, g.height = nc, nr
+        g.transform = from_origin(g.west, g.north, self.res, self.res)
+        g.wrap = False
+        return g
 
     @property
     def shape(self):
@@ -723,19 +752,32 @@ def stage_download(ctx):
     jobs.append((URLS["wpi"], dl / "UpdatedPub150.csv"))
     jobs.append((URLS["naturalearth"], dl / "ne_10m_admin_0_countries.zip"))
     jobs.append((URLS["copdem_list"], dl / "copdem90_tileList.txt"))
+    nelson_md5 = {}
     if NELSON_COMPARE:
-        art = sess.get(URLS["nelson"], timeout=120).json()
+        base = URLS["nelson"].format(a=NELSON_ARTICLE)
+        latest = max(v["version"] for v in sess.get(base + "/versions", timeout=120).json())
+        art = sess.get(f"{base}/versions/{latest}", timeout=120).json()
         (dl / "nelson").mkdir(parents=True, exist_ok=True)
         (dl / "nelson" / "article.json").write_text(json.dumps(art, indent=1))
+        log(f"Nelson et al. 2019: figshare version {latest}, doi {art.get('doi')}")
         wanted = set(ctx["nelson_layers"])
         for f in art["files"]:
             m = re.match(r"travel_time_to_(cities|ports)_(\d+)\.tif$", f["name"])
             if (m and f"{m[1]}_{m[2]}" in wanted) or f["name"] == "README.txt":
                 jobs.append((f["download_url"], dl / "nelson" / f["name"]))
+                nelson_md5[f["name"]] = f.get("computed_md5")
     total = sum(r["bytes"] for y in years for r in plan[y])
     log(f"downloads: {len(jobs)} files (OSM {total / 1e9:.1f} GB + others)")
     with cf.ThreadPoolExecutor(DOWNLOAD_WORKERS) as ex:
         list(ex.map(lambda j: download(j[0], j[1], session()), jobs))
+    for name, md5 in nelson_md5.items():
+        h = hashlib.md5()
+        with open(dl / "nelson" / name, "rb") as fh:
+            for chunk in iter(lambda: fh.read(1 << 22), b""):
+                h.update(chunk)
+        if md5 and h.hexdigest() != md5:
+            (dl / "nelson" / name).unlink()
+            raise RuntimeError(f"MD5 mismatch for Nelson file {name}; deleted, rerun to fetch again")
 
     # World Bank WGI, all years
     wgi = []
@@ -1557,6 +1599,13 @@ def write_methods(ctx):
              [f"settlements_{e}.csv" for e in sorted(set(ctx["epoch"].values()))]:
         if (work / f).exists():
             shutil.copy(work / f, res / f)
+    if (dl / "nelson" / "article.json").exists():
+        art = json.loads((dl / "nelson" / "article.json").read_text())
+        (res / "nelson2019_figshare.json").write_text(json.dumps(
+            {k: art.get(k) for k in ("title", "doi", "version", "published_date", "modified_date",
+                                     "license")} | {"files": [{"name": f["name"], "md5": f.get(
+                                         "computed_md5"), "bytes": f["size"]} for f in art["files"]]},
+            indent=1, default=str))
     if (work / "african_borders.gpkg").exists():
         shutil.copy(work / "african_borders.gpkg", res / "african_borders.gpkg")
     man = pd.DataFrame(MANIFEST)
@@ -1667,6 +1716,158 @@ def stage_compare(ctx):
 
 
 # =============================================================================
+# stage: validation of the end year against OSRM (free routing engine, OSM car profile)
+# =============================================================================
+def great_circle_km(lon1, lat1, lon2, lat2):
+    lon1, lat1, lon2, lat2 = map(np.radians, (lon1, lat1, lon2, lat2))
+    a = np.sin((lat2 - lat1) / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin((lon2 - lon1) / 2) ** 2
+    return 2 * R_EARTH / 1000 * np.arcsin(np.sqrt(np.clip(a, 0, 1)))
+
+
+class RateLimited:
+    """OSRM table requests, one per ROUTING_MIN_INTERVAL_S, trying each server in turn."""
+
+    def __init__(self):
+        self.sess, self.last, self.bad = session(), 0.0, set()
+
+    def table(self, coords, n_src):
+        q = ";".join(f"{x:.6f},{y:.6f}" for x, y in coords)
+        params = {"sources": ";".join(map(str, range(n_src))),
+                  "destinations": str(n_src), "annotations": "duration,distance"}
+        for srv in ROUTING_SERVERS:
+            if srv in self.bad:
+                continue
+            wait = self.last + ROUTING_MIN_INTERVAL_S - time.time()
+            if wait > 0:
+                time.sleep(wait)
+            self.last = time.time()
+            try:
+                r = self.sess.get(f"{srv}/table/v1/{ROUTING_PROFILE}/{q}", params=params, timeout=60)
+                if r.status_code == 429:
+                    time.sleep(30)
+                    continue
+                j = r.json()
+                if j.get("code") == "Ok":
+                    return j, srv
+                log(f"routing {srv}: {j.get('code')} {j.get('message', '')[:80]}")
+            except Exception as e:
+                log(f"routing {srv} failed: {e!r}")
+                self.bad.add(srv) if "Connection" in repr(e) else None
+        return None, None
+
+
+def stage_validate(ctx):
+    if not ROUTING_VALIDATION:
+        return
+    grid, work, res = ctx["grid"], ctx["work"], ctx["results"] / "routing_validation"
+    res.mkdir(parents=True, exist_ok=True)
+    y = ctx["years"][-1]
+    e = ctx["epoch"][y]
+    fr = memmap(work / f"friction_{y}.npy", grid, None, mode="r")
+    pop = memmap(work / f"population_{e}.npy", grid, None, mode="r")
+    cg = memmap(work / "countries.npy", grid, None, mode="r")
+    ct = pd.read_csv(work / "countries.csv").set_index("cid")
+    st = pd.read_csv(work / f"settlements_{e}.csv")
+    st = st[(st.population >= ROUTING_MIN_POP) & st.lon.between(grid.west, grid.east)
+            & st.lat.between(grid.south, grid.north)].copy()
+    st["row"] = ((grid.north - st.lat) / grid.res).astype(int)
+    st["col"] = ((st.lon - grid.west) / grid.res).astype(int)
+    st["continent"] = [ct.CONTINENT.get(int(cg[r, c]), "none") for r, c in zip(st.row, st.col)]
+    rng = np.random.default_rng(42)
+    # stratified by continent, proportional to sqrt(number of cities), at least 5 each
+    counts = st.continent.value_counts()
+    alloc = np.maximum(5, np.round(ROUTING_CITIES * np.sqrt(counts) / np.sqrt(counts).sum()))
+    parts = [g.sample(min(len(g), int(alloc[c])), random_state=1) for c, g in st.groupby("continent")]
+    cities = pd.concat(parts).head(ROUTING_CITIES) if parts else st.head(0)
+    log(f"routing validation: {len(cities)} cities, up to {ROUTING_ORIGINS_PER_CITY} origins each, "
+        f"~{len(cities) * ROUTING_MIN_INTERVAL_S / 60:.0f} min at 1 request/s")
+    warm_up_numba()
+    osrm, rows = RateLimited(), []
+    rmax = ROUTING_RADIUS_KM[1] * 1.1
+    for _, cty in cities.iterrows():
+        dlat = rmax / 111.2
+        dlon = rmax / (111.2 * max(math.cos(math.radians(cty.lat)), 0.05))
+        w = grid.window_of((cty.lon - dlon, cty.lat - dlat, cty.lon + dlon, cty.lat + dlat))
+        if not w:
+            continue
+        r0, c0, nr, nc = w
+        sub = grid.subgrid(r0, c0, nr, nc)
+        f = np.array(fr[r0:r0 + nr, c0:c0 + nc])
+        pr, pc = port_cells(pd.DataFrame({"Longitude": [cty.lon], "Latitude": [cty.lat]}), sub, f)
+        if pr[0] < 0:
+            continue
+        t = travel_time(f, [int(pr[0]) * sub.width + int(pc[0])], sub)
+        p = np.array(pop[r0:r0 + nr, c0:c0 + nc], np.float64)
+        rr, cc = np.nonzero(np.isfinite(t) & (p > 1))
+        if not len(rr):
+            continue
+        lon = sub.west + (cc + 0.5) * sub.res; lat = sub.north - (rr + 0.5) * sub.res
+        d = great_circle_km(lon, lat, cty.lon, cty.lat)
+        keep = (d >= ROUTING_RADIUS_KM[0]) & (d <= ROUTING_RADIUS_KM[1])
+        if keep.sum() == 0:
+            continue
+        idx = np.flatnonzero(keep)
+        w_ = p[rr[idx], cc[idx]]
+        pick = rng.choice(idx, size=min(ROUTING_ORIGINS_PER_CITY, len(idx)), replace=False,
+                          p=w_ / w_.sum())
+        coords = [(lon[i], lat[i]) for i in pick] + [(cty.lon, cty.lat)]
+        j, srv = osrm.table(coords, len(pick))
+        if j is None:
+            continue
+        for k, i in enumerate(pick):
+            dur = j["durations"][k][0]
+            dist = (j.get("distances") or [[None]])[k][0] if j.get("distances") else None
+            rows.append({"settlement_id": int(cty.settlement_id), "population": cty.population,
+                         "continent": cty.continent, "city_lon": cty.lon, "city_lat": cty.lat,
+                         "origin_lon": round(float(lon[i]), 5), "origin_lat": round(float(lat[i]), 5),
+                         "great_circle_km": round(float(d[i]), 2),
+                         "ours_min": round(float(t[rr[i], cc[i]]), 1),
+                         "osrm_min": None if dur is None else round(dur / 60, 1),
+                         "osrm_km": None if dist is None else round(dist / 1000, 2),
+                         "snap_origin_m": round(j["sources"][k].get("distance", np.nan), 1),
+                         "snap_city_m": round(j["destinations"][0].get("distance", np.nan), 1),
+                         "server": srv})
+    df = pd.DataFrame(rows)
+    df.to_csv(res / f"pairs_{y}.csv", index=False)
+    if df.empty:
+        log("routing validation: no pairs (servers unreachable?)")
+        return
+    ok = df.osrm_min.notna() & (df.snap_origin_m <= ROUTING_MAX_SNAP_M) & \
+        (df.snap_city_m <= ROUTING_MAX_SNAP_M) & (df.osrm_min > 0)
+    v = df[ok]
+
+    def stats(g):
+        a, b = g.ours_min.values, g.osrm_min.values
+        return pd.Series({"pairs": len(g), "median_ours_min": np.median(a),
+                          "median_osrm_min": np.median(b),
+                          "median_ratio_ours_over_osrm": np.median(a / b),
+                          "median_diff_min": np.median(a - b), "mean_abs_diff_min": np.mean(np.abs(a - b)),
+                          "share_within_30pct": np.mean(np.abs(a / b - 1) <= 0.3),
+                          "pearson_r_log": np.corrcoef(np.log1p(a), np.log1p(b))[0, 1] if len(g) > 2 else np.nan})
+    summ = pd.concat([stats(v).to_frame("all").T,
+                      v.groupby("continent").apply(stats, include_groups=False)])
+    summ.index.name = "group"
+    summ.to_csv(res / f"summary_{y}.csv")
+    fig, ax = plt.subplots(figsize=(6, 6))
+    for i, (c, g) in enumerate(v.groupby("continent")):
+        ax.scatter(g.osrm_min, g.ours_min, s=8, alpha=0.6, label=c,
+                   color=["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300",
+                          "#4a3aa7", "#e34948"][i % 8])
+    lim = [1, max(v.osrm_min.max(), v.ours_min.max()) * 1.1]
+    ax.plot(lim, lim, color="#52514e", lw=0.8)
+    ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xlim(lim); ax.set_ylim(lim)
+    ax.set_xlabel(f"OSRM car, free flow (minutes)"); ax.set_ylabel(f"this study, {y} (minutes)")
+    ax.set_title(f"{len(v)} origin-city pairs"); ax.legend(fontsize=7, frameon=False)
+    fig.savefig(res / f"scatter_{y}.png", dpi=130, bbox_inches="tight"); plt.close(fig)
+    (res / "ATTRIBUTION.txt").write_text(
+        "Reference travel times: OSRM (Project OSRM demo server and/or FOSSGIS routing.openstreetmap.de),\n"
+        "car profile, routing data (c) OpenStreetMap contributors, ODbL. Fix the map: "
+        "https://www.openstreetmap.org/fixthemap\n")
+    log(f"routing validation: {len(v)} valid pairs of {len(df)}; median ratio ours/OSRM "
+        f"{summ.loc['all', 'median_ratio_ours_over_osrm']:.2f}")
+
+
+# =============================================================================
 # cleanup, planning, main
 # =============================================================================
 def stage_cleanup(ctx):
@@ -1703,7 +1904,8 @@ def dry_run(ctx):
         log(f"OSM {y}: largest extracts {[(r['region'], round(r['bytes'] / 1e9, 2)) for r in big]}")
 
 
-STAGES = ["download", "grids", "roads", "friction", "traveltime", "outputs", "compare", "cleanup"]
+STAGES = ["download", "grids", "roads", "friction", "traveltime", "outputs", "compare",
+          "validate", "cleanup"]
 
 
 def nearest_epoch(y):
@@ -1712,6 +1914,7 @@ def nearest_epoch(y):
 
 def main(argv=None):
     global START_YEAR, END_YEAR, BBOX, CLEANUP, ML_FILES, NELSON_LAYERS, MAX_WORKERS, INCLUDE_ML_ROADS
+    global ROUTING_CITIES, ROUTING_VALIDATION
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0],
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--start", type=int, default=START_YEAR)
@@ -1726,11 +1929,14 @@ def main(argv=None):
     p.add_argument("--max-workers", type=int, default=MAX_WORKERS)
     p.add_argument("--no-cleanup", action="store_true")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--routing-cities", type=int, default=ROUTING_CITIES)
+    p.add_argument("--no-routing", action="store_true")
     a = p.parse_args(argv)
     START_YEAR, END_YEAR, BBOX = a.start, a.end, a.bbox
     ML_FILES, NELSON_LAYERS, MAX_WORKERS = a.ml_files, a.nelson_layers, a.max_workers
     CLEANUP = CLEANUP and not a.no_cleanup
     INCLUDE_ML_ROADS = INCLUDE_ML_ROADS and not a.no_ml
+    ROUTING_CITIES, ROUTING_VALIDATION = a.routing_cities, ROUTING_VALIDATION and not a.no_routing
     if END_YEAR <= START_YEAR:
         raise SystemExit("END_YEAR must be after START_YEAR")
     work, res = Path(a.work_dir).resolve(), Path(a.results_dir).resolve()
@@ -1749,7 +1955,8 @@ def main(argv=None):
     want = [s.strip() for s in a.stages.split(",") if s.strip()]
     funcs = {"download": stage_download, "grids": stage_grids, "roads": stage_roads,
              "friction": stage_friction, "traveltime": stage_traveltime,
-             "outputs": stage_outputs, "compare": stage_compare, "cleanup": stage_cleanup}
+             "outputs": stage_outputs, "compare": stage_compare, "validate": stage_validate,
+             "cleanup": stage_cleanup}
     for s in STAGES:
         if s not in want:
             continue

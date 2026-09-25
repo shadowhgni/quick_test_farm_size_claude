@@ -196,3 +196,52 @@ def test_port_cells_snap_to_land():
     r, c = ga.port_cells(ports, g, fr)
     assert c[0] == 60 and r[0] == 60                           # ~2 cells offshore -> coast
     assert r[1] == -1                                           # 40 km offshore -> dropped
+
+
+def test_stage_validate_with_mocked_osrm(tmp_path, monkeypatch):
+    g = ga.Grid((0, 6, 3, 9), D)
+    work = tmp_path / "work"; work.mkdir()
+    fr = np.full(g.shape, 0.06 / 30, np.float32)                     # 30 km/h everywhere
+    np.save(work / "friction_2026.npy", fr)
+    np.save(work / "population_2025.npy", np.full(g.shape, 100, np.float32))
+    np.save(work / "countries.npy", np.ones(g.shape, np.int16))
+    pd.DataFrame({"cid": [1], "iso3": ["AAA"], "NAME": ["A"], "CONTINENT": ["Africa"]}) \
+        .to_csv(work / "countries.csv", index=False)
+    pd.DataFrame({"settlement_id": [1, 2, 3], "population": [2e5, 6e4, 1e4],
+                  "lon": [1.5, 2.2, 0.7], "lat": [7.5, 8.2, 6.7], "cells_1km": [9, 4, 1]}) \
+        .to_csv(work / "settlements_2025.csv", index=False)
+    calls = []
+
+    def fake_table(self, coords, n_src):
+        calls.append(len(coords))
+        (x0, y0) = coords[-1]
+        dur = [[float(ga.great_circle_km(x, y, x0, y0) * 1.3 / 50 * 3600)] for x, y in coords[:n_src]]
+        return {"code": "Ok", "durations": dur, "distances": [[1000.0]] * n_src,
+                "sources": [{"distance": 50.0}] * n_src, "destinations": [{"distance": 20.0}]}, "mock"
+    monkeypatch.setattr(ga.RateLimited, "table", fake_table)
+    monkeypatch.setattr(ga, "ROUTING_CITIES", 5)
+    ctx = {"grid": g, "work": work, "results": tmp_path / "res", "years": [2015, 2026],
+           "epoch": {2015: 2015, 2026: 2025}}
+    ga.stage_validate(ctx)
+    pairs = pd.read_csv(tmp_path / "res" / "routing_validation" / "pairs_2026.csv")
+    assert calls == [11, 11]                                   # 2 cities >= 50k, 10 origins + city
+    assert len(pairs) == 20 and pairs.great_circle_km.between(10, 150).all()
+    summ = pd.read_csv(tmp_path / "res" / "routing_validation" / "summary_2026.csv", index_col=0)
+    # ours: 30 km/h over ~ straight lines (8-neighbour path, slightly longer); mock: 50 km/h x 1.3
+    assert 1.0 < summ.loc["all", "median_ratio_ours_over_osrm"] < 1.45
+    assert (tmp_path / "res" / "routing_validation" / "scatter_2026.png").exists()
+
+
+def test_grid_round_trip_is_exact():
+    """Workers rebuild the grid from its bbox: shapes must never change."""
+    rng = np.random.default_rng(0)
+    for _ in range(2000):
+        w = rng.uniform(-180, 170); s = rng.uniform(-60, 80)
+        g = ga.Grid((w, s, w + rng.uniform(0.1, 10), min(85, s + rng.uniform(0.1, 5))), D)
+        g2 = ga.Grid(g.to_dict()["bbox"], g.to_dict()["res_deg"])
+        assert g2.shape == g.shape and g2.transform == g.transform
+        r0, c0 = rng.integers(0, g.height), rng.integers(0, g.width)
+        sub = g.subgrid(r0, c0, g.height - r0, g.width - c0)
+        assert sub.shape == (g.height - r0, g.width - c0)
+    glob = ga.Grid(ga.NELSON_EXTENT, D)
+    assert ga.Grid(glob.to_dict()["bbox"], D).shape == (17400, 43200)
