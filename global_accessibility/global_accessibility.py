@@ -95,6 +95,20 @@ NELSON_COMPARE = True
 NELSON_ARTICLE = 7638134        # figshare article (v3 is cited by R geodata; v4 = same rasters)
 NELSON_LAYERS = None            # None = all 17; or e.g. ["cities_11", "ports_5"]
 
+# --- 2015 roads completed with the Weiss et al. (2018) 2015 friction surface ------
+#     (OSM + Google roads; Malaria Atlas Project, CC BY 4.0). A cell gets a 2015 road if
+#     OSM 2015 has none there, Weiss 2015 shows a transport network (>= WEISS_NETWORK_KMH)
+#     and OSM END_YEAR has a road there (this excludes Weiss rivers, sea lanes, railways).
+WEISS2015_AUGMENT = True        # used only when START_YEAR == 2015
+WEISS_NETWORK_KMH = 10.0
+WEISS_WCS = ("https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1"
+             "&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface"
+             "&format=image/geotiff&subset=Lat({s},{n})&subset=Long({w},{e})")
+WEISS_TILE_DEG = 10             # download in 10 x 10 degree tiles
+COMPLETE_TILE_DEG = 2           # tiles for "where OSM 2015 data exist" (Weiss validation tiles)
+COMPLETE_MIN = 0.8              # OSM 2015 road cells / Weiss network cells, before completion
+COMPLETE_MIN_CELLS = 50         # tiles with fewer Weiss network cells are not assessed
+
 # --- validation of the end year against a free routing engine (OSRM, OSM car) ---
 ROUTING_VALIDATION = True
 ROUTING_SERVERS = ["https://router.project-osrm.org",            # demo server, 1 req/s,
@@ -769,6 +783,15 @@ def stage_download(ctx):
             if (m and f"{m[1]}_{m[2]}" in wanted) or f["name"] == "README.txt":
                 jobs.append((f["download_url"], dl / "nelson" / f["name"]))
                 nelson_md5[f["name"]] = f.get("computed_md5")
+    if WEISS2015_AUGMENT and 2015 in years:
+        g, t = ctx["grid"], WEISS_TILE_DEG
+        for lat in range(int(math.floor(max(g.south, -60) / t) * t), int(math.ceil(min(g.north, 85))), t):
+            for lon in range(int(math.floor(g.west / t) * t), int(math.ceil(g.east)), t):
+                s_, n_ = max(lat, -60), min(lat + t, 85)
+                if s_ >= n_:
+                    continue
+                jobs.append((WEISS_WCS.format(s=s_, n=n_, w=lon, e=lon + t),
+                             dl / "weiss2015" / f"friction2015_{lat:+03d}_{lon:+04d}.tif"))
     total = sum(r["bytes"] for y in years for r in plan[y])
     log(f"downloads: {len(jobs)} files (OSM {total / 1e9:.1f} GB + others)")
     with cf.ThreadPoolExecutor(DOWNLOAD_WORKERS) as ex:
@@ -1030,8 +1053,42 @@ def settlements_epoch(ctx, epoch):
         f"{float(np.asarray(pg).sum(dtype=np.float64)) / 1e9:.2f} bn people on the grid")
 
 
+def weiss_grid(ctx):
+    """Weiss et al. 2015 friction (min/m) -> speed (km/h) on the grid; 0 where missing."""
+    grid, dl, work = ctx["grid"], ctx["dl"], ctx["work"]
+    sp = memmap(work / "weiss2015_speed.npy", grid, np.float32, fill=0)
+    n = 0
+    for f in sorted((dl / "weiss2015").glob("*.tif")):
+        try:
+            src = rasterio.open(f)
+        except Exception as e:
+            log(f"Weiss tile unreadable ({e.__class__.__name__}): {f.name}")
+            continue
+        with src:
+            w = grid.window_of(tuple(src.bounds))
+            if not w:
+                continue
+            r0, c0, nr, nc = w
+            b = (grid.west + c0 * grid.res, grid.north - (r0 + nr) * grid.res,
+                 grid.west + (c0 + nc) * grid.res, grid.north - r0 * grid.res)
+            win = from_bounds(*b, src.transform).round_offsets().round_lengths()
+            a = src.read(1, window=win, boundless=True, fill_value=0, out_shape=(nr, nc)).astype(np.float64)
+            ok = np.isfinite(a) & (a > 0) & (a < 1e3)
+            v = np.zeros(a.shape, np.float32)
+            v[ok] = 60.0 / (1000.0 * a[ok])
+            sub = sp[r0:r0 + nr, c0:c0 + nc]
+            np.maximum(sub, v, out=sub)
+            n += 1
+    sp.flush()
+    log(f"Weiss et al. 2015 friction: {n} tiles on the grid")
+    return {"weiss2015_tiles": n}
+
+
 def stage_grids(ctx):
     info = {}
+    if WEISS2015_AUGMENT and 2015 in ctx["years"] and (ctx["dl"] / "weiss2015").exists():
+        with Timer("Weiss et al. 2015 friction surface"):
+            info.update(weiss_grid(ctx))
     with Timer("land cover (WorldCover 2021)"):
         info.update(landcover_grid(ctx))
     with Timer("slope (Copernicus GLO-90)"):
@@ -1278,6 +1335,22 @@ def stage_friction(ctx):
     for k, v in LANDCOVER_SPEED.items():
         lut[k] = v
     ew, dy, _, _ = step_lengths(grid)
+    y_end = ctx["years"][-1]
+    augment = WEISS2015_AUGMENT and ctx["years"][0] == 2015 and (work / "weiss2015_speed.npy").exists()
+    if augment:
+        weiss = memmap(work / "weiss2015_speed.npy", grid, None, mode="r")
+        road_end = memmap(work / f"road_speed_{y_end}.npy", grid, None, mode="r")
+        cross_end = memmap(work / f"road_crossing_{y_end}.npy", grid, None, mode="r")
+        T = int(round(COMPLETE_TILE_DEG / grid.res))
+        nti, ntj = -(-grid.height // T), -(-grid.width // T)
+        tile_osm = np.zeros((nti, ntj)); tile_weiss = np.zeros((nti, ntj))
+
+    def clean(rs, cross, open_water):
+        on_water = (rs > 0) & open_water
+        keep = on_water & (cross > 0)
+        rs[on_water & ~keep] = 0
+        return int((on_water & ~keep).sum()), int(keep.sum())
+
     for y in ctx["years"]:
         corr = corruption_table(ctx, y)
         corr.to_csv(work / f"corruption_{y}.csv", index=False)
@@ -1288,16 +1361,30 @@ def stage_friction(ctx):
         fr = memmap(work / f"friction_{y}.npy", grid, np.float32)
         stats = {"road_cells": 0, "ml_cells": 0, "passable_cells": 0,
                  "osm_road_cells_dropped_on_water": 0, "osm_road_cells_kept_as_crossings": 0,
-                 "ml_road_cells_dropped_on_water": 0}
+                 "ml_road_cells_dropped_on_water": 0, "weiss2015_cells_added": 0}
         use_ml = INCLUDE_ML_ROADS and y == ctx["years"][-1]
         for r0, r1 in row_chunks(grid.height):
             rs = np.array(road[r0:r1])
             open_water = np.asarray(water[r0:r1]) >= WATER_ROAD_MAX_PCT
-            on_water = (rs > 0) & open_water
-            keep = on_water & (np.asarray(crossing[r0:r1]) > 0)
-            rs[on_water & ~keep] = 0
-            stats["osm_road_cells_dropped_on_water"] += int((on_water & ~keep).sum())
-            stats["osm_road_cells_kept_as_crossings"] += int(keep.sum())
+            dropped, kept = clean(rs, np.asarray(crossing[r0:r1]), open_water)
+            on_water = open_water & (np.asarray(road[r0:r1]) > 0)
+            stats["osm_road_cells_dropped_on_water"] += dropped
+            stats["osm_road_cells_kept_as_crossings"] += kept
+            if augment and y == 2015:
+                wz = np.asarray(weiss[r0:r1])
+                re = np.array(road_end[r0:r1])
+                clean(re, np.asarray(cross_end[r0:r1]), open_water)
+                # Weiss network cells that are roads today (drops Weiss rivers, sea lanes, rail)
+                net = (wz >= WEISS_NETWORK_KMH) & (re > 0) & ~open_water
+                # completeness of OSM 2015 on that network, per tile, before completion
+                rows = (np.arange(r0, r1) // T)[:, None]
+                cols = (np.arange(grid.width) // T)[None, :]
+                idx = (np.broadcast_to(rows, rs.shape) * ntj + np.broadcast_to(cols, rs.shape)).ravel()
+                tile_osm += np.bincount(idx, ((rs > 0) & net).ravel(), nti * ntj).reshape(nti, ntj)
+                tile_weiss += np.bincount(idx, net.ravel(), nti * ntj).reshape(nti, ntj)
+                add = (rs == 0) & net
+                rs[add] = np.minimum(wz[add], re[add])
+                stats["weiss2015_cells_added"] += int(add.sum())
             if use_ml:
                 cand = (rs == 0) & (ml[r0:r1] > 0) & ~on_water
                 stats["ml_road_cells_dropped_on_water"] += int((cand & open_water).sum())
@@ -1324,6 +1411,21 @@ def stage_friction(ctx):
         fr.flush()
         (work / f"friction_{y}.json").write_text(json.dumps(stats))
         log(f"friction {y}: {stats}")
+        if augment and y == 2015:
+            ti, tj = np.meshgrid(np.arange(nti), np.arange(ntj), indexing="ij")
+            tiles = pd.DataFrame({
+                "tile_row": ti.ravel(), "tile_col": tj.ravel(),
+                "west": grid.west + tj.ravel() * T * grid.res,
+                "north": grid.north - ti.ravel() * T * grid.res,
+                "weiss_network_cells": tile_weiss.ravel(), "osm2015_cells_on_weiss_network": tile_osm.ravel()})
+            # weiss_network_cells: Weiss 2015 network cells that are OSM roads in END_YEAR
+            tiles["completeness"] = tiles.osm2015_cells_on_weiss_network / tiles.weiss_network_cells.where(tiles.weiss_network_cells > 0)
+            tiles["osm2015_complete"] = (tiles.completeness >= COMPLETE_MIN) & \
+                (tiles.weiss_network_cells >= COMPLETE_MIN_CELLS)
+            tiles.to_csv(work / "osm2015_completeness_tiles.csv", index=False)
+            log(f"OSM 2015 completeness: {int(tiles.osm2015_complete.sum())} of "
+                f"{int((tiles.weiss_network_cells >= COMPLETE_MIN_CELLS).sum())} assessed "
+                f"{COMPLETE_TILE_DEG} deg tiles >= {COMPLETE_MIN:.0%}")
 
 
 # =============================================================================
@@ -1645,7 +1747,7 @@ def write_methods(ctx):
                   for k, v in SPEED_TABLE.items()]).to_csv(res / "speed_table.csv", index=False)
     pd.DataFrame([{"worldcover_class": k, "walking_speed_kmh_flat": v}
                   for k, v in LANDCOVER_SPEED.items()]).to_csv(res / "landcover_speed.csv", index=False)
-    for f in ["road_km_by_extract.csv", "destinations.csv", "tt_timings.csv", "osm_plan.json",
+    for f in ["osm2015_completeness_tiles.csv", "road_km_by_extract.csv", "destinations.csv", "tt_timings.csv", "osm_plan.json",
               "countries.csv", "grids_info.json", "roads_info.json"] + \
              [f"corruption_{y}.csv" for y in ctx["years"]] + \
              [f"checkpoints_{y}.csv" for y in ctx["years"]] + \
@@ -1696,7 +1798,15 @@ def stage_compare(ctx):
         with rasterio.open(f) as src:
             win = from_bounds(*grid.bounds, src.transform).round_offsets().round_lengths()
             nel = src.read(1, window=win, boundless=True, fill_value=65535)[:grid.height, :grid.width]
-        for y in (y0, y1):
+        tiles_f = work / "osm2015_completeness_tiles.csv"
+        subsets = ["all"]
+        if tiles_f.exists():
+            tl = pd.read_csv(tiles_f)
+            T = int(round(COMPLETE_TILE_DEG / grid.res))
+            okmask = np.zeros((int(tl.tile_row.max()) + 1, int(tl.tile_col.max()) + 1), bool)
+            okmask[tl.tile_row, tl.tile_col] = tl.osm2015_complete.values
+            subsets.append("osm2015_complete_tiles")
+        for y, subset in [(yy, ss) for yy in (y0, y1) for ss in subsets]:
             ours = np.load(work / "tt" / f"tt_{y}_{name}.npy", mmap_mode="r")
             pop = memmap(work / f"population_{ctx['epoch'][y]}.npy", grid, None, mode="r")
             acc = {"n": 0, "sum_d": 0.0, "sum_ad": 0.0, "le30": 0, "sx": 0.0, "sy": 0.0,
@@ -1706,6 +1816,8 @@ def stage_compare(ctx):
             for r0, r1 in row_chunks(grid.height):
                 o = np.asarray(ours[r0:r1], np.float64); nn = nel[r0:r1].astype(np.float64)
                 ok = np.isfinite(o) & (nn != 65535)
+                if subset != "all":
+                    ok &= okmask[(np.arange(r0, r1) // T)[:, None], (np.arange(grid.width) // T)[None, :]]
                 if not ok.any():
                     continue
                 a, b = o[ok], nn[ok]; d = a - b
@@ -1725,7 +1837,8 @@ def stage_compare(ctx):
             cov = acc["sxy"] / n - acc["sx"] * acc["sy"] / n ** 2
             r_log = cov / math.sqrt(max((acc["sxx"] / n - (acc["sx"] / n) ** 2) *
                                         (acc["syy"] / n - (acc["sy"] / n) ** 2), 1e-12))
-            rows.append({"layer": name, "our_year": y, "nelson_year": 2015, "cells": acc["n"],
+            rows.append({"layer": name, "our_year": y, "nelson_year": 2015, "subset": subset,
+                         "cells": acc["n"],
                          "mean_diff_min": acc["sum_d"] / n, "mean_abs_diff_min": acc["sum_ad"] / n,
                          "share_within_30min": acc["le30"] / n, "pearson_r_log1p": r_log,
                          "pop_weighted_ours_min": acc["pwo"] / max(acc["pw"], 1),
@@ -1736,10 +1849,10 @@ def stage_compare(ctx):
                 df = df[df.pw > 0].join(ct[["iso3", "CONTINENT"]], on="cid")
                 g = df.groupby("CONTINENT")[["pw", "pwo", "pwn"]].sum()
                 for cont, rr in g.iterrows():
-                    cont_rows.append({"layer": name, "our_year": y, "continent": cont,
+                    cont_rows.append({"layer": name, "our_year": y, "subset": subset, "continent": cont,
                                       "pop_weighted_ours_min": rr.pwo / rr.pw,
                                       "pop_weighted_nelson_min": rr.pwn / rr.pw})
-            if name in (HEADLINE_LAYER, "ports_5") and samp_o:
+            if name in (HEADLINE_LAYER, "ports_5") and samp_o and subset == subsets[-1]:
                 a, b = np.concatenate(samp_o), np.concatenate(samp_n)
                 fig, ax = plt.subplots(figsize=(6, 6))
                 ax.hexbin(np.log1p(b), np.log1p(a), gridsize=80, bins="log", cmap="Blues", mincnt=1)
@@ -1748,8 +1861,8 @@ def stage_compare(ctx):
                 t = [0, 15, 60, 240, 960, 3840]
                 ax.set_xticks(np.log1p(t), t); ax.set_yticks(np.log1p(t), t)
                 ax.set_xlabel("Nelson et al. 2019 (2015), minutes"); ax.set_ylabel(f"this study ({y}), minutes")
-                ax.set_title(f"{name}: {len(a):,} sampled cells")
-                fig.savefig(out / f"scatter_{name}_{y}.png", dpi=130, bbox_inches="tight"); plt.close(fig)
+                ax.set_title(f"{name} ({subset}): {len(a):,} sampled cells")
+                fig.savefig(out / f"scatter_{name}_{y}_{subset}.png", dpi=130, bbox_inches="tight"); plt.close(fig)
         if name in (HEADLINE_LAYER, "ports_5"):
             f10 = LIGHT_FACTOR
             o = np.load(work / "tt" / f"tt_{y0}_{name}.npy", mmap_mode="r")

@@ -279,6 +279,10 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
         cr = np.zeros(g.shape, np.uint8); cr[120, 118:121] = 1                 # the bridge
         np.save(work / f"road_crossing_{y}.npy", cr)
     ml = np.zeros(g.shape, np.uint8); ml[200, 20:100] = 1; ml[200, 110:125] = 1
+    # Weiss 2015: the E-W road (in OSM 2015) plus 40 cells of the N-S road (not in OSM 2015)
+    # plus a "river" at 20 km/h with no OSM road in 2026 (must not be used)
+    wz = np.zeros(g.shape, np.float32); wz[120, :] = 60; wz[0:40, 60] = 50; wz[150, 150:200] = 20
+    np.save(work / "weiss2015_speed.npy", wz)
     np.save(work / "ml_roads.npy", ml)
     pd.DataFrame([{"year": y, "lon": 2.0, "lat": 7.0 - 0.5 / 120, "iso3_a": "AAA", "iso3_b": "BBB",
                    "highway": "primary"} for y in (2015, 2026)]).to_csv(work / "checkpoints_raw.csv", index=False)
@@ -305,6 +309,12 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     assert np.isinf(f15[0, 119]) and np.isfinite(f15[120, 119])             # river, bridge
     assert np.isinf(f26[30, 119]) and np.isfinite(f26[30, 117])             # water road dropped, bank kept
     assert np.isinf(f26[200, 119]) and np.isfinite(f26[200, 115])           # ML over water dropped
+    st15 = json.loads((work / "friction_2015.json").read_text())
+    assert st15["weiss2015_cells_added"] == 40                             # only where OSM 2026 has a road
+    assert np.isclose(f15[10, 60], 0.06 / (40 * (1 - 0.1 * 0.6)))           # min(Weiss, OSM 2026) x corruption
+    assert f15[150, 170] > 0.06 / 10                                        # Weiss river not used
+    tiles = pd.read_csv(work / "osm2015_completeness_tiles.csv")
+    assert len(tiles) == 1 and tiles.completeness[0] == pytest.approx(237 / 277)   # 3 bridge cells on open water excluded and tiles.osm2015_complete[0]
     st26 = json.loads((work / "friction_2026.json").read_text())
     assert st26["osm_road_cells_dropped_on_water"] == 20
     assert st26["osm_road_cells_kept_as_crossings"] == 3
@@ -328,7 +338,9 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     assert set(tab.layer) == set(ga.layer_names()) and len(tab) == 34
     ga.stage_compare(ctx)
     cmp_ = pd.read_csv(res / "nelson_comparison" / "comparison_by_layer.csv")
-    assert list(cmp_.our_year) == [2015, 2026] and (cmp_.cells > 50000).all()
+    assert list(cmp_.our_year) == [2015, 2015, 2026, 2026] and (cmp_.cells > 50000).all()
+    assert list(cmp_.subset) == ["all", "osm2015_complete_tiles"] * 2
+    assert (res / "methods" / "osm2015_completeness_tiles.csv").exists()
     for f in ["config.json", "speed_table.csv", "corruption_2026.csv", "checkpoints_2026.csv",
               "software_versions.json", "destinations.csv"]:
         assert (res / "methods" / f).exists(), f

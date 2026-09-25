@@ -38,7 +38,7 @@ No container tools are needed. Missing packages are installed with
 | `friction` | per year: speed = max(road speed × corruption factor, walking speed × Tobler) → minutes per metre; +15 min (× corruption) at African border checkpoints |
 | `traveltime` | per year × 17 layers in parallel: multi-source Dijkstra on the lon/lat grid (step lengths depend on latitude; wraps at the dateline) |
 | `outputs` | COGs (1 km, 10 km), global PNGs, population-weighted tables, methods folder |
-| `compare` | against Nelson et al. (2019), layer by layer |
+| `compare` | against Nelson et al. (2019), layer by layer; all cells and tiles where OSM 2015 was complete |
 | `validate` | end year against OSRM (car, free flow) for sampled origin–city pairs |
 | `cleanup` | deletes the work folder (keeps the installed packages) |
 
@@ -70,6 +70,16 @@ its own figures.
 - **Roads:** OSM `highway` classes → `SPEED_TABLE`. Unpaved (tagged, or untagged minor
   classes) × 0.7. Fastest road wins in a cell. Microsoft ML roads (undated) are used for
   the end year only, at 15 km/h, in cells with no OSM road.
+- **2015 roads completed with Weiss et al. (2018):** OSM in 2015 missed many roads that the
+  2015 friction surface of Weiss et al. (OSM + Google roads; Malaria Atlas Project, CC BY 4.0,
+  downloaded by WCS) contains. A 30″ cell gets a 2015 road when OSM 2015 has none, the Weiss
+  surface is ≥ 10 km/h there, and OSM of the end year has a road there (this excludes the
+  rivers, sea lanes and railways in the Weiss surface, and open water). Its speed is
+  min(Weiss speed, end-year OSM speed). Done before any travel-time calculation; the number
+  of cells added is in `methods/friction_2015.json`. Only for START_YEAR = 2015.
+- **Where OSM 2015 data exist:** per 2° tile, completeness = OSM 2015 road cells / Weiss 2015
+  network cells that are roads today (before completion). The Nelson comparison is reported
+  for all cells and for tiles ≥ 80% complete (`methods/osm2015_completeness_tiles.csv`).
 - **Units:** travel times in minutes (uint16, nodata 65535, as Nelson et al.); change in
   minutes (int16); friction in minutes per metre. Units are written into each COG band.
 - **Water:** waterways and ferries are not used as travel links (only OSM `highway=*`).
