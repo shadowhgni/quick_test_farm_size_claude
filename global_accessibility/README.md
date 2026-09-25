@@ -1,6 +1,6 @@
 # global_accessibility_v2.py — travel time to cities and ports, two reference years
 
-**Use `global_accessibility_v2.py`** (version 2.0). It is version 1 (`global_accessibility.py`, kept
+**Use `global_accessibility_v2.py`** (version 2.0.1: differences relative to Nelson et al.; safe resume after the friction is rebuilt). It is version 1 (`global_accessibility.py`, kept
 for reference) plus a sensitivity analysis of the governance factor K and of the African
 border-crossing delay (stage `sensitivity`, see below).
 
@@ -27,7 +27,7 @@ python global_accessibility_v2.py               # full run (resumable: rerun aft
 
 Useful options: `--start 2015 --end 2026`, `--bbox W S E N` (regional run),
 `--stages download,grids` (run part of the chain), `--max-workers N`, `--no-cleanup`,
-`--no-ml`, `--no-routing`, `--no-sensitivity`, `--sens-design oat|full`, `--routing-cities N`, `--work-dir`, `--results-dir`.
+`--no-ml`, `--no-weiss`, `--no-routing`, `--no-sensitivity`, `--sens-design oat|full`, `--routing-cities N`, `--work-dir`, `--results-dir`.
 
 No container tools are needed. Missing packages are installed with
 `pip install --target WORK_DIR/pylib`, so no administrator rights are required.

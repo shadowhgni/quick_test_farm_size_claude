@@ -30,7 +30,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -1509,8 +1509,9 @@ def port_cells(ports, grid, fr):
 def tt_job(job):
     grid = Grid(job["grid"]["bbox"], job["grid"]["res_deg"])
     out = Path(job["out"])
-    if out.exists() and Path(str(out) + ".done").exists():
-        return json.loads(Path(str(out) + ".done").read_text())
+    done = Path(str(out) + ".done")      # resume, unless the friction grid was rebuilt since
+    if out.exists() and done.exists() and done.stat().st_mtime >= Path(job["friction"]).stat().st_mtime:
+        return json.loads(done.read_text())
     t0 = time.time()
     fr = np.load(job["friction"], mmap_mode="r")
     src = np.load(job["sources"])

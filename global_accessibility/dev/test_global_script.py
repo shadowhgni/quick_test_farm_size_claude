@@ -326,6 +326,16 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     assert t15[120, 202] == 0 and (t26 <= t15 + 1e-3)[np.isfinite(t15)].all()
     assert (t26 < t15 - 1).sum() > 100                                       # new road helps
     assert np.isinf(np.load(work / "tt" / "tt_2015_cities_1.npy")).all()   # no city of 5-50 M
+    # resume reuses layers, but recomputes them when the friction grid was rebuilt since
+    ffile = work / "friction_2015.npy"
+    fr0 = np.load(ffile); np.save(ffile, fr0 * 2)
+    later = (work / "tt" / "tt_2015_cities_11.npy.done").stat().st_mtime + 10
+    os.utime(ffile, (later, later))
+    ga.stage_traveltime(ctx)
+    t15x2 = np.load(work / "tt" / "tt_2015_cities_11.npy")
+    assert np.allclose(t15x2[np.isfinite(t15)], 2 * t15[np.isfinite(t15)], rtol=1e-4)
+    np.save(ffile, fr0); os.utime(ffile, (later + 10, later + 10)); ga.stage_traveltime(ctx)
+    assert np.array_equal(np.load(work / "tt" / "tt_2015_cities_11.npy"), t15)
     # crossing the checkpoint costs ~ its delay: compare with a run without it
     ga.stage_outputs(ctx)
     with rasterio.open(res / "cog_1km" / "traveltime_2026_1km.tif") as r:
