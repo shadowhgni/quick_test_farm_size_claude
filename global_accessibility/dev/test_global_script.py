@@ -326,6 +326,16 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     assert t15[120, 202] == 0 and (t26 <= t15 + 1e-3)[np.isfinite(t15)].all()
     assert (t26 < t15 - 1).sum() > 100                                       # new road helps
     assert np.isinf(np.load(work / "tt" / "tt_2015_cities_1.npy")).all()   # no city of 5-50 M
+    # resume reuses layers, but recomputes them when the friction grid was rebuilt since
+    ffile = work / "friction_2015.npy"
+    fr0 = np.load(ffile); np.save(ffile, fr0 * 2)
+    later = (work / "tt" / "tt_2015_cities_11.npy.done").stat().st_mtime + 10
+    os.utime(ffile, (later, later))
+    ga.stage_traveltime(ctx)
+    t15x2 = np.load(work / "tt" / "tt_2015_cities_11.npy")
+    assert np.allclose(t15x2[np.isfinite(t15)], 2 * t15[np.isfinite(t15)], rtol=1e-4)
+    np.save(ffile, fr0); os.utime(ffile, (later + 10, later + 10)); ga.stage_traveltime(ctx)
+    assert np.array_equal(np.load(work / "tt" / "tt_2015_cities_11.npy"), t15)
     # crossing the checkpoint costs ~ its delay: compare with a run without it
     ga.stage_outputs(ctx)
     with rasterio.open(res / "cog_1km" / "traveltime_2026_1km.tif") as r:
@@ -351,6 +361,8 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     for f in ["config.json", "speed_table.csv", "corruption_2026.csv", "checkpoints_2026.csv",
               "software_versions.json", "destinations.csv"]:
         assert (res / "methods" / f).exists(), f
+    monkeypatch.setattr(ga, "MANIFEST", [])                             # resumed run: nothing downloaded
+    ga.write_methods(ctx); ga.write_methods(ctx)
     # --- sensitivity to K and to the border delay
     monkeypatch.setattr(ga, "SENS_LAYERS", ["cities_11"])
     ga.stage_sensitivity(ctx)
@@ -377,3 +389,114 @@ def test_block_mode_and_water():
     a[0, 0] = 40                                         # 24 water + 1 cropland
     mode, w = ga.block_mode_and_water(a, 5)
     assert mode.tolist() == [[80, 40], [10, 0]] and w.tolist() == [[96, 0], [0, 0]]
+
+
+def test_geofabrik_plan_falls_back_to_next_snapshot(tmp_path, monkeypatch):
+    """Snapshots are read from Geofabrik's folder listings (HEAD only where there is none,
+    e.g. the site root). Russia has no 2015 snapshot (the first is russia-160101)."""
+    import types
+    import pytest
+    sq = lambda w, s_, e, n: {"type": "Polygon", "coordinates": [[[w, s_], [e, s_], [e, n], [w, n], [w, s_]]]}
+    base = "https://download.geofabrik.de/"
+    feats = [
+        {"properties": {"id": "europe", "urls": {"pbf": base + "europe-latest.osm.pbf"}}, "geometry": sq(0, 40, 30, 60)},
+        {"properties": {"id": "france", "parent": "europe", "urls": {"pbf": base + "europe/france-latest.osm.pbf"}},
+         "geometry": sq(0, 40, 10, 50)},
+        {"properties": {"id": "russia", "urls": {"pbf": base + "russia-latest.osm.pbf"}}, "geometry": sq(30, 40, 60, 60)},
+        {"properties": {"id": "ural", "parent": "russia", "urls": {"pbf": base + "russia/ural-latest.osm.pbf"}},
+         "geometry": sq(30, 40, 60, 60)},
+        {"properties": {"id": "mars", "urls": {"pbf": base + "mars-latest.osm.pbf"}}, "geometry": sq(60, 40, 70, 60)},
+    ]
+    idx = tmp_path / "idx.json"; idx.write_text(json.dumps({"features": feats}))
+    apache = lambda names: "<pre>\n" + "\n".join(
+        f'<a href="{n}">{n}</a>   2026-01-02 00:25  46M' for n in names) + "\n</pre>"
+    table = lambda names: "<table>\n" + "\n".join(
+        f'<tr><td><a href="{n}">{n}</a></td><td align="right">2026-01-02 00:25  </td><td align="right">1.5G</td></tr>'
+        for n in names) + "\n</table>"
+    pages = {base + "europe/": apache(["france-150101.osm.pbf", "france-260101.osm.pbf", "france-latest.osm.pbf"]),
+             base + "russia/": table(["ural-260101.osm.pbf", "ural-latest.osm.pbf"]),
+             base: '<html>Geofabrik home page <a href="europe-latest.osm.pbf">Europe</a> '
+                   '<a href="russia-latest.osm.pbf">Russia</a> <a href="mars-latest.osm.pbf">x</a></html>'}
+    root_files = {base + "russia-160101.osm.pbf": 3_900_000_000}
+    calls = []
+
+    def fake(url, sess, method="HEAD", tries=6, **kw):
+        calls.append((method, url))
+        if method == "GET":
+            return types.SimpleNamespace(status_code=200, ok=True, text=pages.get(url, ""), headers={})
+        n = root_files.get(url)
+        return types.SimpleNamespace(status_code=200 if n else 404, ok=bool(n), text="",
+                                     headers={"Content-Length": str(n or 0)})
+    monkeypatch.setattr(ga, "download", lambda url, dest, sess: idx)
+    monkeypatch.setattr(ga, "http_request", fake)
+    grid = ga.Grid((0, 40, 70, 60), 0.5)
+    monkeypatch.setattr(ga, "OSM_MAX_MISSING_REGIONS", 1)                # mars has no data at all
+    plan = ga.geofabrik_plan(tmp_path, grid, [2015, 2026], None)
+    p15 = {r["region"]: r for r in plan[2015]}
+    assert set(p15) == {"france", "russia"}
+    assert p15["russia"]["url"].endswith("russia-160101.osm.pbf") and p15["russia"]["snapshot_year"] == 2016
+    assert p15["russia"]["bytes"] == 3_900_000_000                     # HEAD at the site root
+    assert p15["france"]["snapshot_year"] == 2015 and p15["france"]["bytes"] == 46 * 2**20
+    p26 = {r["region"]: r for r in plan[2026]}
+    assert set(p26) == {"france", "ural"} and p26["ural"]["bytes"] == int(1.5 * 2**30)   # mars: no data
+    assert any("no snapshot for 1 regions" in m and "mars" in m for m in ga.LOG)
+    assert ("HEAD", base + "russia-150101.osm.pbf") in calls              # root: asked, not assumed absent
+    gets = [u for m, u in calls if m == "GET"]
+    assert len(gets) == len(set(gets)) == 3                              # one request per folder
+    n = len(calls); ga.geofabrik_plan(tmp_path, grid, [2015], None)
+    assert not [c for c in calls[n:] if c[0] == "GET"]                   # listings cached on disk
+
+    monkeypatch.setattr(ga, "OSM_MAX_MISSING_REGIONS", 0)
+    with pytest.raises(SystemExit, match="mars"):
+        ga.geofabrik_plan(tmp_path, grid, [2015], None)
+    # a server that keeps failing stops the run instead of planning a world without roads
+    def down(url, sess, method="HEAD", tries=6, **kw):
+        raise ga.RemoteUnavailable(f"{url}: ConnectionError after 6 attempts")
+    monkeypatch.setattr(ga, "http_request", down)
+    with pytest.raises(SystemExit, match="not reachable"):
+        ga.geofabrik_plan(tmp_path / "fresh", grid, [2015], None)
+    # ... and so does a plan that is implausibly empty
+    monkeypatch.setattr(ga, "http_request", lambda url, sess, method="HEAD", tries=6, **kw: types.SimpleNamespace(
+        status_code=404, ok=False, text="", headers={}))
+    with pytest.raises(SystemExit, match="no Geofabrik extract found"):
+        ga.geofabrik_plan(tmp_path / "fresh2", grid, [2015], None)
+
+
+def test_http_request_retries_then_raises(monkeypatch):
+    import types
+    import pytest
+    monkeypatch.setattr(ga.time, "sleep", lambda s: None)
+    seq = iter([503, 429, 200])
+
+    class S:
+        def request(self, method, url, **kw):
+            return types.SimpleNamespace(status_code=next(seq), headers={})
+    assert ga.http_request("u", S()).status_code == 200
+    assert ga.head_ok.__doc__ and ga.http_request("u", types.SimpleNamespace(
+        request=lambda *a, **k: types.SimpleNamespace(status_code=404, headers={}))).status_code == 404
+
+    class Down:
+        def request(self, method, url, **kw):
+            raise ga.requests.ConnectionError("reset by peer")
+    with pytest.raises(ga.RemoteUnavailable):
+        ga.http_request("u", Down(), tries=3)
+
+
+def test_fix_proj_data_prefers_a_setting_without_proj_errors(monkeypatch):
+    """The HPC case: the environment 'works' but PROJ prints 'Open of /opt/conda/share/proj
+    failed'; the script must move on to a setting where PROJ is silent."""
+    import types
+    monkeypatch.setenv("PROJ_LIB", "/opt/conda/share/proj")
+    monkeypatch.delenv("PROJ_DATA", raising=False)
+    monkeypatch.delenv("GA_PROJ_DATA", raising=False)
+    seen = []
+
+    def run(cmd, env, **kw):
+        seen.append(env.get("PROJ_LIB"))
+        noisy = env.get("PROJ_LIB") == "/opt/conda/share/proj"
+        return types.SimpleNamespace(returncode=0, stderr="ERROR 1: PROJ: proj_create_from_database: "
+                                     "Open of /opt/conda/share/proj failed\n" if noisy else "")
+    monkeypatch.setattr(ga.subprocess, "run", run)
+    ga.fix_proj_data()
+    assert seen == ["/opt/conda/share/proj", None]                      # as set (noisy), then unset
+    assert "PROJ_LIB" not in ga.os.environ and "PROJ_DATA" not in ga.os.environ

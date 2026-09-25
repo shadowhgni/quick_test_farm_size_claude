@@ -1,6 +1,6 @@
 # global_accessibility_v2.py — travel time to cities and ports, two reference years
 
-**Use `global_accessibility_v2.py`** (version 2.0). It is version 1 (`global_accessibility.py`, kept
+**Use `global_accessibility_v2.py`** (version 2.0.4). It is version 1 (`global_accessibility.py`, kept
 for reference) plus a sensitivity analysis of the governance factor K and of the African
 border-crossing delay (stage `sensitivity`, see below).
 
@@ -27,7 +27,21 @@ python global_accessibility_v2.py               # full run (resumable: rerun aft
 
 Useful options: `--start 2015 --end 2026`, `--bbox W S E N` (regional run),
 `--stages download,grids` (run part of the chain), `--max-workers N`, `--no-cleanup`,
-`--no-ml`, `--no-routing`, `--no-sensitivity`, `--sens-design oat|full`, `--routing-cities N`, `--work-dir`, `--results-dir`.
+`--no-ml`, `--no-weiss`, `--no-routing`, `--no-sensitivity`, `--sens-design oat|full`, `--routing-cities N`, `--work-dir`, `--results-dir`.
+
+### If something goes wrong at start-up or while planning downloads
+
+- **PROJ** (`ERROR 1: PROJ: ... Open of /opt/conda/share/proj failed`, or unknown EPSG codes):
+  at start-up the script tests the PROJ setting as it is, then without `PROJ_DATA`/`PROJ_LIB`,
+  then every `proj.db` folder shipped with the installed packages or the environment. It keeps
+  the first one that works with no PROJ error and prints `[bootstrap] PROJ data: ...`. To force
+  a folder, set `GA_PROJ_DATA=/path/to/folder/with/proj.db`.
+- **Geofabrik**: snapshots are found from each folder's directory listing (about 50 requests,
+  cached for 7 days in `WORK_DIR/downloads/geofabrik_listing`), not by probing each file.
+  Network errors, HTTP 429 and 5xx are retried with backoff; if the server stays unreachable, or
+  if any region would have no extract at all (`OSM_MAX_MISSING_REGIONS` = 0), the script stops with a message instead of
+  building maps without roads. Check `curl -I https://download.geofabrik.de/africa/` from the
+  node, wait, and rerun.
 
 No container tools are needed. Missing packages are installed with
 `pip install --target WORK_DIR/pylib`, so no administrator rights are required.
@@ -36,7 +50,7 @@ No container tools are needed. Missing packages are installed with
 
 | Stage | What it does |
 |---|---|
-| `download` | OSM extracts from Geofabrik for 1 January of each year (smallest regions with a snapshot, falling back to parent regions); Microsoft ML roads; GHSL SMOD + POP (nearest 5-year epoch); World Port Index; Natural Earth countries; World Bank WGI; Copernicus DEM tile list; WorldCover tile list; Nelson et al. layers (latest figshare version, MD5-checked) |
+| `download` | OSM extracts from Geofabrik for 1 January of each year (smallest regions with a snapshot, falling back to parent regions, then to the next year's snapshot, at most `OSM_SNAPSHOT_MAX_LAG` = 1 year later, e.g. Russia 2016 for 2015); Microsoft ML roads; GHSL SMOD + POP (nearest 5-year epoch); World Port Index; Natural Earth countries; World Bank WGI; Copernicus DEM tile list; WorldCover tile list; Nelson et al. layers (latest figshare version, MD5-checked) |
 | `grids` | WorldCover 2021 at 30″ (mode, read from COG overviews); mean tan(slope) from Copernicus GLO-90 at ~180 m; countries; African land borders; settlements per GHSL epoch (8-connected urban clusters) and population on the grid |
 | `roads` | per OSM extract in parallel: road speeds, burned at 30″ (fastest road per cell), km by class, border checkpoints; Microsoft roads (end year) |
 | `friction` | per year: speed = max(road speed × corruption factor, walking speed × Tobler) → minutes per metre; +15 min (× corruption) at African border checkpoints |

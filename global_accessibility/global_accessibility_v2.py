@@ -30,7 +30,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "2.0.0"
+__version__ = "2.0.4"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -113,6 +113,9 @@ NELSON_LAYERS = None            # None = all 17; or e.g. ["cities_11", "ports_5"
 #     OSM 2015 has none there, Weiss 2015 shows a transport network (>= WEISS_NETWORK_KMH)
 #     and OSM END_YEAR has a road there (this excludes Weiss rivers, sea lanes, railways).
 WEISS2015_AUGMENT = True        # used only when START_YEAR == 2015
+OSM_MAX_MISSING_REGIONS = 0     # regions allowed to have no extract at all (they get no roads)
+OSM_SNAPSHOT_MAX_LAG = 1        # years: a region with no 1 January snapshot of the year (e.g. Russia
+                                # before 2016) uses the next available one, at most this much later
 WEISS_NETWORK_KMH = 10.0
 WEISS_WCS = ("https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1"
              "&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface"
@@ -163,6 +166,7 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 import time
 import traceback
 import zipfile
@@ -230,6 +234,79 @@ os.environ.setdefault("OSM_MAX_TMPFILE_SIZE", "1024")
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ.setdefault(_v, "1")
 bootstrap(_WD)
+
+_PROJ_TEST = r"""
+import os, tempfile
+import numpy, pandas, geopandas as gpd, pyogrio, rasterio, shapely   # same order as the script
+from rasterio.crs import CRS
+from rasterio.warp import transform
+assert CRS.from_epsg(4326).to_epsg() == 4326
+transform(CRS.from_epsg(4326), CRS.from_string("ESRI:54009"), [10.0], [10.0])
+f = os.path.join(tempfile.mkdtemp(dir=os.environ.get("CPL_TMPDIR")), "t.gpkg")
+gpd.GeoDataFrame(geometry=[shapely.Point(0, 0)], crs=4326).to_file(f)
+assert gpd.read_file(f).crs.to_epsg() == 4326
+"""
+
+
+def _proj_dirs():
+    """Folders holding a proj.db: those shipped with the Python packages (any site-packages,
+    including ~/.local), then the environment's own share/proj."""
+    dirs = []
+    for sp in dict.fromkeys(p for p in sys.path if p and Path(p).is_dir()):
+        for pat in ("rasterio/proj_data", "pyogrio/proj_data", "fiona/proj_data", "pyproj/proj_dir/share/proj"):
+            dirs.append(Path(sp) / pat)
+    for pre in (os.environ.get("CONDA_PREFIX"), sys.prefix, sys.base_prefix):
+        if pre:
+            dirs.append(Path(pre) / "share" / "proj")
+    return [d for d in dict.fromkeys(dirs) if (d / "proj.db").is_file()]
+
+
+def fix_proj_data():
+    """Make sure GDAL/PROJ find a usable proj.db before the geospatial libraries are imported.
+
+    Conda activation scripts, other packages (e.g. a user-installed fiona) or a module
+    system can leave PROJ_DATA / PROJ_LIB pointing to a missing or incompatible database
+    ("PROJ: proj_create_from_database: Open of /opt/conda/share/proj failed"), which breaks
+    or silently degrades coordinate-system lookups. Each candidate setting is tested in a
+    subprocess that imports the libraries in the same order as this script: first the
+    environment as it is, then without the variables (pip wheels then use their bundled
+    data), then each proj.db folder found. A candidate counts only if it works AND PROJ
+    prints no error. GA_PROJ_DATA=<folder> forces a folder.
+    """
+    keys = ("PROJ_DATA", "PROJ_LIB")
+    old = {k: os.environ[k] for k in keys if os.environ.get(k)}
+    base = {k: v for k, v in os.environ.items() if k not in keys}
+    if os.environ.get("GA_PROJ_DATA"):
+        cands = [("GA_PROJ_DATA", {k: os.environ["GA_PROJ_DATA"] for k in keys})]
+    else:
+        cands = [("as set", None), ("unset", {})] + [(str(d), {k: str(d) for k in keys}) for d in _proj_dirs()]
+    pypath = os.pathsep.join([p for p in sys.path if p] + [os.environ.get("PYTHONPATH", "")]).strip(os.pathsep)
+    tried, usable = [], None                   # tried: (label, returncode, PROJ error or "")
+    for label, c in cands:
+        env = {**(os.environ.copy() if c is None else {**base, **c}), "PYTHONPATH": pypath}   # sees pylib
+        r = subprocess.run([sys.executable, "-c", _PROJ_TEST], env=env, capture_output=True, text=True)
+        noise = [ln.strip() for ln in r.stderr.splitlines() if "PROJ" in ln and "ERROR" in ln.upper()]
+        last = (noise or r.stderr.strip().splitlines() or [""])[-1][:200]
+        tried.append((label, r.returncode, last if (noise or r.returncode) else ""))
+        if r.returncode == 0 and (not noise or usable is None):
+            usable = (label, c, noise[-1][:200] if noise else "")
+            if not noise:
+                break                            # works and PROJ is silent
+    if usable is None:
+        raise SystemExit("No working PROJ database (proj.db) was found, so coordinate systems cannot be read.\n"
+                         + "\n".join(f"  {l}: {'works' if rc == 0 else 'fails'} {e}" for l, rc, e in tried)
+                         + "\nSet GA_PROJ_DATA to a folder containing proj.db (find / -name proj.db) and rerun.")
+    label, c, still = usable
+    if c is not None:
+        for k in keys:
+            os.environ.pop(k, None)
+        os.environ.update(c)
+    print(f"[bootstrap] PROJ data: {label}" + (f" (environment had {old})" if old else "")
+          + (f"; tried first: {[t[0] for t in tried[:-1]]}" if len(tried) > 1 else "")
+          + (f"; WARNING, PROJ still reports: {still}" if still else ""), flush=True)
+
+
+fix_proj_data()
 
 import numpy as np                                    # noqa: E402
 import pandas as pd                                   # noqa: E402
@@ -385,14 +462,64 @@ def download(url, dest, sess=None, retries=5, record=True):
     raise RuntimeError(f"download failed: {url}")
 
 
-def head_ok(url, sess):
-    for _ in range(3):
+class RemoteUnavailable(RuntimeError):
+    """A server kept failing (network error, 429 or 5xx): stop instead of guessing."""
+
+
+def http_request(url, sess, method="HEAD", tries=6, **kw):
+    """Response of a HEAD/GET, retrying network errors, 429 and 5xx with backoff (5 s to
+    2 min). Any other status (200, 404, ...) is returned as is. Raises RemoteUnavailable."""
+    delay, last = 5, None
+    for i in range(tries):
         try:
-            h = sess.head(url, timeout=60, allow_redirects=True)
-            return h.ok, int(h.headers.get("Content-Length", 0) or 0)
-        except Exception:
-            time.sleep(3)
-    return False, 0
+            r = sess.request(method, url, timeout=60, allow_redirects=True, **kw)
+            if r.status_code != 429 and r.status_code < 500:
+                return r
+            last = f"HTTP {r.status_code}"
+            wait = r.headers.get("Retry-After", "")
+            delay = max(delay, int(wait)) if wait.isdigit() else delay
+        except requests.RequestException as e:
+            last = repr(e)
+        if i < tries - 1:
+            time.sleep(delay); delay = min(delay * 2, 120)
+    raise RemoteUnavailable(f"{url}: {last} after {tries} attempts")
+
+
+def head_ok(url, sess):
+    """(exists, bytes). A 404/410 means absent; other failures raise RemoteUnavailable."""
+    r = http_request(url, sess, "HEAD")
+    if r.status_code in (404, 410):
+        return False, 0
+    if not r.ok:
+        raise RemoteUnavailable(f"{url}: HTTP {r.status_code}")
+    return True, int(r.headers.get("Content-Length", 0) or 0)
+
+
+_UNITS = {"": 1, "K": 2**10, "M": 2**20, "G": 2**30, "T": 2**40}
+
+
+def geofabrik_listing(dir_url, cache_dir, sess, max_age_days=7):
+    """{file name: approximate bytes} of the .osm.pbf files in a Geofabrik folder, from its raw
+    directory index (one request per folder instead of one per file; cached on disk).
+    None if the page is not a raw index (e.g. the site root)."""
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    f = cache_dir / (re.sub(r"[^A-Za-z0-9]+", "_", dir_url).strip("_") + ".json")
+    if f.exists() and time.time() - f.stat().st_mtime < max_age_days * 86400:
+        return json.loads(f.read_text())["files"]
+    r = http_request(dir_url.rstrip("/") + "/", sess, "GET")
+    files = None
+    if r.ok:
+        found = {}
+        for line in r.text.splitlines():
+            for m in re.finditer(r'href="([^"?#]*?([^"/?#]+\.osm\.pbf))"', line):
+                tail = re.sub(r"<[^>]+>", " ", line[m.end():])
+                sm = re.search(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}\s+([\d.]+)\s*([KMGT]?)\b", tail)
+                found[m.group(2)] = int(float(sm.group(1)) * _UNITS[sm.group(2)]) if sm else 0
+        files = found if any(re.search(r"-\d{6}\.osm\.pbf$", n) for n in found) else None   # dated files: a raw index
+        f.write_text(json.dumps({"url": dir_url, "files": files}))   # cache successful reads only
+    elif r.status_code not in (403, 404):
+        raise RemoteUnavailable(f"{dir_url}: HTTP {r.status_code}")
+    return files
 
 
 def sha256(path, limit=200 * 2**20):
@@ -695,6 +822,15 @@ def warm_up_numba():
 # stage: download
 # =============================================================================
 def geofabrik_plan(work, grid, years, sess):
+    try:
+        return _geofabrik_plan(work, grid, years, sess)
+    except RemoteUnavailable as e:
+        raise SystemExit(f"Geofabrik is not reachable or refuses the requests ({e}). Nothing was "
+                         "planned. Check `curl -I https://download.geofabrik.de/africa/` from this "
+                         "node, wait (an hour if the server throttles), and rerun.") from None
+
+
+def _geofabrik_plan(work, grid, years, sess):
     """Per year, the Geofabrik extracts covering the grid: the smallest regions with a
     1 January snapshot of that year (falling back to parent regions when a region did
     not exist yet), and '-latest' for the current year if the snapshot is missing."""
@@ -710,37 +846,58 @@ def geofabrik_plan(work, grid, years, sess):
               and geoms[i].intersects(area)]
     today = dt.date.today()
     plan = {}
+    listings, listing_lock = {}, threading.Lock()
     for y in years:
-        stamp = f"{y % 100:02d}0101"
         chosen = {}
 
-        def url_for(rid):
+        def url_for(rid, yy):
             latest = props[rid]["urls"]["pbf"]
-            return latest.replace("-latest.osm.pbf", f"-{stamp}.osm.pbf"), latest
+            return latest.replace("-latest.osm.pbf", f"-{yy % 100:02d}0101.osm.pbf"), latest
 
         cache = {}
 
-        def available(rid):
-            if rid not in cache:
-                u, latest = url_for(rid)
-                ok, size = head_ok(u, sess)
-                if not ok and y >= today.year:
-                    ok, size = head_ok(latest, sess)
-                    u = latest if ok else u
-                cache[rid] = (ok, u, size)
-            return cache[rid]
+        def exists(url):
+            """(exists, bytes) from the folder listing, or a HEAD where there is none."""
+            d, name = url.rsplit("/", 1)
+            with listing_lock:
+                if d not in listings:
+                    listings[d] = geofabrik_listing(d, work / "downloads" / "geofabrik_listing", sess)
+            lst = listings[d]
+            region = re.sub(r"-(latest|\d{6})\.osm\.pbf$", "", name)
+            if lst is not None and any(re.fullmatch(re.escape(region) + r"-\d{6}\.osm\.pbf", n) for n in lst):
+                return name in lst, lst.get(name, 0)     # the listing shows this region's snapshots
+            return head_ok(url, sess)
 
-        def job(leaf):
+        def available(rid, yy):
+            if (rid, yy) not in cache:
+                u, latest = url_for(rid, yy)
+                ok, size = exists(u)
+                if not ok and yy >= today.year:
+                    ok, size = exists(latest)
+                    u = latest if ok else u
+                cache[(rid, yy)] = (ok, u, size)
+            return cache[(rid, yy)]
+
+        def job(leaf, yy):
             rid = leaf
             while rid:
-                ok, u, size = available(rid)
+                ok, u, size = available(rid, yy)
                 if ok:
-                    return rid, u, size
+                    return rid, u, size, yy
                 rid = parents.get(rid)
             return None
 
         with cf.ThreadPoolExecutor(DOWNLOAD_WORKERS * 2) as ex:
-            found = list(ex.map(job, leaves))
+            found = list(ex.map(lambda lf: job(lf, y), leaves))
+        lagged = {}
+        for lag in range(1, OSM_SNAPSHOT_MAX_LAG + 1):   # next snapshot for regions without one
+            todo = [i for i, f in enumerate(found) if f is None]
+            if not todo or y + lag > today.year:
+                break
+            with cf.ThreadPoolExecutor(DOWNLOAD_WORKERS * 2) as ex:
+                for i, f in zip(todo, ex.map(lambda lf: job(lf, y + lag), [leaves[i] for i in todo])):
+                    if f:
+                        found[i] = f; lagged[leaves[i]] = f"{f[0]}-{(y + lag) % 100:02d}0101"
         missing = [lf for lf, f in zip(leaves, found) if f is None]
         for f in found:
             if f:
@@ -754,11 +911,22 @@ def geofabrik_plan(work, grid, years, sess):
                 p = parents.get(p)
             return False
         chosen = {k: v for k, v in chosen.items() if not has_chosen_ancestor(k)}
-        plan[y] = [{"region": k, "url": v[1], "bytes": v[2],
+        if not chosen or len(missing) > OSM_MAX_MISSING_REGIONS:
+            raise SystemExit(f"OSM {y}: no Geofabrik extract found for {len(missing)} of {len(leaves)} regions "
+                             f"{missing[:20]}; these would have no roads. Geofabrik has continent snapshots "
+                             "since 2014, so this usually means the server was not reachable or refused "
+                             "requests: check `curl -I https://download.geofabrik.de/africa/` from this node, "
+                             "delete WORK_DIR/downloads/geofabrik_listing, wait, and rerun. To accept the gaps, "
+                             "raise OSM_MAX_MISSING_REGIONS in the configuration.")
+        for k, v in chosen.items():            # sizes from the listing (2 digits); HEAD where it has none
+            if not v[2]:
+                chosen[k] = (v[0], v[1], head_ok(v[1], sess)[1], v[3])
+        plan[y] = [{"region": k, "url": v[1], "bytes": v[2], "snapshot_year": v[3],
                     "bounds": list(geoms[k].bounds) if geoms[k] else None}
                    for k, v in sorted(chosen.items())]
         log(f"OSM {y}: {len(plan[y])} extracts, {sum(r['bytes'] for r in plan[y]) / 1e9:.1f} GB"
-            + (f"; no snapshot for {len(missing)} regions: {missing[:10]}" if missing else ""))
+            + (f"; {len(lagged)} regions from a later snapshot: {sorted(set(lagged.values()))}" if lagged else "")
+            + (f"; no snapshot for {len(missing)} regions (no roads there): {missing}" if missing else ""))
     return plan
 
 
@@ -1509,8 +1677,9 @@ def port_cells(ports, grid, fr):
 def tt_job(job):
     grid = Grid(job["grid"]["bbox"], job["grid"]["res_deg"])
     out = Path(job["out"])
-    if out.exists() and Path(str(out) + ".done").exists():
-        return json.loads(Path(str(out) + ".done").read_text())
+    done = Path(str(out) + ".done")      # resume, unless the friction grid was rebuilt since
+    if out.exists() and done.exists() and done.stat().st_mtime >= Path(job["friction"]).stat().st_mtime:
+        return json.loads(done.read_text())
     t0 = time.time()
     fr = np.load(job["friction"], mmap_mode="r")
     src = np.load(job["sources"])
@@ -1807,9 +1976,10 @@ def write_methods(ctx):
         shutil.copy(work / "african_borders.gpkg", res / "african_borders.gpkg")
     man = pd.DataFrame(MANIFEST)
     prev = res / "inputs_manifest.csv"
-    if prev.exists():
-        man = pd.concat([pd.read_csv(prev), man]).drop_duplicates(["url", "file"], keep="last")
-    man.to_csv(prev, index=False)
+    if prev.exists() and prev.stat().st_size > 1:     # resumed runs add to the earlier manifest
+        man = pd.concat([pd.read_csv(prev), man])
+    if len(man):
+        man.drop_duplicates(["url", "file"], keep="last").to_csv(prev, index=False)
     versions = {"script": f"global_accessibility_v2.py {__version__}",
                 "python": sys.version, "platform": platform.platform(),
                 **{m: importlib.metadata.version(p) for m, (p, _) in REQUIRED.items()},

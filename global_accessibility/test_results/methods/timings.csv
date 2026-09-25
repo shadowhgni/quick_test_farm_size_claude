@@ -1,25 +1,25 @@
 step,seconds,rss_gb
-stage download,129.7,0.4
-Weiss et al. 2015 friction surface,0.0,0.41
-land cover (WorldCover 2021),1.6,0.52
-slope (Copernicus GLO-90),3.4,0.81
-countries and African borders,0.5,0.83
-settlements GHSL 2015,1.1,0.85
-settlements GHSL 2025,1.0,0.85
-stage grids,7.8,0.85
-Microsoft ML roads,112.5,2.88
-stage roads,211.7,2.88
-stage friction,0.1,2.88
-stage traveltime,10.2,2.89
-COG travel time 2015 1km,1.5,2.89
-COG travel time 2026 1km,1.5,2.89
-COG change 1km,1.4,2.89
-COG travel time 2015 10km,0.2,2.89
-COG travel time 2026 10km,0.2,2.89
-COG change 10km,0.2,2.89
-PNG maps,11.8,2.89
-summary tables,5.7,2.89
-stage outputs,22.8,2.89
-stage compare,1.0,2.89
-stage validate,13.3,2.9
-stage sensitivity,8.6,2.89
+stage download,176.1,0.4
+Weiss et al. 2015 friction surface,0.1,0.42
+land cover (WorldCover 2021),2.3,0.48
+slope (Copernicus GLO-90),4.1,0.77
+countries and African borders,0.5,0.78
+settlements GHSL 2015,1.1,0.8
+settlements GHSL 2025,1.0,0.8
+stage grids,9.2,0.8
+Microsoft ML roads,112.0,2.87
+stage roads,211.7,2.87
+stage friction,0.1,2.86
+stage traveltime,10.5,2.87
+COG travel time 2015 1km,1.5,2.88
+COG travel time 2026 1km,1.5,2.88
+COG change 1km,1.4,2.88
+COG travel time 2015 10km,0.2,2.88
+COG travel time 2026 10km,0.2,2.88
+COG change 10km,0.2,2.88
+PNG maps,12.2,2.88
+summary tables,5.9,2.87
+stage outputs,23.4,2.87
+stage compare,1.1,2.87
+stage validate,13.4,2.88
+stage sensitivity,8.8,2.87
