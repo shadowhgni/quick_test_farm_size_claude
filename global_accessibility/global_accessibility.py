@@ -1360,8 +1360,8 @@ def stage_traveltime(ctx):
                 n_dest = int(len(ids))
             else:
                 sel = np.ones(len(ports), bool) if PORT_LAYERS[k] is None else \
-                    ports["Harbor Size"].isin(PORT_LAYERS[k]).values
-                sel &= pr >= 0
+                    ports["Harbor Size"].isin(PORT_LAYERS[k]).to_numpy(copy=True)
+                sel = sel & (pr >= 0)          # pandas 3 returns read-only arrays
                 src = np.unique(pr[sel].astype(np.int64) * grid.width + pc[sel])
                 n_dest = int(sel.sum())
             sp = work / "tt" / f"sources_{y}_{name}.npy"
@@ -1395,6 +1395,7 @@ def write_cog(path, grid, bands, dtype, nodata, desc, factor=1, resampling="aver
     H, W = grid.height // factor, grid.width // factor
     tr = from_origin(grid.west, grid.north, grid.res * factor, grid.res * factor)
     tmp = Path(tmpdir or path.parent) / (path.stem + ".tmp.tif")
+    tmp.parent.mkdir(parents=True, exist_ok=True)
     prof = dict(driver="GTiff", height=H, width=W, count=len(bands), dtype=dtype, crs="EPSG:4326",
                 transform=tr, nodata=nodata, tiled=True, blockxsize=512, blockysize=512,
                 compress="DEFLATE", predictor=2 if np.dtype(dtype).kind in "iu" else 3,
@@ -1478,8 +1479,7 @@ def png_map(path, arr, nodata, title, kind, extent):
     else:
         cmap, label = plt.get_cmap("Greys"), "friction (min/m, log10)"
         a = np.ma.log10(np.ma.masked_less_equal(a, 0)); norm = None; ticks = None
-    cmap = cmap.copy() if hasattr(cmap, "copy") else cmap
-    cmap.set_bad("#ffffff")
+    cmap = cmap.with_extremes(bad="#ffffff")
     aspect = (extent[1] - extent[0]) / (extent[3] - extent[2])
     width_in = 18 if aspect > 1.5 else 9          # global ~3600 px wide; regions smaller
     fig, ax = plt.subplots(figsize=(width_in, width_in / aspect * 1.08 + 0.8))

@@ -245,3 +245,72 @@ def test_grid_round_trip_is_exact():
         assert sub.shape == (g.height - r0, g.width - c0)
     glob = ga.Grid(ga.NELSON_EXTENT, D)
     assert ga.Grid(glob.to_dict()["bbox"], D).shape == (17400, 43200)
+
+
+def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
+    """friction -> traveltime -> outputs -> compare on a synthetic work folder."""
+    g = ga.Grid((1.0, 6.0, 3.0, 8.0), D)                       # 240 x 240 cells
+    work, dl, res = tmp_path / "work", tmp_path / "work" / "downloads", tmp_path / "res"
+    (dl / "nelson").mkdir(parents=True)
+    lc = np.full(g.shape, 40, np.uint8); lc[:, 118:121] = 80           # river
+    np.save(work / "landcover.npy", lc)
+    np.save(work / "tan_slope.npy", np.full(g.shape, 0.02, np.float32))
+    cg = np.ones(g.shape, np.int16); cg[:, 120:] = 2
+    np.save(work / "countries.npy", cg)
+    pd.DataFrame({"cid": [1, 2], "iso3": ["AAA", "BBB"], "ADM0_A3": ["AAA", "BBB"],
+                  "NAME": ["A", "B"], "CONTINENT": ["Africa", "Africa"]}).to_csv(work / "countries.csv", index=False)
+    pd.DataFrame({"iso3": ["AAA", "BBB"], "year": [2015, 2015], "score": [40.0, 30.0]}) \
+        .to_csv(dl / "wgi_control_of_corruption.csv", index=False)
+    for y in (2015, 2026):
+        r = np.zeros(g.shape, np.float32); r[120, :] = 70                     # E-W primary road
+        if y == 2026:
+            r[:, 60] = np.maximum(r[:, 60], 40)                               # new N-S road
+        np.save(work / f"road_speed_{y}.npy", r)
+    ml = np.zeros(g.shape, np.uint8); ml[200, 20:100] = 1
+    np.save(work / "ml_roads.npy", ml)
+    pd.DataFrame([{"year": y, "lon": 2.0, "lat": 7.0 - 0.5 / 120, "iso3_a": "AAA", "iso3_b": "BBB",
+                   "highway": "primary"} for y in (2015, 2026)]).to_csv(work / "checkpoints_raw.csv", index=False)
+    for e in (2015, 2025):
+        lab = np.zeros(g.shape, np.int32); lab[118:123, 200:205] = 1; lab[30:32, 30:32] = 2
+        np.save(work / f"settlement_id_{e}.npy", lab)
+        np.save(work / f"population_{e}.npy", np.full(g.shape, 50, np.float32))
+        pd.DataFrame({"settlement_id": [1, 2], "population": [2e5, 8e3], "lon": [2.7, 1.26],
+                      "lat": [7.0, 7.74], "cells_1km": [25, 4]}).to_csv(work / f"settlements_{e}.csv", index=False)
+    pd.DataFrame({"Main Port Name": ["P"], "Country Code": ["A"], "Harbor Size": ["Medium"],
+                  "Latitude": [6.2], "Longitude": [1.1]}).to_csv(dl / "UpdatedPub150.csv", index=False)
+    nel = np.full((17400, 43200), 65535, np.uint16)                          # global, like Nelson
+    wr = ga.Grid(ga.NELSON_EXTENT, D).window_of(g.bounds)
+    nel[wr[0]:wr[0] + wr[2], wr[1]:wr[1] + wr[3]] = 100
+    with rasterio.open(dl / "nelson" / "travel_time_to_cities_11.tif", "w", driver="GTiff",
+                       height=17400, width=43200, count=1, dtype="uint16", crs="EPSG:4326",
+                       transform=from_origin(-180, 85, D, D), compress="deflate") as d:
+        d.write(nel, 1)
+    ctx = {"work": work, "dl": dl, "results": res, "grid": g, "years": [2015, 2026],
+           "epoch": {2015: 2015, 2026: 2025}, "nelson_layers": ["cities_11"]}
+    monkeypatch.setattr(ga, "LIGHT_FACTOR", 10)
+    ga.stage_friction(ctx)
+    f15, f26 = np.load(work / "friction_2015.npy"), np.load(work / "friction_2026.npy")
+    assert np.isinf(f15[0, 119]) and np.isfinite(f15[120, 119])             # river, bridge
+    cp = pd.read_csv(work / "checkpoints_2015.csv")
+    assert len(cp) == 1 and cp.delay_min[0] > 15
+    ga.stage_traveltime(ctx)
+    t15 = np.load(work / "tt" / "tt_2015_cities_11.npy"); t26 = np.load(work / "tt" / "tt_2026_cities_11.npy")
+    assert t15[120, 202] == 0 and (t26 <= t15 + 1e-3)[np.isfinite(t15)].all()
+    assert (t26 < t15 - 1).sum() > 100                                       # new road helps
+    assert np.isinf(np.load(work / "tt" / "tt_2015_cities_1.npy")).all()   # no city of 5-50 M
+    # crossing the checkpoint costs ~ its delay: compare with a run without it
+    ga.stage_outputs(ctx)
+    with rasterio.open(res / "cog_1km" / "traveltime_2026_1km.tif") as r:
+        assert r.count == 17 and r.descriptions[10].startswith("cities_11")
+        assert r.tags(ns="IMAGE_STRUCTURE").get("LAYOUT") == "COG"
+    with rasterio.open(res / "cog_10km" / "traveltime_change_2026_minus_2015_10km.tif") as r:
+        assert r.shape == (24, 24) and r.dtypes[0] == "int16"
+    assert len(list((res / "png").glob("*.png"))) == 2 * 17 + 2 + 17
+    tab = pd.read_csv(res / "tables" / "pop_weighted_traveltime_global.csv")
+    assert set(tab.layer) == set(ga.layer_names()) and len(tab) == 34
+    ga.stage_compare(ctx)
+    cmp_ = pd.read_csv(res / "nelson_comparison" / "comparison_by_layer.csv")
+    assert list(cmp_.our_year) == [2015, 2026] and (cmp_.cells > 50000).all()
+    for f in ["config.json", "speed_table.csv", "corruption_2026.csv", "checkpoints_2026.csv",
+              "software_versions.json", "destinations.csv"]:
+        assert (res / "methods" / f).exists(), f
