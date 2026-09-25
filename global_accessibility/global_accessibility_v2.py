@@ -1807,9 +1807,10 @@ def write_methods(ctx):
         shutil.copy(work / "african_borders.gpkg", res / "african_borders.gpkg")
     man = pd.DataFrame(MANIFEST)
     prev = res / "inputs_manifest.csv"
-    if prev.exists():
-        man = pd.concat([pd.read_csv(prev), man]).drop_duplicates(["url", "file"], keep="last")
-    man.to_csv(prev, index=False)
+    if prev.exists() and prev.stat().st_size > 1:     # resumed runs add to the earlier manifest
+        man = pd.concat([pd.read_csv(prev), man])
+    if len(man):
+        man.drop_duplicates(["url", "file"], keep="last").to_csv(prev, index=False)
     versions = {"script": f"global_accessibility_v2.py {__version__}",
                 "python": sys.version, "platform": platform.platform(),
                 **{m: importlib.metadata.version(p) for m, (p, _) in REQUIRED.items()},

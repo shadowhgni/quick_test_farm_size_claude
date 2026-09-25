@@ -351,6 +351,8 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     for f in ["config.json", "speed_table.csv", "corruption_2026.csv", "checkpoints_2026.csv",
               "software_versions.json", "destinations.csv"]:
         assert (res / "methods" / f).exists(), f
+    monkeypatch.setattr(ga, "MANIFEST", [])                             # resumed run: nothing downloaded
+    ga.write_methods(ctx); ga.write_methods(ctx)
     # --- sensitivity to K and to the border delay
     monkeypatch.setattr(ga, "SENS_LAYERS", ["cities_11"])
     ga.stage_sensitivity(ctx)
