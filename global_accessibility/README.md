@@ -1,6 +1,6 @@
 # global_accessibility_v2.py — travel time to cities and ports, two reference years
 
-**Use `global_accessibility_v2.py`** (version 2.0.4). It is version 1 (`global_accessibility.py`, kept
+**Use `global_accessibility_v2.py`** (version 2.0.5). It is version 1 (`global_accessibility.py`, kept
 for reference) plus a sensitivity analysis of the governance factor K and of the African
 border-crossing delay (stage `sensitivity`, see below).
 
@@ -27,9 +27,21 @@ python global_accessibility_v2.py               # full run (resumable: rerun aft
 
 Useful options: `--start 2015 --end 2026`, `--bbox W S E N` (regional run),
 `--stages download,grids` (run part of the chain), `--max-workers N`, `--no-cleanup`,
-`--no-ml`, `--no-weiss`, `--no-routing`, `--no-sensitivity`, `--sens-design oat|full`, `--routing-cities N`, `--work-dir`, `--results-dir`.
+`--no-ml`, `--no-weiss`, `--no-routing`, `--skip-network-check`, `--no-sensitivity`, `--sens-design oat|full`, `--routing-cities N`, `--work-dir`, `--results-dir`.
 
 ### If something goes wrong at start-up or while planning downloads
+
+- **No internet, or only some sites allowed** (`[Errno 101] Network is unreachable`): before any
+  download (and in `--dry-run`) the script contacts every server it needs, writes
+  `WORK_DIR/network_check.csv` and stops within seconds, listing the servers this machine cannot
+  reach. It switches to IPv4 by itself when only IPv6 fails. Ask IT to allow HTTPS to the listed
+  hosts, or run `--stages download,grids` on a machine with internet using the same `--work-dir`
+  (stage `grids` reads WorldCover and the DEM remotely), then rerun on the compute node. The routing
+  servers are optional: if they are unreachable, the validation is skipped.
+- **Downloads are kept until the run succeeds**: `WORK_DIR` (downloads included) is deleted only
+  when every stage has finished. A downloaded file is never fetched again while its size matches
+  the size recorded when it was downloaded (`<file>.meta.json`); a damaged file is downloaded again
+  and replaced only once the new copy is complete.
 
 - **PROJ** (`ERROR 1: PROJ: ... Open of /opt/conda/share/proj failed`, or unknown EPSG codes):
   at start-up the script tests the PROJ setting as it is, then without `PROJ_DATA`/`PROJ_LIB`,

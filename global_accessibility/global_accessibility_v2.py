@@ -30,7 +30,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "2.0.4"
+__version__ = "2.0.5"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -42,7 +42,7 @@ RESULTS_DIR = "./ga_results"    # everything kept
 BBOX = None                     # None = Nelson extent (-180, -60, 180, 85); or (W, S, E, N)
 RES_ARCSEC = 30                 # 30" ~ 1 km, the grid of Nelson et al. (2019)
 LIGHT_FACTOR = 10               # 10 x 30" = 300" ~ 10 km "light" version
-CLEANUP = True                  # delete WORK_DIR at the end (results are kept)
+CLEANUP = True                  # delete WORK_DIR at the end, only if every stage succeeded (results are kept)
 KEEP_DOWNLOADS = False          # keep WORK_DIR/downloads when cleaning up
 
 # --- roads (km/h by OSM highway class; paved_if_missing=False -> unpaved factor
@@ -127,6 +127,7 @@ COMPLETE_MIN_CELLS = 50         # tiles with fewer Weiss network cells are not a
 
 # --- validation of the end year against a free routing engine (OSRM, OSM car) ---
 ROUTING_VALIDATION = True
+NETWORK_CHECK = True            # test every download server before starting (--skip-network-check)
 ROUTING_SERVERS = ["https://router.project-osrm.org",            # demo server, 1 req/s,
                    "https://routing.openstreetmap.de/routed-car"]  # FOSSGIS, 1 req/s
 ROUTING_PROFILE = "driving"
@@ -424,16 +425,32 @@ MANIFEST = []
 
 
 def download(url, dest, sess=None, retries=5, record=True):
-    """Resumable download; returns dest. Skips files already complete."""
+    """Resumable download; returns dest.
+
+    A file is written as <name>.part and renamed only when complete, with its size, date and
+    source recorded in <name>.meta.json. A file already on disk is kept and never downloaded
+    again while its size matches that record (files from runs before this record existed are
+    trusted as complete, since they were renamed only when complete). A file whose size no
+    longer matches is downloaded again, replacing it only once the new copy is complete.
+    """
     dest = Path(dest)
     dest.parent.mkdir(parents=True, exist_ok=True)
-    sess = sess or session()
+    meta = dest.with_name(dest.name + ".meta.json")
     if dest.exists() and dest.stat().st_size > 0:
-        if record:
-            MANIFEST.append({"url": url, "file": dest.name, "bytes": dest.stat().st_size,
-                             "downloaded": "earlier run"})
-        return dest
+        size = dest.stat().st_size
+        m = json.loads(meta.read_text()) if meta.exists() else None
+        if m is None or m.get("bytes") == size:
+            if m is None:
+                meta.write_text(json.dumps({"url": url, "bytes": size, "downloaded": "earlier run"}))
+            if record:
+                MANIFEST.append({"url": url, "file": dest.name, "bytes": size,
+                                 "downloaded": (m or {}).get("downloaded", "earlier run"),
+                                 "last_modified": (m or {}).get("last_modified", "")})
+            return dest
+        log(f"{dest.name}: {size:,} bytes on disk but {m['bytes']:,} when downloaded; downloading it again")
+    sess = sess or session()
     tmp = dest.with_name(dest.name + ".part")
+    last = None
     for attempt in range(retries):
         try:
             headers = {}
@@ -448,18 +465,22 @@ def download(url, dest, sess=None, retries=5, record=True):
                 with open(tmp, mode) as fh:
                     for chunk in r.iter_content(1 << 22):
                         fh.write(chunk)
-                lastmod = r.headers.get("Last-Modified", "")
-            tmp.rename(dest)
+                lastmod, etag = r.headers.get("Last-Modified", ""), r.headers.get("ETag", "")
+            tmp.replace(dest)
+            info = {"url": url, "bytes": dest.stat().st_size, "last_modified": lastmod, "etag": etag,
+                    "downloaded": dt.datetime.now().isoformat(timespec="seconds")}
+            meta.write_text(json.dumps(info))
             if record:
-                MANIFEST.append({"url": url, "file": dest.name, "bytes": dest.stat().st_size,
-                                 "downloaded": dt.datetime.now().isoformat(timespec="seconds"),
-                                 "last_modified": lastmod})
+                MANIFEST.append({k: info[k] for k in ("url", "bytes", "downloaded", "last_modified")}
+                                | {"file": dest.name})
             return dest
         except Exception as e:
-            wait = 5 * 2 ** attempt
-            log(f"download retry {attempt + 1}/{retries} {url}: {e!r}; waiting {wait}s")
-            time.sleep(wait)
-    raise RuntimeError(f"download failed: {url}")
+            last = e
+            if attempt < retries - 1:
+                wait = 5 * 2 ** attempt
+                log(f"download retry {attempt + 1}/{retries} {url}: {e!r}; waiting {wait}s")
+                time.sleep(wait)
+    raise RemoteUnavailable(f"download failed after {retries} attempts: {url}: {last!r}")
 
 
 class RemoteUnavailable(RuntimeError):
@@ -821,6 +842,83 @@ def warm_up_numba():
 # =============================================================================
 # stage: download
 # =============================================================================
+def network_targets(ctx):
+    """(url, what it is for, required) for every server the run needs."""
+    t = [("https://download.geofabrik.de/", "OSM road extracts (Geofabrik)", True),
+         ("https://jeodpp.jrc.ec.europa.eu/", "GHSL settlements and population (JRC)", True),
+         (URLS["worldcover_list"], "ESA WorldCover, read remotely in stage grids", True),
+         (URLS["copdem_list"], "Copernicus DEM, read remotely in stage grids", True),
+         ("https://naciscdn.org/", "Natural Earth countries", True),
+         ("https://api.worldbank.org/", "World Bank WGI (corruption)", True),
+         ("https://msi.nga.mil/", "World Port Index (NGA)", True)]
+    if INCLUDE_ML_ROADS and ML_FILES:
+        t.append(("https://usaminedroads.z19.web.core.windows.net/", "Microsoft road detections", True))
+    if NELSON_COMPARE:
+        t += [("https://api.figshare.com/", "Nelson et al. 2019 (figshare metadata)", True),
+              ("https://ndownloader.figshare.com/", "Nelson et al. 2019 (figshare files)", True)]
+    if WEISS2015_AUGMENT and ctx["years"][0] == 2015:
+        t.append(("https://data.malariaatlas.org/", "Weiss et al. 2015 roads (Malaria Atlas)", True))
+    if ROUTING_VALIDATION:
+        t += [(u.rstrip("/") + "/", "routing validation (optional)", False) for u in ROUTING_SERVERS]
+    return t
+
+
+def _probe(url, sess):
+    """'' if the server answers at all (any HTTP status), else the error."""
+    try:
+        sess.head(url, timeout=20, allow_redirects=False)
+        return ""
+    except requests.RequestException as e:
+        err = str(e)
+        m = re.search(r"\[Errno -?\d+\][^'\")]*|Name or service not known|timed out|SSLError[^'\")]*", err)
+        return (m.group(0) if m else type(e).__name__)[:120]
+
+
+def network_check(ctx, sess):
+    """Test every server before starting, so that a node without (full) internet access fails
+    in seconds with a clear list instead of after minutes of retries. Falls back to IPv4
+    when only IPv6 fails. Optional servers (routing validation) are dropped if unreachable."""
+    global ROUTING_SERVERS, ROUTING_VALIDATION
+    targets = network_targets(ctx)
+    with cf.ThreadPoolExecutor(8) as ex:
+        errs = list(ex.map(lambda t: _probe(t[0], sess), targets))
+    if any(errs):
+        import socket
+        import urllib3.util.connection as uc
+        orig = uc.allowed_gai_family
+        uc.allowed_gai_family = lambda: socket.AF_INET
+        retry = [_probe(t[0], sess) if e else "" for t, e in zip(targets, errs)]
+        if sum(map(bool, retry)) < sum(map(bool, errs)):
+            log("network: some servers fail over IPv6 but answer over IPv4; using IPv4 only")
+            errs = retry
+        else:
+            uc.allowed_gai_family = orig
+    rows = [{"url": u, "purpose": w, "required": r, "reachable": not e, "error": e}
+            for (u, w, r), e in zip(targets, errs)]
+    pd.DataFrame(rows).to_csv(ctx["work"] / "network_check.csv", index=False)
+    bad = [x for x in rows if not x["reachable"]]
+    for x in bad:
+        log(f"network: cannot reach {x['url']} ({x['purpose']}): {x['error']}")
+    if not bad:
+        log(f"network: all {len(rows)} servers reachable")
+    opt_bad = {x["url"] for x in bad if not x["required"]}
+    if opt_bad:
+        ROUTING_SERVERS = [u for u in ROUTING_SERVERS if u.rstrip("/") + "/" not in opt_bad]
+        if not ROUTING_SERVERS:
+            ROUTING_VALIDATION = False
+            log("network: no routing server reachable; the routing validation is skipped")
+    req_bad = [x for x in bad if x["required"]]
+    if req_bad:
+        raise SystemExit(
+            "This machine cannot reach " + str(len(req_bad)) + " server(s) the run needs:\n"
+            + "\n".join(f"  {x['url']:<52} {x['purpose']}: {x['error']}" for x in req_bad)
+            + "\nThe cluster probably allows only some sites (other sites such as PyPI worked). Either ask "
+            "your IT team to allow HTTPS (port 443) to these hosts from this node, or run "
+            "`--stages download,grids` on a machine with internet access using the same --work-dir "
+            "(e.g. a shared disk), then rerun here: finished stages are skipped. Nothing was deleted. "
+            "(--skip-network-check skips this test.)")
+
+
 def geofabrik_plan(work, grid, years, sess):
     try:
         return _geofabrik_plan(work, grid, years, sess)
@@ -934,6 +1032,8 @@ def stage_download(ctx):
     work, sess = ctx["work"], session()
     dl = work / "downloads"
     years = ctx["years"]
+    if NETWORK_CHECK:
+        network_check(ctx, sess)
     plan = geofabrik_plan(work, ctx["grid"], years, sess)
     (work / "osm_plan.json").write_text(json.dumps(plan, indent=1))
 
@@ -2418,6 +2518,11 @@ def stage_cleanup(ctx):
         log("cleanup skipped (CLEANUP = False)")
         return
     work = ctx["work"]
+    pending = [s for s in STAGES if s != "cleanup" and not (work / "_done" / s).exists()]
+    if pending:
+        log(f"cleanup skipped: stages {pending} have not completed, so downloads and intermediate "
+            f"files are kept in {work} and a rerun resumes from them")
+        return
     for p in work.iterdir():
         if KEEP_DOWNLOADS and p.name in ("downloads", "pylib"):
             continue
@@ -2445,6 +2550,8 @@ def dry_run(ctx):
     log(f"shared grids on disk (memory-mapped): ~{shared / 1e9:.0f} GB; per-year friction "
         f"{grid.size * 4 / 1e9:.1f} GB")
     log(f"disk for results: ~{grid.size * (2 * 17 * 2 + 4 * 2) / 3 / 1e9:.0f} GB (compressed estimate)")
+    if NETWORK_CHECK:
+        network_check(ctx, session())
     plan = geofabrik_plan(ctx["work"], grid, ctx["years"], session())
     for y, rs in plan.items():
         big = sorted(rs, key=lambda r: -r["bytes"])[:3]
@@ -2461,7 +2568,7 @@ def nearest_epoch(y):
 
 def main(argv=None):
     global START_YEAR, END_YEAR, BBOX, CLEANUP, ML_FILES, NELSON_LAYERS, MAX_WORKERS, INCLUDE_ML_ROADS, WEISS2015_AUGMENT
-    global ROUTING_CITIES, ROUTING_VALIDATION, SENSITIVITY, SENS_DESIGN
+    global NETWORK_CHECK, ROUTING_CITIES, ROUTING_VALIDATION, SENSITIVITY, SENS_DESIGN
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0],
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--start", type=int, default=START_YEAR)
@@ -2473,6 +2580,7 @@ def main(argv=None):
     p.add_argument("--ml-files", nargs="+", default=ML_FILES)
     p.add_argument("--no-ml", action="store_true")
     p.add_argument("--no-weiss", action="store_true", help="do not complete 2015 roads with Weiss et al. (2018)")
+    p.add_argument("--skip-network-check", action="store_true", help="do not test the download servers first")
     p.add_argument("--nelson-layers", nargs="+", default=NELSON_LAYERS)
     p.add_argument("--max-workers", type=int, default=MAX_WORKERS)
     p.add_argument("--no-cleanup", action="store_true")
@@ -2487,6 +2595,7 @@ def main(argv=None):
     CLEANUP = CLEANUP and not a.no_cleanup
     INCLUDE_ML_ROADS = INCLUDE_ML_ROADS and not a.no_ml
     WEISS2015_AUGMENT = WEISS2015_AUGMENT and not a.no_weiss
+    NETWORK_CHECK = NETWORK_CHECK and not a.skip_network_check
     ROUTING_CITIES, ROUTING_VALIDATION = a.routing_cities, ROUTING_VALIDATION and not a.no_routing
     SENSITIVITY, SENS_DESIGN = SENSITIVITY and not a.no_sensitivity, a.sens_design
     if END_YEAR <= START_YEAR:
@@ -2519,6 +2628,11 @@ def main(argv=None):
         with Timer(f"stage {s}"):
             try:
                 funcs[s](ctx)
+            except RemoteUnavailable as e:
+                log(traceback.format_exc())
+                write_methods(ctx)
+                raise SystemExit(f"stage {s} stopped: a server kept failing ({e}). Nothing was deleted; "
+                                 "rerun later to resume.") from None
             except Exception:
                 log(traceback.format_exc())
                 write_methods(ctx)

@@ -500,3 +500,92 @@ def test_fix_proj_data_prefers_a_setting_without_proj_errors(monkeypatch):
     ga.fix_proj_data()
     assert seen == ["/opt/conda/share/proj", None]                      # as set (noisy), then unset
     assert "PROJ_LIB" not in ga.os.environ and "PROJ_DATA" not in ga.os.environ
+
+
+class _FakeResp:
+    def __init__(self, body, status=200):
+        self.body, self.status_code, self.headers = body, status, {"Last-Modified": "Thu, 01 Jan 2026"}
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise ga.requests.HTTPError(str(self.status_code))
+
+    def iter_content(self, n):
+        yield self.body
+
+
+def test_download_keeps_complete_files_and_replaces_damaged_ones(tmp_path, monkeypatch):
+    monkeypatch.setattr(ga.time, "sleep", lambda s: None)
+    calls = []
+
+    class S:
+        body = b"x" * 1000
+
+        def get(self, url, **kw):
+            calls.append(url)
+            return _FakeResp(self.body)
+    dest = tmp_path / "a.osm.pbf"
+    ga.download("u", dest, S())
+    meta = json.loads((tmp_path / "a.osm.pbf.meta.json").read_text())
+    assert dest.read_bytes() == S.body and meta["bytes"] == 1000 and len(calls) == 1
+    ga.download("u", dest, S())                                            # unchanged: not downloaded again
+    assert len(calls) == 1
+    dest.write_bytes(b"x" * 10)                                            # damaged: downloaded again
+    ga.download("u", dest, S())
+    assert len(calls) == 2 and dest.stat().st_size == 1000
+    dest.write_bytes(b"x" * 10)                                            # damaged and the server is down:
+    fail = type("F", (), {"get": lambda self, url, **kw: (_ for _ in ()).throw(ga.requests.ConnectionError("down"))})
+    with pytest.raises(ga.RemoteUnavailable):
+        ga.download("u", dest, fail(), retries=2)
+    assert dest.read_bytes() == b"x" * 10                                  # the old file is left as it was
+    old = tmp_path / "old.zip"; old.write_bytes(b"y" * 5)                 # file from a run before .meta.json
+    ga.download("u2", old, fail())
+    assert json.loads((tmp_path / "old.zip.meta.json").read_text())["bytes"] == 5
+
+
+def test_cleanup_only_after_all_stages_succeeded(tmp_path, monkeypatch):
+    work = tmp_path / "w"
+    for d in ("downloads", "pylib", "_done"):
+        (work / d).mkdir(parents=True)
+    (work / "downloads" / "f.osm.pbf").write_bytes(b"1")
+    (work / "grid.npy").write_bytes(b"1")
+    monkeypatch.setattr(ga, "write_methods", lambda ctx: None)
+    monkeypatch.setattr(ga, "CLEANUP", True); monkeypatch.setattr(ga, "KEEP_DOWNLOADS", False)
+    ctx = {"work": work}
+    for s_ in ga.STAGES[:3]:
+        (work / "_done" / s_).write_text("x")
+    ga.stage_cleanup(ctx)                                                  # incomplete run: nothing deleted
+    assert (work / "downloads" / "f.osm.pbf").exists() and (work / "grid.npy").exists()
+    for s_ in ga.STAGES:
+        if s_ != "cleanup":
+            (work / "_done" / s_).write_text("x")
+    ga.stage_cleanup(ctx)
+    assert sorted(p.name for p in work.iterdir()) == ["pylib"]
+
+
+def test_network_check_stops_early_and_drops_optional_servers(tmp_path, monkeypatch):
+    blocked = {"https://download.geofabrik.de/", "https://router.project-osrm.org/"}
+
+    class S:
+        def head(self, url, **kw):
+            if url in blocked:
+                raise ga.requests.ConnectionError("Failed to establish a new connection: [Errno 101] Network is unreachable")
+            return object()
+    monkeypatch.setattr(ga, "ROUTING_SERVERS", list(ga.ROUTING_SERVERS))
+    monkeypatch.setattr(ga, "ROUTING_VALIDATION", True)
+    ctx = {"work": tmp_path, "years": [2015, 2026]}
+    with pytest.raises(SystemExit) as e:
+        ga.network_check(ctx, S())
+    assert "download.geofabrik.de" in str(e.value) and "Errno 101" in str(e.value)
+    assert "project-osrm" not in str(e.value)                            # optional: not a reason to stop
+    assert ga.ROUTING_SERVERS == ["https://routing.openstreetmap.de/routed-car"]
+    blocked.discard("https://download.geofabrik.de/")
+    ga.network_check(ctx, S())                                             # only an optional server down: go on
+    chk = pd.read_csv(tmp_path / "network_check.csv")
+    assert chk.reachable.all() and not chk.url.str.contains("project-osrm").any()   # dropped earlier
