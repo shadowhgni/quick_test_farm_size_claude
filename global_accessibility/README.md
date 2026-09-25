@@ -70,6 +70,14 @@ its own figures.
 - **Roads:** OSM `highway` classes → `SPEED_TABLE`. Unpaved (tagged, or untagged minor
   classes) × 0.7. Fastest road wins in a cell. Microsoft ML roads (undated) are used for
   the end year only, at 15 km/h, in cells with no OSM road.
+- **Units:** travel times in minutes (uint16, nodata 65535, as Nelson et al.); change in
+  minutes (int16); friction in minutes per metre. Units are written into each COG band.
+- **Water:** waterways and ferries are not used as travel links (only OSM `highway=*`).
+  WorldCover water is impassable. A road on a cell that is ≥ 90% water (share computed from
+  WorldCover at ~185 m) is removed unless the OSM way is a bridge, causeway (`bridge=*`),
+  ford or embankment; Microsoft roads on such cells are always removed. Counts of removed
+  and kept cells are in `methods/friction_<year>.json`. Islands reached only by ferry are
+  unreachable from the mainland.
 - **Off-road:** WorldCover 2021 walking speeds (`LANDCOVER_SPEED`, placeholders to be
   calibrated) × exp(−3.5 tan slope), for both years. Water is impassable unless a road
   crosses it.

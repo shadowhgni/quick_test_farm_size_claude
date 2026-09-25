@@ -79,7 +79,7 @@ OSM = """<?xml version="1.0"?><osm version="0.6">
 <node id="3" lat="6.2" lon="0.5"/><node id="4" lat="6.2" lon="1.5"/>
 <node id="5" lat="6.8" lon="1.5"/><node id="6" lat="6.8" lon="2.5"/>
 <way id="10"><nd ref="1"/><nd ref="2"/><tag k="highway" v="primary"/></way>
-<way id="11"><nd ref="3"/><nd ref="4"/><tag k="highway" v="track"/></way>
+<way id="11"><nd ref="3"/><nd ref="4"/><tag k="highway" v="track"/><tag k="bridge" v="yes"/></way>
 <way id="12"><nd ref="5"/><nd ref="6"/><tag k="highway" v="trunk"/></way>
 </osm>"""
 
@@ -97,6 +97,10 @@ def test_roads_job_rasterizes_and_finds_checkpoints(tmp_path):
     assert s["checkpoints"][0][0] == pytest.approx(1.0)
     d = np.load(tmp_path / "x.npz")
     assert d["speed"].max() == 80 and (d["speed"] == 70).any()
+    assert s["crossing_segments"] == 1                        # the track tagged bridge=yes
+    # the bridge track lies exactly on the bounding-box edge (lat 6.2): must not be clipped
+    rows = np.nonzero(d["bridge"].any(axis=1))[0]
+    assert d["bridge"].sum() >= 120 and len(rows) <= 2 and rows.min() >= d["bridge"].shape[0] - 3
 
 
 def test_corruption_and_border_delay(tmp_path):
@@ -161,8 +165,10 @@ def test_block_mean_cog_and_png(tmp_path):
     a[:10, :10] = ga.TT_NODATA
     getter = lambda r0, r1: a[r0:r1]
     for factor, name in ((1, "t1.tif"), (10, "t10.tif")):
-        ga.write_cog(tmp_path / name, g, [getter, getter], "uint16", ga.TT_NODATA, ["a", "b"], factor)
+        ga.write_cog(tmp_path / name, g, [getter, getter], "uint16", ga.TT_NODATA, ["a", "b"], factor,
+                     units="minutes")
         with rasterio.open(tmp_path / name) as r:
+            assert r.units == ("minutes", "minutes") and r.tags()["UNITS"] == "minutes"
             assert r.tags(ns="IMAGE_STRUCTURE").get("LAYOUT") == "COG"
             assert r.count == 2 and r.descriptions == ("a", "b")
             assert r.shape == (g.height // factor, g.width // factor)
@@ -254,6 +260,8 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     (dl / "nelson").mkdir(parents=True)
     lc = np.full(g.shape, 40, np.uint8); lc[:, 118:121] = 80           # river
     np.save(work / "landcover.npy", lc)
+    wp = np.zeros(g.shape, np.uint8); wp[:, 118:121] = 100; wp[:, 117] = 60   # river + bank
+    np.save(work / "water_pct.npy", wp)
     np.save(work / "tan_slope.npy", np.full(g.shape, 0.02, np.float32))
     cg = np.ones(g.shape, np.int16); cg[:, 120:] = 2
     np.save(work / "countries.npy", cg)
@@ -265,8 +273,12 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
         r = np.zeros(g.shape, np.float32); r[120, :] = 70                     # E-W primary road
         if y == 2026:
             r[:, 60] = np.maximum(r[:, 60], 40)                               # new N-S road
+            r[20:40, 119] = 30                                                 # "road" in the river
+            r[20:40, 117] = 30                                                 # road on the bank
         np.save(work / f"road_speed_{y}.npy", r)
-    ml = np.zeros(g.shape, np.uint8); ml[200, 20:100] = 1
+        cr = np.zeros(g.shape, np.uint8); cr[120, 118:121] = 1                 # the bridge
+        np.save(work / f"road_crossing_{y}.npy", cr)
+    ml = np.zeros(g.shape, np.uint8); ml[200, 20:100] = 1; ml[200, 110:125] = 1
     np.save(work / "ml_roads.npy", ml)
     pd.DataFrame([{"year": y, "lon": 2.0, "lat": 7.0 - 0.5 / 120, "iso3_a": "AAA", "iso3_b": "BBB",
                    "highway": "primary"} for y in (2015, 2026)]).to_csv(work / "checkpoints_raw.csv", index=False)
@@ -291,6 +303,12 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     ga.stage_friction(ctx)
     f15, f26 = np.load(work / "friction_2015.npy"), np.load(work / "friction_2026.npy")
     assert np.isinf(f15[0, 119]) and np.isfinite(f15[120, 119])             # river, bridge
+    assert np.isinf(f26[30, 119]) and np.isfinite(f26[30, 117])             # water road dropped, bank kept
+    assert np.isinf(f26[200, 119]) and np.isfinite(f26[200, 115])           # ML over water dropped
+    st26 = json.loads((work / "friction_2026.json").read_text())
+    assert st26["osm_road_cells_dropped_on_water"] == 20
+    assert st26["osm_road_cells_kept_as_crossings"] == 3
+    assert st26["ml_road_cells_dropped_on_water"] == 3
     cp = pd.read_csv(work / "checkpoints_2015.csv")
     assert len(cp) == 1 and cp.delay_min[0] > 15
     ga.stage_traveltime(ctx)
@@ -314,3 +332,11 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     for f in ["config.json", "speed_table.csv", "corruption_2026.csv", "checkpoints_2026.csv",
               "software_versions.json", "destinations.csv"]:
         assert (res / "methods" / f).exists(), f
+
+
+def test_block_mode_and_water():
+    a = np.zeros((10, 10), np.uint8)
+    a[:5, :5] = 80; a[:5, 5:] = 40; a[5:, :5] = 10; a[5:, 5:] = 0
+    a[0, 0] = 40                                         # 24 water + 1 cropland
+    mode, w = ga.block_mode_and_water(a, 5)
+    assert mode.tolist() == [[80, 40], [10, 0]] and w.tolist() == [[96, 0], [0, 0]]

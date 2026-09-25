@@ -29,6 +29,7 @@ jobs:
           pip install pytest scikit-image   # only for the offline tests; the script installs its own packages
       - name: Run (bbox Benin/Togo and neighbours; script installs its own dependencies)
         run: |
+          rm -rf global_accessibility/test_results    # no leftovers from earlier runs
           python global_accessibility/global_accessibility.py \
             --bbox -1 5.5 4.5 13.5 --start 2015 --end 2026 --routing-cities 12 \
             --ml-files Western_Africa.zip \

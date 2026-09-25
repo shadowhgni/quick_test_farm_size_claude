@@ -63,6 +63,9 @@ LANDCOVER_SPEED = {10: 2.5, 20: 3.0, 30: 4.0, 40: 4.0, 50: 5.0, 60: 3.0, 70: 1.0
                    80: 0.0,      # permanent water: impassable unless a road crosses
                    90: 1.5, 95: 1.0, 100: 3.0}
 TOBLER_K = 3.5                  # walking speed factor exp(-3.5 * tan(slope))
+LC_SUBSAMPLE = 5                # land cover read at RES/5 (~185 m): majority class + water share
+WATER_ROAD_MAX_PCT = 90         # a road on a cell >= 90% water is dropped unless it is an OSM
+                                # bridge / causeway / ford (Microsoft roads: always dropped)
 DEM_OVERSAMPLE = 5              # slope computed at RES/5 (~180 m) then averaged
 
 # --- corruption penalty (World Bank WGI "Control of Corruption", score 0-100) ------
@@ -854,9 +857,24 @@ def read_tile_into(url, grid, target, window_bounds, out_rows, out_cols, resampl
         return None
 
 
+WORLDCOVER_CLASSES = (10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100)
+
+
+def block_mode_and_water(a, f, water_class=80):
+    """Majority WorldCover class (nodata 0 ignored) and water share (%) of f x f blocks."""
+    h, w = a.shape[0] // f, a.shape[1] // f
+    b = a[:h * f, :w * f].reshape(h, f, w, f)
+    counts = np.stack([(b == c).sum(axis=(1, 3)) for c in WORLDCOVER_CLASSES])
+    cls = np.array(WORLDCOVER_CLASSES, np.uint8)
+    mode = np.where(counts.sum(0) > 0, cls[counts.argmax(0)], 0).astype(np.uint8)
+    wpct = np.round(100 * counts[WORLDCOVER_CLASSES.index(water_class)] / (f * f)).astype(np.uint8)
+    return mode, wpct
+
+
 def landcover_grid(ctx):
     grid, dl, work = ctx["grid"], ctx["dl"], ctx["work"]
     lc = memmap(work / "landcover.npy", grid, np.uint8, fill=0)
+    water = memmap(work / "water_pct.npy", grid, np.uint8, fill=0)
     keys = (dl / "worldcover_2021_tiles.txt").read_text().split()
     jobs = []
     for k in keys:
@@ -867,20 +885,25 @@ def landcover_grid(ctx):
         if w:
             jobs.append((k, w))
 
+    F = LC_SUBSAMPLE
+
     def job(item):
         k, (r0, c0, nr, nc) = item
         b = (grid.west + c0 * grid.res, grid.north - (r0 + nr) * grid.res,
              grid.west + (c0 + nc) * grid.res, grid.north - r0 * grid.res)
-        a = read_tile_into(URLS["worldcover"].format(key=k), grid, None, b, nr, nc,
-                           Resampling.mode, np.uint8)
+        a = read_tile_into(URLS["worldcover"].format(key=k), grid, None, b, nr * F, nc * F,
+                           Resampling.nearest, np.uint8)
         if a is not None:
+            mode, wpct = block_mode_and_water(a, F)
             sub = lc[r0:r0 + nr, c0:c0 + nc]
-            np.copyto(sub, a, where=(a > 0))
+            np.copyto(sub, mode, where=(mode > 0))
+            wsub = water[r0:r0 + nr, c0:c0 + nc]
+            np.maximum(wsub, wpct, out=wsub)
         return a is not None
 
     with cf.ThreadPoolExecutor(REMOTE_READ_THREADS) as ex:
         ok = list(ex.map(job, jobs))
-    lc.flush()
+    lc.flush(); water.flush()
     log(f"land cover: {sum(ok)}/{len(jobs)} WorldCover tiles read")
     return {"worldcover_tiles": len(jobs), "worldcover_tiles_read": int(sum(ok))}
 
@@ -1025,6 +1048,9 @@ def stage_grids(ctx):
 # stage: roads (per year, per OSM extract, in parallel)
 # =============================================================================
 _SURFACE_RE = re.compile(r'"surface"=>"([^"]*)"')
+# ways that legitimately cross water
+_CROSSING_RE = r'"bridge"=>"(?!no")|"ford"=>"(?:yes|stepping_stones)"|"embankment"=>"yes"'
+
 
 
 def road_speed(highway, other_tags):
@@ -1064,19 +1090,26 @@ def roads_job(job):
         out.with_suffix(".done").write_text(json.dumps(stats))
         return stats
     g["speed"], _ = road_speed(g["highway"], g["other_tags"])
+    g["crossing"] = g["other_tags"].fillna("").str.contains(_CROSSING_RE)
     g = g.drop(columns="other_tags")
     g = g[g.intersects(box(*grid.bounds))]
     km = line_lengths_km(g.geometry.values)
     stats["km_by_class"] = pd.Series(km, index=g["highway"].values).groupby(level=0).sum().round(1).to_dict()
     b = g.total_bounds
-    w = grid.window_of(tuple(b))
+    pad = grid.res          # one cell of margin: lines on the box edge must not be clipped away
+    w = grid.window_of((b[0] - pad, b[1] - pad, b[2] + pad, b[3] + pad))
     if w:
         r0, c0, nr, nc = w
         g = g.sort_values("speed")
         speed = rasterize(zip(g.geometry, g["speed"]), out_shape=(nr, nc),
                           transform=grid.sub_transform(r0, c0), fill=0, all_touched=True,
                           dtype="float32")
-        np.savez(out, r0=r0, c0=c0, speed=speed)
+        br = g[g["crossing"]]
+        bridge = rasterize(((geom, 1) for geom in br.geometry), out_shape=(nr, nc),
+                           transform=grid.sub_transform(r0, c0), fill=0, all_touched=True,
+                           dtype="uint8") if len(br) else np.zeros((nr, nc), np.uint8)
+        np.savez(out, r0=r0, c0=c0, speed=speed, bridge=bridge)
+        stats["crossing_segments"] = int(len(br))
         stats["window"] = [int(r0), int(c0), int(nr), int(nc)]
     # official checkpoints: major roads crossing an African land border
     if borders_path and Path(borders_path).exists():
@@ -1116,7 +1149,8 @@ def ml_batch_job(job):
     if not len(arr):
         return None
     km = float(line_lengths_km(arr).sum())
-    w = grid.window_of(tuple(shapely.total_bounds(arr)))
+    tb = shapely.total_bounds(arr)
+    w = grid.window_of((tb[0] - grid.res, tb[1] - grid.res, tb[2] + grid.res, tb[3] + grid.res))
     if not w:
         return None
     r0, c0, nr, nc = w
@@ -1188,6 +1222,7 @@ def stage_roads(ctx):
         # extracts; conservative), plus the rasterized window
         stats = run_budgeted(roads_job, jobs, lambda j: 1.5e9 + 7 * j["bytes"], f"roads {y}")
         speed = memmap(work / f"road_speed_{y}.npy", grid, np.float32, fill=0)
+        bridge = memmap(work / f"road_crossing_{y}.npy", grid, np.uint8, fill=0)
         for j, s in zip(jobs, stats):
             npz = Path(j["out"])
             if npz.exists():
@@ -1195,12 +1230,14 @@ def stage_roads(ctx):
                 r0, c0, a = int(d["r0"]), int(d["c0"]), d["speed"]
                 sub = speed[r0:r0 + a.shape[0], c0:c0 + a.shape[1]]
                 np.maximum(sub, a, out=sub)
+                bsub = bridge[r0:r0 + a.shape[0], c0:c0 + a.shape[1]]
+                np.maximum(bsub, d["bridge"], out=bsub)
             for hw, v in (s.get("km_by_class") or {}).items():
                 km_rows.append({"year": y, "extract": s["extract"], "highway": hw, "km": v})
             for p in s.get("checkpoints") or []:
                 cp_rows.append({"year": y, "lon": p[0], "lat": p[1], "iso3_a": p[2],
                                 "iso3_b": p[3], "highway": p[4]})
-        speed.flush()
+        speed.flush(); bridge.flush()
         info[f"osm_extracts_{y}"] = len(jobs)
     if INCLUDE_ML_ROADS:
         with Timer("Microsoft ML roads"):
@@ -1233,6 +1270,7 @@ def checkpoint_cells(ctx, year, corr):
 def stage_friction(ctx):
     grid, work = ctx["grid"], ctx["work"]
     lc = memmap(work / "landcover.npy", grid, None, mode="r")
+    water = memmap(work / "water_pct.npy", grid, None, mode="r")
     tan = memmap(work / "tan_slope.npy", grid, None, mode="r")
     cg = memmap(work / "countries.npy", grid, None, mode="r")
     ml = memmap(work / "ml_roads.npy", grid, None, mode="r") if INCLUDE_ML_ROADS else None
@@ -1246,13 +1284,24 @@ def stage_friction(ctx):
         factor = np.ones(int(max(corr.cid.max(), 0)) + 1, np.float32)
         factor[corr.cid.values] = corr.road_speed_factor.values
         road = memmap(work / f"road_speed_{y}.npy", grid, None, mode="r")
+        crossing = memmap(work / f"road_crossing_{y}.npy", grid, None, mode="r")
         fr = memmap(work / f"friction_{y}.npy", grid, np.float32)
-        stats = {"road_cells": 0, "ml_cells": 0, "passable_cells": 0}
+        stats = {"road_cells": 0, "ml_cells": 0, "passable_cells": 0,
+                 "osm_road_cells_dropped_on_water": 0, "osm_road_cells_kept_as_crossings": 0,
+                 "ml_road_cells_dropped_on_water": 0}
         use_ml = INCLUDE_ML_ROADS and y == ctx["years"][-1]
         for r0, r1 in row_chunks(grid.height):
             rs = np.array(road[r0:r1])
+            open_water = np.asarray(water[r0:r1]) >= WATER_ROAD_MAX_PCT
+            on_water = (rs > 0) & open_water
+            keep = on_water & (np.asarray(crossing[r0:r1]) > 0)
+            rs[on_water & ~keep] = 0
+            stats["osm_road_cells_dropped_on_water"] += int((on_water & ~keep).sum())
+            stats["osm_road_cells_kept_as_crossings"] += int(keep.sum())
             if use_ml:
-                add = (rs == 0) & (ml[r0:r1] > 0)
+                cand = (rs == 0) & (ml[r0:r1] > 0) & ~on_water
+                stats["ml_road_cells_dropped_on_water"] += int((cand & open_water).sum())
+                add = cand & ~open_water
                 rs[add] = ML_SPEED
                 stats["ml_cells"] += int(add.sum())
             stats["road_cells"] += int((rs > 0).sum())
@@ -1389,7 +1438,7 @@ BAND_DESC = {**{f"cities_{k}": f"cities_{k}: population {int(lo):,} to <{int(hi)
 
 
 def write_cog(path, grid, bands, dtype, nodata, desc, factor=1, resampling="average",
-              tmpdir=None):
+              tmpdir=None, units=None):
     """bands: list of callables returning a (rows, cols) block for (r0, r1).
     factor > 1 aggregates blocks of factor x factor cells (mean of valid cells)."""
     H, W = grid.height // factor, grid.width // factor
@@ -1402,6 +1451,9 @@ def write_cog(path, grid, bands, dtype, nodata, desc, factor=1, resampling="aver
                 BIGTIFF="YES")
     step = 2000 - 2000 % factor
     with rasterio.open(tmp, "w", **prof) as dst:
+        if units:
+            dst.units = tuple([units] * len(bands))
+            dst.update_tags(UNITS=units)
         for b, (get, d) in enumerate(zip(bands, desc), start=1):
             dst.set_band_description(b, d)
             for r0, r1 in row_chunks(grid.height - grid.height % factor, step):
@@ -1545,13 +1597,15 @@ def stage_outputs(ctx):
             with Timer(f"COG travel time {y} {tag}"):
                 write_cog(res / sub / f"traveltime_{y}_{tag}.tif", grid,
                           [tt_block(work, y, n) for n in names], "uint16", TT_NODATA, desc, factor,
-                          tmpdir=work / "tmp")
+                          tmpdir=work / "tmp", units="minutes")
             write_cog(res / sub / f"friction_{y}_{tag}.tif", grid, [fr_block(work, y)], "float32",
-                      -9999.0, ["friction (minutes per metre)"], factor, tmpdir=work / "tmp")
+                      -9999.0, ["friction (minutes per metre)"], factor, tmpdir=work / "tmp",
+                      units="minutes per metre")
         with Timer(f"COG change {tag}"):
             write_cog(res / sub / f"traveltime_change_{y1}_minus_{y0}_{tag}.tif", grid,
                       [change_block(work, y0, y1, n) for n in names], "int16", CHANGE_NODATA,
-                      [f"{d} (minutes, {y1} - {y0})" for d in desc], factor, tmpdir=work / "tmp")
+                      [f"{d} (minutes, {y1} - {y0})" for d in desc], factor, tmpdir=work / "tmp",
+                      units="minutes")
     # PNGs from the 10 km COGs
     ext = [grid.west, grid.east, grid.south, grid.north]
     with Timer("PNG maps"):
