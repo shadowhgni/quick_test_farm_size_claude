@@ -1,0 +1,83 @@
+{
+ "2015": [
+  {
+   "region": "africa",
+   "url": "https://download.geofabrik.de/africa-150101.osm.pbf",
+   "bytes": 721392542,
+   "bounds": [
+    -27.262032,
+    -60.3167,
+    66.722766,
+    37.77817
+   ]
+  }
+ ],
+ "2026": [
+  {
+   "region": "benin",
+   "url": "https://download.geofabrik.de/africa/benin-260101.osm.pbf",
+   "bytes": 46832967,
+   "bounds": [
+    0.761489,
+    5.984817,
+    3.861694,
+    12.43658
+   ]
+  },
+  {
+   "region": "burkina-faso",
+   "url": "https://download.geofabrik.de/africa/burkina-faso-260101.osm.pbf",
+   "bytes": 80806798,
+   "bounds": [
+    -5.527409,
+    9.384107,
+    2.412529,
+    15.09271
+   ]
+  },
+  {
+   "region": "ghana",
+   "url": "https://download.geofabrik.de/africa/ghana-260101.osm.pbf",
+   "bytes": 108105651,
+   "bounds": [
+    -3.807399,
+    3.704056,
+    1.394038,
+    11.17772
+   ]
+  },
+  {
+   "region": "niger",
+   "url": "https://download.geofabrik.de/africa/niger-260101.osm.pbf",
+   "bytes": 71818630,
+   "bounds": [
+    0.119721,
+    11.68684,
+    16.05605,
+    23.56864
+   ]
+  },
+  {
+   "region": "nigeria",
+   "url": "https://download.geofabrik.de/africa/nigeria-260101.osm.pbf",
+   "bytes": 664158838,
+   "bounds": [
+    2.664528,
+    2.674022,
+    14.68057,
+    13.89874
+   ]
+  },
+  {
+   "region": "togo",
+   "url": "https://download.geofabrik.de/africa/togo-260101.osm.pbf",
+   "bytes": 61134072,
+   "bounds": [
+    -0.148338,
+    5.892541,
+    1.810942,
+    11.14395
+   ]
+  }
+ ]
+}

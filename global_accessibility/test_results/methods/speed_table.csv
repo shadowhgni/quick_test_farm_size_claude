@@ -1,0 +1,16 @@
+highway,speed_kmh,paved_if_missing,unpaved_speed_kmh
+motorway,100,True,100.0
+trunk,80,True,80.0
+primary,70,True,70.0
+secondary,55,True,55.0
+tertiary,40,False,28.0
+unclassified,30,False,21.0
+residential,25,False,17.5
+motorway_link,60,True,60.0
+trunk_link,50,True,50.0
+primary_link,45,True,45.0
+secondary_link,40,True,40.0
+tertiary_link,30,False,21.0
+service,20,False,14.0
+track,15,False,10.5
+living_street,15,False,10.5

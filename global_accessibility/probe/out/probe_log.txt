@@ -1,0 +1,26 @@
+nelson file saved: travel_time_to_cities_metadata.pdf
+nelson file saved: travel_time_to_ports_metadata.pdf
+nelson file saved: README.txt
+nelson file saved: Metadata_Travel time to the cities and the ports in the year 2015__V02.csv
+geofabrik features: 555 leaves: 523
+geofabrik 150101: 264/523 leaves available, 25.3 GB
+geofabrik 180101: 352/523 leaves available, 42.2 GB
+geofabrik 200101: 383/523 leaves available, 55.2 GB
+geofabrik 230101: 444/523 leaves available, 88.6 GB
+geofabrik 250101: 477/523 leaves available, 102.3 GB
+geofabrik 260101: 480/523 leaves available, 112.9 GB
+leaf parents: ['africa', 'asia', 'australia', 'australia-oceania', 'baden-wuerttemberg', 'bayern', 'brazil', 'british-columbia', 'canada', 'central-america', 'china', 'czech-republic', 'england', 'europe', 'france', 'germany', 'greater-london', 'india', 'indonesia', 'italy', 'japan', 'netherlands', 'nordrhein-westfalen', 'north-america', 'norway', 'nunavut', 'poland', 'russia', 'south-america', 'spain', 'united-kingdom', 'us/california']
+worldcover 2021 map tiles: 2651 example: ['v200/2021/map/ESA_WorldCover_10m_2021_v200_N00E006_Map.tif', 'v200/2021/map/ESA_WorldCover_10m_2021_v200_N00E009_Map.tif']
+worldcover tile: (36000, 36000) EPSG:4326 (8.333333333333333e-05, 8.333333333333333e-05) ('uint8',) nodata 0.0 overviews [2, 4, 8, 16, 32, 64] blocks [(1024, 1024)] bounds BoundingBox(left=0.0, bottom=6.0, right=3.0, top=9.0)
+copernicus glo-90 tiles: 26475 example: ['Copernicus_DSM_COG_30_N00_00_E006_00_DEM', 'Copernicus_DSM_COG_30_N00_00_E009_00_DEM']
+glo-90 Copernicus_DSM_COG_30_N00_00_E006_00_DEM (1200, 1200) (0.0008333333333333334, 0.0008333333333333334) ('float32',) nodata None overviews [2, 4] bounds BoundingBox(left=5.999583333333334, bottom=0.0004166666666667318, right=6.999583333333334, top=1.0004166666666667)
+glo-90 Copernicus_DSM_COG_30_N06_00_E001_00_DEM (1200, 1200) (0.0008333333333333334, 0.0008333333333333334) ('float32',) nodata None overviews [2, 4] bounds BoundingBox(left=0.9995833333333334, bottom=6.000416666666666, right=1.9995833333333333, top=7.000416666666666)
+glo-90 Copernicus_DSM_COG_30_N65_00_E020_00_DEM (1200, 600) (0.0016666666666666668, 0.0008333333333333334) ('float32',) nodata None overviews [2, 4] bounds BoundingBox(left=19.999166666666667, bottom=65.00041666666667, right=20.999166666666667, top=66.00041666666667)
+natural earth zip MB: 4.9
+natural earth rows: 258 cols: ['SOV_A3', 'ADM0_A3', 'NAME', 'ISO_A3', 'ISO_A3_EH', 'CONTINENT', 'REGION_UN']
+continents: {'Asia': 59, 'Africa': 55, 'Europe': 51, 'North America': 42, 'Oceania': 26, 'South America': 15, 'Seven seas (open ocean)': 9, 'Antarctica': 1}
+africa n: 55 ISO_A3 == -99: ['Somaliland', 'Bir Tawil']
+wgi 2024 countries with value: 215 meta: {'page': 1, 'pages': 1, 'per_page': 400, 'total': 216, 'sourceid': '3', 'lastupdated': '2026-03-18'}
+nelson6: (17400, 43200) EPSG:4326 (0.008333333333, 0.008333333333) ('uint16',) nodata None bounds BoundingBox(left=-180.0, bottom=-59.99999999419998, right=179.99999998559997, top=85.0) compress Compression.lzw tags {'DataType': 'Generic', 'AREA_OR_POINT': 'Area'}
+nelson6 Benin/Togo window: min/median/max 0 112.0 65535
+python 3.13.15 (main, Aug  6 2026, 02:15:18) [GCC 13.3.0]

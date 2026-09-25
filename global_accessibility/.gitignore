@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+ga_work/
+ga_results/

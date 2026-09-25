@@ -1,0 +1,39 @@
+name: Global accessibility - probe data sources
+
+on:
+  push:
+    branches: ['claude/**']
+    paths:
+      - 'global_accessibility/probe/probe_sources.py'
+      - '.github/workflows/global_probe.yml'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install (Python 3.13)
+        run: |
+          python --version
+          pip install requests rasterio geopandas pyogrio numpy numba scikit-image scipy psutil osmium pyarrow matplotlib 2>&1 | tail -3
+          pip list 2>/dev/null | grep -iE "rasterio|geopandas|pyogrio|numba|scikit-image|scipy|osmium|numpy|shapely|pyproj" | tee global_accessibility/probe/pip_versions_py313.txt
+      - name: Probe
+        env:
+          GDAL_DISABLE_READDIR_ON_OPEN: EMPTY_DIR
+        run: python global_accessibility/probe/probe_sources.py
+      - name: Commit probe results
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add global_accessibility/probe/ || true
+          git diff --cached --quiet && exit 0
+          git commit -m "ci: global data-source probe [skip ci]"
+          for i in 1 2 3; do git pull --rebase origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && break; sleep 5; done
