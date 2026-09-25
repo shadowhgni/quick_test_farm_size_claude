@@ -1,13 +1,13 @@
 """
-Benin + Togo test run of merge_roads.py (run by .github/workflows/roads_merge.yml).
+Benin + Togo test run of merge_roads.py (run by .github/workflows/accessibility.yml).
 
 Expects in data/:
   benin-200101.osm.pbf  togo-200101.osm.pbf   (t1, Geofabrik yearly snapshot)
   benin-260901.osm.pbf  togo-260901.osm.pbf   (t2)
   Western_Africa.zip                          (Microsoft drop 2025.04.28)
 
-Writes small, committable QA outputs to results_benin_togo/ and large ones
-(gpkg, tif) to output_benin_togo/.
+Writes small, committable QA outputs to results/roads/ and large ones
+(gpkg, tif) to output/roads/.
 """
 import time
 from pathlib import Path
@@ -22,7 +22,8 @@ import matplotlib.pyplot as plt
 
 import merge_roads as mr
 
-DATA, RES, OUT = Path("data"), Path("results_benin_togo"), Path("output_benin_togo")
+ROOT = Path(__file__).resolve().parents[1]   # accessibility_update/
+DATA, RES, OUT = ROOT / "data", ROOT / "results" / "roads", ROOT / "output" / "roads"
 CRS = 32631                     # UTM 31N covers Benin and nearly all of Togo
 T1, T2 = "200101", "260901"
 OSM_EXT = ".osm.pbf"            # tests swap in ".osm" (XML) files
@@ -76,7 +77,7 @@ def qa_map(name, lonlat, osm, ms_all, path):
 
 
 def main():
-    RES.mkdir(exist_ok=True); OUT.mkdir(exist_ok=True)
+    RES.mkdir(parents=True, exist_ok=True); OUT.mkdir(parents=True, exist_ok=True)
     log = []
     say = lambda s: (print(s), log.append(s))
     table = mr.load_speed_table()
@@ -152,7 +153,8 @@ def main():
 
     # --- 5. outputs
     t = time.time()
-    roads.to_file(OUT / "roads_merged.gpkg", layer="roads", driver="GPKG")
+    mr.write_roads(roads, OUT / "roads_merged.gpkg")
+    mr.write_roads(osm1, OUT / "roads_merged.gpkg", layer="osm_t1")  # with gone_by_t2
     mr.rasterize_speed(roads, OUT / "road_speed_kmh.tif", res_m=mr.RES_M)
     say(f"write gpkg + tif: {time.time() - t:.0f}s")
     for name, ll in WINDOWS.items():

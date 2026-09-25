@@ -42,7 +42,7 @@ from shapely.ops import unary_union
 import merge_roads as mr
 
 HERE = Path(__file__).resolve().parent
-LANDCOVER_TABLE = HERE / "landcover_speed.csv"
+LANDCOVER_TABLE = HERE.parent / "config" / "landcover_speed.csv"
 RES_M = 100
 NODATA = -9999.0
 TOBLER_K = 3.5

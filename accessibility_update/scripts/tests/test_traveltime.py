@@ -50,6 +50,15 @@ def test_travel_time_uniform_and_barrier():
     assert t[50, 45] == fr.NODATA and t[50, 39] > 0
 
 
+def test_flag_reachable():
+    g = _grid()
+    passable = np.ones(g.shape, bool)
+    passable[:, :60] = False                                  # 6 km of impassable in the west
+    pts = [rasterio.transform.xy(g.transform, 50, c) for c in (5, 30, 80)]
+    d = gpd.GeoDataFrame(geometry=[Point(x, y) for x, y in pts] + [Point(0, 0)], crs=UTM)
+    assert tt.flag_reachable(d, g, passable).tolist() == [False, True, True, False]
+
+
 def test_target_snaps_port_off_water():
     g = _grid()
     passable = np.ones(g.shape, bool)
@@ -120,7 +129,7 @@ def test_main_two_dates(tmp_path):
     assert set(s["layer"]) == {"city6", "city9", "port2"}
     c6 = s[s["layer"] == "city6"].set_index("date")
     assert c6.loc["2026", "pop_weighted_mean_min"] <= c6.loc["2020", "pop_weighted_mean_min"]
-    assert (c6["n_destinations"] == 1).all()
+    assert (c6["n_destinations"] == 1).all() and (c6["n_reachable"] == 1).all()
     with rasterio.open(out / "traveltime_change_2026_minus_2020_city6.tif") as r:
         d = r.read(1, masked=True)
     assert d.max() <= 1e-4 and d.min() < 0                       # only faster
@@ -150,8 +159,10 @@ def test_benin_togo_driver(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(rtb, "DATA", data)
     monkeypatch.setattr(rtb, "FRIC", fric)
+    monkeypatch.setattr(rtb, "OUT", tmp_path / "output" / "traveltime")
+    monkeypatch.setattr(rtb, "RES", tmp_path / "results" / "traveltime")
     rtb.main()
-    res = tmp_path / "results_traveltime_benin_togo"
+    res = tmp_path / "results" / "traveltime"
     s = pd.read_csv(res / "traveltime_summary.csv")
     assert len(s) == 4 * 4                                  # 4 scenarios x 4 layers
     p5 = s[s["layer"] == "port5"].set_index("date")

@@ -42,7 +42,7 @@ ML_SPEED = 15        # untagged ML roads treated as tracks (km/h)
 UNPAVED = {"unpaved", "dirt", "gravel", "ground", "earth", "sand", "compacted",
            "mud", "fine_gravel", "grass", "laterite"}
 UNPAVED_FACTOR = 0.7
-SPEED_TABLE = HERE / "speed_table.csv"
+SPEED_TABLE = HERE.parent / "config" / "speed_table.csv"
 
 _SURFACE_RE = re.compile(r'"surface"=>"([^"]*)"')
 
@@ -232,6 +232,16 @@ def rasterize_speed(roads: gpd.GeoDataFrame, out_tif: str | Path, res_m: float =
         dst.write(speed, 1)
 
 
+def write_roads(roads, path, layer="roads"):
+    """GeoPackage output. Boolean flags with gaps (new_since_t1 is empty for ML roads)
+    would be stored as text "True"/"False", so write them as nullable 0/1 integers."""
+    roads = roads.copy()
+    for col in ("new_since_t1", "gone_by_t2"):
+        if col in roads:
+            roads[col] = roads[col].map({True: 1, False: 0}).astype("Int8")
+    roads.to_file(path, layer=layer, driver="GPKG")
+
+
 # ---------------- summary ----------------
 def summarize(roads: gpd.GeoDataFrame) -> pd.DataFrame:
     keys = ["source", "highway"] + (["new_since_t1"] if "new_since_t1" in roads else [])
@@ -286,7 +296,7 @@ def main(argv=None):
 
     roads = gpd.GeoDataFrame(pd.concat([osm, ms_new], ignore_index=True),
                              geometry="geometry", crs=crs)
-    roads.to_file(out / "roads_merged.gpkg", layer="roads", driver="GPKG")
+    write_roads(roads, out / "roads_merged.gpkg")
     summarize(roads).to_csv(out / "road_length_summary.csv", index=False)
     rasterize_speed(roads, out / "road_speed_kmh.tif", a.res_m, a.template)
     print(f"Saved outputs to {out}/")

@@ -174,15 +174,17 @@ def test_benin_togo_driver(inputs, monkeypatch):
 
     monkeypatch.chdir(t)
     monkeypatch.setattr(rfb, "DATA", data)
+    monkeypatch.setattr(rfb, "OUT", t / "output" / "friction")
+    monkeypatch.setattr(rfb, "RES", t / "results" / "friction")
     monkeypatch.setattr(rfb, "OSM_EXT", ".osm")
     monkeypatch.setattr(fr, "worldcover_urls", lambda b, y=2021: [str(t / "lc.tif")])
     monkeypatch.setattr(fr, "copdem_urls", lambda b: [str(t / "dem.tif")])
     monkeypatch.setattr(rfb, "ZOOMS", {"centre": (2.45, 6.45)})
     rfb.main()
 
-    s = pd.read_csv(t / "results_friction_benin_togo" / "friction_summary.csv")
+    s = pd.read_csv(t / "results" / "friction" / "friction_summary.csv")
     assert s["map"].tolist() == ["t1", "t2", "t2_ml"]
     assert s["road_cells"].is_monotonic_increasing        # t1 < t2 < t2 + ML
     assert (s["cells_slower_than_t1"] == 0).all()
     for f in ["friction_maps.png", "speed_change.png", "zoom_centre.png"]:
-        assert (t / "results_friction_benin_togo" / f).exists()
+        assert (t / "results" / "friction" / f).exists()

@@ -1,5 +1,5 @@
 """
-Benin + Togo friction maps for 2020 and 2026 (run by .github/workflows/friction.yml).
+Benin + Togo friction maps for 2020 and 2026 (run by .github/workflows/accessibility.yml).
 
 Expects in data/ (same files as run_benin_togo.py, plus the country outlines):
   benin-200101.osm.pbf  togo-200101.osm.pbf   benin-260901.osm.pbf  togo-260901.osm.pbf
@@ -9,8 +9,7 @@ Land cover (ESA WorldCover 2021, used for both dates so that only roads change)
 and elevation (Copernicus GLO-30) are read directly from their public S3
 buckets; pass local tiles to friction.py instead if you have them.
 
-Large rasters go to output_friction_benin_togo/, small QA files to
-results_friction_benin_togo/.
+Large rasters go to output/friction/, small QA files to results/friction/.
 """
 import time
 from pathlib import Path
@@ -25,8 +24,9 @@ from matplotlib.colors import LogNorm, TwoSlopeNorm
 
 import friction as fr
 
-DATA = Path("data")
-OUT, RES = Path("output_friction_benin_togo"), Path("results_friction_benin_togo")
+ROOT = Path(__file__).resolve().parents[1]   # accessibility_update/
+DATA = ROOT / "data"
+OUT, RES = ROOT / "output" / "friction", ROOT / "results" / "friction"
 T1, T2 = "200101", "260901"
 COUNTRIES = ["benin", "togo"]
 OSM_EXT = ".osm.pbf"            # tests swap in ".osm" (XML) files
@@ -68,7 +68,7 @@ def zoom(tifs, titles, lonlat, path, norm, half_m=10_000):
 
 
 def main():
-    OUT.mkdir(exist_ok=True); RES.mkdir(exist_ok=True)
+    OUT.mkdir(parents=True, exist_ok=True); RES.mkdir(parents=True, exist_ok=True)
     pbf = lambda t: [str(DATA / f"{c}-{t}{OSM_EXT}") for c in COUNTRIES]
     t = time.time()
     fr.main(["--osm-pbf-t1", *pbf(T1), "--osm-pbf-t2", *pbf(T2),

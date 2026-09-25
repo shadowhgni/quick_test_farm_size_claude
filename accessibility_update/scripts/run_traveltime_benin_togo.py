@@ -1,6 +1,6 @@
 """
 Benin + Togo travel time to cities and ports, 2020 vs 2026
-(run by .github/workflows/friction.yml after run_friction_benin_togo.py).
+(run by .github/workflows/accessibility.yml after run_friction_benin_togo.py).
 
 Four scenarios; the change between consecutive ones isolates one factor:
   2020    OSM 2020 roads            + GHSL 2020 settlements
@@ -13,7 +13,7 @@ medium-or-larger ports (size 2) and any port (size 5).
 
 Expects in data/: GHS_SMOD_E2020/E2025 and GHS_POP_E2020/E2025 1 km zips (R2023A,
 Mollweide) and UpdatedPub150.csv (World Port Index); friction rasters in
-output_friction_benin_togo/.
+output/friction/.
 """
 import time
 from pathlib import Path
@@ -28,8 +28,9 @@ from matplotlib.colors import TwoSlopeNorm
 
 import traveltime as tt
 
-DATA, FRIC = Path("data"), Path("output_friction_benin_togo")
-OUT, RES = Path("output_traveltime_benin_togo"), Path("results_traveltime_benin_togo")
+ROOT = Path(__file__).resolve().parents[1]   # accessibility_update/
+DATA, FRIC = ROOT / "data", ROOT / "output" / "friction"
+OUT, RES = ROOT / "output" / "traveltime", ROOT / "results" / "traveltime"
 SMOD = "GHS_SMOD_E{y}_GLOBE_R2023A_54009_1000_V2_0.zip"
 POP = "GHS_POP_E{y}_GLOBE_R2023A_54009_1000_V1_0.zip"
 SCENARIOS = {"2020": ("t1", 2020), "2026r": ("t2", 2020),
@@ -43,7 +44,7 @@ def read(path, step=5):
 
 
 def main():
-    OUT.mkdir(exist_ok=True); RES.mkdir(exist_ok=True)
+    OUT.mkdir(parents=True, exist_ok=True); RES.mkdir(parents=True, exist_ok=True)
     t = time.time()
     s = tt.main(["--friction", *[str(FRIC / f"friction_{f}.tif") for f, _ in SCENARIOS.values()],
                  "--labels", *SCENARIOS,
@@ -59,6 +60,7 @@ def main():
     counts = []
     for label in ("2020", "2026"):
         c = gpd.read_file(OUT / f"cities_{label}.gpkg")
+        c = c[c["reachable"]]           # drop cities beyond the masked borders
         counts.append(c.groupby("size_class").agg(n=("pop", "size"), pop=("pop", "sum"))
                       .assign(ghsl_epoch=2020 if label == "2020" else 2025).reset_index())
     pd.concat(counts).to_csv(RES / "settlements_by_class.csv", index=False)

@@ -1,7 +1,7 @@
-# Test report — OSM + Microsoft ML roads merge, Benin and Togo
+# Test report — accessibility update, Benin and Togo (2020 vs 2026)
 
-Date: 2026-09-25. Code: `roads_merge/` (this folder). Original script under test:
-`original/Claude_merge_roads_v00.py`.
+Date: 2026-09-25. Code: `scripts/`, settings: `config/`, results: `results/` (see README.md).
+Original script under test: `scripts/original/Claude_merge_roads_v00.py`.
 
 ## 1. What was tested
 
@@ -16,7 +16,8 @@ projection EPSG:32631 (UTM 31N).
 
 The run was done on a GitHub Actions `ubuntu-latest` runner (runs #1–#3 in the
 `quick_test_farm_size_claude` repo; figures below are from run #3), because downloads were not permitted in the
-development container. Raw outputs: `results_benin_togo/`.
+development container. Raw outputs: `results/roads/`, `results/friction/`,
+`results/traveltime/`, `results/towns/`.
 
 ## 2. Results
 
@@ -69,7 +70,7 @@ and by −32% to +56% in Togo, so Togo is more sensitive to these settings.
 
 ### 2.4 Visual checks
 
-`results_benin_togo/qa_*.png`: 10 × 10 km windows around Parakou, Kandi, Kara and
+`results/roads/qa_*.png`: 10 × 10 km windows around Parakou, Kandi, Kara and
 Dapaong (each window is centred on the town).
 
 - ML roads flagged as duplicates sit on OSM roads, as intended.
@@ -79,7 +80,7 @@ Dapaong (each window is centred on the town).
 
 ### 2.5 Friction maps 2020 and 2026 (`friction.py`)
 
-Run #1 of `.github/workflows/friction.yml` (352 s, tiles read remotely). 100 m grid,
+Friction runs #1–#2 (before the workflows were merged into `accessibility.yml`; 274–352 s, tiles read remotely). 100 m grid,
 4,441 × 7,256 cells, EPSG:32631, masked to the Geofabrik outlines of Benin and Togo
 (slightly buffered, hence 176,597 km² of valid cells). Land cover: ESA WorldCover 2021
 for both dates, so only roads differ. Two Copernicus DEM tiles over the sea
@@ -100,13 +101,41 @@ for both dates, so only roads differ. Two Copernicus DEM tiles over the sea
   road that was downgraded (class or surface). This matches the "gone" roads in 2.2,
   i.e. mostly roads re-drawn elsewhere or deleted; treat them as map edits, not as
   roads that disappeared on the ground.
-- Visual checks (`results_friction_benin_togo/`): the country-wide maps and the
+- Visual checks (`results/friction/`): the country-wide maps and the
   20 × 20 km zooms around Dapaong and Kandi show the new 2026 roads as expected, and
   the reservoir west of Dapaong as impassable. At 100 m with `all_touched`, roads
   are 1–3 cells wide.
 - `landcover_speed.csv` holds placeholder walking speeds, so the absolute friction
   values off-road are not calibrated; the 2020 vs 2026 difference on roads does not
   depend on them.
+
+### 2.6 Travel time to cities and ports (`traveltime.py`)
+
+Run #3 of the friction + travel-time workflow (308 s for 16 cost-distance runs on the
+4,441 × 7,256 grid). Population inside the Benin + Togo outlines: 21.0 M (GHS-POP 2020),
+23.9 M (2025).
+
+Population-weighted mean travel time (minutes) and share of people within 60 min:
+
+| layer | 2020 | 2026r (new roads) | 2026 (+ city growth) | 2026ml (+ ML roads) |
+|---|---:|---:|---:|---:|
+| cities ≥ 50k (city6) | 24.6 (83.3%) | 21.5 (86.3%) | 21.4 (86.1%) | 21.1 (86.3%) |
+| cities ≥ 5k (city9) | 9.5 (95.8%) | 8.2 (97.2%) | 8.1 (97.1%) | 7.9 (97.4%) |
+| any port (port5) | 228.0 (31.7%) | 219.6 (32.4%) | 219.8 (33.0%) | 217.0 (33.4%) |
+
+- New OSM roads account for almost all of the change to cities ≥ 50k (−3.1 min); city
+  growth (−0.1) and the Microsoft gap-fill (−0.3) add little at this scale.
+- Some areas get slower from the road changes alone, up to +60 min and more
+  (`results/traveltime/traveltime_city6_change.png`), e.g. a large patch in north-western
+  Benin. These are areas where 2020 roads have no 2026 counterpart. A likely cause is
+  tracks deleted or retagged to classes outside the speed table (e.g. `path`); I have not
+  checked this against the OSM history.
+- Ports: only Cotonou, Lomé and Kpémé are inside the outlines; Lagos, Lekki, Tin Can
+  Island and Tema are not reachable with the masked friction map, so port times in the
+  east and west are too long.
+- Run #3 counted destinations over the whole bounding box, including cities outside the
+  outlines (e.g. Lagos as the only class-1 city). From the next run, `n_reachable` and
+  `settlements_by_class.csv` count only destinations reachable on the friction map.
 
 ## 3. Findings to act on
 
@@ -144,96 +173,89 @@ for both dates, so only roads differ. Two Copernicus DEM tiles over the sea
 With conda/mamba (recommended on Windows; brings GDAL with it):
 
 ```bash
-git clone https://github.com/shadowhgni/RoadDetections.git
-cd RoadDetections
+git clone https://github.com/shadowhgni/quick_test_farm_size_claude.git
+cd quick_test_farm_size_claude
 git checkout claude/roaddetections-fork-test-m1plof
-conda create -n roads -c conda-forge python=3.11 geopandas pyogrio shapely rasterio pyarrow matplotlib pytest
-conda activate roads
+cd accessibility_update
+conda create -n access -c conda-forge python=3.11 geopandas pyogrio shapely rasterio \
+    pyarrow matplotlib scikit-image scipy pytest
+conda activate access
 ```
 
-Or with pip (Linux/macOS/Windows, Python 3.10–3.12). The `pyogrio` and `rasterio`
-wheels ship their own GDAL, including the OSM driver used to read `.pbf` files
-(checked with pyogrio 0.13 / GDAL 3.12.4):
+Or with pip (Python 3.10–3.12). The `pyogrio` and `rasterio` wheels ship their own GDAL,
+including the OSM driver used to read `.pbf` files (checked with pyogrio 0.13 / GDAL 3.12.4):
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r roads_merge/requirements.txt
+pip install -r scripts/requirements.txt
 ```
 
-Check the install (no downloads needed, ~5 s):
+Check the install (no downloads needed, ~15 s):
 
 ```bash
-python -m pytest roads_merge/tests -q
+python -m pytest scripts/tests -q
 ```
 
-### 4.2 Download the data (~700 MB)
+### 4.2 Download the data (~1.5 GB) into `accessibility_update/data/`
 
 ```bash
-cd roads_merge
 mkdir -p data && cd data
 for c in benin togo; do
   for t in 200101 260901; do
     curl -fLO https://download.geofabrik.de/africa/$c-$t.osm.pbf
   done
+  curl -fLO https://download.geofabrik.de/africa/$c.poly
 done
 curl -fLO https://usaminedroads.z19.web.core.windows.net/drops/2025.04.28/Western_Africa.zip
+G=https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL
+for y in 2020 2025; do
+  curl -fLO $G/GHS_SMOD_GLOBE_R2023A/GHS_SMOD_E${y}_GLOBE_R2023A_54009_1000/V2-0/GHS_SMOD_E${y}_GLOBE_R2023A_54009_1000_V2_0.zip
+  curl -fLO $G/GHS_POP_GLOBE_R2023A/GHS_POP_E${y}_GLOBE_R2023A_54009_1000/V1-0/GHS_POP_E${y}_GLOBE_R2023A_54009_1000_V1_0.zip
+done
+curl -fL -o UpdatedPub150.csv "https://msi.nga.mil/api/publications/download?type=view&key=16920959/SFH00000/UpdatedPub150.csv"
+curl -fL -o geoBoundaries-BEN-ADM2.geojson https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/BEN/ADM2/geoBoundaries-BEN-ADM2.geojson
 cd ..
 ```
 
 On Windows PowerShell, replace `curl -fLO URL` with
-`Invoke-WebRequest URL -OutFile <file name>`, or download the files in a browser into
-`roads_merge/data/`.
+`Invoke-WebRequest URL -OutFile <file name>`, or download the files in a browser.
+Land cover (WorldCover) and elevation (Copernicus) are read over the internet during
+step 2; pass local tiles to `friction.py` with `--landcover-t1` and `--dem` to work offline.
 
 ### 4.3 Run
 
-The full Benin + Togo test (reproduces this report; writes `results_benin_togo/` and
-`output_benin_togo/`):
+The four steps, in order (each reads the previous step's `output/`):
 
 ```bash
-cd roads_merge
-python run_benin_togo.py
+python scripts/run_roads_benin_togo.py        # -> results/roads/,      output/roads/
+python scripts/run_friction_benin_togo.py     # -> results/friction/,   output/friction/
+python scripts/run_traveltime_benin_togo.py   # -> results/traveltime/, output/traveltime/
+python scripts/run_towns_benin.py             # -> results/towns/
 ```
 
-Your own run (any countries, any dates):
+For other countries, dates or layers, call the modules directly, e.g.:
 
 ```bash
-python merge_roads.py \
-  --osm-pbf data/benin-260901.osm.pbf data/togo-260901.osm.pbf \
-  --osm-pbf-t1 data/benin-200101.osm.pbf data/togo-200101.osm.pbf \
-  --ms-roads data/Western_Africa.zip --iso3 BEN TGO \
-  --out-dir output                     # optional: --template landcover.tif
+python scripts/merge_roads.py --osm-pbf <t2.pbf ...> --osm-pbf-t1 <t1.pbf ...> \
+  --ms-roads data/Western_Africa.zip --iso3 BEN TGO --out-dir output/my_roads
+python scripts/friction.py --osm-pbf-t1 <...> --osm-pbf-t2 <...> \
+  --boundary data/benin.poly --out-dir output/my_friction   # or --base-friction existing.tif
+python scripts/traveltime.py --friction output/my_friction/friction_t1.tif output/my_friction/friction_t2.tif \
+  --labels 2020 2026 --smod <smod 2020> <smod 2025> --pop <pop 2020> <pop 2025> \
+  --ports data/UpdatedPub150.csv --city-sizes 6 7 8 9 --port-sizes 1 5 --out-dir output/my_tt
 ```
 
-Outputs: `roads_merged.gpkg` (layer `roads`; columns `source`, `highway`, `speed`,
-`new_since_t1`, `osm_overlap`, `width_m`), `road_speed_kmh.tif` and
-`road_length_summary.csv`. Open the GeoPackage in QGIS and style it by `source` and
-`new_since_t1` to review the result.
+Open `output/roads/roads_merged.gpkg` (layers `roads` and `osm_t1`) and the GeoTIFFs in
+QGIS to review them.
 
-Friction maps for 2020 and 2026 (add the country outlines to `data/` first:
-`https://download.geofabrik.de/africa/benin.poly` and `.../togo.poly`). Land cover and
-elevation are streamed from the public ESA / Copernicus S3 buckets unless you pass
-local tiles with `--landcover-t1` and `--dem`:
-
-```bash
-python run_friction_benin_togo.py          # Benin + Togo, as in section 2.5
-python friction.py \
-  --osm-pbf-t1 data/benin-200101.osm.pbf data/togo-200101.osm.pbf \
-  --osm-pbf-t2 data/benin-260901.osm.pbf data/togo-260901.osm.pbf \
-  --boundary data/benin.poly data/togo.poly --out-dir output_friction
-# to update an existing friction map instead: add --base-friction existing.tif
-```
-
-Resources: on the GitHub runner (4 CPU, 16 GB RAM) the full test took a few minutes;
-most of the time is the v00 comparison and the sensitivity loop in `run_benin_togo.py`,
-which `merge_roads.py` does not do. I did not measure peak memory.
+Resources: on the GitHub runner (4 CPU, 16 GB RAM) steps 1–3 take about 6, 5 and 5 min.
+Each cost-distance run on the 32 M-cell grid takes ~30 s. I did not measure peak memory.
 
 ### 4.4 GitHub Actions (optional)
 
-`.github/workflows/roads_merge.yml` re-runs the tests and the Benin + Togo roads run
-when the roads-merge files change, and commits `results_benin_togo/` back.
-`.github/workflows/friction.yml` does the same for the friction maps
-(`results_friction_benin_togo/`). Both can also be started by hand ("Run workflow").
-GitHub only runs workflows from `.github/workflows/`, not from other folders.
-On a fork, Actions are disabled until you enable them in the repository's
-**Actions** tab. You do not need the workflow to run anything on your computer.
+`.github/workflows/accessibility.yml` installs, runs the tests, downloads the inputs,
+runs steps 1–4 and commits `results/` back. It starts on pushes that change
+`accessibility_update/scripts/` or `config/`, or by hand ("Run workflow").
+GitHub only runs workflows from `.github/workflows/`. On a fork, Actions are disabled
+until you enable them in the repository's **Actions** tab.

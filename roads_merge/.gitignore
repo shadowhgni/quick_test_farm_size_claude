@@ -1,9 +1,0 @@
-data/
-output/
-output_benin_togo/
-__pycache__/
-.pytest_cache/
-output_friction/
-output_friction_benin_togo/
-output_traveltime/
-output_traveltime_benin_togo/

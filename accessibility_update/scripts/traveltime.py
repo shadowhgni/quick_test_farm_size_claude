@@ -158,6 +158,21 @@ def target_cells(dest, grid, passable):
     return targets
 
 
+def flag_reachable(dest, grid, passable):
+    """True for destinations whose representative point lies on the grid within
+    SNAP_MAX_M of a passable cell (e.g. not a city beyond a masked border)."""
+    if dest.empty:
+        return pd.Series([], dtype=bool, index=dest.index)
+    dist = ndimage.distance_transform_edt(~passable) * grid.res
+    pts = dest.to_crs(grid.crs).geometry.representative_point()
+    flags = []
+    for p in pts:
+        r, c = rasterio.transform.rowcol(grid.transform, p.x, p.y)
+        flags.append(bool(0 <= r < grid.height and 0 <= c < grid.width
+                          and dist[r, c] <= SNAP_MAX_M))
+    return pd.Series(flags, index=dest.index)
+
+
 def travel_time(friction, grid, targets):
     """Minutes from every cell to the nearest target cell (least-cost, 8 neighbours).
 
@@ -260,12 +275,14 @@ def main(argv=None):
                 cities = settlements_from_ghsl(smod, pop, wide)
             else:
                 raise SystemExit("cities need --smod and --pop, or --cities")
+            cities["reachable"] = flag_reachable(cities, grid, passable)
             cities.to_crs(4326).to_file(out / f"cities_{label}.gpkg", driver="GPKG")
             dests["city"] = cities
         if a.port_sizes:
             if not a.ports:
                 raise SystemExit("--port-sizes needs --ports")
             dests["port"] = load_ports(a.ports, wide)
+            dests["port"]["reachable"] = flag_reachable(dests["port"], grid, passable)
             dests["port"].to_file(out / f"ports_{label}.gpkg", driver="GPKG")
 
         people = population_on_grid(pop, grid) if pop else None
@@ -276,7 +293,8 @@ def main(argv=None):
                 name = f"{to}{size}{'_exact' if a.exact_class else ''}"
                 fr.write_tif(out / f"traveltime_{label}_{name}.tif", tt, grid)
                 results[(label, name)] = tt
-                row = {"date": label, "layer": name, "n_destinations": len(sel)}
+                row = {"date": label, "layer": name, "n_destinations": len(sel),
+                       "n_reachable": int(sel["reachable"].sum())}
                 if people is not None:
                     row.update(access_stats(tt, people))
                 rows.append(row)

@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-import run_benin_togo as rbt  # noqa: E402
+import run_roads_benin_togo as rbt  # noqa: E402
 
 SPOTS = {"benin": (2.5, 9.2), "togo": (1.0, 9.4)}
 
@@ -48,14 +48,16 @@ def test_driver_runs(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(rbt, "OSM_EXT", ".osm")
     monkeypatch.setattr(rbt, "DATA", data)
+    monkeypatch.setattr(rbt, "RES", tmp_path / "results" / "roads")
+    monkeypatch.setattr(rbt, "OUT", tmp_path / "output" / "roads")
     rbt.main()
 
-    s = pd.read_csv(tmp_path / "results_benin_togo" / "summary_by_country.csv")
+    s = pd.read_csv(tmp_path / "results" / "roads" / "summary_by_country.csv")
     assert set(s["iso3"]) == {"BEN", "TGO"}
     # 50 extra ways per country at t2 -> new length > 0 but < t2 total
     assert (s["osm_new_since_t1_km"] > 0).all()
     assert (s["osm_new_since_t1_km"] < s[f"osm_{rbt.T2}_km"]).all()
     assert (s["ml_kept_km"] <= s["ml_total_km"]).all()
     assert (s["osm_gone_by_t2_km"] == 0).all()   # t2 is a strict superset of t1 here
-    assert sorted(p.stem for p in (tmp_path / "results_benin_togo").glob("qa_*.png")) == \
+    assert sorted(p.stem for p in (tmp_path / "results" / "roads").glob("qa_*.png")) == \
         sorted(f"qa_{n}" for n in rbt.WINDOWS)

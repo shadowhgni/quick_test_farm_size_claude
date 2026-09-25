@@ -1,6 +1,6 @@
 """Offline tests for merge_roads.py on synthetic data (no downloads needed).
 
-Run:  pytest roads_merge/tests -q
+Run:  pytest accessibility_update/scripts/tests -q
 """
 import json
 import sys
@@ -144,6 +144,8 @@ def test_main_end_to_end(tmp_path, osm_file):
     roads = mr.main(["--osm-pbf", str(osm_file), "--osm-pbf-t1", str(osm_file),
                      "--ms-roads", str(z), "--iso3", "BEN", "--out-dir", str(out)])
     assert (roads["source"] == "microsoft").sum() == 1
+    saved = gpd.read_file(out / "roads_merged.gpkg", layer="roads")
+    assert set(saved["new_since_t1"].dropna()) <= {0, 1}      # not the text "False"
     assert not roads["new_since_t1"].fillna(False).any()
     for f in ["roads_merged.gpkg", "road_length_summary.csv", "road_speed_kmh.tif"]:
         assert (out / f).exists()
