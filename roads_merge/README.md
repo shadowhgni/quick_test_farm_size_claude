@@ -15,6 +15,8 @@ Builds the road layer of an accessibility (travel-time-to-city) friction surface
 | `friction.py` | friction maps (min/m) for two dates: road class speeds + land cover × Tobler slope factor |
 | `landcover_speed.csv` | off-road walking speed per ESA WorldCover class (placeholders, calibrate) |
 | `run_friction_benin_togo.py` | Benin + Togo 2020 / 2026 friction maps and quicklooks |
+| `traveltime.py` | travel time (min) to cities / ports by Nelson et al. size class, from friction maps |
+| `run_traveltime_benin_togo.py` | Benin + Togo 2020 vs 2026, split into roads / city growth / ML effects |
 | `REPORT.md` | Benin + Togo test results and local installation guide |
 | `run_benin_togo.py` | Benin + Togo test run: v00 comparison, sensitivity, QA maps |
 | `tests/` | offline tests on synthetic data (`pytest roads_merge/tests`) |
@@ -107,3 +109,41 @@ Outputs: `friction_t1.tif`, `friction_t2.tif`, `friction_t2_ml.tif` (with `--ms-
   Roads already in the base map stay; roads absent at t1 cannot be removed.
 - Slope at 100 m is gentler than at 30 m, so the Tobler penalty is conservative.
 - `landcover_speed.csv` values are placeholders in the 1–5 km/h range; calibrate them.
+
+## Travel time to cities and ports (`traveltime.py`)
+
+Least-cost travel time (8 neighbours, `skimage.graph.MCP_Geometric`) from every cell
+to the nearest destination, on the friction rasters from `friction.py`.
+
+| `to` | size | destinations |
+|---|---|---|
+| city | 1–9 | 5–50 M, 1–5 M, 0.5–1 M, 200–500 k, 100–200 k, 50–100 k, 20–50 k, 10–20 k, 5–10 k inhabitants |
+| port | 1–5 | Large, Medium, Small, Very small, Any (World Port Index `Harbor Size`) |
+
+A size means "this class or larger" (city 6 = at least 50,000 inhabitants, the default);
+`--exact-class` uses the class alone. Cities are built per date from GHSL R2023A:
+8-connected GHS-SMOD urban-cluster / urban-centre cells (codes 21, 22, 23, 30) with
+GHS-POP population summed; `--cities` accepts your own layer with a `pop` column instead.
+
+```bash
+python traveltime.py \
+  --friction output_friction/friction_t1.tif output_friction/friction_t2.tif \
+  --labels 2020 2026 \
+  --smod data/GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_V2_0.zip data/GHS_SMOD_E2025_GLOBE_R2023A_54009_1000_V2_0.zip \
+  --pop  data/GHS_POP_E2020_GLOBE_R2023A_54009_1000_V1_0.zip  data/GHS_POP_E2025_GLOBE_R2023A_54009_1000_V1_0.zip \
+  --ports data/UpdatedPub150.csv \
+  --city-sizes 6 7 8 9 --port-sizes 1 5 --out-dir output_tt
+```
+
+Outputs per date and layer: `traveltime_<date>_<layer>.tif` (minutes), change rasters
+between consecutive dates, `cities_<date>.gpkg`, `ports_<date>.gpkg` and
+`traveltime_summary.csv` (population-weighted mean time, share of people within
+30/60/120/240 min).
+
+- Destinations are only reachable inside the passable part of the friction grid. With
+  a friction map masked to Benin + Togo, Lagos, Accra/Tema and cities in Burkina Faso,
+  Niger and Nigeria near the border are not counted. Build the friction surface over a
+  wider area (neighbouring OSM extracts, buffered `--boundary`) to include them.
+- Ports on a water cell are moved to the nearest passable cell within 5 km.
+- GHSL 2025 is a projection made by GHSL, not an observation (my understanding of
+  R2023A; check the GHSL documentation).

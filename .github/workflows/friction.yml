@@ -1,4 +1,4 @@
-name: Friction maps 2020 / 2026 (Benin + Togo)
+name: Friction + travel time 2020 / 2026 (Benin + Togo)
 
 on:
   push:
@@ -9,6 +9,9 @@ on:
       - 'roads_merge/landcover_speed.csv'
       - 'roads_merge/speed_table.csv'
       - 'roads_merge/tests/test_friction.py'
+      - 'roads_merge/traveltime.py'
+      - 'roads_merge/run_traveltime_benin_togo.py'
+      - 'roads_merge/tests/test_traveltime.py'
       - '.github/workflows/friction.yml'
   workflow_dispatch:
 
@@ -47,7 +50,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: roads_merge/data
-          key: roads-data-200101-260901-ms20250428-poly
+          key: roads-data-200101-260901-ms20250428-poly-ghsl2023a-wpi
 
       - name: Download OSM snapshots, outlines, Microsoft roads
         run: |
@@ -60,10 +63,21 @@ jobs:
             get "https://download.geofabrik.de/africa/$c.poly" "$c.poly"
           done
           get "https://usaminedroads.z19.web.core.windows.net/drops/2025.04.28/Western_Africa.zip" Western_Africa.zip
+          G=https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL
+          for y in 2020 2025; do
+            f=GHS_SMOD_E${y}_GLOBE_R2023A_54009_1000_V2_0.zip
+            get "$G/GHS_SMOD_GLOBE_R2023A/GHS_SMOD_E${y}_GLOBE_R2023A_54009_1000/V2-0/$f" "$f"
+            f=GHS_POP_E${y}_GLOBE_R2023A_54009_1000_V1_0.zip
+            get "$G/GHS_POP_GLOBE_R2023A/GHS_POP_E${y}_GLOBE_R2023A_54009_1000/V1-0/$f" "$f"
+          done
+          get "https://msi.nga.mil/api/publications/download?type=view&key=16920959/SFH00000/UpdatedPub150.csv" UpdatedPub150.csv
           ls -lh
 
       - name: Friction maps
         run: python run_friction_benin_togo.py 2>&1 | tee run_friction_stdout.txt
+
+      - name: Travel time to cities and ports
+        run: python run_traveltime_benin_togo.py 2>&1 | tee run_traveltime_stdout.txt
 
       - name: Upload rasters
         if: always()
@@ -73,6 +87,8 @@ jobs:
           path: |
             roads_merge/output_friction_benin_togo/
             roads_merge/results_friction_benin_togo/
+            roads_merge/output_traveltime_benin_togo/
+            roads_merge/results_traveltime_benin_togo/
           retention-days: 30
 
       - name: Commit small results back
@@ -80,7 +96,11 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add results_friction_benin_togo/ run_friction_stdout.txt 2>/dev/null || true
+          # one path at a time: git add fails as a whole if any path is missing
+          for p in results_friction_benin_togo run_friction_stdout.txt \
+                   results_traveltime_benin_togo run_traveltime_stdout.txt; do
+            git add "$p" 2>/dev/null || true
+          done
           git diff --cached --quiet && exit 0
-          git commit -m "ci: friction maps Benin+Togo run #${{ github.run_number }} [skip ci]"
+          git commit -m "ci: friction maps + travel time Benin+Togo run #${{ github.run_number }} [skip ci]"
           for i in 1 2 3; do git pull --rebase origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && break; sleep 5; done

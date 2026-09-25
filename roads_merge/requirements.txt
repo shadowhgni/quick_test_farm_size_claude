@@ -7,3 +7,5 @@ numpy
 pyarrow
 matplotlib
 pytest
+scikit-image>=0.22
+scipy
