@@ -1,0 +1,10 @@
+geopandas          1.1.4
+numba              0.67.0
+numpy              2.5.3
+osmium             4.3.1
+pyogrio            0.13.0
+pyproj             3.8.0
+rasterio           1.5.1
+scikit-image       0.26.0
+scipy              1.18.1
+shapely            2.1.2
