@@ -1,0 +1,18 @@
+# km/h by OSM highway class -- calibrate for your area (values from v00).
+# paved_if_missing = no -> unpaved factor applies when the surface tag is absent.
+highway,speed_kmh,paved_if_missing
+motorway,100,yes
+trunk,80,yes
+primary,70,yes
+secondary,55,yes
+tertiary,40,no
+unclassified,30,no
+residential,25,no
+motorway_link,60,yes
+trunk_link,50,yes
+primary_link,45,yes
+secondary_link,40,yes
+tertiary_link,30,no
+service,20,no
+track,15,no
+living_street,15,no
