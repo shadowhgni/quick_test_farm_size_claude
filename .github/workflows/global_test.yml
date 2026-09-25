@@ -28,6 +28,8 @@ jobs:
           python --version; nproc; free -g; df -h .
           pip install pytest scikit-image   # only for the offline tests; the script installs its own packages
       - name: Run (bbox Benin/Togo and neighbours; script installs its own dependencies)
+        env:
+          PROJ_LIB: /opt/conda/share/proj    # a broken setting seen on a user's HPC node: the script must recover
         run: |
           rm -rf global_accessibility/test_results    # no leftovers from earlier runs
           python global_accessibility/global_accessibility_v2.py \

@@ -30,7 +30,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "2.0.1"
+__version__ = "2.0.2"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -113,6 +113,8 @@ NELSON_LAYERS = None            # None = all 17; or e.g. ["cities_11", "ports_5"
 #     OSM 2015 has none there, Weiss 2015 shows a transport network (>= WEISS_NETWORK_KMH)
 #     and OSM END_YEAR has a road there (this excludes Weiss rivers, sea lanes, railways).
 WEISS2015_AUGMENT = True        # used only when START_YEAR == 2015
+OSM_SNAPSHOT_MAX_LAG = 1        # years: a region with no 1 January snapshot of the year (e.g. Russia
+                                # before 2016) uses the next available one, at most this much later
 WEISS_NETWORK_KMH = 10.0
 WEISS_WCS = ("https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1"
              "&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface"
@@ -230,6 +232,57 @@ os.environ.setdefault("OSM_MAX_TMPFILE_SIZE", "1024")
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ.setdefault(_v, "1")
 bootstrap(_WD)
+
+_PROJ_TEST = r"""
+import tempfile, os
+from rasterio.crs import CRS
+from rasterio.warp import transform
+assert CRS.from_epsg(4326).to_epsg() == 4326
+transform(CRS.from_epsg(4326), CRS.from_string("ESRI:54009"), [10.0], [10.0])
+import geopandas as gpd, shapely
+f = os.path.join(tempfile.mkdtemp(dir=os.environ.get("CPL_TMPDIR")), "t.gpkg")
+gpd.GeoDataFrame(geometry=[shapely.Point(0, 0)], crs=4326).to_file(f)
+assert gpd.read_file(f).crs.to_epsg() == 4326
+"""
+
+
+def fix_proj_data():
+    """Make sure GDAL/PROJ find a proj.db before the geospatial libraries are imported.
+
+    A PROJ_DATA / PROJ_LIB variable pointing to a missing folder (e.g. set by a conda
+    activation script, "Open of /opt/conda/share/proj failed") breaks every CRS lookup.
+    Candidates are tried in a subprocess, first as is, then without the variables (pip
+    wheels use their bundled data), then the proj folders shipped with the packages.
+    """
+    keys = ("PROJ_DATA", "PROJ_LIB")
+    dirs = []
+    for mod, sub in (("rasterio", "proj_data"), ("pyogrio", "proj_data"), ("pyproj", "proj_dir/share/proj")):
+        spec = importlib.util.find_spec(mod)
+        if spec and spec.submodule_search_locations:
+            dirs += [Path(d) / sub for d in spec.submodule_search_locations]
+    dirs += [Path(os.environ.get("CONDA_PREFIX", sys.prefix)) / "share" / "proj", Path(sys.prefix) / "share" / "proj"]
+    cands = [None, {}] + [{k: str(d) for k in keys} for d in dict.fromkeys(dirs) if (d / "proj.db").exists()]
+    base = {k: v for k, v in os.environ.items() if k not in keys}
+    pypath = os.pathsep.join([p for p in sys.path if p] + [os.environ.get("PYTHONPATH", "")]).strip(os.pathsep)
+    for c in cands:
+        env = {**(os.environ.copy() if c is None else {**base, **c}), "PYTHONPATH": pypath}   # sees pylib
+        r = subprocess.run([sys.executable, "-c", _PROJ_TEST], env=env, capture_output=True, text=True)
+        if r.returncode == 0:
+            if c is not None:
+                old = {k: os.environ.get(k) for k in keys if os.environ.get(k)}
+                for k in keys:
+                    os.environ.pop(k, None)
+                os.environ.update(c)
+                print(f"[bootstrap] PROJ data: {old or 'unset'} did not work; using "
+                      f"{c.get('PROJ_DATA', 'the data bundled with the packages')}", flush=True)
+            return
+        err = (r.stderr.strip().splitlines() or ["?"])[-1]
+    raise SystemExit("No working PROJ database (proj.db) was found, so coordinate systems cannot be "
+                     f"read. Last error: {err}. Set PROJ_DATA to a folder containing proj.db, or "
+                     "unset PROJ_DATA and PROJ_LIB, and rerun.")
+
+
+fix_proj_data()
 
 import numpy as np                                    # noqa: E402
 import pandas as pd                                   # noqa: E402
@@ -714,33 +767,42 @@ def geofabrik_plan(work, grid, years, sess):
         stamp = f"{y % 100:02d}0101"
         chosen = {}
 
-        def url_for(rid):
+        def url_for(rid, yy):
             latest = props[rid]["urls"]["pbf"]
-            return latest.replace("-latest.osm.pbf", f"-{stamp}.osm.pbf"), latest
+            return latest.replace("-latest.osm.pbf", f"-{yy % 100:02d}0101.osm.pbf"), latest
 
         cache = {}
 
-        def available(rid):
-            if rid not in cache:
-                u, latest = url_for(rid)
+        def available(rid, yy):
+            if (rid, yy) not in cache:
+                u, latest = url_for(rid, yy)
                 ok, size = head_ok(u, sess)
-                if not ok and y >= today.year:
+                if not ok and yy >= today.year:
                     ok, size = head_ok(latest, sess)
                     u = latest if ok else u
-                cache[rid] = (ok, u, size)
-            return cache[rid]
+                cache[(rid, yy)] = (ok, u, size)
+            return cache[(rid, yy)]
 
-        def job(leaf):
+        def job(leaf, yy):
             rid = leaf
             while rid:
-                ok, u, size = available(rid)
+                ok, u, size = available(rid, yy)
                 if ok:
-                    return rid, u, size
+                    return rid, u, size, yy
                 rid = parents.get(rid)
             return None
 
         with cf.ThreadPoolExecutor(DOWNLOAD_WORKERS * 2) as ex:
-            found = list(ex.map(job, leaves))
+            found = list(ex.map(lambda lf: job(lf, y), leaves))
+        lagged = {}
+        for lag in range(1, OSM_SNAPSHOT_MAX_LAG + 1):   # next snapshot for regions without one
+            todo = [i for i, f in enumerate(found) if f is None]
+            if not todo or y + lag > today.year:
+                break
+            with cf.ThreadPoolExecutor(DOWNLOAD_WORKERS * 2) as ex:
+                for i, f in zip(todo, ex.map(lambda lf: job(lf, y + lag), [leaves[i] for i in todo])):
+                    if f:
+                        found[i] = f; lagged[leaves[i]] = f"{f[0]}-{(y + lag) % 100:02d}0101"
         missing = [lf for lf, f in zip(leaves, found) if f is None]
         for f in found:
             if f:
@@ -754,11 +816,12 @@ def geofabrik_plan(work, grid, years, sess):
                 p = parents.get(p)
             return False
         chosen = {k: v for k, v in chosen.items() if not has_chosen_ancestor(k)}
-        plan[y] = [{"region": k, "url": v[1], "bytes": v[2],
+        plan[y] = [{"region": k, "url": v[1], "bytes": v[2], "snapshot_year": v[3],
                     "bounds": list(geoms[k].bounds) if geoms[k] else None}
                    for k, v in sorted(chosen.items())]
         log(f"OSM {y}: {len(plan[y])} extracts, {sum(r['bytes'] for r in plan[y]) / 1e9:.1f} GB"
-            + (f"; no snapshot for {len(missing)} regions: {missing[:10]}" if missing else ""))
+            + (f"; {len(lagged)} regions from a later snapshot: {sorted(set(lagged.values()))}" if lagged else "")
+            + (f"; no snapshot for {len(missing)} regions (no roads there): {missing}" if missing else ""))
     return plan
 
 

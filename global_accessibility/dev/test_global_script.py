@@ -389,3 +389,30 @@ def test_block_mode_and_water():
     a[0, 0] = 40                                         # 24 water + 1 cropland
     mode, w = ga.block_mode_and_water(a, 5)
     assert mode.tolist() == [[80, 40], [10, 0]] and w.tolist() == [[96, 0], [0, 0]]
+
+
+def test_geofabrik_plan_falls_back_to_next_snapshot(tmp_path, monkeypatch):
+    """Russia has no 2015 snapshot on Geofabrik (the first is russia-160101)."""
+    sq = lambda w, s, e, n: {"type": "Polygon", "coordinates": [[[w, s], [e, s], [e, n], [w, n], [w, s]]]}
+    base = "https://download.geofabrik.de/"
+    feats = [
+        {"properties": {"id": "europe", "urls": {"pbf": base + "europe-latest.osm.pbf"}}, "geometry": sq(0, 40, 30, 60)},
+        {"properties": {"id": "france", "parent": "europe", "urls": {"pbf": base + "europe/france-latest.osm.pbf"}},
+         "geometry": sq(0, 40, 10, 50)},
+        {"properties": {"id": "russia", "urls": {"pbf": base + "russia-latest.osm.pbf"}}, "geometry": sq(30, 40, 60, 60)},
+        {"properties": {"id": "ural", "parent": "russia", "urls": {"pbf": base + "russia/ural-latest.osm.pbf"}},
+         "geometry": sq(30, 40, 60, 60)},
+        {"properties": {"id": "mars", "urls": {"pbf": base + "mars-latest.osm.pbf"}}, "geometry": sq(60, 40, 70, 60)},
+    ]
+    idx = tmp_path / "idx.json"; idx.write_text(json.dumps({"features": feats}))
+    exist = {"europe/france-150101", "russia-160101", "europe/france-260101", "russia/ural-260101"}
+    monkeypatch.setattr(ga, "download", lambda url, dest, sess: idx)
+    monkeypatch.setattr(ga, "head_ok", lambda u, sess: (u[len(base):].replace(".osm.pbf", "") in exist, 1000))
+    grid = ga.Grid((0, 40, 70, 60), 0.5)
+    plan = ga.geofabrik_plan(tmp_path, grid, [2015, 2026], None)
+    p15 = {r["region"]: r for r in plan[2015]}
+    assert set(p15) == {"france", "russia"}
+    assert p15["russia"]["url"].endswith("russia-160101.osm.pbf") and p15["russia"]["snapshot_year"] == 2016
+    assert p15["france"]["snapshot_year"] == 2015
+    assert {r["region"] for r in plan[2026]} == {"france", "ural"}        # mars: no data at all
+    assert any("no snapshot for 1 regions" in m and "mars" in m for m in ga.LOG)
