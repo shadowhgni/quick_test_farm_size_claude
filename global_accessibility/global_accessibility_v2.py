@@ -2166,6 +2166,9 @@ def stage_sensitivity(ctx):
     out = {"domain": d.groupby(keys).apply(agg, include_groups=False).reset_index(),
            "continent": d.groupby(keys + ["CONTINENT"]).apply(agg, include_groups=False).reset_index(),
            "country": d[d.cid > 0].groupby(keys + ["iso3", "NAME", "CONTINENT"]).apply(agg, include_groups=False).reset_index()}
+    ctry = out["country"]
+    has_pop = ctry.groupby("iso3")["population"].transform("min") > 0      # drop countries outside the grid
+    out["country"] = ctry[has_pop]
     y0, y1 = ctx["years"][0], ctx["years"][-1]
     for level, t in out.items():
         idx = [c for c in t.columns if c not in ("year", "population", "pop_weighted_mean_min",
@@ -2187,7 +2190,7 @@ def stage_sensitivity(ctx):
     # the delay (K at baseline), both years, per layer
     dom = out["domain"]
     fig, axes = plt.subplots(len(layers), 2, figsize=(9, 3.2 * len(layers)), squeeze=False,
-                             constrained_layout=True)
+                             constrained_layout=True, sharey="row")      # same scale: K vs delay comparable
     colors = {y0: "#2a78d6", y1: "#eb6834"}
     for i, name in enumerate(layers):
         for j, (var, fixed, fixval, lab) in enumerate(
