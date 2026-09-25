@@ -1,1 +1,1 @@
-{"road_cells": 66921, "ml_cells": 0, "passable_cells": 576746, "checkpoints": 65}
+{"road_cells": 66886, "ml_cells": 0, "passable_cells": 576919, "osm_road_cells_dropped_on_water": 35, "osm_road_cells_kept_as_crossings": 9, "ml_road_cells_dropped_on_water": 0, "checkpoints": 65}
