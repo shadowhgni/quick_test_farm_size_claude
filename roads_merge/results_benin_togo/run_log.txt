@@ -1,6 +1,6 @@
-read inputs: 26s | OSM 200101: 177,065 segs, OSM 260901: 213,031 segs, ML: 301,434 segs
+read inputs: 25s | OSM 200101: 177,065 segs, OSM 260901: 213,031 segs, ML: 301,434 segs
 flag new/gone roads: 154s
-conflation time: new 40s vs v00 96s
+conflation time: new 40s vs v00 97s
 keep/drop decisions differing from v00: 865 of 260,374 (96 km of 68886 km)
 
 iso3  osm_200101_km  osm_260901_km  osm_new_since_t1_km  osm_gone_by_t2_km  ml_total_km  ml_kept_km  merged_km  ml_kept_median_width_m  ml_dropped_median_width_m
