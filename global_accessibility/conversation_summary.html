@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accessibility Update Log</title>
+<style>
+:root {
+  --bg: #fbfaf7; --fg: #1f1e1b; --muted: #5f5d57; --line: #dedbd2; --card: #ffffff;
+  --accent: #1f5f8b; --ok: #2d7a46; --warn: #9a6200; --code: #f1efe9; --head: #e8eef7;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1a18; --fg: #e9e7e1; --muted: #a8a59c; --line: #3a3935; --card: #22221f;
+    --accent: #7fb6dd; --ok: #7cc792; --warn: #e0b060; --code: #2c2b28; --head: #263241;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1a1a18; --fg: #e9e7e1; --muted: #a8a59c; --line: #3a3935; --card: #22221f;
+  --accent: #7fb6dd; --ok: #7cc792; --warn: #e0b060; --code: #2c2b28; --head: #263241;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 980px; margin: 0 auto; padding: 32px 16px 64px; }
+h1 { font-size: 1.7rem; margin: 0 0 4px; }
+h2 { font-size: 1.25rem; margin: 40px 0 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+h3 { font-size: 1.05rem; margin: 22px 0 6px; }
+p, li { max-width: 72ch; }
+.sub { color: var(--muted); margin: 0 0 20px; }
+a { color: var(--accent); }
+code { background: var(--code); padding: 1px 5px; border-radius: 4px; font-size: .9em; }
+pre { background: var(--code); padding: 12px 14px; border-radius: 6px; overflow-x: auto; font-size: .88em; }
+.wrap { overflow-x: auto; margin: 10px 0 6px; }
+table { border-collapse: collapse; font-size: .9rem; min-width: 100%; }
+th, td { border: 1px solid var(--line); padding: 5px 8px; text-align: right; vertical-align: top; }
+th { background: var(--head); text-align: center; }
+td:first-child, th:first-child { text-align: left; }
+td.l, th.l { text-align: left; }
+.note { color: var(--muted); font-size: .88rem; }
+.tag { display: inline-block; font-size: .75rem; padding: 0 6px; border-radius: 10px;
+  border: 1px solid var(--line); color: var(--muted); margin-left: 4px; white-space: nowrap; }
+.tag.v { color: var(--ok); border-color: var(--ok); }
+.tag.i { color: var(--warn); border-color: var(--warn); }
+ol.timeline { padding-left: 1.3em; }
+ol.timeline li { margin-bottom: 8px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 12px 0; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.card b { display: block; font-size: 1.35rem; }
+.card span { color: var(--muted); font-size: .88rem; }
+</style>
+</head>
+<body>
+<main>
+<h1>Updating travel-time-to-cities maps: conversation log</h1>
+<p class="sub">From testing a road-merge script on Benin and Togo to a stand-alone global HPC script, a regional test, and a manuscript. Repository <code>shadowhgni/quick_test_farm_size_claude</code>, branch <code>claude/roaddetections-fork-test-m1plof</code>. Last commit described: <code>f875fdd</code> (25 Sep 2026).</p>
+
+<p class="note">How to read the claims below: <span class="tag v">verified</span> means taken from files produced by the GitHub Actions run of the regional test and committed to the repository; <span class="tag i">inference</span> means an interpretation not checked directly. Everything else describes what was built or decided.</p>
+
+<div class="grid">
+  <div class="card"><b>2.0.1</b><span>version of <code>global_accessibility_v2.py</code> to run on the HPC</span></div>
+  <div class="card"><b>22.0 → 19.0 min</b><span>pop.-weighted travel time to cities ≥50k, 2015 → 2026, test domain <span class="tag v">verified</span></span></div>
+  <div class="card"><b>−4%</b><span>pop.-weighted bias vs Nelson et al. 2019 (2015, cities ≥50k) <span class="tag v">verified</span></span></div>
+  <div class="card"><b>0.98</b><span>median ratio to OSRM car times, 105 pairs, 2026 <span class="tag v">verified</span></span></div>
+</div>
+
+<h2>1. What was asked, and what was done</h2>
+<ol class="timeline">
+  <li><b>Fork microsoft/RoadDetections and test the artefact <code>Claude_merge_roads_v00.py</code> on Benin and Togo.</b> Forking or creating repositories was not possible from this session (no GitHub API; a push to <code>shadowhgni/RoadDetections</code> was refused with 403 because it was outside the session's authorised repositories). All work went to the branch above.</li>
+  <li><b>Test and fix the merge script, run it in GitHub Actions, report how to deploy locally.</b> Fixes included parsing <code>WidthMeters</code> as a number (it is a string in the 2025.04.28 Microsoft drop). Real-data runs happened in CI because the session could not download the data directly.</li>
+  <li><b>Friction maps for 2020 and 2026</b> with speeds by road class and topography, then <b>travel time to cities ≥50,000 and to ports</b>, with all Nelson et al. size classes available.</li>
+  <li><b>Organise into folders; results for nine Beninese towns</b> (Parakou, Kandi, Malanville, Cotonou, Porto-Novo, Comè, Sakété, Natitingou, Djougou), in <code>accessibility_update/</code>.</li>
+  <li><b>A stand-alone Python 3.13 script for one HPC node</b> (up to 90 cores, no Apptainer or Singularity): installs missing packages, has start and end years in a configuration block, gives 1 km and 10 km COGs, global PNGs and a methods folder, and deletes intermediate files. It adds a corruption penalty on road speeds and a border delay in Africa only → <code>global_accessibility/global_accessibility.py</code> (v1).</li>
+  <li><b>Decisions on penalties:</b> World Bank WGI Control of Corruption, K = 0.10, also applied at the border; border delay 15 min instead of 60; only at official checkpoints (major roads crossing a land border), for walking and goods alike; ECOWAS not exempt; Europe and the rest of the world not penalised; one WorldCover 2021 map for both years.</li>
+  <li><b>Compare with Nelson et al. (2019)</b> using the latest figshare version (v4, the same rasters as the v3 cited by R <code>geodata</code>, checked by MD5), reference year 2015; <b>validate the end year with a free routing engine</b> (OSRM).</li>
+  <li><b>Units and water:</b> travel times are in minutes. Waterways and ferries are not used as links. Roads on cells that are ≥90% water are removed unless tagged as a bridge, causeway, ford or embankment.</li>
+  <li><b>“Our 2015 is slower than Nelson”:</b> as you asked, the 2015 OSM roads are completed with the roads of the Weiss et al. (2018) 2015 friction surface before any calculation, and the comparison is also reported where OSM 2015 was complete.</li>
+  <li><b>Manuscript</b> with Methods, Results, Discussion and Supplementary material in one Word file; the HPC script shared.</li>
+  <li><b>v2: sensitivity analysis</b> of K ∈ {0, 0.05, 0.10, 0.20} and border delay ∈ {0, 15, 30, 60} min → <code>global_accessibility_v2.py</code>.</li>
+  <li><b>What are “mean diff” and “mean abs diff”; express them relative to Nelson.</b> Added relative bias, relative mean absolute difference and median per-cell % difference; Table 3 rebuilt. This led to two bug fixes (section 5) and version 2.0.1.</li>
+</ol>
+
+<h2>2. Method in brief</h2>
+<div class="wrap"><table>
+<tr><th class="l">Component</th><th class="l">Choice</th></tr>
+<tr><td>Grid</td><td class="l">WGS84, 30″ (~1 km), −180…180° / −60…85° (the Nelson et al. grid); light version 300″ (~10 km)</td></tr>
+<tr><td>Roads</td><td class="l">OSM Geofabrik snapshots on 1 January of each year; speed by <code>highway</code> class, unpaved × 0.7; fastest road per cell. Microsoft ML roads for the end year only, at 15 km/h, where there is no OSM road</td></tr>
+<tr><td>2015 completion</td><td class="l">Adds a road to a cell where OSM 2015 has none, Weiss 2015 speed is ≥10 km/h, the end-year OSM has a road and the cell is not open water; speed = min(Weiss, end-year OSM). 79,233 cells added in the test domain <span class="tag v">verified</span></td></tr>
+<tr><td>Off-road</td><td class="l">WorldCover 2021 walking speeds × Tobler exp(−3.5 tan θ), slope from Copernicus GLO-90</td></tr>
+<tr><td>Corruption</td><td class="l">WGI score S (0–100); c = 1 − S/100; road speed × (1 − K·c), K = 0.10</td></tr>
+<tr><td>Borders</td><td class="l">African land borders only, at checkpoints (motorway to secondary roads): 15 min / (1 − K·c̄)</td></tr>
+<tr><td>Destinations</td><td class="l">GHSL R2023A urban clusters (SMOD 21–30) with GHS-POP, nearest epoch; World Port Index; the 12 city and 5 port layers of Nelson et al.</td></tr>
+<tr><td>Cost distance</td><td class="l">Multi-source Dijkstra, 8 neighbours, geodesic step lengths, wraps at the dateline (numba)</td></tr>
+<tr><td>Parallelism</td><td class="l">Workers sized from cgroup CPU and memory limits, per-task memory plus 0.35 GB process overhead, within 75% of memory</td></tr>
+</table></div>
+
+<h2>3. Regional test results (Benin, Togo and neighbours; bbox −1, 5.5, 4.5, 13.5; 2015 vs 2026)</h2>
+<p class="note">These are CI results on a regional domain and are not global. Values marked [global] in the manuscript must be replaced after the HPC run.</p>
+
+<h3>Population-weighted travel time <span class="tag v">verified</span></h3>
+<div class="wrap"><table>
+<tr><th>Layer</th><th>2015 (min)</th><th>2026 (min)</th></tr>
+<tr><td>Cities ≥50,000 (cities 11)</td><td>22.0</td><td>19.0</td></tr>
+<tr><td>Cities ≥5,000 (cities 12)</td><td>8.7</td><td>6.4</td></tr>
+<tr><td>Any port (ports 5)</td><td>261.6</td><td>243.5</td></tr>
+</table></div>
+<p class="note">GHS-POP 2015 and 2025 weights. The ports value is probably inflated because ports outside the domain (e.g. Lagos, Tema, Abidjan) cannot be reached in a regional run <span class="tag i">inference</span>.</p>
+
+<h3>Comparison with Nelson et al. (2019), 2015 layers <span class="tag v">verified</span></h3>
+<p>d = ours − Nelson per cell. <b>Bias</b> = mean d, in brackets Σd / ΣNelson. <b>Mean abs. diff.</b> = mean |d|, in brackets Σ|d| / ΣNelson. Ratios of sums stay defined inside cities, where Nelson is about 0 min. <b>Median cell diff.</b> = median of 100·d/Nelson over cells with Nelson &gt; 0, the statistic Nelson et al. used against Google Maps.</p>
+<div class="wrap"><table>
+<tr><th>Layer and version</th><th>Cells</th><th>Bias, min (% of Nelson)</th><th>Mean abs. diff., min (%)</th><th>Median cell diff.</th><th>Within ±30 min</th><th>r (log)</th><th>Pop.-weighted ours / Nelson (bias)</th></tr>
+<tr><td>Cities 11, 2015, OSM only</td><td>576,562</td><td>+71.9 (+70%)</td><td>83.8 (82%)</td><td>+42%</td><td>44%</td><td>0.80</td><td>33.8 / 23.1 (+46%)</td></tr>
+<tr><td><b>Cities 11, 2015, completed</b></td><td>576,822</td><td>+16.2 (+16%)</td><td>33.1 (32%)</td><td>+9%</td><td>67%</td><td>0.89</td><td><b>22.0 / 23.1 (−4%)</b></td></tr>
+<tr><td>Cities 11, 2026</td><td>577,282</td><td>−6.6 (−6%)</td><td>33.7 (33%)</td><td>−11%</td><td>64%</td><td>0.85</td><td>19.0 / 24.4 (−22%)</td></tr>
+<tr><td>Cities 12, 2015, OSM only</td><td>576,631</td><td>+68.0 (+107%)</td><td>73.6 (116%)</td><td>+67%</td><td>49%</td><td>0.77</td><td>15.9 / 7.9 (+101%)</td></tr>
+<tr><td><b>Cities 12, 2015, completed</b></td><td>576,917</td><td>+19.9 (+31%)</td><td>27.5 (43%)</td><td>+19%</td><td>74%</td><td>0.87</td><td><b>8.7 / 7.9 (+11%)</b></td></tr>
+<tr><td>Cities 12, 2026</td><td>577,401</td><td>−3.8 (−6%)</td><td>25.4 (40%)</td><td>−9%</td><td>74%</td><td>0.82</td><td>6.4 / 9.1 (−30%)</td></tr>
+<tr><td>Ports 5, 2015, OSM only</td><td>576,522</td><td>+190.0 (+43%)</td><td>192.3 (43%)</td><td>+38%</td><td>12%</td><td>0.92</td><td>281.2 / 203.0 (+39%)</td></tr>
+<tr><td><b>Ports 5, 2015, completed</b></td><td>576,765</td><td>+123.1 (+28%)</td><td>128.5 (29%)</td><td>+29%</td><td>20%</td><td>0.97</td><td><b>262.1 / 202.9 (+29%)</b></td></tr>
+<tr><td>Ports 5, 2026</td><td>577,215</td><td>+63.3 (+14%)</td><td>86.4 (19%)</td><td>+15%</td><td>26%</td><td>0.96</td><td>244.0 / 207.5 (+18%)</td></tr>
+</table></div>
+<ul>
+  <li>Completing the 2015 roads cut the population-weighted bias for cities ≥50k from +46% to −4%, and the area bias from +70% to +16%.</li>
+  <li>The area bias (+16%) is larger than the population-weighted bias (−4%), so our estimates are longer mainly in sparsely populated cells <span class="tag i">inference</span>.</li>
+  <li>The 2026 rows compare our 2026 map with Nelson's 2015 map, so they mix real change with differences in method.</li>
+  <li>No 2° tile reached the 80% OSM 2015 completeness threshold (14–73%, median 39%), so the “OSM 2015 complete” subset is empty in this domain.</li>
+  <li>The OSM-only rows come from a second pass of the same 2.0.1 code with <code>--no-weiss</code>, on identical inputs.</li>
+</ul>
+
+<h3>Validation against OSRM, 2026 <span class="tag v">verified</span></h3>
+<p>12 sampled settlements ≥50k, 120 origin–settlement pairs 12–149 km apart; 105 kept after a ≤1 km snap filter. Median travel time 118.7 min here vs 113.5 min in OSRM; median ratio 0.98; median difference −1.6 min; mean absolute difference 14.2 min; 90.5% within ±30%; r (log) 0.94. Both use current OSM, so this tests the speed model and routing rather than the completeness of the network.</p>
+
+<h3>Sensitivity, cities ≥50k <span class="tag v">verified</span></h3>
+<div class="wrap"><table>
+<tr><th>Scenario</th><th>2015 (min)</th><th>2026 (min)</th><th>Change (min)</th></tr>
+<tr><td>K = 0, delay 15</td><td>20.9</td><td>17.9</td><td>−2.99</td></tr>
+<tr><td>K = 0.05, delay 15</td><td>21.4</td><td>18.4</td><td>−3.01</td></tr>
+<tr><td><b>K = 0.10, delay 15 (baseline)</b></td><td><b>22.0</b></td><td><b>19.0</b></td><td><b>−3.04</b></td></tr>
+<tr><td>K = 0.20, delay 15</td><td>23.3</td><td>20.2</td><td>−3.09</td></tr>
+<tr><td>K = 0.10, delay 0</td><td>21.9</td><td>19.0</td><td>−2.94</td></tr>
+<tr><td>K = 0.10, delay 30</td><td>22.1</td><td>19.0</td><td>−3.06</td></tr>
+<tr><td>K = 0.10, delay 60</td><td>22.1</td><td>19.0</td><td>−3.06</td></tr>
+</table></div>
+<p>K shifts the level by about ±6% (ports about ±7%) but hardly changes the 2015→2026 change. The border delay has a negligible effect that levels off above 15 min. A likely reason is that off-road paths bypass checkpoints and most people's nearest city is in their own country <span class="tag i">inference, paths not checked</span>.</p>
+
+<h2>4. Files</h2>
+<div class="wrap"><table>
+<tr><th class="l">File</th><th class="l">What it is</th></tr>
+<tr><td><code>global_accessibility/global_accessibility_v2.py</code></td><td class="l"><b>The script to run on the HPC</b> (version 2.0.1)</td></tr>
+<tr><td><code>global_accessibility/README.md</code></td><td class="l">Usage, stages, resources, method choices, outputs, licences</td></tr>
+<tr><td><code>global_accessibility/manuscript/Manuscript_v2_Methods_Results_Discussion_Suppl.docx</code></td><td class="l">Methods, Results, Discussion, Supplementary material, References (built by <code>build.js</code>)</td></tr>
+<tr><td><code>global_accessibility/test_results/</code></td><td class="l">Latest regional CI outputs: COGs, PNGs, tables, methods, Nelson comparison, routing validation, sensitivity</td></tr>
+<tr><td><code>global_accessibility/dev/</code></td><td class="l">21 offline tests, including an end-to-end run on synthetic data</td></tr>
+<tr><td><code>global_accessibility/global_accessibility.py</code></td><td class="l">v1, kept for reference</td></tr>
+<tr><td><code>accessibility_update/</code></td><td class="l">Earlier Benin/Togo scripts, results and <code>REPORT.md</code></td></tr>
+<tr><td><code>.github/workflows/global_test.yml</code></td><td class="l">Regional end-to-end test on Python 3.13 (main run plus a <code>--no-weiss</code> pass)</td></tr>
+</table></div>
+
+<h3>Running on the HPC</h3>
+<pre>python global_accessibility_v2.py --dry-run   # grid, workers, memory, OSM downloads
+python global_accessibility_v2.py             # full run; rerun the same command to resume after a crash</pre>
+<p>Options: <code>--start --end --bbox W S E N --stages --max-workers --no-cleanup --no-ml --no-weiss --no-routing --no-sensitivity --sens-design oat|full --routing-cities N --work-dir --results-dir</code>. The README gives rough needs for a global run: about 170 GB of OSM downloads, about 150 GB of intermediate grids, and peak RAM of about 8 GB per parallel travel-time task plus 15 GB. These are estimates, not measured on a global run.</p>
+
+<h2>5. Bugs found in this last round (fixed in 2.0.1)</h2>
+<ul>
+  <li><b>Empty inputs manifest on resumed runs.</b> A rerun without the download stage wrote an empty <code>methods/inputs_manifest.csv</code> and then crashed reading it. This caused the failed Actions job you reported.</li>
+  <li><b>Stale travel times after a friction rebuild.</b> A resumed run reused finished travel-time layers even when the friction grid had been rebuilt, for example after changing K or the speeds. A layer is now reused only if it is newer than its friction grid. A new test fails on the old code and passes on the new.</li>
+</ul>
+<p>After both fixes, the regional CI run finished with no traceback and 21 of 21 tests passed <span class="tag v">verified</span>.</p>
+
+<h2>6. Still open</h2>
+<ul>
+  <li>Run 2.0.1 globally on the HPC and replace the [global] placeholders in the manuscript.</li>
+  <li>The off-road walking speeds by land-cover class are placeholders to calibrate.</li>
+  <li>The ports bias should be re-examined on the global run, where there are no domain-edge effects.</li>
+  <li>Check whether the weak border-delay effect comes from bypass paths, for example by tracing least-cost paths across a few checkpoints.</li>
+  <li>Check data licences with each provider before publication.</li>
+</ul>
+</main>
+</body>
+</html>
