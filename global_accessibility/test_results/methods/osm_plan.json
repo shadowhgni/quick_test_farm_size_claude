@@ -1,39 +1,15 @@
 {
  "2015": [
   {
-   "region": "benin",
-   "url": "https://download.geofabrik.de/africa/benin-160101.osm.pbf",
-   "bytes": 8106453,
-   "snapshot_year": 2016,
-   "bounds": [
-    0.761489,
-    5.984817,
-    3.861694,
-    12.43658
-   ]
-  },
-  {
-   "region": "burkina-faso",
-   "url": "https://download.geofabrik.de/africa/burkina-faso-150101.osm.pbf",
-   "bytes": 9246155,
+   "region": "africa",
+   "url": "https://download.geofabrik.de/africa-150101.osm.pbf",
+   "bytes": 721392542,
    "snapshot_year": 2015,
    "bounds": [
-    -5.527409,
-    9.384107,
-    2.412529,
-    15.09271
-   ]
-  },
-  {
-   "region": "nigeria",
-   "url": "https://download.geofabrik.de/africa/nigeria-150101.osm.pbf",
-   "bytes": 26393547,
-   "snapshot_year": 2015,
-   "bounds": [
-    2.664528,
-    2.674022,
-    14.68057,
-    13.89874
+    -27.262032,
+    -60.3167,
+    66.722766,
+    37.77817
    ]
   }
  ],
@@ -41,7 +17,7 @@
   {
    "region": "benin",
    "url": "https://download.geofabrik.de/africa/benin-260101.osm.pbf",
-   "bytes": 46832967,
+   "bytes": 47185920,
    "snapshot_year": 2026,
    "bounds": [
     0.761489,
@@ -53,7 +29,7 @@
   {
    "region": "burkina-faso",
    "url": "https://download.geofabrik.de/africa/burkina-faso-260101.osm.pbf",
-   "bytes": 80806798,
+   "bytes": 80740352,
    "snapshot_year": 2026,
    "bounds": [
     -5.527409,
@@ -65,7 +41,7 @@
   {
    "region": "ghana",
    "url": "https://download.geofabrik.de/africa/ghana-260101.osm.pbf",
-   "bytes": 108105651,
+   "bytes": 108003328,
    "snapshot_year": 2026,
    "bounds": [
     -3.807399,
@@ -77,7 +53,7 @@
   {
    "region": "niger",
    "url": "https://download.geofabrik.de/africa/niger-260101.osm.pbf",
-   "bytes": 71818630,
+   "bytes": 71303168,
    "snapshot_year": 2026,
    "bounds": [
     0.119721,
@@ -89,7 +65,7 @@
   {
    "region": "nigeria",
    "url": "https://download.geofabrik.de/africa/nigeria-260101.osm.pbf",
-   "bytes": 664158838,
+   "bytes": 663748608,
    "snapshot_year": 2026,
    "bounds": [
     2.664528,
@@ -101,7 +77,7 @@
   {
    "region": "togo",
    "url": "https://download.geofabrik.de/africa/togo-260101.osm.pbf",
-   "bytes": 61134072,
+   "bytes": 60817408,
    "snapshot_year": 2026,
    "bounds": [
     -0.148338,
