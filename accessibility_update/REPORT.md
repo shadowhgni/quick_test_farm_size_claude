@@ -14,8 +14,9 @@ Original script under test: `scripts/original/Claude_merge_roads_v00.py`.
 Default settings: buffer 20 m, max overlap 0.5, min ML length 50 m, 100 m raster,
 projection EPSG:32631 (UTM 31N).
 
-The run was done on a GitHub Actions `ubuntu-latest` runner (runs #1–#3 in the
-`quick_test_farm_size_claude` repo; figures below are from run #3), because downloads were not permitted in the
+The runs were done on GitHub Actions `ubuntu-latest` runners in the
+`quick_test_farm_size_claude` repo. Road figures are from roads run #3 (repeated
+identically in later runs); town figures from run #1 of `accessibility.yml`, because downloads were not permitted in the
 development container. Raw outputs: `results/roads/`, `results/friction/`,
 `results/traveltime/`, `results/towns/`.
 
@@ -133,9 +134,72 @@ Population-weighted mean travel time (minutes) and share of people within 60 min
 - Ports: only Cotonou, Lomé and Kpémé are inside the outlines; Lagos, Lekki, Tin Can
   Island and Tema are not reachable with the masked friction map, so port times in the
   east and west are too long.
-- Run #3 counted destinations over the whole bounding box, including cities outside the
-  outlines (e.g. Lagos as the only class-1 city). From the next run, `n_reachable` and
-  `settlements_by_class.csv` count only destinations reachable on the friction map.
+- Reachable destinations (run #1 of `accessibility.yml`, identical travel times): of the
+  cities ≥ 50k in the bounding box, 52 of 105 (2020) and 50 of 102 (2025) lie on the
+  passable map; the rest are in Nigeria, Ghana, Burkina Faso or Niger. Ports: 3 of 5
+  (Cotonou, Lomé, Kpémé). `settlements_by_class.csv` now lists reachable ones only.
+
+### 2.7 Nine Beninese towns (`run_towns_benin.py`)
+
+Run #1 of `.github/workflows/accessibility.yml`. Each town is summarised over its
+commune (geoBoundaries ADM2), so rural parts of large communes (Kandi, Malanville,
+Djougou: 3,300–3,900 km²) weigh heavily, while Cotonou and Porto-Novo are almost entirely
+built-up. Files: `results/towns/town_summary.csv`, `town_traveltime.csv`,
+`overview_city6.png`, `map_<town>.png`.
+
+**Roads and population**
+
+| town | area km² | pop 2020 → 2025 | OSM 2020 km | new | gone | ML added | density 2020 → 2026+ML (km/km²) | cells faster |
+|---|---:|---|---:|---:|---:|---:|---|---:|
+| Parakou | 473 | 362k → 442k | 1,722 | 282 | 22 | 103 | 3.64 → 4.43 | 5.6% |
+| Kandi | 3,489 | 246k → 289k | 1,222 | 366 | 1 | 227 | 0.35 → 0.53 | 1.1% |
+| Malanville | 3,261 | 217k → 254k | 1,042 | 256 | 2 | 316 | 0.32 → 0.50 | 1.1% |
+| Cotonou | 81 | 808k → 884k | 995 | 54 | 20 | 23 | 12.34 → 13.27 | 24.5% |
+| Porto-Novo | 50 | 345k → 385k | 661 | 7 | 10 | 17 | 13.30 → 13.90 | 10.2% |
+| Comè | 172 | 92k → 100k | 490 | 12 | 26 | 18 | 2.84 → 2.86 | 2.3% |
+| Sakété | 425 | 133k → 151k | 667 | 72 | 8 | 103 | 1.57 → 1.98 | 3.4% |
+| Natitingou | 1,356 | 125k → 136k | 772 | 52 | 0 | 60 | 0.57 → 0.65 | 0.9% |
+| Djougou | 3,921 | 337k → 396k | 1,446 | 280 | 4 | 209 | 0.37 → 0.49 | 0.8% |
+
+**Population-weighted mean travel time (minutes)**, scenarios as in 2.6:
+
+| town | city ≥ 50k: 2020 | 2026r | 2026 | 2026ml | city ≥ 5k: 2020 → 2026ml | any port: 2020 → 2026ml |
+|---|---:|---:|---:|---:|---|---|
+| Parakou | 0.6 | 0.5 | 0.5 | 0.5 | 0.6 → 0.5 | 358 → 345 |
+| Kandi | 20.5 | 20.2 | 22.2 | 21.9 | 12.8 → 13.5 | 571 → 553 |
+| Malanville | 20.3 | 19.1 | 19.5 | 19.0 | 8.3 → 6.6 | 651 → 631 |
+| Cotonou | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 → 0.0 | 5 → 5 |
+| Porto-Novo | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 → 0.0 | 31 → 29 |
+| Comè | 2.1 | 2.1 | 0.4 | 0.4 | 0.5 → 0.4 | 54 → 54 |
+| Sakété | 8.9 | 6.8 | 3.8 | 3.4 | 4.4 → 2.4 | 69 → 63 |
+| Natitingou | 12.3 | 11.1 | 11.8 | 11.7 | 10.7 → 10.3 | 435 → 433 |
+| Djougou | 20.5 | 19.3 | 20.7 | 20.1 | 9.9 → 8.3 | 386 → 383 |
+
+- **Cotonou, Porto-Novo and Parakou** are inside a city ≥ 50k almost everywhere, so their
+  times to cities are ~0 and do not change. In Cotonou, 24.5% of cells got faster
+  (54 km of new OSM roads in 81 km²), which matters for intra-urban travel but not for
+  this indicator.
+- **New roads** cut the time to cities ≥ 50k by 1.2–2.1 min in Sakété, Malanville,
+  Natitingou and Djougou, and by 0.3 min in Kandi. For ports, the northern towns gain
+  13–20 min (Parakou, Kandi, Malanville) on trips of 6–11 h.
+- **Sakété** improves the most (8.9 → 3.4 min, 99% → 100% of people within 60 min): new
+  roads (−2.1) and GHSL growth (−3.0), consistent with nearby settlements crossing the
+  50k threshold between the 2020 and 2025 epochs. **Comè** drops from 2.1 to 0.4 min for
+  the same reason (GHSL step only).
+- **Kandi and Djougou get slower in the "city growth" step** (+2.0 and +1.4 min). This step
+  changes two things at once: the destinations (GHSL 2020 → 2025 settlements) and the
+  population weights (GHS-POP 2020 → 2025). An increase can come from either (e.g. faster
+  growth in remote parts of the commune, or a settlement falling below the threshold or
+  being split). I cannot tell which from the committed outputs; a fifth scenario (2025
+  settlements with 2020 weights) would separate them.
+- **Roads that got slower:** the Kandi map shows a patch in the north-west up to 30 min
+  slower from road changes alone, yet only 1.2 km of Kandi's 2020 roads are "gone". The
+  roads there most likely still exist but were downgraded (class or surface tag); I have
+  not checked the OSM tags.
+- **Microsoft roads** add 17–316 km per commune, most in the large rural communes
+  (Malanville 316 km, Kandi 227, Djougou 209), and cut 0.3–0.6 min further there.
+- Travel times near the Nigerian border (Malanville, Kandi, Sakété, Porto-Novo) ignore
+  Nigerian cities and ports (see 2.6), so they are upper bounds.
 
 ## 3. Findings to act on
 
