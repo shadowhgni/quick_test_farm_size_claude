@@ -1,1 +1,1 @@
-{"road_cells": 146119, "ml_cells": 0, "passable_cells": 577211, "osm_road_cells_dropped_on_water": 35, "osm_road_cells_kept_as_crossings": 9, "ml_road_cells_dropped_on_water": 0, "weiss2015_cells_added": 79233, "checkpoints": 65}
+{"road_cells": 145549, "ml_cells": 0, "passable_cells": 577211, "osm_road_cells_dropped_on_water": 19, "osm_road_cells_kept_as_crossings": 6, "ml_road_cells_dropped_on_water": 0, "weiss2015_cells_added": 92998, "checkpoints": 66}
