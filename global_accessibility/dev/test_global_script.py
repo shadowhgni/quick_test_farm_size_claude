@@ -340,6 +340,13 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     cmp_ = pd.read_csv(res / "nelson_comparison" / "comparison_by_layer.csv")
     assert list(cmp_.our_year) == [2015, 2015, 2026, 2026] and (cmp_.cells > 50000).all()
     assert list(cmp_.subset) == ["all", "osm2015_complete_tiles"] * 2
+    r0 = cmp_.iloc[0]                                                     # relative to Nelson
+    assert r0.rel_bias_pct == pytest.approx(100 * r0.mean_diff_min / r0.nelson_mean_min)
+    assert r0.rel_mad_pct == pytest.approx(100 * r0.mean_abs_diff_min / r0.nelson_mean_min)
+    assert r0.pw_rel_bias_pct == pytest.approx(
+        100 * (r0.pop_weighted_ours_min / r0.pop_weighted_nelson_min - 1), rel=1e-6)
+    assert r0.rel_mad_pct >= abs(r0.rel_bias_pct) and r0.pw_rel_mad_pct >= abs(r0.pw_rel_bias_pct) - 1e-9
+    assert r0.median_abs_pct_diff >= abs(r0.median_pct_diff) and r0.pct_sample_cells > 0
     assert (res / "methods" / "osm2015_completeness_tiles.csv").exists()
     for f in ["config.json", "speed_table.csv", "corruption_2026.csv", "checkpoints_2026.csv",
               "software_versions.json", "destinations.csv"]:

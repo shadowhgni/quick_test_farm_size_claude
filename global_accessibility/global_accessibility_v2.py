@@ -1823,6 +1823,29 @@ def write_methods(ctx):
 # =============================================================================
 # stage: comparison with Nelson et al. (2019)
 # =============================================================================
+def relative_stats(acc, a, b):
+    """Differences relative to Nelson et al. (reference), in %.
+
+    rel_bias / rel_mad: ratio of sums, sum(ours - Nelson) / sum(Nelson) and
+    sum(|ours - Nelson|) / sum(Nelson), i.e. mean difference / Nelson mean (area-weighted,
+    one weight per cell) and the same with population weights (pw_). Ratios of sums stay
+    defined where Nelson is ~0 min (cells inside cities). median_pct_diff /
+    median_abs_pct_diff: per-cell 100 (ours - Nelson) / Nelson over cells with Nelson > 0
+    (the statistic Nelson et al. 2019 used against Google Maps), from the random sample.
+    """
+    pct = lambda x, ref: 100 * x / ref if ref > 0 else np.nan
+    k = b > 0
+    r = 100 * (a[k] - b[k]) / b[k]
+    return {"nelson_mean_min": acc["sum_n"] / acc["n"],
+            "rel_bias_pct": pct(acc["sum_d"], acc["sum_n"]),
+            "rel_mad_pct": pct(acc["sum_ad"], acc["sum_n"]),
+            "pw_rel_bias_pct": pct(acc["pwo"] - acc["pwn"], acc["pwn"]),
+            "pw_rel_mad_pct": pct(acc["pwad"], acc["pwn"]),
+            "median_pct_diff": float(np.median(r)) if r.size else np.nan,
+            "median_abs_pct_diff": float(np.median(np.abs(r))) if r.size else np.nan,
+            "pct_sample_cells": int(r.size)}
+
+
 def stage_compare(ctx):
     if not NELSON_COMPARE:
         return
@@ -1852,7 +1875,8 @@ def stage_compare(ctx):
             ours = np.load(work / "tt" / f"tt_{y}_{name}.npy", mmap_mode="r")
             pop = memmap(work / f"population_{ctx['epoch'][y]}.npy", grid, None, mode="r")
             acc = {"n": 0, "sum_d": 0.0, "sum_ad": 0.0, "le30": 0, "sx": 0.0, "sy": 0.0,
-                   "sxx": 0.0, "syy": 0.0, "sxy": 0.0, "pw": 0.0, "pwo": 0.0, "pwn": 0.0}
+                   "sxx": 0.0, "syy": 0.0, "sxy": 0.0, "pw": 0.0, "pwo": 0.0, "pwn": 0.0,
+                   "sum_n": 0.0, "pwad": 0.0}
             samp_o, samp_n = [], []
             cw = {}
             for r0, r1 in row_chunks(grid.height):
@@ -1865,6 +1889,7 @@ def stage_compare(ctx):
                 a, b = o[ok], nn[ok]; d = a - b
                 p = np.asarray(pop[r0:r1], np.float64)[ok]
                 acc["n"] += a.size; acc["sum_d"] += d.sum(); acc["sum_ad"] += np.abs(d).sum()
+                acc["sum_n"] += b.sum(); acc["pwad"] += (p * np.abs(d)).sum()
                 acc["le30"] += int((np.abs(d) <= 30).sum())
                 la, lb = np.log1p(a), np.log1p(b)
                 acc["sx"] += la.sum(); acc["sy"] += lb.sum(); acc["sxx"] += (la * la).sum()
@@ -1888,7 +1913,8 @@ def stage_compare(ctx):
                          "mean_diff_min": acc["sum_d"] / n, "mean_abs_diff_min": acc["sum_ad"] / n,
                          "share_within_30min": acc["le30"] / n, "pearson_r_log1p": r_log,
                          "pop_weighted_ours_min": acc["pwo"] / max(acc["pw"], 1),
-                         "pop_weighted_nelson_min": acc["pwn"] / max(acc["pw"], 1)})
+                         "pop_weighted_nelson_min": acc["pwn"] / max(acc["pw"], 1),
+                         **relative_stats(acc, np.concatenate(samp_o), np.concatenate(samp_n))})
             if cw:
                 tot = {k: np.sum(v, axis=0) for k, v in cw.items()}
                 df = pd.DataFrame({"cid": np.arange(len(tot["pw"])), **tot})
@@ -2264,7 +2290,7 @@ def nearest_epoch(y):
 
 
 def main(argv=None):
-    global START_YEAR, END_YEAR, BBOX, CLEANUP, ML_FILES, NELSON_LAYERS, MAX_WORKERS, INCLUDE_ML_ROADS
+    global START_YEAR, END_YEAR, BBOX, CLEANUP, ML_FILES, NELSON_LAYERS, MAX_WORKERS, INCLUDE_ML_ROADS, WEISS2015_AUGMENT
     global ROUTING_CITIES, ROUTING_VALIDATION, SENSITIVITY, SENS_DESIGN
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0],
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -2276,6 +2302,7 @@ def main(argv=None):
     p.add_argument("--stages", default=",".join(STAGES))
     p.add_argument("--ml-files", nargs="+", default=ML_FILES)
     p.add_argument("--no-ml", action="store_true")
+    p.add_argument("--no-weiss", action="store_true", help="do not complete 2015 roads with Weiss et al. (2018)")
     p.add_argument("--nelson-layers", nargs="+", default=NELSON_LAYERS)
     p.add_argument("--max-workers", type=int, default=MAX_WORKERS)
     p.add_argument("--no-cleanup", action="store_true")
@@ -2289,6 +2316,7 @@ def main(argv=None):
     ML_FILES, NELSON_LAYERS, MAX_WORKERS = a.ml_files, a.nelson_layers, a.max_workers
     CLEANUP = CLEANUP and not a.no_cleanup
     INCLUDE_ML_ROADS = INCLUDE_ML_ROADS and not a.no_ml
+    WEISS2015_AUGMENT = WEISS2015_AUGMENT and not a.no_weiss
     ROUTING_CITIES, ROUTING_VALIDATION = a.routing_cities, ROUTING_VALIDATION and not a.no_routing
     SENSITIVITY, SENS_DESIGN = SENSITIVITY and not a.no_sensitivity, a.sens_design
     if END_YEAR <= START_YEAR:

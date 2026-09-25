@@ -34,8 +34,18 @@ jobs:
             --bbox -1 5.5 4.5 13.5 --start 2015 --end 2026 --routing-cities 12 \
             --ml-files Western_Africa.zip \
             --nelson-layers cities_11 cities_12 ports_5 \
-            --work-dir ga_work --results-dir global_accessibility/test_results \
+            --work-dir ga_work --results-dir global_accessibility/test_results --no-cleanup \
             2>&1 | tee run_stdout.txt
+      - name: Nelson comparison without the Weiss 2015 completion (same inputs)
+        run: |
+          rm -f ga_work/_done/friction ga_work/_done/traveltime ga_work/_done/compare
+          python global_accessibility/global_accessibility_v2.py \
+            --bbox -1 5.5 4.5 13.5 --start 2015 --end 2026 --no-weiss \
+            --ml-files Western_Africa.zip --nelson-layers cities_11 cities_12 ports_5 \
+            --stages friction,traveltime,compare \
+            --work-dir ga_work --results-dir osm_only_results 2>&1 | tail -20 | tee -a run_stdout.txt
+          cp osm_only_results/nelson_comparison/comparison_by_layer.csv \
+            global_accessibility/test_results/nelson_comparison/comparison_by_layer_osm_only_2015.csv
       - name: Offline unit tests (using the packages the script installed)
         if: always()
         run: |
