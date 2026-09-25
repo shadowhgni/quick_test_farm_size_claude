@@ -219,6 +219,7 @@
   "ports_5"
  ],
  "WEISS2015_AUGMENT": true,
+ "OSM_SNAPSHOT_MAX_LAG": 1,
  "WEISS_NETWORK_KMH": 10.0,
  "WEISS_WCS": "https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface&format=image/geotiff&subset=Lat({s},{n})&subset=Long({w},{e})",
  "WEISS_TILE_DEG": 10,
