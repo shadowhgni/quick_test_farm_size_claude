@@ -1,10 +1,10 @@
-/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/roads_merge/friction.py:132: UserWarning: skipping unreadable tile: https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N05_00_E002_00_DEM/Copernicus_DSM_COG_10_N05_00_E002_00_DEM.tif
+/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/accessibility_update/scripts/friction.py:132: UserWarning: skipping unreadable tile: https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N05_00_E002_00_DEM/Copernicus_DSM_COG_10_N05_00_E002_00_DEM.tif
   warnings.warn(f"skipping unreadable tile: {src_path}")
-/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/roads_merge/friction.py:132: UserWarning: skipping unreadable tile: https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N05_00_E003_00_DEM/Copernicus_DSM_COG_10_N05_00_E003_00_DEM.tif
+/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/accessibility_update/scripts/friction.py:132: UserWarning: skipping unreadable tile: https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N05_00_E003_00_DEM/Copernicus_DSM_COG_10_N05_00_E003_00_DEM.tif
   warnings.warn(f"skipping unreadable tile: {src_path}")
 grid: 4441 x 7256 cells of 100 m, EPSG:32631
   map  cells_valid  road_cells  mean_speed_kmh  mean_friction_min_per_m  cells_faster_than_t1  cells_slower_than_t1
    t1     17659656     1053788           4.253                 0.020605                     0                     0
    t2     17659761     1279894           4.482                 0.020404                361556                 70846
 t2_ml     17659925     1387214           4.555                 0.020300                467806                 70550
-done in 342s
+done in 285s
