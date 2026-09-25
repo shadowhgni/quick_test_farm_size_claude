@@ -1,4 +1,4 @@
-friction.main: 285s
+friction.main: 341s
 
   map  cells_valid  road_cells  mean_speed_kmh  mean_friction_min_per_m  cells_faster_than_t1  cells_slower_than_t1
    t1     17659656     1053788           4.253                 0.020605                     0                     0

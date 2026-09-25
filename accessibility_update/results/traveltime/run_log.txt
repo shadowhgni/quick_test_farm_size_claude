@@ -1,4 +1,4 @@
-traveltime.main: 296s
+traveltime.main: 322s
 
   date layer  n_destinations  n_reachable  pop_total  pop_weighted_mean_min  median_min_area  pop_share_within_30min  pop_share_within_60min  pop_share_within_120min  pop_share_within_240min
   2020 city6             105           52   21030444                   24.6             94.1                  0.7154                  0.8327                   0.9605                   0.9988

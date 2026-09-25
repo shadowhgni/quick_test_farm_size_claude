@@ -14,4 +14,4 @@
 {'date': '2026ml', 'layer': 'city9', 'n_destinations': 643, 'n_reachable': 368, 'pop_total': 23869418, 'pop_weighted_mean_min': 7.9, 'median_min_area': 46.2, 'pop_share_within_30min': 0.9016, 'pop_share_within_60min': 0.9735, 'pop_share_within_120min': 0.9973, 'pop_share_within_240min': 0.9998}
 {'date': '2026ml', 'layer': 'port2', 'n_destinations': 3, 'n_reachable': 2, 'pop_total': 23840927, 'pop_weighted_mean_min': 218.3, 'median_min_area': 436.4, 'pop_share_within_30min': 0.1532, 'pop_share_within_60min': 0.3176, 'pop_share_within_120min': 0.4695, 'pop_share_within_240min': 0.6207}
 {'date': '2026ml', 'layer': 'port5', 'n_destinations': 5, 'n_reachable': 3, 'pop_total': 23840927, 'pop_weighted_mean_min': 217.0, 'median_min_area': 436.4, 'pop_share_within_30min': 0.1643, 'pop_share_within_60min': 0.3339, 'pop_share_within_120min': 0.4754, 'pop_share_within_240min': 0.6208}
-done in 296s
+done in 322s
