@@ -1833,7 +1833,11 @@ def stage_compare(ctx):
                 c = np.asarray(cg[r0:r1])[ok]
                 for key, arr in (("pw", p), ("pwo", p * a), ("pwn", p * b)):
                     cw.setdefault(key, []).append(np.bincount(c, arr, int(ct.index.max()) + 1))
-            n = max(acc["n"], 1)
+            if acc["n"] == 0:          # e.g. no tile where OSM 2015 was complete
+                rows.append({"layer": name, "our_year": y, "nelson_year": 2015, "subset": subset,
+                             "cells": 0})
+                continue
+            n = acc["n"]
             cov = acc["sxy"] / n - acc["sx"] * acc["sy"] / n ** 2
             r_log = cov / math.sqrt(max((acc["sxx"] / n - (acc["sx"] / n) ** 2) *
                                         (acc["syy"] / n - (acc["sy"] / n) ** 2), 1e-12))
