@@ -27,9 +27,9 @@ CRS = 32631                     # UTM 31N covers Benin and nearly all of Togo
 T1, T2 = "200101", "260901"
 OSM_EXT = ".osm.pbf"            # tests swap in ".osm" (XML) files
 COUNTRY = {"benin": "BEN", "togo": "TGO"}
-# 10 x 10 km QA windows (lon, lat): two towns and two rural areas
-WINDOWS = {"Parakou_BEN": (2.63, 9.35), "Kandi_rural_BEN": (2.94, 11.13),
-           "Kara_TGO": (1.19, 9.55), "Dapaong_rural_TGO": (0.20, 10.86)}
+# 10 x 10 km QA windows (lon, lat), centred on four towns
+WINDOWS = {"Parakou_BEN": (2.63, 9.35), "Kandi_BEN": (2.94, 11.13),
+           "Kara_TGO": (1.19, 9.55), "Dapaong_TGO": (0.20, 10.86)}
 
 
 def osm_for(stamp, table):
@@ -90,7 +90,10 @@ def main():
     # --- 1. new OSM roads between snapshots
     t = time.time()
     osm2["new_since_t1"] = mr.flag_new_roads(osm2, osm1)
-    say(f"flag new roads: {time.time() - t:.0f}s")
+    # reverse check: t1 roads with no t2 counterpart (deleted, or moved > BUFFER_M).
+    # Moved roads also show up as "new", so this bounds the false positives above.
+    osm1["gone_by_t2"] = mr.flag_new_roads(osm1, osm2)
+    say(f"flag new/gone roads: {time.time() - t:.0f}s")
 
     # --- 2. conflation (new method) and comparison with v00
     ms = ms.explode(index_parts=False)
@@ -138,6 +141,7 @@ def main():
         m_all, m_new = ms[ms["iso3"] == iso], ms_new[ms_new["iso3"] == iso]
         s.append({"iso3": iso, f"osm_{T1}_km": km(o1), f"osm_{T2}_km": km(o2),
                   "osm_new_since_t1_km": km(o2[o2["new_since_t1"]]),
+                  "osm_gone_by_t2_km": km(o1[o1["gone_by_t2"]]),
                   "ml_total_km": km(m_all), "ml_kept_km": km(m_new),
                   "merged_km": km(o2) + km(m_new),
                   "ml_kept_median_width_m": m_new["width_m"].median(),

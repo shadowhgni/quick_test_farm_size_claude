@@ -56,4 +56,6 @@ def test_driver_runs(tmp_path, monkeypatch):
     assert (s["osm_new_since_t1_km"] > 0).all()
     assert (s["osm_new_since_t1_km"] < s[f"osm_{rbt.T2}_km"]).all()
     assert (s["ml_kept_km"] <= s["ml_total_km"]).all()
-    assert len(list((tmp_path / "results_benin_togo").glob("qa_*.png"))) == 4
+    assert (s["osm_gone_by_t2_km"] == 0).all()   # t2 is a strict superset of t1 here
+    assert sorted(p.stem for p in (tmp_path / "results_benin_togo").glob("qa_*.png")) == \
+        sorted(f"qa_{n}" for n in rbt.WINDOWS)

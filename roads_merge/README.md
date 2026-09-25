@@ -12,6 +12,7 @@ Builds the road layer of an accessibility (travel-time-to-city) friction surface
 |---|---|
 | `merge_roads.py` | improved pipeline (CLI + importable functions) |
 | `speed_table.csv` | speed per OSM class, kept outside the code so it stays fixed across versions |
+| `REPORT.md` | Benin + Togo test results and local installation guide |
 | `run_benin_togo.py` | Benin + Togo test run: v00 comparison, sensitivity, QA maps |
 | `tests/` | offline tests on synthetic data (`pytest roads_merge/tests`) |
 | `original/Claude_merge_roads_v00.py` | the script being improved, unchanged |
