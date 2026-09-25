@@ -134,7 +134,10 @@ def read_ms_roads(path: str | Path, iso3: list[str]) -> gpd.GeoDataFrame:
                      "width_m": props.get("WidthMeters")})
     if not geoms:
         raise ValueError(f"No Microsoft roads found for {sorted(wanted)} in {path}")
-    return gpd.GeoDataFrame(rows, geometry=geoms, crs=4326)
+    ms = gpd.GeoDataFrame(rows, geometry=geoms, crs=4326)
+    # WidthMeters is stored as a string in the 2025.04.28 drop
+    ms["width_m"] = pd.to_numeric(ms["width_m"], errors="coerce")
+    return ms
 
 
 # ---------------- conflation ----------------

@@ -82,7 +82,8 @@ def _write_ms_zip(path, rows):
 
 
 def _feature(coords, width=5.0):
-    return {"type": "Feature", "properties": {"WidthMeters": width},
+    # the real file stores WidthMeters as a string
+    return {"type": "Feature", "properties": {"WidthMeters": str(width)},
             "geometry": mapping(LineString(coords))}
 
 
