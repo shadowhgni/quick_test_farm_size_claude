@@ -114,6 +114,24 @@
  "DEM_OVERSAMPLE": 5,
  "CORRUPTION_K": 0.1,
  "WGI_INDICATOR": "GOV_WGI_CC.SC",
+ "SENSITIVITY": true,
+ "SENS_K": [
+  0.0,
+  0.05,
+  0.1,
+  0.2
+ ],
+ "SENS_DELAY_MIN": [
+  0.0,
+  15.0,
+  30.0,
+  60.0
+ ],
+ "SENS_DESIGN": "oat",
+ "SENS_LAYERS": [
+  "cities_11",
+  "ports_5"
+ ],
  "BORDER_DELAY_MIN": 15.0,
  "BORDER_CONTINENTS": [
   "Africa"
@@ -323,6 +341,7 @@
   "outputs",
   "compare",
   "validate",
+  "sensitivity",
   "cleanup"
  ],
  "years": [

@@ -1,4 +1,4 @@
-"""Offline tests of global_accessibility.py on synthetic data.
+"""Offline tests of global_accessibility_v2.py on synthetic data.
 
 Run:  python -m pytest global_accessibility/dev -q
 """
@@ -21,7 +21,7 @@ from shapely.geometry import LineString, Polygon, box
 os.environ.setdefault("GA_WORK_DIR", tempfile.mkdtemp(prefix="ga_test_"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import global_accessibility as ga  # noqa: E402
+import global_accessibility_v2 as ga  # noqa: E402
 import geodijkstra as gd  # noqa: E402
 
 D = 1 / 120
@@ -340,10 +340,35 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     cmp_ = pd.read_csv(res / "nelson_comparison" / "comparison_by_layer.csv")
     assert list(cmp_.our_year) == [2015, 2015, 2026, 2026] and (cmp_.cells > 50000).all()
     assert list(cmp_.subset) == ["all", "osm2015_complete_tiles"] * 2
+    r0 = cmp_.iloc[0]                                                     # relative to Nelson
+    assert r0.rel_bias_pct == pytest.approx(100 * r0.mean_diff_min / r0.nelson_mean_min)
+    assert r0.rel_mad_pct == pytest.approx(100 * r0.mean_abs_diff_min / r0.nelson_mean_min)
+    assert r0.pw_rel_bias_pct == pytest.approx(
+        100 * (r0.pop_weighted_ours_min / r0.pop_weighted_nelson_min - 1), rel=1e-6)
+    assert r0.rel_mad_pct >= abs(r0.rel_bias_pct) and r0.pw_rel_mad_pct >= abs(r0.pw_rel_bias_pct) - 1e-9
+    assert r0.median_abs_pct_diff >= abs(r0.median_pct_diff) and r0.pct_sample_cells > 0
     assert (res / "methods" / "osm2015_completeness_tiles.csv").exists()
     for f in ["config.json", "speed_table.csv", "corruption_2026.csv", "checkpoints_2026.csv",
               "software_versions.json", "destinations.csv"]:
         assert (res / "methods" / f).exists(), f
+    # --- sensitivity to K and to the border delay
+    monkeypatch.setattr(ga, "SENS_LAYERS", ["cities_11"])
+    ga.stage_sensitivity(ctx)
+    sc = pd.read_csv(res / "sensitivity" / "scenarios.csv")
+    assert len(sc) == 7 and sc.baseline.sum() == 1                      # one-at-a-time design
+    dom = pd.read_csv(res / "sensitivity" / "sensitivity_domain.csv")
+    base = dom[dom.baseline].iloc[0]
+    tab = pd.read_csv(res / "tables" / "pop_weighted_traveltime_global.csv")
+    main15 = tab[(tab.year == 2015) & (tab.layer == "cities_11")].pop_weighted_mean_min.item()
+    assert base.mean_min_2015 == pytest.approx(main15, rel=1e-9)         # baseline = main run
+    byk = dom[dom.delay_min == 15].sort_values("K")
+    assert byk.mean_min_2015.is_monotonic_increasing and byk.mean_min_2015.iloc[-1] > byk.mean_min_2015.iloc[0]
+    byd = dom[dom.K == 0.1].sort_values("delay_min")
+    assert byd.mean_min_2026.is_monotonic_increasing and byd.mean_min_2026.iloc[-1] > byd.mean_min_2026.iloc[0]
+    assert (dom[dom.baseline].filter(like="_vs_baseline").abs() < 1e-9).all(axis=None)
+    assert (res / "sensitivity" / "sensitivity.png").exists()
+    assert (res / "sensitivity" / "sensitivity_country.csv").exists()
+    assert not list((work / "sens").glob("*.npy"))                       # scenario grids removed
 
 
 def test_block_mode_and_water():
