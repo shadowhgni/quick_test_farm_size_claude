@@ -1,5 +1,5 @@
 {
- "START_YEAR": 2020,
+ "START_YEAR": 2015,
  "END_YEAR": 2026,
  "WORK_DIR": "./ga_work",
  "RESULTS_DIR": "./ga_results",
@@ -192,11 +192,27 @@
  ],
  "PORT_SNAP_KM": 5.0,
  "NELSON_COMPARE": true,
+ "NELSON_ARTICLE": 7638134,
  "NELSON_LAYERS": [
   "cities_11",
   "cities_12",
   "ports_5"
  ],
+ "ROUTING_VALIDATION": true,
+ "ROUTING_SERVERS": [
+  "https://router.project-osrm.org",
+  "https://routing.openstreetmap.de/routed-car"
+ ],
+ "ROUTING_PROFILE": "driving",
+ "ROUTING_MIN_INTERVAL_S": 1.1,
+ "ROUTING_CITIES": 12,
+ "ROUTING_MIN_POP": 50000.0,
+ "ROUTING_ORIGINS_PER_CITY": 10,
+ "ROUTING_RADIUS_KM": [
+  10,
+  150
+ ],
+ "ROUTING_MAX_SNAP_M": 1000,
  "MAX_WORKERS": null,
  "MEMORY_FRACTION": 0.75,
  "DOWNLOAD_WORKERS": 4,
@@ -284,14 +300,15 @@
   "traveltime",
   "outputs",
   "compare",
+  "validate",
   "cleanup"
  ],
  "years": [
-  2020,
+  2015,
   2026
  ],
  "ghsl_epoch": {
-  "2020": 2020,
+  "2015": 2015,
   "2026": 2025
  },
  "grid": {

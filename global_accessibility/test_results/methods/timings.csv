@@ -1,11 +1,23 @@
 step,seconds,rss_gb
-stage download,259.1,0.39
-land cover (WorldCover 2021),0.9,0.43
-slope (Copernicus GLO-90),3.5,0.82
-countries and African borders,0.5,0.85
-settlements GHSL 2020,1.1,0.87
-settlements GHSL 2025,1.0,0.87
-stage grids,7.0,0.87
-Microsoft ML roads,109.7,2.26
-stage roads,207.1,2.25
-stage friction,0.1,2.25
+stage download,145.5,0.4
+land cover (WorldCover 2021),1.1,0.44
+slope (Copernicus GLO-90),3.7,0.74
+countries and African borders,0.5,0.77
+settlements GHSL 2015,1.2,0.79
+settlements GHSL 2025,0.9,0.79
+stage grids,7.3,0.79
+Microsoft ML roads,77.6,2.84
+stage roads,173.0,2.83
+stage friction,0.1,2.83
+stage traveltime,11.8,2.85
+COG travel time 2015 1km,1.2,2.85
+COG travel time 2026 1km,1.3,2.85
+COG change 1km,1.2,2.85
+COG travel time 2015 10km,0.1,2.85
+COG travel time 2026 10km,0.2,2.85
+COG change 10km,0.2,2.85
+PNG maps,9.1,2.85
+summary tables,3.4,2.85
+stage outputs,17.0,2.85
+stage compare,1.7,2.85
+stage validate,13.4,2.85

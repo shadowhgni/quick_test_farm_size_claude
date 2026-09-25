@@ -1,0 +1,134 @@
+{
+ "title": "Travel time to cities and ports in the year 2015",
+ "doi": "10.6084/m9.figshare.7638134.v4",
+ "version": 4,
+ "published_date": "2022-10-13T06:27:38Z",
+ "modified_date": "2023-05-30T12:05:15Z",
+ "license": {
+  "value": 1,
+  "name": "CC BY 4.0",
+  "url": "https://creativecommons.org/licenses/by/4.0/"
+ },
+ "files": [
+  {
+   "name": "travel_time_to_cities_1.tif",
+   "md5": "6c672ce02310d7b60cbab986b7801c53",
+   "bytes": 451133922
+  },
+  {
+   "name": "travel_time_to_cities_2.tif",
+   "md5": "4ab1d88e1e2f0f1e4818663e74f57bfa",
+   "bytes": 441652102
+  },
+  {
+   "name": "travel_time_to_cities_3.tif",
+   "md5": "8a7b924d6532fbaa9cbaf68d6d6cfce3",
+   "bytes": 442038696
+  },
+  {
+   "name": "travel_time_to_cities_4.tif",
+   "md5": "60c2640e51f7c3f13bae17c227fe8480",
+   "bytes": 435220807
+  },
+  {
+   "name": "travel_time_to_cities_5.tif",
+   "md5": "88913d3ea738191bba7952648ed66667",
+   "bytes": 431762883
+  },
+  {
+   "name": "travel_time_to_cities_6.tif",
+   "md5": "84a92251fc4bf45dd012fcd32cd33ae7",
+   "bytes": 426715454
+  },
+  {
+   "name": "travel_time_to_cities_7.tif",
+   "md5": "5ff0a2e3187aa552c386a73d20ee130d",
+   "bytes": 418515893
+  },
+  {
+   "name": "travel_time_to_cities_8.tif",
+   "md5": "05301b86a66f64e3712557951433235c",
+   "bytes": 415391003
+  },
+  {
+   "name": "travel_time_to_cities_9.tif",
+   "md5": "ad1b4943d999de38e1466ae224373648",
+   "bytes": 412028412
+  },
+  {
+   "name": "travel_time_to_cities_10.tif",
+   "md5": "05f58022f40a223db77e3538953999e5",
+   "bytes": 411514170
+  },
+  {
+   "name": "travel_time_to_cities_11.tif",
+   "md5": "befbda61c99903bd831147414fba7378",
+   "bytes": 420516009
+  },
+  {
+   "name": "travel_time_to_cities_12.tif",
+   "md5": "33512c3f14698354e99832f6959fbf54",
+   "bytes": 402462348
+  },
+  {
+   "name": "travel_time_to_cities_metadata.pdf",
+   "md5": "13a85aa253673e0966f74a90104e95c2",
+   "bytes": 70010
+  },
+  {
+   "name": "travel_time_to_ports_1.tif",
+   "md5": "61fbc9b349b6ab42668d8665385f1af1",
+   "bytes": 453863053
+  },
+  {
+   "name": "travel_time_to_ports_2.tif",
+   "md5": "4bb1f099483085381973f9d369ee51ef",
+   "bytes": 450488010
+  },
+  {
+   "name": "travel_time_to_ports_3.tif",
+   "md5": "ff7898db17a2553d61480a0df5cbb602",
+   "bytes": 446652960
+  },
+  {
+   "name": "travel_time_to_ports_4.tif",
+   "md5": "414e1e260fd4d0fede2c1f8c60d87798",
+   "bytes": 445276909
+  },
+  {
+   "name": "travel_time_to_ports_5.tif",
+   "md5": "e5b06432241fe74e2cddeea7822b2877",
+   "bytes": 442467991
+  },
+  {
+   "name": "travel_time_to_ports_metadata.pdf",
+   "md5": "b452c5afd9ff8db762e35ebff66dd7df",
+   "bytes": 99160
+  },
+  {
+   "name": "global_access_map_Rscript.zip",
+   "md5": "46ef4135496defb4ad0a490418c7c1ff",
+   "bytes": 2450
+  },
+  {
+   "name": "validation.zip",
+   "md5": "8a0924593dfc116d909a79c6da646d9f",
+   "bytes": 6758584
+  },
+  {
+   "name": "zones.zip",
+   "md5": "1dd7e64defdeaca33ad4bdd4edf0e772",
+   "bytes": 197222
+  },
+  {
+   "name": "README.txt",
+   "md5": "49b5c76ddce126730e7bb23447fbaa24",
+   "bytes": 7918
+  },
+  {
+   "name": "Metadata_Travel time to the cities and the ports in the year 2015__V02.csv",
+   "md5": "c3e69a2cb9449edbe421f83c85886a86",
+   "bytes": 5518
+  }
+ ]
+}
