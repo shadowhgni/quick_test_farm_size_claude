@@ -14,8 +14,8 @@ Date: 2026-09-25. Code: `roads_merge/` (this folder). Original script under test
 Default settings: buffer 20 m, max overlap 0.5, min ML length 50 m, 100 m raster,
 projection EPSG:32631 (UTM 31N).
 
-The run was done on a GitHub Actions `ubuntu-latest` runner (runs #1 and #2 in the
-`quick_test_farm_size_claude` repo), because downloads were not permitted in the
+The run was done on a GitHub Actions `ubuntu-latest` runner (runs #1–#3 in the
+`quick_test_farm_size_claude` repo; figures below are from run #3), because downloads were not permitted in the
 development container. Raw outputs: `results_benin_togo/`.
 
 ## 2. Results
@@ -28,8 +28,8 @@ development container. Raw outputs: `results_benin_togo/`.
 | ML segments compared | 260,374 (after dropping < 50 m) |
 | Keep/drop decisions that differ from v00 | 865 segments (0.33%), 96 km of 68,886 km |
 | Mean overlap fraction, new vs v00 | 0.848 vs 0.848 |
-| Conflation time | 40 s (new) vs 92 s (v00), ~2.3x faster |
-| Other steps | read inputs 23 s; new-road flag 81 s; write gpkg + tif 8 s |
+| Conflation time | 40 s (new) vs 96 s (v00), ~2.4x faster |
+| Other steps | read inputs 25 s; new + gone road flags 154 s; write gpkg + tif 9 s |
 
 The differences come from sampling every 10 m instead of exact polygon intersection;
 they concern short segments near the 50% threshold.
@@ -40,7 +40,9 @@ they concern short segments near the 50% threshold.
 |---|---:|---:|
 | OSM 2020-01-01 | 67,827 | 37,146 |
 | OSM 2026-09-01 | 72,071 | 52,753 |
+| Net OSM change | +4,244 | +15,608 |
 | OSM segments flagged new since 2020 | 9,861 | 14,501 |
+| OSM 2020 segments with no 2026 counterpart ("gone") | 3,784 | 1,189 |
 | Microsoft ML total | 42,694 | 26,192 |
 | Microsoft ML kept (not in OSM 2026) | 8,194 (19%) | 3,020 (12%) |
 | Merged network | 80,265 | 55,774 |
@@ -68,8 +70,7 @@ and by −32% to +56% in Togo, so Togo is more sensitive to these settings.
 ### 2.4 Visual checks
 
 `results_benin_togo/qa_*.png`: 10 × 10 km windows around Parakou, Kandi, Kara and
-Dapaong. The PNGs from run #2 are titled "Kandi_rural" and "Dapaong_rural", but both
-windows are centred on the towns; the labels are fixed in the code and the files renamed.
+Dapaong (each window is centred on the town).
 
 - ML roads flagged as duplicates sit on OSM roads, as intended.
 - The kept ML roads are mostly short street segments inside towns, not long rural links.
@@ -78,12 +79,19 @@ windows are centred on the towns; the labels are fixed in the code and the files
 
 ## 3. Findings to act on
 
-1. **The "new since 2020" flag over-counts in Benin.** Net OSM growth is 4,244 km, but
-   9,861 km is flagged new. So many 2020 roads were deleted, or re-drawn more than
-   20 m away (e.g. re-traced on better imagery), and the re-drawn ones count as new.
-   From these outputs I cannot say which. The driver now also reports
-   `osm_gone_by_t2_km` (2020 roads with no 2026 counterpart); run it again to
-   measure this. In Togo, flagged (14,501 km) ≈ net growth (15,608 km).
+1. **The "new since 2020" flag over-counts in Benin, much less in Togo.**
+   In Benin, 9,861 km is flagged new but net growth is only 4,244 km, and 3,784 km of
+   2020 roads have no 2026 counterpart within 20 m. Those "gone" roads were either
+   deleted or re-drawn elsewhere (e.g. re-traced on better imagery); if re-drawn, their
+   new position is counted as new. So up to ~3,800 km (38%) of Benin's "new" roads may
+   be moved roads rather than additions. The outputs cannot separate deleted from
+   moved; a visual check of a sample of "gone" segments in QGIS would.
+   In Togo, only 1,189 km is gone (8% of the 14,501 km flagged new).
+   The accounting does not close exactly (new − gone ≠ net change: 6,078 vs 4,244 km in
+   Benin, 13,313 vs 15,608 km in Togo) because the flag is all-or-nothing per segment:
+   a way that was extended or partly re-drawn counts as entirely new or entirely
+   existing depending on which side of the 50% threshold it falls. Measuring only the
+   part of each segment outside the buffer would fix this.
 2. **New in OSM does not mean newly built.** The pattern (tracks and residential, very
    few primary roads, big jumps in one country) fits mapping campaigns better than
    construction. This is an inference; confirming it needs imagery for a sample of the
