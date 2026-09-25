@@ -1,10 +1,10 @@
-name: Global accessibility - regional end-to-end test (Python 3.13)
+name: Global accessibility v2 - regional end-to-end test (Python 3.13)
 
 on:
   push:
     branches: ['claude/**']
     paths:
-      - 'global_accessibility/global_accessibility.py'
+      - 'global_accessibility/global_accessibility_v2.py'
       - '.github/workflows/global_test.yml'
   workflow_dispatch:
 
@@ -30,7 +30,7 @@ jobs:
       - name: Run (bbox Benin/Togo and neighbours; script installs its own dependencies)
         run: |
           rm -rf global_accessibility/test_results    # no leftovers from earlier runs
-          python global_accessibility/global_accessibility.py \
+          python global_accessibility/global_accessibility_v2.py \
             --bbox -1 5.5 4.5 13.5 --start 2015 --end 2026 --routing-cities 12 \
             --ml-files Western_Africa.zip \
             --nelson-layers cities_11 cities_12 ports_5 \

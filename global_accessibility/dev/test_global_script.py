@@ -1,4 +1,4 @@
-"""Offline tests of global_accessibility.py on synthetic data.
+"""Offline tests of global_accessibility_v2.py on synthetic data.
 
 Run:  python -m pytest global_accessibility/dev -q
 """
@@ -21,7 +21,7 @@ from shapely.geometry import LineString, Polygon, box
 os.environ.setdefault("GA_WORK_DIR", tempfile.mkdtemp(prefix="ga_test_"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import global_accessibility as ga  # noqa: E402
+import global_accessibility_v2 as ga  # noqa: E402
 import geodijkstra as gd  # noqa: E402
 
 D = 1 / 120
@@ -344,6 +344,24 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     for f in ["config.json", "speed_table.csv", "corruption_2026.csv", "checkpoints_2026.csv",
               "software_versions.json", "destinations.csv"]:
         assert (res / "methods" / f).exists(), f
+    # --- sensitivity to K and to the border delay
+    monkeypatch.setattr(ga, "SENS_LAYERS", ["cities_11"])
+    ga.stage_sensitivity(ctx)
+    sc = pd.read_csv(res / "sensitivity" / "scenarios.csv")
+    assert len(sc) == 7 and sc.baseline.sum() == 1                      # one-at-a-time design
+    dom = pd.read_csv(res / "sensitivity" / "sensitivity_domain.csv")
+    base = dom[dom.baseline].iloc[0]
+    tab = pd.read_csv(res / "tables" / "pop_weighted_traveltime_global.csv")
+    main15 = tab[(tab.year == 2015) & (tab.layer == "cities_11")].pop_weighted_mean_min.item()
+    assert base.mean_min_2015 == pytest.approx(main15, rel=1e-9)         # baseline = main run
+    byk = dom[dom.delay_min == 15].sort_values("K")
+    assert byk.mean_min_2015.is_monotonic_increasing and byk.mean_min_2015.iloc[-1] > byk.mean_min_2015.iloc[0]
+    byd = dom[dom.K == 0.1].sort_values("delay_min")
+    assert byd.mean_min_2026.is_monotonic_increasing and byd.mean_min_2026.iloc[-1] > byd.mean_min_2026.iloc[0]
+    assert (dom[dom.baseline].filter(like="_vs_baseline").abs() < 1e-9).all(axis=None)
+    assert (res / "sensitivity" / "sensitivity.png").exists()
+    assert (res / "sensitivity" / "sensitivity_country.csv").exists()
+    assert not list((work / "sens").glob("*.npy"))                       # scenario grids removed
 
 
 def test_block_mode_and_water():

@@ -1,4 +1,8 @@
-# global_accessibility.py — travel time to cities and ports, two reference years
+# global_accessibility_v2.py — travel time to cities and ports, two reference years
+
+**Use `global_accessibility_v2.py`** (version 2.0). It is version 1 (`global_accessibility.py`, kept
+for reference) plus a sensitivity analysis of the governance factor K and of the African
+border-crossing delay (stage `sensitivity`, see below).
 
 One stand-alone Python file (Python ≥ 3.11; written for 3.13). It installs the Python
 packages it is missing, downloads all inputs, and produces for a start and an end year:
@@ -17,13 +21,13 @@ Edit the configuration block at the top of the script (years, folders, speeds,
 penalties), then, in a terminal or a Jupyter cell:
 
 ```bash
-python global_accessibility.py --dry-run     # grid size, workers, memory, OSM downloads
-python global_accessibility.py               # full run (resumable: rerun after a crash)
+python global_accessibility_v2.py --dry-run     # grid size, workers, memory, OSM downloads
+python global_accessibility_v2.py               # full run (resumable: rerun after a crash)
 ```
 
 Useful options: `--start 2015 --end 2026`, `--bbox W S E N` (regional run),
 `--stages download,grids` (run part of the chain), `--max-workers N`, `--no-cleanup`,
-`--no-ml`, `--no-routing`, `--routing-cities N`, `--work-dir`, `--results-dir`.
+`--no-ml`, `--no-routing`, `--no-sensitivity`, `--sens-design oat|full`, `--routing-cities N`, `--work-dir`, `--results-dir`.
 
 No container tools are needed. Missing packages are installed with
 `pip install --target WORK_DIR/pylib`, so no administrator rights are required.
@@ -40,6 +44,7 @@ No container tools are needed. Missing packages are installed with
 | `outputs` | COGs (1 km, 10 km), global PNGs, population-weighted tables, methods folder |
 | `compare` | against Nelson et al. (2019), layer by layer; all cells and tiles where OSM 2015 was complete |
 | `validate` | end year against OSRM (car, free flow) for sampled origin–city pairs |
+| `sensitivity` | K ∈ {0, 0.05, 0.10, 0.20} and border delay ∈ {0, 15, 30, 60} min, one at a time around the baseline (K = 0.10, 15 min; 7 scenarios) or all 16 combinations (`--sens-design full`); headline layers (cities 11, ports 5), both years; population-weighted results by country, continent and domain |
 | `cleanup` | deletes the work folder (keeps the installed packages) |
 
 ## Parallelism and memory
@@ -117,6 +122,7 @@ png/       one global map per layer and year, friction, and change maps
 tables/    population-weighted travel time by country / continent / globe
 nelson_comparison/   per-layer statistics, per-continent means, difference maps, scatter plots
 routing_validation/  origin–city pairs, summary by continent, scatter plot, attribution
+sensitivity/         scenarios, results by domain / continent / country (vs baseline), figure
 methods/   config.json, speed_table.csv, landcover_speed.csv, corruption_<year>.csv,
            checkpoints_<year>.csv, african_borders.gpkg, settlements_<epoch>.csv,
            destinations.csv, road_km_by_extract.csv, osm_plan.json, inputs_manifest.csv,
