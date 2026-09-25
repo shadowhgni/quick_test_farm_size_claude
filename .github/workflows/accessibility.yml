@@ -1,0 +1,106 @@
+name: Accessibility update (Benin + Togo)
+
+# Runs the whole chain on real data and commits the small results back:
+#   roads merge -> friction 2020/2026 -> travel time -> per-town results
+on:
+  push:
+    branches: [main, 'claude/**']
+    paths:
+      - 'accessibility_update/scripts/**'
+      - 'accessibility_update/config/**'
+      - '.github/workflows/accessibility.yml'
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    permissions:
+      contents: write   # commit results back
+    defaults:
+      run:
+        working-directory: accessibility_update
+    env:
+      # fewer HTTP requests when GDAL reads the WorldCover / Copernicus COGs remotely
+      GDAL_DISABLE_READDIR_ON_OPEN: EMPTY_DIR
+      CPL_VSIL_CURL_ALLOWED_EXTENSIONS: .tif
+      GDAL_HTTP_MAX_RETRY: '5'
+      GDAL_HTTP_RETRY_DELAY: '2'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'accessibility_update/scripts/requirements.txt'
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Unit tests (synthetic data)
+        run: python -m pytest scripts/tests -q
+
+      - name: Cache downloads
+        uses: actions/cache@v4
+        with:
+          path: accessibility_update/data
+          key: access-data-osm200101-260901-ms20250428-ghsl2023a-wpi-gb-ben-adm2
+
+      - name: Download inputs
+        working-directory: accessibility_update
+        run: |
+          mkdir -p data && cd data
+          get() { [ -s "$2" ] || curl -fsSL --retry 3 -o "$2" "$1"; }
+          for c in benin togo; do
+            for t in 200101 260901; do
+              get "https://download.geofabrik.de/africa/$c-$t.osm.pbf" "$c-$t.osm.pbf"
+            done
+            get "https://download.geofabrik.de/africa/$c.poly" "$c.poly"
+          done
+          get "https://usaminedroads.z19.web.core.windows.net/drops/2025.04.28/Western_Africa.zip" Western_Africa.zip
+          G=https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL
+          for y in 2020 2025; do
+            f=GHS_SMOD_E${y}_GLOBE_R2023A_54009_1000_V2_0.zip
+            get "$G/GHS_SMOD_GLOBE_R2023A/GHS_SMOD_E${y}_GLOBE_R2023A_54009_1000/V2-0/$f" "$f"
+            f=GHS_POP_E${y}_GLOBE_R2023A_54009_1000_V1_0.zip
+            get "$G/GHS_POP_GLOBE_R2023A/GHS_POP_E${y}_GLOBE_R2023A_54009_1000/V1-0/$f" "$f"
+          done
+          get "https://msi.nga.mil/api/publications/download?type=view&key=16920959/SFH00000/UpdatedPub150.csv" UpdatedPub150.csv
+          get "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/BEN/ADM2/geoBoundaries-BEN-ADM2.geojson" geoBoundaries-BEN-ADM2.geojson
+          ls -lh
+
+      - name: 1. Roads merge
+        run: python scripts/run_roads_benin_togo.py 2>&1 | tee results/roads/stdout.txt
+
+      - name: 2. Friction maps
+        run: python scripts/run_friction_benin_togo.py 2>&1 | tee results/friction/stdout.txt
+
+      - name: 3. Travel time
+        run: python scripts/run_traveltime_benin_togo.py 2>&1 | tee results/traveltime/stdout.txt
+
+      - name: 4. Towns
+        run: |
+          mkdir -p results/towns
+          python scripts/run_towns_benin.py 2>&1 | tee results/towns/stdout.txt
+
+      - name: Upload large outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-benin-togo-run${{ github.run_number }}
+          path: |
+            accessibility_update/output/
+            accessibility_update/results/
+          retention-days: 30
+
+      - name: Commit results back
+        if: always() && github.event_name != 'pull_request'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add results/
+          git diff --cached --quiet && exit 0
+          git commit -m "ci: accessibility results Benin+Togo run #${{ github.run_number }} [skip ci]"
+          for i in 1 2 3; do git pull --rebase origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && break; sleep 5; done
