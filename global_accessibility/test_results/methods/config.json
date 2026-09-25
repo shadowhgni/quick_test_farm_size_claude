@@ -11,7 +11,7 @@
  ],
  "RES_ARCSEC": 30,
  "LIGHT_FACTOR": 10,
- "CLEANUP": true,
+ "CLEANUP": false,
  "KEEP_DOWNLOADS": false,
  "SPEED_TABLE": {
   "motorway": [

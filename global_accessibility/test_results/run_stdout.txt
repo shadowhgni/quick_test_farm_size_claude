@@ -1,85 +1,105 @@
 [bootstrap] installing into /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/ga_work/pylib: pandas>=2.0 geopandas>=1.0 pyogrio>=0.9 shapely>=2.0 rasterio>=1.4 pyproj>=3.6 numba>=0.60 psutil>=5.9 matplotlib>=3.8 requests>=2.28 pyarrow>=14
-[2026-09-25 09:51:16] global_accessibility v2.0.0: years [2015, 2026], GHSL epochs {2015: 2015, 2026: 2025}, grid {'bbox': [-1.0, 5.5, 4.5, 13.5], 'res_deg': 0.008333333333333333, 'width': 660, 'height': 960, 'wrap': False}
-[2026-09-25 09:51:16] cpus 2, available memory 7 GB
-[2026-09-25 09:51:16] --- stage download ...
-[2026-09-25 09:51:18] OSM 2015: 1 extracts, 0.7 GB
-[2026-09-25 09:51:19] OSM 2026: 6 extracts, 1.0 GB
-[2026-09-25 09:51:19] Nelson et al. 2019: figshare version 4, doi 10.6084/m9.figshare.7638134.v4
-[2026-09-25 09:51:19] downloads: 23 files (OSM 1.8 GB + others)
-[2026-09-25 09:53:26] WorldCover 2021: 2651 tiles listed
-[2026-09-25 09:53:26] --- stage download: 2.2 min
-[2026-09-25 09:53:26] --- stage grids ...
-[2026-09-25 09:53:26] --- Weiss et al. 2015 friction surface ...
-[2026-09-25 09:53:26] Weiss et al. 2015 friction: 4 tiles on the grid
-[2026-09-25 09:53:26] --- Weiss et al. 2015 friction surface: 0.0 min
-[2026-09-25 09:53:26] --- land cover (WorldCover 2021) ...
-[2026-09-25 09:53:27] land cover: 12/12 WorldCover tiles read
-[2026-09-25 09:53:27] --- land cover (WorldCover 2021): 0.0 min
-[2026-09-25 09:53:27] --- slope (Copernicus GLO-90) ...
-[2026-09-25 09:53:31] slope: 52/52 Copernicus GLO-90 tiles read
-[2026-09-25 09:53:31] --- slope (Copernicus GLO-90): 0.1 min
-[2026-09-25 09:53:31] --- countries and African borders ...
-[2026-09-25 09:53:31] countries: 257; African land-border segments: 111
-[2026-09-25 09:53:31] --- countries and African borders: 0.0 min
-[2026-09-25 09:53:31] --- settlements GHSL 2015 ...
-[2026-09-25 09:53:33] GHSL 2015: 1219 settlements, 66 M people in settlements, 0.07 bn people on the grid
-[2026-09-25 09:53:33] --- settlements GHSL 2015: 0.0 min
-[2026-09-25 09:53:33] --- settlements GHSL 2025 ...
-[2026-09-25 09:53:34] GHSL 2025: 1369 settlements, 83 M people in settlements, 0.08 bn people on the grid
-[2026-09-25 09:53:34] --- settlements GHSL 2025: 0.0 min
-[2026-09-25 09:53:34] --- stage grids: 0.1 min
-[2026-09-25 09:53:34] --- stage roads ...
-[2026-09-25 09:53:34] roads 2015: 1 tasks, up to 1 workers, memory budget 5 GB, largest task ~6.5 GB
-[2026-09-25 09:54:09] roads 2026: 6 tasks, up to 1 workers, memory budget 3 GB, largest task ~6.1 GB
-[2026-09-25 09:55:13] --- Microsoft ML roads ...
-[2026-09-25 09:55:13] Microsoft ML roads: 1 workers
-[2026-09-25 09:57:05] Microsoft ML roads: 1,084,450 segments, 220,227 km inside the grid
-[2026-09-25 09:57:05] --- Microsoft ML roads: 1.9 min
-[2026-09-25 09:57:05] --- stage roads: 3.5 min
-[2026-09-25 09:57:05] --- stage friction ...
-[2026-09-25 09:57:05] friction 2015: {'road_cells': 146119, 'ml_cells': 0, 'passable_cells': 577211, 'osm_road_cells_dropped_on_water': 35, 'osm_road_cells_kept_as_crossings': 9, 'ml_road_cells_dropped_on_water': 0, 'weiss2015_cells_added': 79233, 'checkpoints': 65}
-[2026-09-25 09:57:05] OSM 2015 completeness: 0 of 12 assessed 2 deg tiles >= 80%
-[2026-09-25 09:57:05] friction 2026: {'road_cells': 252709, 'ml_cells': 29882, 'passable_cells': 577709, 'osm_road_cells_dropped_on_water': 111, 'osm_road_cells_kept_as_crossings': 12, 'ml_road_cells_dropped_on_water': 29, 'weiss2015_cells_added': 0, 'checkpoints': 87}
-[2026-09-25 09:57:05] --- stage friction: 0.0 min
-[2026-09-25 09:57:05] --- stage traveltime ...
-[2026-09-25 09:57:09] travel time: 34 tasks, up to 1 workers, memory budget 3 GB, largest task ~0.3 GB
-[2026-09-25 09:57:16] --- stage traveltime: 0.2 min
-[2026-09-25 09:57:16] --- stage outputs ...
-[2026-09-25 09:57:16] --- COG travel time 2015 1km ...
-[2026-09-25 09:57:17] --- COG travel time 2015 1km: 0.0 min
-[2026-09-25 09:57:17] --- COG travel time 2026 1km ...
-[2026-09-25 09:57:19] --- COG travel time 2026 1km: 0.0 min
-[2026-09-25 09:57:19] --- COG change 1km ...
-[2026-09-25 09:57:20] --- COG change 1km: 0.0 min
-[2026-09-25 09:57:20] --- COG travel time 2015 10km ...
-[2026-09-25 09:57:20] --- COG travel time 2015 10km: 0.0 min
-[2026-09-25 09:57:21] --- COG travel time 2026 10km ...
-[2026-09-25 09:57:21] --- COG travel time 2026 10km: 0.0 min
-[2026-09-25 09:57:21] --- COG change 10km ...
-[2026-09-25 09:57:21] --- COG change 10km: 0.0 min
-[2026-09-25 09:57:21] --- PNG maps ...
-[2026-09-25 09:57:33] --- PNG maps: 0.2 min
-[2026-09-25 09:57:33] --- summary tables ...
-[2026-09-25 09:57:38] --- summary tables: 0.1 min
-[2026-09-25 09:57:38] --- stage outputs: 0.4 min
-[2026-09-25 09:57:38] --- stage compare ...
-[2026-09-25 09:57:39] Nelson comparison: 12 rows
-[2026-09-25 09:57:39] --- stage compare: 0.0 min
-[2026-09-25 09:57:39] --- stage validate ...
-[2026-09-25 09:57:39] routing validation: 12 cities, up to 10 origins each, ~0 min at 1 request/s
-[2026-09-25 09:57:53] routing validation: 105 valid pairs of 120; median ratio ours/OSRM 0.98
-[2026-09-25 09:57:53] --- stage validate: 0.2 min
-[2026-09-25 09:57:53] --- stage sensitivity ...
-[2026-09-25 09:57:53] sensitivity: 7 scenarios (oat) x 2 years x 2 layers; baseline K=0.1, delay=15.0 min
-[2026-09-25 09:57:53] sensitivity travel time: 24 tasks, up to 1 workers, memory budget 3 GB, largest task ~0.3 GB
-[2026-09-25 09:58:01] sensitivity: 7 scenarios summarised in /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/global_accessibility/test_results/sensitivity
-[2026-09-25 09:58:01] --- stage sensitivity: 0.1 min
-[2026-09-25 09:58:01] --- stage cleanup ...
-[2026-09-25 09:58:02] intermediate files removed from /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/ga_work
-[2026-09-25 09:58:02] --- stage cleanup: 0.0 min
-[2026-09-25 09:58:02] finished
+[2026-09-25 10:19:04] global_accessibility v2.0.0: years [2015, 2026], GHSL epochs {2015: 2015, 2026: 2025}, grid {'bbox': [-1.0, 5.5, 4.5, 13.5], 'res_deg': 0.008333333333333333, 'width': 660, 'height': 960, 'wrap': False}
+[2026-09-25 10:19:04] cpus 2, available memory 7 GB
+[2026-09-25 10:19:04] --- stage download ...
+[2026-09-25 10:19:07] OSM 2015: 1 extracts, 0.7 GB
+[2026-09-25 10:19:07] OSM 2026: 6 extracts, 1.0 GB
+[2026-09-25 10:19:07] Nelson et al. 2019: figshare version 4, doi 10.6084/m9.figshare.7638134.v4
+[2026-09-25 10:19:07] downloads: 23 files (OSM 1.8 GB + others)
+[2026-09-25 10:20:34] WorldCover 2021: 2651 tiles listed
+[2026-09-25 10:20:34] --- stage download: 1.5 min
+[2026-09-25 10:20:34] --- stage grids ...
+[2026-09-25 10:20:34] --- Weiss et al. 2015 friction surface ...
+[2026-09-25 10:20:34] Weiss et al. 2015 friction: 4 tiles on the grid
+[2026-09-25 10:20:34] --- Weiss et al. 2015 friction surface: 0.0 min
+[2026-09-25 10:20:34] --- land cover (WorldCover 2021) ...
+[2026-09-25 10:20:36] land cover: 12/12 WorldCover tiles read
+[2026-09-25 10:20:36] --- land cover (WorldCover 2021): 0.0 min
+[2026-09-25 10:20:36] --- slope (Copernicus GLO-90) ...
+[2026-09-25 10:20:39] slope: 52/52 Copernicus GLO-90 tiles read
+[2026-09-25 10:20:39] --- slope (Copernicus GLO-90): 0.1 min
+[2026-09-25 10:20:39] --- countries and African borders ...
+[2026-09-25 10:20:40] countries: 257; African land-border segments: 111
+[2026-09-25 10:20:40] --- countries and African borders: 0.0 min
+[2026-09-25 10:20:40] --- settlements GHSL 2015 ...
+[2026-09-25 10:20:41] GHSL 2015: 1219 settlements, 66 M people in settlements, 0.07 bn people on the grid
+[2026-09-25 10:20:41] --- settlements GHSL 2015: 0.0 min
+[2026-09-25 10:20:41] --- settlements GHSL 2025 ...
+[2026-09-25 10:20:42] GHSL 2025: 1369 settlements, 83 M people in settlements, 0.08 bn people on the grid
+[2026-09-25 10:20:42] --- settlements GHSL 2025: 0.0 min
+[2026-09-25 10:20:42] --- stage grids: 0.1 min
+[2026-09-25 10:20:42] --- stage roads ...
+[2026-09-25 10:20:42] roads 2015: 1 tasks, up to 1 workers, memory budget 5 GB, largest task ~6.5 GB
+[2026-09-25 10:21:10] roads 2026: 6 tasks, up to 1 workers, memory budget 3 GB, largest task ~6.1 GB
+[2026-09-25 10:22:02] --- Microsoft ML roads ...
+[2026-09-25 10:22:02] Microsoft ML roads: 1 workers
+[2026-09-25 10:23:08] Microsoft ML roads: 1,084,450 segments, 220,227 km inside the grid
+[2026-09-25 10:23:08] --- Microsoft ML roads: 1.1 min
+[2026-09-25 10:23:08] --- stage roads: 2.4 min
+[2026-09-25 10:23:08] --- stage friction ...
+[2026-09-25 10:23:09] friction 2015: {'road_cells': 146119, 'ml_cells': 0, 'passable_cells': 577211, 'osm_road_cells_dropped_on_water': 35, 'osm_road_cells_kept_as_crossings': 9, 'ml_road_cells_dropped_on_water': 0, 'weiss2015_cells_added': 79233, 'checkpoints': 65}
+[2026-09-25 10:23:09] OSM 2015 completeness: 0 of 12 assessed 2 deg tiles >= 80%
+[2026-09-25 10:23:09] friction 2026: {'road_cells': 252709, 'ml_cells': 29882, 'passable_cells': 577709, 'osm_road_cells_dropped_on_water': 111, 'osm_road_cells_kept_as_crossings': 12, 'ml_road_cells_dropped_on_water': 29, 'weiss2015_cells_added': 0, 'checkpoints': 87}
+[2026-09-25 10:23:09] --- stage friction: 0.0 min
+[2026-09-25 10:23:09] --- stage traveltime ...
+[2026-09-25 10:23:12] travel time: 34 tasks, up to 1 workers, memory budget 4 GB, largest task ~0.3 GB
+[2026-09-25 10:23:20] --- stage traveltime: 0.2 min
+[2026-09-25 10:23:20] --- stage outputs ...
+[2026-09-25 10:23:20] --- COG travel time 2015 1km ...
+[2026-09-25 10:23:21] --- COG travel time 2015 1km: 0.0 min
+[2026-09-25 10:23:21] --- COG travel time 2026 1km ...
+[2026-09-25 10:23:23] --- COG travel time 2026 1km: 0.0 min
+[2026-09-25 10:23:23] --- COG change 1km ...
+[2026-09-25 10:23:24] --- COG change 1km: 0.0 min
+[2026-09-25 10:23:24] --- COG travel time 2015 10km ...
+[2026-09-25 10:23:24] --- COG travel time 2015 10km: 0.0 min
+[2026-09-25 10:23:24] --- COG travel time 2026 10km ...
+[2026-09-25 10:23:24] --- COG travel time 2026 10km: 0.0 min
+[2026-09-25 10:23:24] --- COG change 10km ...
+[2026-09-25 10:23:24] --- COG change 10km: 0.0 min
+[2026-09-25 10:23:24] --- PNG maps ...
+[2026-09-25 10:23:33] --- PNG maps: 0.1 min
+[2026-09-25 10:23:33] --- summary tables ...
+[2026-09-25 10:23:36] --- summary tables: 0.0 min
+[2026-09-25 10:23:36] --- stage outputs: 0.3 min
+[2026-09-25 10:23:36] --- stage compare ...
+[2026-09-25 10:23:37] Nelson comparison: 12 rows
+[2026-09-25 10:23:37] --- stage compare: 0.0 min
+[2026-09-25 10:23:37] --- stage validate ...
+[2026-09-25 10:23:37] routing validation: 12 cities, up to 10 origins each, ~0 min at 1 request/s
+[2026-09-25 10:23:50] routing validation: 105 valid pairs of 120; median ratio ours/OSRM 0.98
+[2026-09-25 10:23:50] --- stage validate: 0.2 min
+[2026-09-25 10:23:50] --- stage sensitivity ...
+[2026-09-25 10:23:50] sensitivity: 7 scenarios (oat) x 2 years x 2 layers; baseline K=0.1, delay=15.0 min
+[2026-09-25 10:23:51] sensitivity travel time: 24 tasks, up to 1 workers, memory budget 4 GB, largest task ~0.3 GB
+[2026-09-25 10:23:59] sensitivity: 7 scenarios summarised in /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/global_accessibility/test_results/sensitivity
+[2026-09-25 10:23:59] --- stage sensitivity: 0.1 min
+[2026-09-25 10:23:59] --- stage cleanup ...
+[2026-09-25 10:23:59] cleanup skipped (CLEANUP = False)
+[2026-09-25 10:23:59] --- stage cleanup: 0.0 min
+[2026-09-25 10:23:59] finished
+    write_methods(ctx)
+    ~~~~~~~~~~~~~^^^^^
+  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/global_accessibility/global_accessibility_v2.py", line 1811, in write_methods
+    man = pd.concat([pd.read_csv(prev), man]).drop_duplicates(["url", "file"], keep="last")
+                     ~~~~~~~~~~~^^^^^^
+  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/ga_work/pylib/pandas/io/parsers/readers.py", line 872, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/ga_work/pylib/pandas/io/parsers/readers.py", line 300, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/ga_work/pylib/pandas/io/parsers/readers.py", line 1643, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/ga_work/pylib/pandas/io/parsers/readers.py", line 1925, in _make_engine
+    return mapping[engine](f, **self.options)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/ga_work/pylib/pandas/io/parsers/c_parser_wrapper.py", line 95, in __init__
+    self._reader = parsers.TextReader(src, **kwds)
+                   ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "pandas/_libs/parsers.pyx", line 575, in pandas._libs.parsers.TextReader.__cinit__
+pandas.errors.EmptyDataError: No columns to parse from file
   /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/ga_work/pylib/rasterio/windows.py:361: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
     return Affine.translation(
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-21 passed, 6086 warnings in 39.62s
+21 passed, 6086 warnings in 31.04s
