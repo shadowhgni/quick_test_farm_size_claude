@@ -8,6 +8,7 @@
  "OSM_HISTORY_URL": "https://planet.openstreetmap.org/pbf/full-history/",
  "OSM_HISTORY_FILE": null,
  "OSM_TILE_DEG": 10,
+ "OSM_EXTRACT_BATCH": 16,
  "WORK_DIR": "./ga_work",
  "RESULTS_DIR": "./ga_results",
  "BBOX": [
