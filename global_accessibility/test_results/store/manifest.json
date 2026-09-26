@@ -1,0 +1,802 @@
+{
+ "script": "global_accessibility_v3.py 3.0.0",
+ "years": [
+  2015,
+  2020,
+  2026
+ ],
+ "grid": {
+  "bbox": [
+   -1.0,
+   5.5,
+   4.5,
+   13.5
+  ],
+  "res_deg": 0.008333333333333333,
+  "width": 660,
+  "height": 960,
+  "wrap": false
+ },
+ "crs": "EPSG:4326",
+ "layers": [
+  "cities_1",
+  "cities_2",
+  "cities_3",
+  "cities_4",
+  "cities_5",
+  "cities_6",
+  "cities_7",
+  "cities_8",
+  "cities_9",
+  "cities_10",
+  "cities_11",
+  "cities_12",
+  "ports_1",
+  "ports_2",
+  "ports_3",
+  "ports_4",
+  "ports_5"
+ ],
+ "items": [
+  {
+   "name": "landcover",
+   "year": null,
+   "layer": null,
+   "file": "landcover.tif",
+   "units": "ESA WorldCover 2021 class",
+   "description": "dominant WorldCover 2021 class (mode of 10 m pixels)",
+   "dtype": "uint8",
+   "nodata": null
+  },
+  {
+   "name": "water_pct",
+   "year": null,
+   "layer": null,
+   "file": "water_pct.tif",
+   "units": "percent",
+   "description": "share of open water (WorldCover class 80) in the cell",
+   "dtype": "uint8",
+   "nodata": null
+  },
+  {
+   "name": "tan_slope",
+   "year": null,
+   "layer": null,
+   "file": "tan_slope.tif",
+   "units": "tan(slope)",
+   "description": "mean tangent of the slope (Copernicus GLO-90)",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "offroad_speed",
+   "year": null,
+   "layer": null,
+   "file": "offroad_speed.tif",
+   "units": "km/h",
+   "description": "walking speed off road: land cover speed x Tobler slope factor",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "countries",
+   "year": null,
+   "layer": null,
+   "file": "countries.tif",
+   "units": "country id",
+   "description": "country id; see tables/countries.csv (0 = none)",
+   "dtype": "int16",
+   "nodata": null
+  },
+  {
+   "name": "weiss2015_speed",
+   "year": null,
+   "layer": null,
+   "file": "weiss2015_speed.tif",
+   "units": "km/h",
+   "description": "Weiss et al. (2018) 2015 friction surface as speed",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "ml_roads",
+   "year": null,
+   "layer": null,
+   "file": "ml_roads.tif",
+   "units": "presence",
+   "description": "Microsoft ML road detections (1 = present)",
+   "dtype": "uint8",
+   "nodata": null
+  },
+  {
+   "name": "population",
+   "year": 2015,
+   "layer": null,
+   "file": "population_2015.tif",
+   "units": "persons",
+   "description": "GHS-POP R2023A epoch 2015",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "settlement_id",
+   "year": 2015,
+   "layer": null,
+   "file": "settlement_id_2015.tif",
+   "units": "id",
+   "description": "GHSL urban cluster id, epoch 2015; see tables/settlements_2015.csv (0 = none)",
+   "dtype": "int32",
+   "nodata": null
+  },
+  {
+   "name": "population",
+   "year": 2020,
+   "layer": null,
+   "file": "population_2020.tif",
+   "units": "persons",
+   "description": "GHS-POP R2023A epoch 2020",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "settlement_id",
+   "year": 2020,
+   "layer": null,
+   "file": "settlement_id_2020.tif",
+   "units": "id",
+   "description": "GHSL urban cluster id, epoch 2020; see tables/settlements_2020.csv (0 = none)",
+   "dtype": "int32",
+   "nodata": null
+  },
+  {
+   "name": "population",
+   "year": 2025,
+   "layer": null,
+   "file": "population_2025.tif",
+   "units": "persons",
+   "description": "GHS-POP R2023A epoch 2025",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "settlement_id",
+   "year": 2025,
+   "layer": null,
+   "file": "settlement_id_2025.tif",
+   "units": "id",
+   "description": "GHSL urban cluster id, epoch 2025; see tables/settlements_2025.csv (0 = none)",
+   "dtype": "int32",
+   "nodata": null
+  },
+  {
+   "name": "road_speed_osm",
+   "year": 2015,
+   "layer": null,
+   "file": "road_speed_osm_2015.tif",
+   "units": "km/h",
+   "description": "fastest OSM road in the cell on 1 January 2015 (before water rule and completion)",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "road_speed",
+   "year": 2015,
+   "layer": null,
+   "file": "road_speed_2015.tif",
+   "units": "km/h",
+   "description": "road speed used for 2015: after the water rule, the Weiss completion and ML roads, before the governance factor",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "road_crossing",
+   "year": 2015,
+   "layer": null,
+   "file": "road_crossing_2015.tif",
+   "units": "flag",
+   "description": "OSM bridge, causeway, ford or embankment",
+   "dtype": "uint8",
+   "nodata": null
+  },
+  {
+   "name": "friction",
+   "year": 2015,
+   "layer": null,
+   "file": "friction_2015.tif",
+   "units": "minutes per metre",
+   "description": "friction 2015, including the governance factor and border delays",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_1",
+   "file": "traveltime/2015/cities_1.tif",
+   "units": "minutes",
+   "description": "cities_1: population 5,000,000 to <50,000,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_2",
+   "file": "traveltime/2015/cities_2.tif",
+   "units": "minutes",
+   "description": "cities_2: population 1,000,000 to <5,000,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_3",
+   "file": "traveltime/2015/cities_3.tif",
+   "units": "minutes",
+   "description": "cities_3: population 500,000 to <1,000,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_4",
+   "file": "traveltime/2015/cities_4.tif",
+   "units": "minutes",
+   "description": "cities_4: population 200,000 to <500,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_5",
+   "file": "traveltime/2015/cities_5.tif",
+   "units": "minutes",
+   "description": "cities_5: population 100,000 to <200,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_6",
+   "file": "traveltime/2015/cities_6.tif",
+   "units": "minutes",
+   "description": "cities_6: population 50,000 to <100,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_7",
+   "file": "traveltime/2015/cities_7.tif",
+   "units": "minutes",
+   "description": "cities_7: population 20,000 to <50,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_8",
+   "file": "traveltime/2015/cities_8.tif",
+   "units": "minutes",
+   "description": "cities_8: population 10,000 to <20,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_9",
+   "file": "traveltime/2015/cities_9.tif",
+   "units": "minutes",
+   "description": "cities_9: population 5,000 to <10,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_10",
+   "file": "traveltime/2015/cities_10.tif",
+   "units": "minutes",
+   "description": "cities_10: population 20,000 to <110,000,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_11",
+   "file": "traveltime/2015/cities_11.tif",
+   "units": "minutes",
+   "description": "cities_11: population 50,000 to <50,000,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "cities_12",
+   "file": "traveltime/2015/cities_12.tif",
+   "units": "minutes",
+   "description": "cities_12: population 5,000 to <110,000,000 (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "ports_1",
+   "file": "traveltime/2015/ports_1.tif",
+   "units": "minutes",
+   "description": "ports_1: Large (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "ports_2",
+   "file": "traveltime/2015/ports_2.tif",
+   "units": "minutes",
+   "description": "ports_2: Medium (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "ports_3",
+   "file": "traveltime/2015/ports_3.tif",
+   "units": "minutes",
+   "description": "ports_3: Small (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "ports_4",
+   "file": "traveltime/2015/ports_4.tif",
+   "units": "minutes",
+   "description": "ports_4: Very Small (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2015,
+   "layer": "ports_5",
+   "file": "traveltime/2015/ports_5.tif",
+   "units": "minutes",
+   "description": "ports_5: any (2015), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "road_speed_osm",
+   "year": 2020,
+   "layer": null,
+   "file": "road_speed_osm_2020.tif",
+   "units": "km/h",
+   "description": "fastest OSM road in the cell on 1 January 2020 (before water rule and completion)",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "road_speed",
+   "year": 2020,
+   "layer": null,
+   "file": "road_speed_2020.tif",
+   "units": "km/h",
+   "description": "road speed used for 2020: after the water rule, the Weiss completion and ML roads, before the governance factor",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "road_crossing",
+   "year": 2020,
+   "layer": null,
+   "file": "road_crossing_2020.tif",
+   "units": "flag",
+   "description": "OSM bridge, causeway, ford or embankment",
+   "dtype": "uint8",
+   "nodata": null
+  },
+  {
+   "name": "friction",
+   "year": 2020,
+   "layer": null,
+   "file": "friction_2020.tif",
+   "units": "minutes per metre",
+   "description": "friction 2020, including the governance factor and border delays",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_1",
+   "file": "traveltime/2020/cities_1.tif",
+   "units": "minutes",
+   "description": "cities_1: population 5,000,000 to <50,000,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_2",
+   "file": "traveltime/2020/cities_2.tif",
+   "units": "minutes",
+   "description": "cities_2: population 1,000,000 to <5,000,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_3",
+   "file": "traveltime/2020/cities_3.tif",
+   "units": "minutes",
+   "description": "cities_3: population 500,000 to <1,000,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_4",
+   "file": "traveltime/2020/cities_4.tif",
+   "units": "minutes",
+   "description": "cities_4: population 200,000 to <500,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_5",
+   "file": "traveltime/2020/cities_5.tif",
+   "units": "minutes",
+   "description": "cities_5: population 100,000 to <200,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_6",
+   "file": "traveltime/2020/cities_6.tif",
+   "units": "minutes",
+   "description": "cities_6: population 50,000 to <100,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_7",
+   "file": "traveltime/2020/cities_7.tif",
+   "units": "minutes",
+   "description": "cities_7: population 20,000 to <50,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_8",
+   "file": "traveltime/2020/cities_8.tif",
+   "units": "minutes",
+   "description": "cities_8: population 10,000 to <20,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_9",
+   "file": "traveltime/2020/cities_9.tif",
+   "units": "minutes",
+   "description": "cities_9: population 5,000 to <10,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_10",
+   "file": "traveltime/2020/cities_10.tif",
+   "units": "minutes",
+   "description": "cities_10: population 20,000 to <110,000,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_11",
+   "file": "traveltime/2020/cities_11.tif",
+   "units": "minutes",
+   "description": "cities_11: population 50,000 to <50,000,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "cities_12",
+   "file": "traveltime/2020/cities_12.tif",
+   "units": "minutes",
+   "description": "cities_12: population 5,000 to <110,000,000 (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "ports_1",
+   "file": "traveltime/2020/ports_1.tif",
+   "units": "minutes",
+   "description": "ports_1: Large (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "ports_2",
+   "file": "traveltime/2020/ports_2.tif",
+   "units": "minutes",
+   "description": "ports_2: Medium (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "ports_3",
+   "file": "traveltime/2020/ports_3.tif",
+   "units": "minutes",
+   "description": "ports_3: Small (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "ports_4",
+   "file": "traveltime/2020/ports_4.tif",
+   "units": "minutes",
+   "description": "ports_4: Very Small (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2020,
+   "layer": "ports_5",
+   "file": "traveltime/2020/ports_5.tif",
+   "units": "minutes",
+   "description": "ports_5: any (2020), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "road_speed_osm",
+   "year": 2026,
+   "layer": null,
+   "file": "road_speed_osm_2026.tif",
+   "units": "km/h",
+   "description": "fastest OSM road in the cell on 1 January 2026 (before water rule and completion)",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "road_speed",
+   "year": 2026,
+   "layer": null,
+   "file": "road_speed_2026.tif",
+   "units": "km/h",
+   "description": "road speed used for 2026: after the water rule, the Weiss completion and ML roads, before the governance factor",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "road_crossing",
+   "year": 2026,
+   "layer": null,
+   "file": "road_crossing_2026.tif",
+   "units": "flag",
+   "description": "OSM bridge, causeway, ford or embankment",
+   "dtype": "uint8",
+   "nodata": null
+  },
+  {
+   "name": "friction",
+   "year": 2026,
+   "layer": null,
+   "file": "friction_2026.tif",
+   "units": "minutes per metre",
+   "description": "friction 2026, including the governance factor and border delays",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_1",
+   "file": "traveltime/2026/cities_1.tif",
+   "units": "minutes",
+   "description": "cities_1: population 5,000,000 to <50,000,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_2",
+   "file": "traveltime/2026/cities_2.tif",
+   "units": "minutes",
+   "description": "cities_2: population 1,000,000 to <5,000,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_3",
+   "file": "traveltime/2026/cities_3.tif",
+   "units": "minutes",
+   "description": "cities_3: population 500,000 to <1,000,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_4",
+   "file": "traveltime/2026/cities_4.tif",
+   "units": "minutes",
+   "description": "cities_4: population 200,000 to <500,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_5",
+   "file": "traveltime/2026/cities_5.tif",
+   "units": "minutes",
+   "description": "cities_5: population 100,000 to <200,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_6",
+   "file": "traveltime/2026/cities_6.tif",
+   "units": "minutes",
+   "description": "cities_6: population 50,000 to <100,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_7",
+   "file": "traveltime/2026/cities_7.tif",
+   "units": "minutes",
+   "description": "cities_7: population 20,000 to <50,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_8",
+   "file": "traveltime/2026/cities_8.tif",
+   "units": "minutes",
+   "description": "cities_8: population 10,000 to <20,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_9",
+   "file": "traveltime/2026/cities_9.tif",
+   "units": "minutes",
+   "description": "cities_9: population 5,000 to <10,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_10",
+   "file": "traveltime/2026/cities_10.tif",
+   "units": "minutes",
+   "description": "cities_10: population 20,000 to <110,000,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_11",
+   "file": "traveltime/2026/cities_11.tif",
+   "units": "minutes",
+   "description": "cities_11: population 50,000 to <50,000,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "cities_12",
+   "file": "traveltime/2026/cities_12.tif",
+   "units": "minutes",
+   "description": "cities_12: population 5,000 to <110,000,000 (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "ports_1",
+   "file": "traveltime/2026/ports_1.tif",
+   "units": "minutes",
+   "description": "ports_1: Large (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "ports_2",
+   "file": "traveltime/2026/ports_2.tif",
+   "units": "minutes",
+   "description": "ports_2: Medium (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "ports_3",
+   "file": "traveltime/2026/ports_3.tif",
+   "units": "minutes",
+   "description": "ports_3: Small (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "ports_4",
+   "file": "traveltime/2026/ports_4.tif",
+   "units": "minutes",
+   "description": "ports_4: Very Small (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  },
+  {
+   "name": "traveltime",
+   "year": 2026,
+   "layer": "ports_5",
+   "file": "traveltime/2026/ports_5.tif",
+   "units": "minutes",
+   "description": "ports_5: any (2026), full precision",
+   "dtype": "float32",
+   "nodata": -9999.0
+  }
+ ]
+}

@@ -1,6 +1,13 @@
 {
- "START_YEAR": 2015,
- "END_YEAR": 2026,
+ "YEARS": [
+  2015,
+  2020,
+  2026
+ ],
+ "OSM_SOURCE": "geofabrik",
+ "OSM_HISTORY_URL": "https://planet.openstreetmap.org/pbf/full-history/",
+ "OSM_HISTORY_FILE": null,
+ "OSM_TILE_DEG": 10,
  "WORK_DIR": "./ga_work",
  "RESULTS_DIR": "./ga_results",
  "BBOX": [
@@ -12,6 +19,7 @@
  "RES_ARCSEC": 30,
  "LIGHT_FACTOR": 10,
  "CLEANUP": false,
+ "STORE": true,
  "KEEP_DOWNLOADS": false,
  "SPEED_TABLE": {
   "motorway": [
@@ -214,6 +222,7 @@
  "NELSON_COMPARE": true,
  "NELSON_ARTICLE": 7638134,
  "NELSON_LAYERS": [
+  "cities_10",
   "cities_11",
   "cities_12",
   "ports_5"
@@ -235,14 +244,22 @@
  ],
  "ROUTING_PROFILE": "driving",
  "ROUTING_MIN_INTERVAL_S": 1.1,
- "ROUTING_CITIES": 12,
+ "ROUTING_CITIES_PER_CONTINENT": 12,
  "ROUTING_MIN_POP": 50000.0,
- "ROUTING_ORIGINS_PER_CITY": 10,
+ "ROUTING_ORIGINS_PER_CITY": 20,
  "ROUTING_RADIUS_KM": [
   10,
-  150
+  300
+ ],
+ "ROUTING_BANDS_KM": [
+  10,
+  50,
+  100,
+  200,
+  300
  ],
  "ROUTING_MAX_SNAP_M": 1000,
+ "ROUTING_MIN_PAIRS_COUNTRY": 30,
  "MAX_WORKERS": null,
  "MEMORY_FRACTION": 0.75,
  "DOWNLOAD_WORKERS": 4,
@@ -272,6 +289,7 @@
   2030
  ],
  "PROCESS_OVERHEAD": 350000000.0,
+ "MICROMAMBA_URL": "https://github.com/mamba-org/micromamba-releases/releases/latest/download/micromamba-{plat}",
  "WORLDCOVER_CLASSES": [
   10,
   20,
@@ -342,6 +360,7 @@
   "friction",
   "traveltime",
   "outputs",
+  "store",
   "compare",
   "validate",
   "sensitivity",
@@ -349,10 +368,12 @@
  ],
  "years": [
   2015,
+  2020,
   2026
  ],
  "ghsl_epoch": {
   "2015": 2015,
+  "2020": 2020,
   "2026": 2025
  },
  "grid": {
@@ -368,6 +389,7 @@
   "wrap": false
  },
  "nelson_layers": [
+  "cities_10",
   "cities_11",
   "cities_12",
   "ports_5"
