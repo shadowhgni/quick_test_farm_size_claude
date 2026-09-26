@@ -1,10 +1,11 @@
-name: Global accessibility v2 - regional end-to-end test (Python 3.13)
+name: Global accessibility v3 - regional end-to-end test (Python 3.13)
 
 on:
   push:
     branches: ['claude/**']
     paths:
-      - 'global_accessibility/global_accessibility_v2.py'
+      - 'global_accessibility/global_accessibility_v3.py'
+      - 'global_accessibility/dev/test_global_v3.py'
       - '.github/workflows/global_test.yml'
   workflow_dispatch:
 
@@ -32,18 +33,18 @@ jobs:
           PROJ_LIB: /opt/conda/share/proj    # a broken setting seen on a user's HPC node: the script must recover
         run: |
           rm -rf global_accessibility/test_results    # no leftovers from earlier runs
-          python global_accessibility/global_accessibility_v2.py \
-            --bbox -1 5.5 4.5 13.5 --start 2015 --end 2026 --routing-cities 12 \
-            --ml-files Western_Africa.zip \
-            --nelson-layers cities_11 cities_12 ports_5 \
+          python global_accessibility/global_accessibility_v3.py \
+            --bbox -1 5.5 4.5 13.5 --years 2015 2020 2026 --osm-source geofabrik \
+            --routing-cities-per-continent 12 --ml-files Western_Africa.zip \
+            --nelson-layers cities_10 cities_11 cities_12 ports_5 \
             --work-dir ga_work --results-dir global_accessibility/test_results --no-cleanup \
             2>&1 | tee run_stdout.txt
       - name: Nelson comparison without the Weiss 2015 completion (same inputs)
         run: |
           rm -f ga_work/_done/friction ga_work/_done/traveltime ga_work/_done/compare
-          python global_accessibility/global_accessibility_v2.py \
-            --bbox -1 5.5 4.5 13.5 --start 2015 --end 2026 --no-weiss \
-            --ml-files Western_Africa.zip --nelson-layers cities_11 cities_12 ports_5 \
+          python global_accessibility/global_accessibility_v3.py \
+            --bbox -1 5.5 4.5 13.5 --years 2015 2020 2026 --osm-source geofabrik --no-weiss \
+            --ml-files Western_Africa.zip --nelson-layers cities_10 cities_11 cities_12 ports_5 \
             --stages friction,traveltime,compare \
             --work-dir ga_work --results-dir osm_only_results 2>&1 | tail -20 | tee -a run_stdout.txt
           cp osm_only_results/nelson_comparison/comparison_by_layer.csv \
@@ -51,7 +52,8 @@ jobs:
       - name: Offline unit tests (using the packages the script installed)
         if: always()
         run: |
-          PYTHONPATH=ga_work/pylib python -m pytest global_accessibility/dev -q -p no:cacheprovider 2>&1 | tail -5 | tee -a run_stdout.txt
+          # GA_TEST_INSTALL_OSMIUM=1: the script installs osmium-tool itself to test the OSM-history cut
+          GA_TEST_INSTALL_OSMIUM=1 PYTHONPATH=ga_work/pylib python -m pytest global_accessibility/dev -q -p no:cacheprovider -rs 2>&1 | tail -8 | tee -a run_stdout.txt
       - name: Result size
         if: always()
         run: du -sh global_accessibility/test_results/* 2>/dev/null; ls -la ga_work 2>/dev/null | head
@@ -60,6 +62,7 @@ jobs:
         run: |
           mkdir -p global_accessibility/test_results
           cp run_stdout.txt global_accessibility/test_results/ || true
+          rm -rf global_accessibility/test_results/store/traveltime   # large; the rest of the store is kept
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add global_accessibility/test_results || true
