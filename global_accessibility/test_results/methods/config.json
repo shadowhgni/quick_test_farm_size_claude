@@ -228,6 +228,7 @@
  "COMPLETE_MIN": 0.8,
  "COMPLETE_MIN_CELLS": 50,
  "ROUTING_VALIDATION": true,
+ "NETWORK_CHECK": true,
  "ROUTING_SERVERS": [
   "https://router.project-osrm.org",
   "https://routing.openstreetmap.de/routed-car"
