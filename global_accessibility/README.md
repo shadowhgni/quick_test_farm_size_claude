@@ -1,6 +1,6 @@
 # global_accessibility_v3.py — travel time to cities and ports for several reference years
 
-**Use `global_accessibility_v3.py`** (version 3.0.0). Compared with version 2 (`global_accessibility_v2.py`,
+**Use `global_accessibility_v3.py`** (version 3.0.1). Compared with version 2 (`global_accessibility_v2.py`,
 kept for reference):
 
 - **any number of reference years, processed together** (default 2015, 2020, 2026), with change

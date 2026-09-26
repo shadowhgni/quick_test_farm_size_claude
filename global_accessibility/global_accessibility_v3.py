@@ -40,7 +40,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "3.0.0"
+__version__ = "3.0.1"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -54,6 +54,8 @@ OSM_SOURCE = "history"          # "history": OSM full-history planet cut at 1 Ja
 OSM_HISTORY_URL = "https://planet.openstreetmap.org/pbf/full-history/"
 OSM_HISTORY_FILE = None         # None = newest dated history-YYMMDD.osm.pbf; or an exact file name / local path
 OSM_TILE_DEG = 10               # history source: roads are split into tiles of this size for parallel work
+OSM_EXTRACT_BATCH = 16          # tiles written per osmium extract pass (osmium keeps ID sets per tile in
+                                # memory, up to ~1-2 GB each on the planet: 16 x 3 years stays < ~100 GB)
 WORK_DIR = "./ga_work"          # downloads and intermediate files (deleted at the end)
 RESULTS_DIR = "./ga_results"    # everything kept
 BBOX = None                     # None = Nelson extent (-180, -60, 180, 85); or (W, S, E, N)
@@ -1207,6 +1209,17 @@ def osm_history_plan(ctx, sess):
     log(f"OSM history: {local.name} ({local.stat().st_size / 1e9:.0f} GB), {_osmium_version(osmium)}")
     tiles = history_tiles(ctx)
     tmp = work / "osm_tmp"; tmp.mkdir(parents=True, exist_ok=True)
+    src = local
+    todo = [y for y in years if not (dl / "osm" / str(y) / f"highways-{y}0101.osm.pbf").exists()
+            and not (dl / "osm" / str(y) / "tiles.done").exists()]
+    if BBOX and todo:       # regional run: cut the area out of the history once, for all years
+        src = tmp / "history-bbox.osm.pbf"
+        if not src.exists():
+            part = tmp / "history-bbox.part.osm.pbf"
+            run_osmium([osmium, "extract", "--with-history", "-s", "complete_ways", "-b",
+                        ",".join(map(str, ctx["grid"].bounds)), str(local), "-o", str(part), "--overwrite"],
+                       "OSM history: extract of the bbox")
+            part.replace(src)
 
     def one_year(y):
         ydir = dl / "osm" / str(y)
@@ -1217,32 +1230,27 @@ def osm_history_plan(ctx, sess):
         hw = ydir / f"highways-{y}0101.osm.pbf"
         if not hw.exists():
             cut = tmp / f"planet-{y}0101.osm.pbf"
-            args = [osmium, "time-filter", str(local), f"{y}-01-01T00:00:00Z", "-o", str(cut), "--overwrite"]
-            if BBOX:        # regional run: cut the area first (much smaller files downstream)
-                reg = tmp / f"history-bbox-{y}.osm.pbf"
-                run_osmium([osmium, "extract", "--with-history", "-s", "simple", "-b",
-                            ",".join(map(str, ctx["grid"].bounds)), str(local), "-o", str(reg), "--overwrite"],
-                           f"OSM {y}: history extract of the bbox")
-                args[2] = str(reg)
-            run_osmium(args, f"OSM {y}: time-filter at {y}-01-01")
+            run_osmium([osmium, "time-filter", str(src), f"{y}-01-01T00:00:00Z", "-o", str(cut), "--overwrite"],
+                       f"OSM {y}: time-filter at {y}-01-01")
             part = hw.with_name(hw.name + ".part.osm.pbf")
             run_osmium([osmium, "tags-filter", str(cut), "w/highway", "-o", str(part), "--overwrite"],
                        f"OSM {y}: roads only")
             part.replace(hw)
             cut.unlink(missing_ok=True)
-            if BBOX:
-                reg.unlink(missing_ok=True)
-        for i in range(0, len(tiles), 64):        # osmium extract: many tiles per pass
+        nb = OSM_EXTRACT_BATCH
+        for i in range(0, len(tiles), nb):        # osmium extract: several tiles per pass
             cfg = tmp / f"extract_{y}_{i}.json"
             cfg.write_text(json.dumps({"directory": str(ydir), "extracts": [
-                {"output": f"{t['region']}.osm.pbf", "bbox": t["bounds"]} for t in tiles[i:i + 64]]}))
+                {"output": f"{t['region']}.osm.pbf", "bbox": t["bounds"]} for t in tiles[i:i + nb]]}))
             run_osmium([osmium, "extract", "-c", str(cfg), "-s", "complete_ways", str(hw), "--overwrite"],
-                       f"OSM {y}: tiles {i + 1}-{min(i + 64, len(tiles))} of {len(tiles)}")
+                       f"OSM {y}: tiles {i + 1}-{min(i + nb, len(tiles))} of {len(tiles)}")
         done.write_text(dt.datetime.now().isoformat())
         return y
 
     with cf.ThreadPoolExecutor(len(years)) as ex:        # the years are cut side by side
         list(ex.map(one_year, years))
+    if src != local:
+        src.unlink(missing_ok=True)
     plan = {}
     for y in years:
         plan[y] = []
@@ -2995,7 +3003,7 @@ def dry_run(ctx):
             f"(history + one temporary planet per year + road files)"
             + ("  WARNING: more than the free disk" if peak > free else ""))
         if BBOX:
-            log("OSM: regional run: the history file is still read in full once per year (the bbox is cut first)")
+            log("OSM: regional run: the bbox is cut out of the history file once (one full read), then per year")
         return
     plan = geofabrik_plan(ctx["work"], grid, ctx["years"], session())
     for y, rs in plan.items():
