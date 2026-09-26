@@ -53,7 +53,11 @@ jobs:
         if: always()
         run: |
           # GA_TEST_INSTALL_OSMIUM=1: the script installs osmium-tool itself to test the OSM-history cut
-          GA_TEST_INSTALL_OSMIUM=1 PYTHONPATH=ga_work/pylib python -m pytest global_accessibility/dev -q -p no:cacheprovider -rs 2>&1 | tail -8 | tee -a run_stdout.txt
+          mkdir -p global_accessibility/test_results
+          GA_TEST_INSTALL_OSMIUM=1 PYTHONPATH=ga_work/pylib python -m pytest global_accessibility/dev -q -p no:cacheprovider \
+            -rfEs --tb=short -W ignore::DeprecationWarning -W ignore::PendingDeprecationWarning \
+            > global_accessibility/test_results/pytest_report.txt 2>&1 || true
+          tail -25 global_accessibility/test_results/pytest_report.txt | tee -a run_stdout.txt
       - name: Result size
         if: always()
         run: du -sh global_accessibility/test_results/* 2>/dev/null; ls -la ga_work 2>/dev/null | head
