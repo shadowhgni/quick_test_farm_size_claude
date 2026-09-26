@@ -1,0 +1,33 @@
+.................................................F..                     [100%]
+=================================== FAILURES ===================================
+__________________ test_history_cut_per_year_and_tiles[bbox1] __________________
+global_accessibility/dev/test_global_v3.py:684: in test_history_cut_per_year_and_tiles
+    plan = ga.osm_history_plan(ctx, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+global_accessibility/global_accessibility_v3.py:1245: in osm_history_plan
+    list(ex.map(one_year, years))
+/opt/hostedtoolcache/Python/3.13.15/x64/lib/python3.13/concurrent/futures/_base.py:625: in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.13.15/x64/lib/python3.13/concurrent/futures/_base.py:318: in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.13.15/x64/lib/python3.13/concurrent/futures/_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.13.15/x64/lib/python3.13/concurrent/futures/_base.py:402: in __get_result
+    raise self._exception
+/opt/hostedtoolcache/Python/3.13.15/x64/lib/python3.13/concurrent/futures/thread.py:59: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+global_accessibility/global_accessibility_v3.py:1223: in one_year
+    run_osmium([osmium, "extract", "--with-history", "-s", "simple", "-b",
+global_accessibility/global_accessibility_v3.py:1126: in run_osmium
+    raise RuntimeError(f"{label} failed ({r.returncode}): {(r.stderr or r.stdout).strip()[-800:]}")
+E   RuntimeError: OSM 2015: history extract of the bbox failed (1): The 'simple' strategy is not supported for history files.
+----------------------------- Captured stdout call -----------------------------
+[2026-09-26 12:11:44] installing osmium-tool from conda-forge with conda into /tmp/pytest-of-runner/pytest-0/test_history_cut_per_year_and_1/work/tools/osmium
+[2026-09-26 12:11:47] OSM history: history-260105.osh (0 GB), osmium version 1.19.1
+=========================== short test summary info ============================
+FAILED global_accessibility/dev/test_global_v3.py::test_history_cut_per_year_and_tiles[bbox1] - RuntimeError: OSM 2015: history extract of the bbox failed (1): The 'simple' strategy is not supported for history files.
+1 failed, 51 passed in 112.48s (0:01:52)
