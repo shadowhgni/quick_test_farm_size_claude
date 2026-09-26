@@ -1,33 +1,78 @@
-# global_accessibility_v2.py — travel time to cities and ports, two reference years
+# global_accessibility_v3.py — travel time to cities and ports for several reference years
 
-**Use `global_accessibility_v2.py`** (version 2.0.5). It is version 1 (`global_accessibility.py`, kept
-for reference) plus a sensitivity analysis of the governance factor K and of the African
-border-crossing delay (stage `sensitivity`, see below).
+**Use `global_accessibility_v3.py`** (version 3.0.0). Compared with version 2 (`global_accessibility_v2.py`,
+kept for reference):
+
+- **any number of reference years, processed together** (default 2015, 2020, 2026), with change
+  maps for every consecutive pair and first → last;
+- **OpenStreetMap from one source for all years**: the OSM full-history planet
+  (planet.openstreetmap.org, ~152 GB) is cut at 1 January of each year with
+  [osmium-tool](https://osmcode.org/osmium-tool/), which the script installs itself from conda-forge
+  (mamba/conda, or micromamba from GitHub) into `WORK_DIR/tools`. Geofabrik snapshots remain an
+  option (`--osm-source geofabrik`) where download.geofabrik.de is reachable;
+- **every grid kept for reuse** in `RESULTS_DIR/store` (see below), readable with `load_store()`;
+- **routing validation per continent** with ~2,000 origin–settlement pairs each (10–300 km,
+  spread over distance bands), summarised by continent, distance band and country;
+- **comparison with all 17 layers of Nelson et al. (2019)** for every year in the CSV tables;
+- the Weiss et al. 2015 road completion is applied to every year from 2015 to before the last year.
 
 One stand-alone Python file (Python ≥ 3.11; written for 3.13). It installs the Python
-packages it is missing, downloads all inputs, and produces for a start and an end year:
+packages it is missing, downloads all inputs, and produces for each reference year:
 
 - travel time to cities (12 layers) and ports (5 layers) on the 30″ (~1 km) grid of
   Nelson et al. (2019), plus a 10 km "light" version;
-- the change between the two years;
+- the change between the years;
 - a comparison with Nelson et al. (2019) and a validation against a free routing engine;
-- a `methods/` folder with every input, parameter and version needed for a paper.
+- a `methods/` folder with every input, parameter and version needed for a paper;
+- a `store/` folder with every grid, for other scripts.
 
-Intermediate files are deleted at the end; only `RESULTS_DIR` is kept.
+Intermediate files are deleted at the end, only once every stage has succeeded; `RESULTS_DIR` is kept.
 
 ## Run it
 
-Edit the configuration block at the top of the script (years, folders, speeds,
-penalties), then, in a terminal or a Jupyter cell:
+Edit the configuration block at the top of the script (years, folders, speeds, penalties), then,
+in a terminal (e.g. the JupyterLab terminal):
 
 ```bash
-python global_accessibility_v2.py --dry-run     # grid size, workers, memory, OSM downloads
-python global_accessibility_v2.py               # full run (resumable: rerun after a crash)
+python global_accessibility_v3.py --dry-run     # network check, disk, memory, workers, OSM history file
+python global_accessibility_v3.py               # full run (resumable: rerun the same command after a crash)
 ```
 
-Useful options: `--start 2015 --end 2026`, `--bbox W S E N` (regional run),
-`--stages download,grids` (run part of the chain), `--max-workers N`, `--no-cleanup`,
-`--no-ml`, `--no-weiss`, `--no-routing`, `--skip-network-check`, `--no-sensitivity`, `--sens-design oat|full`, `--routing-cities N`, `--work-dir`, `--results-dir`.
+Useful options: `--years 2015 2020 2026`, `--osm-source history|geofabrik`, `--bbox W S E N`
+(regional run), `--stages download,grids` (run part of the chain), `--max-workers N`, `--no-cleanup`,
+`--no-ml`, `--no-weiss`, `--no-routing`, `--skip-network-check`, `--no-sensitivity`,
+`--sens-design oat|full`, `--routing-cities-per-continent N`, `--work-dir`, `--results-dir`.
+
+### OSM history: what happens and what it needs
+
+1. The newest dated `history-YYMMDD.osm.pbf` is downloaded (resumable) and checked against the
+   `.md5` file published next to it. `OSM_HISTORY_FILE` can name a file already on disk.
+2. For each year, side by side: `osmium time-filter` at `YYYY-01-01T00:00:00Z` (a normal planet of
+   that date), `osmium tags-filter w/highway` (roads with their nodes), then `osmium extract` into
+   `OSM_TILE_DEG` × `OSM_TILE_DEG` land tiles (complete ways). The temporary planet is deleted as soon
+   as the roads are extracted.
+3. Stage `roads` reads the tiles in parallel exactly as it read Geofabrik extracts. Road lengths are
+   clipped to each tile, so a way crossing a tile edge is counted once.
+
+Disk: ~152 GB for the history file plus one temporary planet per year (~60–90 GB each) at the
+peak; the dry run prints the estimate and the free space. The cut takes hours (not yet measured on
+the full planet); it is resumable per year (`downloads/osm/<year>/tiles.done`).
+
+### Reusing the results in another script
+
+`RESULTS_DIR/store/` holds every grid as a Cloud Optimized GeoTIFF on the 30″ grid: land cover,
+water share, slope, off-road speed, countries, Weiss 2015 speeds, Microsoft roads, population and
+settlements per GHSL epoch, and per year the OSM road speed, final road speed, road crossings,
+friction and the 17 travel-time layers in full precision (float32 minutes; −9999 = unreachable).
+`store/manifest.json` describes each file (year, layer, units, dtype, nodata) and `store/tables/`
+has the countries, settlements, corruption, checkpoints and OSM plan tables.
+
+```python
+import sys; sys.path.insert(0, "/mnt/users/dhougni/global_accessibility")
+from global_accessibility_v3 import load_store      # needs only numpy + rasterio
+fr, prof = load_store("ga_results", "friction", 2020)
+tt, prof = load_store("ga_results", "traveltime", 2026, "cities_11", bbox=(-1, 5.5, 4.5, 13.5))
+```
 
 ### If something goes wrong at start-up or while planning downloads
 
@@ -62,16 +107,17 @@ No container tools are needed. Missing packages are installed with
 
 | Stage | What it does |
 |---|---|
-| `download` | OSM extracts from Geofabrik for 1 January of each year (smallest regions with a snapshot, falling back to parent regions, then to the next year's snapshot, at most `OSM_SNAPSHOT_MAX_LAG` = 1 year later, e.g. Russia 2016 for 2015); Microsoft ML roads; GHSL SMOD + POP (nearest 5-year epoch); World Port Index; Natural Earth countries; World Bank WGI; Copernicus DEM tile list; WorldCover tile list; Nelson et al. layers (latest figshare version, MD5-checked) |
+| `download` | OSM: the full-history planet cut at 1 January of each year into road tiles (default), or Geofabrik snapshots (smallest regions with a snapshot, falling back to parent regions, then to the next year's snapshot, at most `OSM_SNAPSHOT_MAX_LAG` = 1 year later, e.g. Russia 2016 for 2015); Microsoft ML roads; GHSL SMOD + POP (nearest 5-year epoch); World Port Index; Natural Earth countries; World Bank WGI; Copernicus DEM tile list; WorldCover tile list; Nelson et al. layers (latest figshare version, MD5-checked) |
 | `grids` | WorldCover 2021 at 30″ (mode, read from COG overviews); mean tan(slope) from Copernicus GLO-90 at ~180 m; countries; African land borders; settlements per GHSL epoch (8-connected urban clusters) and population on the grid |
-| `roads` | per OSM extract in parallel: road speeds, burned at 30″ (fastest road per cell), km by class, border checkpoints; Microsoft roads (end year) |
+| `roads` | per OSM tile or extract in parallel: road speeds, burned at 30″ (fastest road per cell), km by class, border checkpoints; Microsoft roads (last year) |
 | `friction` | per year: speed = max(road speed × corruption factor, walking speed × Tobler) → minutes per metre; +15 min (× corruption) at African border checkpoints |
 | `traveltime` | per year × 17 layers in parallel: multi-source Dijkstra on the lon/lat grid (step lengths depend on latitude; wraps at the dateline) |
-| `outputs` | COGs (1 km, 10 km), global PNGs, population-weighted tables, methods folder |
-| `compare` | against Nelson et al. (2019), layer by layer; all cells and tiles where OSM 2015 was complete |
-| `validate` | end year against OSRM (car, free flow) for sampled origin–city pairs |
-| `sensitivity` | K ∈ {0, 0.05, 0.10, 0.20} and border delay ∈ {0, 15, 30, 60} min, one at a time around the baseline (K = 0.10, 15 min; 7 scenarios) or all 16 combinations (`--sens-design full`); headline layers (cities 11, ports 5), both years; population-weighted results by country, continent and domain |
-| `cleanup` | deletes the work folder (keeps the installed packages) |
+| `outputs` | COGs (1 km, 10 km) per year and change COGs per pair of years, global PNGs, population-weighted tables, methods folder |
+| `store` | every grid as a COG in `store/` with `manifest.json` (for other scripts; `load_store()`) |
+| `compare` | every year against Nelson et al. (2019, 2015), all 17 layers: bias, mean absolute difference (also relative to Nelson), median % difference, share within ±30 min, r(log), population-weighted means; all cells and tiles where OSM 2015 was complete |
+| `validate` | last year against OSRM (car, free flow): `ROUTING_CITIES_PER_CONTINENT` = 100 settlements ≥ 50,000 per continent × `ROUTING_ORIGINS_PER_CITY` = 20 population-weighted origins spread over 10–50–100–200–300 km bands (~2,000 pairs per continent); summaries by continent, distance band and country (≥ 30 pairs); resumable |
+| `sensitivity` | K ∈ {0, 0.05, 0.10, 0.20} and border delay ∈ {0, 15, 30, 60} min, one at a time around the baseline (K = 0.10, 15 min; 7 scenarios) or all 16 combinations (`--sens-design full`); headline layers (cities 11, ports 5), every year; population-weighted results by country, continent and domain |
+| `cleanup` | deletes the work folder, only when every stage has succeeded (keeps the installed packages and osmium-tool) |
 
 ## Parallelism and memory
 
@@ -82,15 +128,16 @@ overhead, keeping within 75% of the available memory (`MEMORY_FRACTION`):
 | Stage | Per task | Notes |
 |---|---|---|
 | OSM extracts | 1.5 GB + 7 × .pbf size | largest extracts start first |
-| Travel time | ~10 bytes × 752 M cells ≈ 7.8 GB | 34 tasks (2 years × 17 layers); friction is memory-mapped and shared |
+| Travel time | ~10 bytes × 752 M cells ≈ 7.8 GB | 51 tasks (3 years × 17 layers); friction is memory-mapped and shared |
+| Store | ~2 GB (thread) | up to 16 threads |
 | WorldCover / DEM reads | threads (I/O bound) | `REMOTE_READ_THREADS` |
 | Downloads | `DOWNLOAD_WORKERS` = 4 | polite to Geofabrik |
 
 Measured: one travel-time layer on a 32 M-cell grid takes ~40 s on one core. On the
 752 M-cell global grid only land cells are processed (~25–30%), so expect roughly
-5–15 min per layer; with enough memory all 34 layers run at once. Rough needs for a
-global run: ~170 GB of OSM downloads (2015 + 2026), 16.5 GB of Microsoft roads, 7.4 GB of
-Nelson layers, ~150 GB of intermediate grids on disk, and a peak RAM of
+5–15 min per layer. Rough needs for a global run with three years: ~152 GB for the OSM history
+file plus one temporary planet per year while cutting, 16.5 GB of Microsoft roads, 7.4 GB of
+Nelson layers, ~200 GB of intermediate grids on disk, ~100 GB for `store/`, and a peak RAM of
 (number of parallel travel-time tasks × ~8 GB) + ~15 GB. Run `--dry-run` on your node for
 its own figures.
 
@@ -100,14 +147,15 @@ its own figures.
   averages 10 × 10 cells (valid cells only).
 - **Roads:** OSM `highway` classes → `SPEED_TABLE`. Unpaved (tagged, or untagged minor
   classes) × 0.7. Fastest road wins in a cell. Microsoft ML roads (undated) are used for
-  the end year only, at 15 km/h, in cells with no OSM road.
-- **2015 roads completed with Weiss et al. (2018):** OSM in 2015 missed many roads that the
+  the last year only, at 15 km/h, in cells with no OSM road.
+- **Roads completed with Weiss et al. (2018):** OSM in 2015 missed many roads that the
   2015 friction surface of Weiss et al. (OSM + Google roads; Malaria Atlas Project, CC BY 4.0,
-  downloaded by WCS) contains. A 30″ cell gets a 2015 road when OSM 2015 has none, the Weiss
-  surface is ≥ 10 km/h there, and OSM of the end year has a road there (this excludes the
-  rivers, sea lanes and railways in the Weiss surface, and open water). Its speed is
-  min(Weiss speed, end-year OSM speed). Done before any travel-time calculation; the number
-  of cells added is in `methods/friction_2015.json`. Only for START_YEAR = 2015.
+  downloaded by WCS) contains. A 30″ cell of reference year Y (2015 ≤ Y < last year) gets a road
+  when OSM of year Y has none, the Weiss surface is ≥ 10 km/h there, and OSM of the last year has
+  a road there (this excludes the rivers, sea lanes and railways in the Weiss surface, and open
+  water): a road mapped in 2015 and still there in the last year existed in Y. Its speed is
+  min(Weiss speed, last-year OSM speed). Done before any travel-time calculation; the number of
+  cells added is in `methods/friction_<year>.json`.
 - **Where OSM 2015 data exist:** per 2° tile, completeness = OSM 2015 road cells / Weiss 2015
   network cells that are roads today (before completion). The Nelson comparison is reported
   for all cells and for tiles ≥ 80% complete (`methods/osm2015_completeness_tiles.csv`).
@@ -142,12 +190,14 @@ its own figures.
 
 ```
 cog_1km/   traveltime_<year>_1km.tif (17 bands, uint16 min, nodata 65535)
-           friction_<year>_1km.tif (min/m), traveltime_change_<end>_minus_<start>_1km.tif (int16)
+           friction_<year>_1km.tif (min/m), traveltime_change_<later>_minus_<earlier>_1km.tif (int16),
+           for 2020-2015, 2026-2020 and 2026-2015
 cog_10km/  the same at 300″
 png/       one global map per layer and year, friction, and change maps
 tables/    population-weighted travel time by country / continent / globe
 nelson_comparison/   per-layer statistics, per-continent means, difference maps, scatter plots
-routing_validation/  origin–city pairs, summary by continent, scatter plot, attribution
+routing_validation/  origin–city pairs, summaries by continent / distance band / country, scatter plot, attribution
+store/     every grid (per year) as COGs + manifest.json + tables/, for other scripts
 sensitivity/         scenarios, results by domain / continent / country (vs baseline), figure
 methods/   config.json, speed_table.csv, landcover_speed.csv, corruption_<year>.csv,
            checkpoints_<year>.csv, african_borders.gpkg, settlements_<epoch>.csv,
