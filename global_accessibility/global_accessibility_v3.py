@@ -2343,7 +2343,7 @@ def write_methods(ctx):
         man = pd.concat([pd.read_csv(prev), man])
     if len(man):
         man.drop_duplicates(["url", "file"], keep="last").to_csv(prev, index=False)
-    versions = {"script": f"global_accessibility_v2.py {__version__}",
+    versions = {"script": f"global_accessibility_v3.py {__version__}",
                 "python": sys.version, "platform": platform.platform(),
                 **{m: importlib.metadata.version(p) for m, (p, _) in REQUIRED.items()},
                 "gdal": rasterio.__gdal_version__, "cpus": cpu_count(),
