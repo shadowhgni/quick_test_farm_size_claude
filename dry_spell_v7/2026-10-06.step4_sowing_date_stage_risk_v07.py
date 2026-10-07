@@ -378,8 +378,11 @@ def _raster_uri(p):
     import zipfile
     with zipfile.ZipFile(p) as z:
         names = [n for n in z.namelist() if n.lower().endswith((".asc", ".tif", ".tiff", ".img"))]
+        if not names:                       # e.g. an ESRI ASCII grid saved as .txt
+            side = (".prj", ".xml", ".aux", ".ovr", ".lyr", ".dbf", ".shp", ".shx", ".cpg", ".pdf", ".doc", "/")
+            names = [n for n in z.namelist() if not n.lower().endswith(side)]
     if not names:
-        sys.exit(f"no .asc/.tif/.img raster inside {p}")
+        sys.exit(f"no raster inside {p}")
     return f"zip://{p.resolve()}!{names[0]}"
 
 

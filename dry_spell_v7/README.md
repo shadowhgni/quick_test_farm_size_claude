@@ -31,3 +31,13 @@ Step 4 covers sorghum, pearl millet and groundnut, with 70, 90, 110 and 130-day 
 - **Stage timings:** set in the `CROPS` block at the top of the script. They are provisional; see CHANGES.md for their sources and status.
 
 See CHANGES.md for the fixes made to steps 1–3.
+
+## Continuous integration (`.github/workflows/dry_spell_v7.yml`)
+
+On every push to `claude/**` that touches this folder, the workflow runs steps 1 → 4 for the Nigeria box (2.5–14.5°E, 4.5–14.5°N) on real data.
+
+- **CHIRPS (real):** CHIRPS v2.0 daily, 1981–2025. `tests/fetch_chirps_cog.py` reads only the Nigeria window of each daily global COG at data.chc.ucsb.edu (a few GB of HTTP range requests; cached between runs). It writes `chirps_NGA_1981_2025.nc` with the same grid and layout as the HPC file.
+- **RADS (rebuilt, not the official files):** `tests/make_rads_from_chirps.py` rebuilds RADS-style onset and demise from that CHIRPS, using the first pass of the RADS algorithm on pentads, including the bimodal harmonic mask. The official RADS files are only shared through a Dropbox folder, which CI cannot list.
+- **Boundaries and AEZ (real):** Natural Earth boundaries and the HarvestChoice AEZ zip are downloaded.
+- **Independent check:** `tests/check_step4.py` recomputes step 4 with plain loops for sampled cells and fails the job on any mismatch.
+- **Results:** small results (CSV tables, logs, PNGs) are committed to `ci_results/`. The NetCDF and Parquet outputs are uploaded as a run artifact instead.
