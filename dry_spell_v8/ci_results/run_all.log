@@ -1,0 +1,33 @@
+14:20:01 INFO - ======================================================================
+14:20:01 INFO - run_all v8  region=ci_nga bbox=(2.5, 4.5, 14.5, 14.5) steps=[1, 2, 3, 4] workers=4 country_jobs=2 resume=False
+14:20:01 INFO - ======================================================================
+14:20:01 INFO - step 1: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v8/v8_01_download.py --region ci_nga --threads 32
+14:28:27 INFO - step 1: done in 8.44 min
+14:28:27 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v8/v8_02_spells_seasons.py --region ci_nga --workers 4
+14:29:09 INFO - step 2: done in 0.7 min
+14:29:09 INFO - step 3 KEN: no polygon inside the region bbox - not run
+14:29:09 INFO - step 3: 5 countries, 2 at a time, 2 workers each
+14:30:09 INFO - step 3 [1/5] BEN: ok in 1.0 min
+14:30:23 INFO - step 3 [2/5] NGA: ok in 1.22 min
+14:30:48 INFO - step 3 [3/5] NER: ok in 0.65 min
+14:31:25 INFO - step 3 [4/5] CMR: ok in 1.03 min
+14:31:38 INFO - step 3 [5/5] TCD: ok in 0.82 min
+14:31:38 INFO - step 3: ok 5, skipped 0, failed 0, not in region 1
+14:31:38 INFO - step 4: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v8/v8_04_aggregate.py --region ci_nga --name SSA --countries NGA BEN NER CMR TCD KEN
+14:32:20 INFO - step 4: done in 0.7 min -> dryspell_v8/ci_nga/step03/SSA
+14:32:20 INFO - run_all finished in 12.3 min - status: dryspell_v8/ci_nga/run_all_status.csv
+14:32:20 INFO - ======================================================================
+14:32:20 INFO - run_all v8  region=ci_nga bbox=(2.5, 4.5, 14.5, 14.5) steps=[1, 2, 3, 4] workers=16 country_jobs=1 resume=True
+14:32:20 INFO - ======================================================================
+14:32:20 INFO - step 1: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v8/v8_01_download.py --region ci_nga --threads 32
+14:32:20 INFO - step 2: outputs newer than the CHIRPS cache - skipped (--resume)
+14:32:20 INFO - step 3 KEN: no polygon inside the region bbox - not run
+14:32:20 INFO - step 3: 5 countries, 1 at a time, 16 workers each
+14:32:20 INFO - step 3 [1/5] NGA: resumed (ok)
+14:32:20 INFO - step 3 [2/5] BEN: resumed (ok)
+14:32:20 INFO - step 3 [3/5] NER: resumed (ok)
+14:32:20 INFO - step 3 [4/5] CMR: resumed (ok)
+14:32:20 INFO - step 3 [5/5] TCD: resumed (ok)
+14:32:20 INFO - step 3: ok 5, skipped 0, failed 0, not in region 1
+14:32:20 INFO - step 4: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v8/v8_04_aggregate.py --region ci_nga --name SSA --countries NGA BEN NER CMR TCD KEN
+14:32:20 INFO - run_all finished in 0.0 min - status: dryspell_v8/ci_nga/run_all_status.csv

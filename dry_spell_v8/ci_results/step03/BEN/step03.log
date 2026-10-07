@@ -1,0 +1,95 @@
+14:29:10 [MainProcess] INFO - ======================================================================
+14:29:10 [MainProcess] INFO - v8 STEP3  region=ci_nga country=BEN crops=['sorghum', 'pearl_millet', 'groundnut']
+14:29:10 [MainProcess] INFO -   sowing = onset + 0 + [0, 10, 20, 30, 40]   cycles = [70, 90, 110, 130] d   grace = 10 d
+14:29:10 [MainProcess] INFO -   min spell (d) = {'sorghum': 10, 'pearl_millet': 10, 'groundnut': 10}   impossible if P(feasible) < 0.5
+14:29:10 [MainProcess] INFO - ======================================================================
+14:29:10 [MainProcess] INFO -   BEN: 1,519 grid cells, 1,519 with usable CHIRPS
+14:29:10 [MainProcess] INFO -   groundnut      70 d: vulnerable window DAS 27-54 = R3 (beginning pod) -> R6 (full seed)
+14:29:10 [MainProcess] INFO -   groundnut      90 d: vulnerable window DAS 34-69 = R3 (beginning pod) -> R6 (full seed)
+14:29:10 [MainProcess] INFO -   groundnut     110 d: vulnerable window DAS 42-85 = R3 (beginning pod) -> R6 (full seed)
+14:29:10 [MainProcess] INFO -   groundnut     130 d: vulnerable window DAS 49-100 = R3 (beginning pod) -> R6 (full seed)
+14:29:10 [MainProcess] INFO -   pearl_millet   70 d: vulnerable window DAS 46-63 = P5 (boot) -> P7 (milk)
+14:29:10 [MainProcess] INFO -   pearl_millet   90 d: vulnerable window DAS 58-82 = P5 (boot) -> P7 (milk)
+14:29:10 [MainProcess] INFO -   pearl_millet  110 d: vulnerable window DAS 72-100 = P5 (boot) -> P7 (milk)
+14:29:10 [MainProcess] INFO -   pearl_millet  130 d: vulnerable window DAS 84-119 = P5 (boot) -> P7 (milk)
+14:29:10 [MainProcess] INFO -   sorghum        70 d: vulnerable window DAS 33-54 = S4 (flag leaf visible) -> S7 (soft dough)
+14:29:10 [MainProcess] INFO -   sorghum        90 d: vulnerable window DAS 42-70 = S4 (flag leaf visible) -> S7 (soft dough)
+14:29:10 [MainProcess] INFO -   sorghum       110 d: vulnerable window DAS 52-86 = S4 (flag leaf visible) -> S7 (soft dough)
+14:29:10 [MainProcess] INFO -   sorghum       130 d: vulnerable window DAS 61-102 = S4 (flag leaf visible) -> S7 (soft dough)
+14:29:10 [MainProcess] INFO - Processing 16 row chunks
+14:29:13 [MainProcess] INFO -   10/16 chunks
+14:29:15 [MainProcess] INFO -   16/16 chunks
+14:29:15 [MainProcess] INFO -   spell x season pairs examined: 67,228
+14:29:15 [MainProcess] INFO -   cells analysed: 1,519; no/too few valid seasons (arid, failed seasons): 0; no usable CHIRPS: 0
+14:29:15 [MainProcess] INFO -     regime unimodal        1,225 analysed cells
+14:29:15 [MainProcess] INFO -     regime transition        101 analysed cells
+14:29:15 [MainProcess] INFO -     regime bimodal           193 analysed cells
+14:29:15 [MainProcess] INFO -   AEZ source: raster dryspell_v8_data/aez/afr_aez09.tif (majority per cell)
+14:29:15 [MainProcess] INFO -     312 Tropic - warm / semiarid                                679 analysed cells
+14:29:15 [MainProcess] INFO -     313 Tropic - warm / subhumid                                840 analysed cells
+14:29:15 [MainProcess] INFO - Written cells_<crop>.nc
+14:29:17 [MainProcess] INFO - Written aez_summary.csv, aez_stage_hits.csv, cell_summary.parquet, cell_stage_hits_<crop>.parquet
+14:30:09 [MainProcess] INFO - --- sorghum (national, possible cells) ---
+14:30:09 [MainProcess] INFO -    70 d  sow +0   impossible   0.0%  P(hit window) 0.03  most hit: S7 (soft dough, DAS 52-62) p=0.02
+14:30:09 [MainProcess] INFO -    70 d  sow +10  impossible   0.0%  P(hit window) 0.03  most hit: S7 (soft dough, DAS 52-62) p=0.03
+14:30:09 [MainProcess] INFO -    70 d  sow +20  impossible   0.3%  P(hit window) 0.03  most hit: S5 (boot, DAS 38-45) p=0.02
+14:30:09 [MainProcess] INFO -    70 d  sow +30  impossible   2.1%  P(hit window) 0.03  most hit: S7 (soft dough, DAS 52-62) p=0.02
+14:30:09 [MainProcess] INFO -    70 d  sow +40  impossible   5.8%  P(hit window) 0.03  most hit: S7 (soft dough, DAS 52-62) p=0.02
+14:30:09 [MainProcess] INFO -    90 d  sow +0   impossible   0.3%  P(hit window) 0.04  most hit: S7 (soft dough, DAS 68-80) p=0.02
+14:30:09 [MainProcess] INFO -    90 d  sow +10  impossible   2.1%  P(hit window) 0.04  most hit: S7 (soft dough, DAS 68-80) p=0.03
+14:30:09 [MainProcess] INFO -    90 d  sow +20  impossible   5.8%  P(hit window) 0.04  most hit: S7 (soft dough, DAS 68-80) p=0.03
+14:30:09 [MainProcess] INFO -    90 d  sow +30  impossible  11.7%  P(hit window) 0.04  most hit: S7 (soft dough, DAS 68-80) p=0.02
+14:30:09 [MainProcess] INFO -    90 d  sow +40  impossible  12.8%  P(hit window) 0.04  most hit: S1 (3-leaf, DAS 13-21) p=0.02
+14:30:09 [MainProcess] INFO -   110 d  sow +0   impossible   5.8%  P(hit window) 0.05  most hit: S7 (soft dough, DAS 82-98) p=0.03
+14:30:09 [MainProcess] INFO -   110 d  sow +10  impossible  11.7%  P(hit window) 0.04  most hit: S7 (soft dough, DAS 82-98) p=0.03
+14:30:09 [MainProcess] INFO -   110 d  sow +20  impossible  12.8%  P(hit window) 0.04  most hit: S2 (5-leaf, DAS 26-36) p=0.02
+14:30:09 [MainProcess] INFO -   110 d  sow +30  impossible  17.0%  P(hit window) 0.04  most hit: S4 (flag leaf visible, DAS 48-60) p=0.03
+14:30:09 [MainProcess] INFO -   110 d  sow +40  impossible  33.2%  P(hit window) 0.04  most hit: S1 (3-leaf, DAS 15-25) p=0.03
+14:30:09 [MainProcess] INFO -   130 d  sow +0   impossible  12.8%  P(hit window) 0.05  most hit: S4 (flag leaf visible, DAS 57-71) p=0.03
+14:30:09 [MainProcess] INFO -   130 d  sow +10  impossible  17.0%  P(hit window) 0.05  most hit: S3 (growing point differentiation, DAS 44-56) p=0.03
+14:30:09 [MainProcess] INFO -   130 d  sow +20  impossible  33.2%  P(hit window) 0.04  most hit: S2 (5-leaf, DAS 31-43) p=0.03
+14:30:09 [MainProcess] INFO -   130 d  sow +30  impossible  57.0%  P(hit window) 0.06  most hit: S3 (growing point differentiation, DAS 44-56) p=0.04
+14:30:09 [MainProcess] INFO -   130 d  sow +40  impossible  84.2%  P(hit window) 0.11  most hit: S4 (flag leaf visible, DAS 57-71) p=0.08
+14:30:09 [MainProcess] INFO - --- pearl_millet (national, possible cells) ---
+14:30:09 [MainProcess] INFO -    70 d  sow +0   impossible   0.0%  P(hit window) 0.03  most hit: P6 (50% flowering, DAS 50-56) p=0.02
+14:30:09 [MainProcess] INFO -    70 d  sow +10  impossible   0.0%  P(hit window) 0.03  most hit: P6 (50% flowering, DAS 50-56) p=0.02
+14:30:09 [MainProcess] INFO -    70 d  sow +20  impossible   0.3%  P(hit window) 0.03  most hit: P3 (panicle initiation, DAS 29-40) p=0.02
+14:30:09 [MainProcess] INFO -    70 d  sow +30  impossible   2.1%  P(hit window) 0.03  most hit: P3 (panicle initiation, DAS 29-40) p=0.03
+14:30:09 [MainProcess] INFO -    70 d  sow +40  impossible   5.8%  P(hit window) 0.03  most hit: P2 (5th leaf, DAS 17-28) p=0.03
+14:30:09 [MainProcess] INFO -    90 d  sow +0   impossible   0.3%  P(hit window) 0.04  most hit: P6 (50% flowering, DAS 65-73) p=0.02
+14:30:09 [MainProcess] INFO -    90 d  sow +10  impossible   2.1%  P(hit window) 0.04  most hit: P3 (panicle initiation, DAS 37-52) p=0.03
+14:30:09 [MainProcess] INFO -    90 d  sow +20  impossible   5.8%  P(hit window) 0.04  most hit: P3 (panicle initiation, DAS 37-52) p=0.03
+14:30:09 [MainProcess] INFO -    90 d  sow +30  impossible  11.7%  P(hit window) 0.03  most hit: P2 (5th leaf, DAS 22-36) p=0.03
+14:30:09 [MainProcess] INFO -    90 d  sow +40  impossible  12.8%  P(hit window) 0.03  most hit: P3 (panicle initiation, DAS 37-52) p=0.03
+14:30:09 [MainProcess] INFO -   110 d  sow +0   impossible   5.8%  P(hit window) 0.04  most hit: P3 (panicle initiation, DAS 45-64) p=0.03
+14:30:09 [MainProcess] INFO -   110 d  sow +10  impossible  11.7%  P(hit window) 0.04  most hit: P3 (panicle initiation, DAS 45-64) p=0.03
+14:30:09 [MainProcess] INFO -   110 d  sow +20  impossible  12.8%  P(hit window) 0.04  most hit: P2 (5th leaf, DAS 26-44) p=0.03
+14:30:09 [MainProcess] INFO -   110 d  sow +30  impossible  17.0%  P(hit window) 0.03  most hit: P2 (5th leaf, DAS 26-44) p=0.03
+14:30:09 [MainProcess] INFO -   110 d  sow +40  impossible  33.2%  P(hit window) 0.03  most hit: P2 (5th leaf, DAS 26-44) p=0.03
+14:30:09 [MainProcess] INFO -   130 d  sow +0   impossible  12.8%  P(hit window) 0.04  most hit: P3 (panicle initiation, DAS 53-76) p=0.03
+14:30:09 [MainProcess] INFO -   130 d  sow +10  impossible  17.0%  P(hit window) 0.04  most hit: P3 (panicle initiation, DAS 53-76) p=0.03
+14:30:09 [MainProcess] INFO -   130 d  sow +20  impossible  33.2%  P(hit window) 0.03  most hit: P2 (5th leaf, DAS 31-52) p=0.04
+14:30:09 [MainProcess] INFO -   130 d  sow +30  impossible  57.0%  P(hit window) 0.03  most hit: P2 (5th leaf, DAS 31-52) p=0.06
+14:30:09 [MainProcess] INFO -   130 d  sow +40  impossible  84.2%  P(hit window) 0.05  most hit: P3 (panicle initiation, DAS 53-76) p=0.11
+14:30:09 [MainProcess] INFO - --- groundnut (national, possible cells) ---
+14:30:09 [MainProcess] INFO -    70 d  sow +0   impossible   0.0%  P(hit window) 0.03  most hit: R7 (beginning maturity, DAS 55-64) p=0.02
+14:30:09 [MainProcess] INFO -    70 d  sow +10  impossible   0.0%  P(hit window) 0.03  most hit: R6 (full seed, DAS 43-54) p=0.03
+14:30:09 [MainProcess] INFO -    70 d  sow +20  impossible   0.3%  P(hit window) 0.04  most hit: R6 (full seed, DAS 43-54) p=0.02
+14:30:09 [MainProcess] INFO -    70 d  sow +30  impossible   2.1%  P(hit window) 0.04  most hit: R6 (full seed, DAS 43-54) p=0.02
+14:30:09 [MainProcess] INFO -    70 d  sow +40  impossible   5.8%  P(hit window) 0.04  most hit: R6 (full seed, DAS 43-54) p=0.03
+14:30:09 [MainProcess] INFO -    90 d  sow +0   impossible   0.3%  P(hit window) 0.04  most hit: R6 (full seed, DAS 56-69) p=0.03
+14:30:09 [MainProcess] INFO -    90 d  sow +10  impossible   2.1%  P(hit window) 0.04  most hit: R7 (beginning maturity, DAS 70-83) p=0.03
+14:30:09 [MainProcess] INFO -    90 d  sow +20  impossible   5.8%  P(hit window) 0.05  most hit: R7 (beginning maturity, DAS 70-83) p=0.03
+14:30:09 [MainProcess] INFO -    90 d  sow +30  impossible  11.7%  P(hit window) 0.04  most hit: R6 (full seed, DAS 56-69) p=0.02
+14:30:09 [MainProcess] INFO -    90 d  sow +40  impossible  12.8%  P(hit window) 0.04  most hit: R6 (full seed, DAS 56-69) p=0.02
+14:30:09 [MainProcess] INFO -   110 d  sow +0   impossible   5.8%  P(hit window) 0.05  most hit: R7 (beginning maturity, DAS 86-101) p=0.03
+14:30:09 [MainProcess] INFO -   110 d  sow +10  impossible  11.7%  P(hit window) 0.05  most hit: R6 (full seed, DAS 68-85) p=0.03
+14:30:09 [MainProcess] INFO -   110 d  sow +20  impossible  12.8%  P(hit window) 0.05  most hit: R6 (full seed, DAS 68-85) p=0.03
+14:30:09 [MainProcess] INFO -   110 d  sow +30  impossible  17.0%  P(hit window) 0.05  most hit: R6 (full seed, DAS 68-85) p=0.02
+14:30:09 [MainProcess] INFO -   110 d  sow +40  impossible  33.2%  P(hit window) 0.05  most hit: VE (emergence, DAS 8-23) p=0.03
+14:30:09 [MainProcess] INFO -   130 d  sow +0   impossible  12.8%  P(hit window) 0.06  most hit: R6 (full seed, DAS 81-100) p=0.03
+14:30:09 [MainProcess] INFO -   130 d  sow +10  impossible  17.0%  P(hit window) 0.06  most hit: R6 (full seed, DAS 81-100) p=0.03
+14:30:09 [MainProcess] INFO -   130 d  sow +20  impossible  33.2%  P(hit window) 0.06  most hit: R2 (beginning peg, DAS 39-48) p=0.03
+14:30:09 [MainProcess] INFO -   130 d  sow +30  impossible  57.0%  P(hit window) 0.08  most hit: R1 (beginning bloom, DAS 29-38) p=0.04
+14:30:09 [MainProcess] INFO -   130 d  sow +40  impossible  84.2%  P(hit window) 0.15  most hit: R5 (beginning seed, DAS 68-80) p=0.07
+14:30:09 [MainProcess] INFO - STEP3 done in 1.0 min -> dryspell_v8/ci_nga/step03/BEN

@@ -1,0 +1,9 @@
+{
+  "iso3": "CMR",
+  "status": "ok",
+  "n_cells": 8119,
+  "n_analysed": 8118,
+  "n_no_rads": 0,
+  "aez_source": "raster dryspell_v8_data/aez/afr_aez09.tif (majority per cell)",
+  "minutes": 1.02
+}
