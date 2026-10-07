@@ -1,0 +1,96 @@
+16:03:41 [MainProcess] INFO - ======================================================================
+16:03:41 [MainProcess] INFO - v9 STEP4  region=ci_nga target=kano_cell crops=['sorghum', 'pearl_millet', 'groundnut'] zones=aez8
+16:03:41 [MainProcess] INFO -   sowing = onset + 0 + [0, 10, 20, 30, 40]   cycles = [70, 90, 110, 130] d   grace = 0 d
+16:03:41 [MainProcess] INFO -   min spell (d) = {'sorghum': 10, 'pearl_millet': 10, 'groundnut': 10}   impossible if P(feasible) < 0.5
+16:03:41 [MainProcess] INFO - ======================================================================
+16:03:41 [MainProcess] INFO -   kano_cell (point): 1 grid cells, 1 usable
+16:03:41 [MainProcess] INFO -   groundnut      70 d: vulnerable window DAS 27-54 = R3 (beginning pod) -> R6 (full seed)
+16:03:41 [MainProcess] INFO -   groundnut      90 d: vulnerable window DAS 34-69 = R3 (beginning pod) -> R6 (full seed)
+16:03:41 [MainProcess] INFO -   groundnut     110 d: vulnerable window DAS 42-85 = R3 (beginning pod) -> R6 (full seed)
+16:03:41 [MainProcess] INFO -   groundnut     130 d: vulnerable window DAS 49-100 = R3 (beginning pod) -> R6 (full seed)
+16:03:41 [MainProcess] INFO -   pearl_millet   70 d: vulnerable window DAS 46-63 = P5 (boot) -> P7 (milk)
+16:03:41 [MainProcess] INFO -   pearl_millet   90 d: vulnerable window DAS 58-82 = P5 (boot) -> P7 (milk)
+16:03:41 [MainProcess] INFO -   pearl_millet  110 d: vulnerable window DAS 72-100 = P5 (boot) -> P7 (milk)
+16:03:41 [MainProcess] INFO -   pearl_millet  130 d: vulnerable window DAS 84-119 = P5 (boot) -> P7 (milk)
+16:03:41 [MainProcess] INFO -   sorghum        70 d: vulnerable window DAS 33-54 = S4 (flag leaf visible) -> S7 (soft dough)
+16:03:41 [MainProcess] INFO -   sorghum        90 d: vulnerable window DAS 42-70 = S4 (flag leaf visible) -> S7 (soft dough)
+16:03:41 [MainProcess] INFO -   sorghum       110 d: vulnerable window DAS 52-86 = S4 (flag leaf visible) -> S7 (soft dough)
+16:03:41 [MainProcess] INFO -   sorghum       130 d: vulnerable window DAS 61-102 = S4 (flag leaf visible) -> S7 (soft dough)
+16:03:41 [MainProcess] INFO - Processing 1 row chunks
+16:03:41 [MainProcess] INFO -   1/1 chunks
+16:03:41 [MainProcess] INFO -   spell x season pairs examined: 69
+16:03:41 [MainProcess] INFO -   cells analysed: 1; no/too few valid seasons (arid, failed seasons): 0; no usable CHIRPS: 0
+16:03:42 [MainProcess] INFO - Written season_detail.csv (2,580 rows)
+16:03:42 [MainProcess] INFO -     regime unimodal            1 analysed cells
+16:03:42 [MainProcess] INFO -     regime transition          0 analysed cells
+16:03:42 [MainProcess] INFO -     regime bimodal             0 analysed cells
+16:03:42 [MainProcess] WARNING - CPLE_AppDefined:Too many points (529 out of 529) failed to transform, unable to compute output bounds.
+16:03:42 [MainProcess] WARNING - CPLE_AppDefined:Unable to compute source region for output window 0,0,1,1, skipping.
+16:03:42 [MainProcess] INFO -   zones: HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell
+16:03:42 [MainProcess] WARNING -     1 analysed cells without a zone ('unassigned'; e.g. the HarvestChoice AEZ grid is damaged south of ~3.8N - use --zones koppen there)
+16:03:42 [MainProcess] INFO - Written cells_<crop>.nc
+16:03:42 [MainProcess] INFO - Written zone_summary.csv, zone_stage_hits.csv, cell_summary.parquet, cell_stage_hits_<crop>.parquet
+16:03:47 [MainProcess] INFO - --- sorghum (all cells of kano_cell, possible cells) ---
+16:03:47 [MainProcess] INFO -    70 d  sow +0   impossible   0.0%  P(hit window) 0.00  most hit: S1 (3-leaf, DAS 10-16) p=0.05
+16:03:47 [MainProcess] INFO -    70 d  sow +10  impossible   0.0%  P(hit window) 0.00  most hit: SOW (sowing to emergence, DAS 0-2) p=0.02
+16:03:47 [MainProcess] INFO -    70 d  sow +20  impossible   0.0%  P(hit window) 0.00  most hit: SOW (sowing to emergence, DAS 0-2) p=0.00
+16:03:47 [MainProcess] INFO -    70 d  sow +30  impossible   0.0%  P(hit window) 0.02  most hit: S7 (soft dough, DAS 52-62) p=0.02
+16:03:47 [MainProcess] INFO -    70 d  sow +40  impossible   0.0%  P(hit window) 0.03  most hit: S5 (boot, DAS 38-45) p=0.03
+16:03:47 [MainProcess] INFO -    90 d  sow +0   impossible   0.0%  P(hit window) 0.00  most hit: S0 (emergence, DAS 4-12) p=0.05
+16:03:47 [MainProcess] INFO -    90 d  sow +10  impossible   0.0%  P(hit window) 0.00  most hit: SOW (sowing to emergence, DAS 0-3) p=0.02
+16:03:47 [MainProcess] INFO -    90 d  sow +20  impossible   0.0%  P(hit window) 0.03  most hit: S6 (half-bloom, DAS 58-67) p=0.03
+16:03:47 [MainProcess] INFO -    90 d  sow +30  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -    90 d  sow +40  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +0   impossible   0.0%  P(hit window) 0.03  most hit: S0 (emergence, DAS 4-14) p=0.06
+16:03:47 [MainProcess] INFO -   110 d  sow +10  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +20  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +30  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +40  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +0   impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +10  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +20  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +30  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +40  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO - --- pearl_millet (all cells of kano_cell, possible cells) ---
+16:03:47 [MainProcess] INFO -    70 d  sow +0   impossible   0.0%  P(hit window) 0.00  most hit: P1 (3rd leaf, DAS 9-16) p=0.05
+16:03:47 [MainProcess] INFO -    70 d  sow +10  impossible   0.0%  P(hit window) 0.00  most hit: SOW (sowing to emergence, DAS 0-3) p=0.02
+16:03:47 [MainProcess] INFO -    70 d  sow +20  impossible   0.0%  P(hit window) 0.00  most hit: SOW (sowing to emergence, DAS 0-3) p=0.00
+16:03:47 [MainProcess] INFO -    70 d  sow +30  impossible   0.0%  P(hit window) 0.02  most hit: P6 (50% flowering, DAS 50-56) p=0.02
+16:03:47 [MainProcess] INFO -    70 d  sow +40  impossible   0.0%  P(hit window) 0.03  most hit: P4 (flag leaf visible, DAS 41-45) p=0.03
+16:03:47 [MainProcess] INFO -    90 d  sow +0   impossible   0.0%  P(hit window) 0.00  most hit: P0 (emergence, DAS 4-11) p=0.05
+16:03:47 [MainProcess] INFO -    90 d  sow +10  impossible   0.0%  P(hit window) 0.02  most hit: SOW (sowing to emergence, DAS 0-3) p=0.02
+16:03:47 [MainProcess] INFO -    90 d  sow +20  impossible   0.0%  P(hit window) 0.03  most hit: P5 (boot, DAS 58-64) p=0.03
+16:03:47 [MainProcess] INFO -    90 d  sow +30  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -    90 d  sow +40  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +0   impossible   0.0%  P(hit window) 0.03  most hit: P0 (emergence, DAS 6-13) p=0.06
+16:03:47 [MainProcess] INFO -   110 d  sow +10  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +20  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +30  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +40  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +0   impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +10  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +20  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +30  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +40  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO - --- groundnut (all cells of kano_cell, possible cells) ---
+16:03:47 [MainProcess] INFO -    70 d  sow +0   impossible   0.0%  P(hit window) 0.00  most hit: VE (emergence, DAS 5-14) p=0.05
+16:03:47 [MainProcess] INFO -    70 d  sow +10  impossible   0.0%  P(hit window) 0.00  most hit: SOW (sowing to emergence, DAS 0-4) p=0.02
+16:03:47 [MainProcess] INFO -    70 d  sow +20  impossible   0.0%  P(hit window) 0.00  most hit: SOW (sowing to emergence, DAS 0-4) p=0.00
+16:03:47 [MainProcess] INFO -    70 d  sow +30  impossible   0.0%  P(hit window) 0.02  most hit: R6 (full seed, DAS 43-54) p=0.02
+16:03:47 [MainProcess] INFO -    70 d  sow +40  impossible   0.0%  P(hit window) 0.03  most hit: R5 (beginning seed, DAS 36-42) p=0.03
+16:03:47 [MainProcess] INFO -    90 d  sow +0   impossible   0.0%  P(hit window) 0.00  most hit: VE (emergence, DAS 6-19) p=0.05
+16:03:47 [MainProcess] INFO -    90 d  sow +10  impossible   0.0%  P(hit window) 0.00  most hit: SOW (sowing to emergence, DAS 0-5) p=0.02
+16:03:47 [MainProcess] INFO -    90 d  sow +20  impossible   0.0%  P(hit window) 0.03  most hit: R6 (full seed, DAS 56-69) p=0.03
+16:03:47 [MainProcess] INFO -    90 d  sow +30  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -    90 d  sow +40  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +0   impossible   0.0%  P(hit window) 0.03  most hit: VE (emergence, DAS 8-23) p=0.06
+16:03:47 [MainProcess] INFO -   110 d  sow +10  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +20  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +30  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   110 d  sow +40  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +0   impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +10  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +20  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +30  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO -   130 d  sow +40  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+16:03:47 [MainProcess] INFO - STEP4 done in 0.1 min -> dryspell_v9/ci_nga/step04/kano_cell

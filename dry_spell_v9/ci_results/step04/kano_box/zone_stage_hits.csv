@@ -1,0 +1,1741 @@
+unit,zone_scheme,crop,cycle,sow,zone,stage,p,n_cells,stage_idx,stage_name,das_start,das_end,overlaps_window
+kano_box,koppen,sorghum,70,0,"Aw Tropical, savannah",SOW,0.00023201489,1868,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,0,"BSh Arid, steppe, hot",SOW,0.00086488563,132,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,10,"Aw Tropical, savannah",SOW,0.0058139535,1868,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,10,"BSh Arid, steppe, hot",SOW,0.0029470178,132,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,20,"Aw Tropical, savannah",SOW,0.00041649502,1868,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,20,"BSh Arid, steppe, hot",SOW,0.00017217631,132,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,30,"Aw Tropical, savannah",SOW,0.00055061094,1868,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,30,"BSh Arid, steppe, hot",SOW,0.0024833046,132,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,40,"Aw Tropical, savannah",SOW,3.7390146e-05,1868,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,40,"BSh Arid, steppe, hot",SOW,0.0,132,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,90,0,"Aw Tropical, savannah",SOW,0.00032934797,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,0,"BSh Arid, steppe, hot",SOW,0.0015778062,132,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,10,"Aw Tropical, savannah",SOW,0.0068463027,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,10,"BSh Arid, steppe, hot",SOW,0.0034881572,132,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,20,"Aw Tropical, savannah",SOW,0.0002323113,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,20,"BSh Arid, steppe, hot",SOW,0.00018037518,132,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,30,"Aw Tropical, savannah",SOW,0.0005580174,1861,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,30,"BSh Arid, steppe, hot",SOW,0.002778207,132,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,40,"Aw Tropical, savannah",SOW,2.4437928e-05,1860,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,40,"BSh Arid, steppe, hot",SOW,0.0,131,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,0,"Aw Tropical, savannah",SOW,0.00033221784,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,0,"BSh Arid, steppe, hot",SOW,0.001452854,132,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,10,"Aw Tropical, savannah",SOW,0.0068627014,1861,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,10,"BSh Arid, steppe, hot",SOW,0.0037169966,132,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,20,"Aw Tropical, savannah",SOW,0.00024166805,1860,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,20,"BSh Arid, steppe, hot",SOW,0.0002120441,131,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,30,"Aw Tropical, savannah",SOW,0.00055695866,1841,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,30,"BSh Arid, steppe, hot",SOW,0.0,53,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,40,"Aw Tropical, savannah",SOW,3.3760403e-05,1519,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,40,"BSh Arid, steppe, hot",SOW,0.0,7,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,130,0,"Aw Tropical, savannah",SOW,0.001614631,1860,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,130,0,"BSh Arid, steppe, hot",SOW,0.0035733106,131,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,130,10,"Aw Tropical, savannah",SOW,0.007747796,1841,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,130,10,"BSh Arid, steppe, hot",SOW,0.009440287,53,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,130,20,"Aw Tropical, savannah",SOW,0.00094358856,1519,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,130,20,"BSh Arid, steppe, hot",SOW,0.0,7,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,130,30,"Aw Tropical, savannah",SOW,0.0014274584,947,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,130,40,"Aw Tropical, savannah",SOW,0.0,564,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,70,0,"Aw Tropical, savannah",S0,0.003991788,1868,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,0,"BSh Arid, steppe, hot",S0,0.00817275,132,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,10,"Aw Tropical, savannah",S0,0.012996229,1868,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,10,"BSh Arid, steppe, hot",S0,0.0078003686,132,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,20,"Aw Tropical, savannah",S0,0.0038500326,1868,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,20,"BSh Arid, steppe, hot",S0,0.009173394,132,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,30,"Aw Tropical, savannah",S0,0.0036078866,1868,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,30,"BSh Arid, steppe, hot",S0,0.006620593,132,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,40,"Aw Tropical, savannah",S0,3.7390146e-05,1868,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,40,"BSh Arid, steppe, hot",S0,0.0054156887,132,1,emergence,3,9,False
+kano_box,koppen,sorghum,90,0,"Aw Tropical, savannah",S0,0.008047118,1868,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,0,"BSh Arid, steppe, hot",S0,0.008217176,132,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,10,"Aw Tropical, savannah",S0,0.012776321,1868,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,10,"BSh Arid, steppe, hot",S0,0.006841319,132,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,20,"Aw Tropical, savannah",S0,0.0041574505,1868,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,20,"BSh Arid, steppe, hot",S0,0.01251039,132,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,30,"Aw Tropical, savannah",S0,0.0035569128,1861,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,30,"BSh Arid, steppe, hot",S0,0.002778207,132,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,40,"Aw Tropical, savannah",S0,0.00011295266,1860,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,40,"BSh Arid, steppe, hot",S0,0.0,131,1,emergence,4,12,False
+kano_box,koppen,sorghum,110,0,"Aw Tropical, savannah",S0,0.009333493,1868,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,0,"BSh Arid, steppe, hot",S0,0.009008631,132,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,10,"Aw Tropical, savannah",S0,0.013283959,1861,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,10,"BSh Arid, steppe, hot",S0,0.0072362064,132,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,20,"Aw Tropical, savannah",S0,0.0042642383,1860,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,20,"BSh Arid, steppe, hot",S0,0.0025057099,131,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,30,"Aw Tropical, savannah",S0,0.0036751206,1841,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,30,"BSh Arid, steppe, hot",S0,0.0,53,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,40,"Aw Tropical, savannah",S0,0.00017131181,1519,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,40,"BSh Arid, steppe, hot",S0,0.0,7,1,emergence,4,14,False
+kano_box,koppen,sorghum,130,0,"Aw Tropical, savannah",S0,0.014619815,1860,1,emergence,5,17,False
+kano_box,koppen,sorghum,130,0,"BSh Arid, steppe, hot",S0,0.0109106265,131,1,emergence,5,17,False
+kano_box,koppen,sorghum,130,10,"Aw Tropical, savannah",S0,0.017070131,1841,1,emergence,5,17,False
+kano_box,koppen,sorghum,130,10,"BSh Arid, steppe, hot",S0,0.013098181,53,1,emergence,5,17,False
+kano_box,koppen,sorghum,130,20,"Aw Tropical, savannah",S0,0.010529313,1519,1,emergence,5,17,False
+kano_box,koppen,sorghum,130,20,"BSh Arid, steppe, hot",S0,0.028673658,7,1,emergence,5,17,False
+kano_box,koppen,sorghum,130,30,"Aw Tropical, savannah",S0,0.009521047,947,1,emergence,5,17,False
+kano_box,koppen,sorghum,130,40,"Aw Tropical, savannah",S0,0.0,564,1,emergence,5,17,False
+kano_box,koppen,sorghum,70,0,"Aw Tropical, savannah",S1,0.013888638,1868,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,0,"BSh Arid, steppe, hot",S1,0.014759877,132,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,10,"Aw Tropical, savannah",S1,0.015489823,1868,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,10,"BSh Arid, steppe, hot",S1,0.008316898,132,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,20,"Aw Tropical, savannah",S1,0.006455956,1868,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,20,"BSh Arid, steppe, hot",S1,0.0114523,132,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,30,"Aw Tropical, savannah",S1,0.0037055025,1868,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,30,"BSh Arid, steppe, hot",S1,0.006620593,132,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,40,"Aw Tropical, savannah",S1,0.002290824,1868,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,40,"BSh Arid, steppe, hot",S1,0.009680699,132,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,90,0,"Aw Tropical, savannah",S1,0.0148896715,1868,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,0,"BSh Arid, steppe, hot",S1,0.011184787,132,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,10,"Aw Tropical, savannah",S1,0.011562051,1868,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,10,"BSh Arid, steppe, hot",S1,0.013699702,132,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,20,"Aw Tropical, savannah",S1,0.0069688614,1868,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,20,"BSh Arid, steppe, hot",S1,0.012330014,132,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,30,"Aw Tropical, savannah",S1,0.0040047136,1861,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,30,"BSh Arid, steppe, hot",S1,0.00080880016,132,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,40,"Aw Tropical, savannah",S1,8.851473e-05,1860,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,40,"BSh Arid, steppe, hot",S1,0.0,131,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,110,0,"Aw Tropical, savannah",S1,0.015600166,1868,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,0,"BSh Arid, steppe, hot",S1,0.0123499725,132,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,10,"Aw Tropical, savannah",S1,0.009065367,1861,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,10,"BSh Arid, steppe, hot",S1,0.014562933,132,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,20,"Aw Tropical, savannah",S1,0.0067689656,1860,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,20,"BSh Arid, steppe, hot",S1,0.0022936657,131,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,30,"Aw Tropical, savannah",S1,0.00321299,1841,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,30,"BSh Arid, steppe, hot",S1,0.0,53,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,40,"Aw Tropical, savannah",S1,0.00013755141,1519,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,40,"BSh Arid, steppe, hot",S1,0.0,7,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,130,0,"Aw Tropical, savannah",S1,0.017267004,1860,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,130,0,"BSh Arid, steppe, hot",S1,0.007985002,131,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,130,10,"Aw Tropical, savannah",S1,0.0084799295,1841,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,130,10,"BSh Arid, steppe, hot",S1,0.003657895,53,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,130,20,"Aw Tropical, savannah",S1,0.0051492937,1519,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,130,20,"BSh Arid, steppe, hot",S1,0.0,7,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,130,30,"Aw Tropical, savannah",S1,0.00034069325,947,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,130,40,"Aw Tropical, savannah",S1,0.0,564,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,70,0,"Aw Tropical, savannah",S2,0.013763293,1868,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,0,"BSh Arid, steppe, hot",S2,0.010591418,132,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,10,"Aw Tropical, savannah",S2,0.0058974223,1868,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,10,"BSh Arid, steppe, hot",S2,0.011752606,132,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,20,"Aw Tropical, savannah",S2,0.0049444637,1868,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,20,"BSh Arid, steppe, hot",S2,0.014267372,132,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,30,"Aw Tropical, savannah",S2,0.0038243395,1868,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,30,"BSh Arid, steppe, hot",S2,0.01319859,132,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,40,"Aw Tropical, savannah",S2,0.0022534337,1868,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,40,"BSh Arid, steppe, hot",S2,0.009680699,132,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,90,0,"Aw Tropical, savannah",S2,0.014221868,1868,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,0,"BSh Arid, steppe, hot",S2,0.014235149,132,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,10,"Aw Tropical, savannah",S2,0.0070779235,1868,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,10,"BSh Arid, steppe, hot",S2,0.015922062,132,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,20,"Aw Tropical, savannah",S2,0.0030929544,1868,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,20,"BSh Arid, steppe, hot",S2,0.0072916076,132,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,30,"Aw Tropical, savannah",S2,0.0011929938,1861,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,30,"BSh Arid, steppe, hot",S2,0.0010192378,132,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,40,"Aw Tropical, savannah",S2,0.0011270728,1860,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,40,"BSh Arid, steppe, hot",S2,0.0011365823,131,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,110,0,"Aw Tropical, savannah",S2,0.009435069,1868,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,0,"BSh Arid, steppe, hot",S2,0.012699784,132,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,10,"Aw Tropical, savannah",S2,0.006386497,1861,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,10,"BSh Arid, steppe, hot",S2,0.013967791,132,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,20,"Aw Tropical, savannah",S2,0.0024546876,1860,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,20,"BSh Arid, steppe, hot",S2,0.0,131,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,30,"Aw Tropical, savannah",S2,9.482787e-05,1841,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,30,"BSh Arid, steppe, hot",S2,0.0,53,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,40,"Aw Tropical, savannah",S2,0.0001112683,1519,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,40,"BSh Arid, steppe, hot",S2,0.0,7,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,130,0,"Aw Tropical, savannah",S2,0.007065888,1860,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,130,0,"BSh Arid, steppe, hot",S2,0.0022936657,131,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,130,10,"Aw Tropical, savannah",S2,0.0033103595,1841,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,130,10,"BSh Arid, steppe, hot",S2,0.0,53,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,130,20,"Aw Tropical, savannah",S2,0.00017131181,1519,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,130,20,"BSh Arid, steppe, hot",S2,0.0,7,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,130,30,"Aw Tropical, savannah",S2,0.00013274132,947,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,130,40,"Aw Tropical, savannah",S2,0.0,564,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,70,0,"Aw Tropical, savannah",S3,0.010774828,1868,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,0,"BSh Arid, steppe, hot",S3,0.013297998,132,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,10,"Aw Tropical, savannah",S3,0.006939792,1868,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,10,"BSh Arid, steppe, hot",S3,0.016097054,132,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,20,"Aw Tropical, savannah",S3,0.0032374565,1868,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,20,"BSh Arid, steppe, hot",S3,0.013526041,132,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,30,"Aw Tropical, savannah",S3,0.0022024438,1868,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,30,"BSh Arid, steppe, hot",S3,0.009237482,132,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,40,"Aw Tropical, savannah",S3,0.0026781291,1868,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,40,"BSh Arid, steppe, hot",S3,0.005180509,132,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,90,0,"Aw Tropical, savannah",S3,0.0070011904,1868,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,0,"BSh Arid, steppe, hot",S3,0.015472606,132,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,10,"Aw Tropical, savannah",S3,0.0033136236,1868,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,10,"BSh Arid, steppe, hot",S3,0.011450605,132,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,20,"Aw Tropical, savannah",S3,0.002290824,1868,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,20,"BSh Arid, steppe, hot",S3,0.009680699,132,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,30,"Aw Tropical, savannah",S3,0.0024127304,1861,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,30,"BSh Arid, steppe, hot",S3,0.0020168563,132,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,40,"Aw Tropical, savannah",S3,0.0023117575,1860,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,40,"BSh Arid, steppe, hot",S3,0.0036214602,131,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,110,0,"Aw Tropical, savannah",S3,0.004765286,1868,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,0,"BSh Arid, steppe, hot",S3,0.011103984,132,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,10,"Aw Tropical, savannah",S3,0.0025897927,1861,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,10,"BSh Arid, steppe, hot",S3,0.0010192378,132,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,20,"Aw Tropical, savannah",S3,0.0010576553,1860,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,20,"BSh Arid, steppe, hot",S3,0.0002181025,131,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,30,"Aw Tropical, savannah",S3,0.0008499809,1841,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,30,"BSh Arid, steppe, hot",S3,0.0042257393,53,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,40,"Aw Tropical, savannah",S3,0.0022007944,1519,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,40,"BSh Arid, steppe, hot",S3,0.0,7,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,130,0,"Aw Tropical, savannah",S3,0.0030424648,1860,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,130,0,"BSh Arid, steppe, hot",S3,0.0,131,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,130,10,"Aw Tropical, savannah",S3,5.2678028e-05,1841,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,130,10,"BSh Arid, steppe, hot",S3,0.0,53,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,130,20,"Aw Tropical, savannah",S3,0.0001112683,1519,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,130,20,"BSh Arid, steppe, hot",S3,0.0,7,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,130,30,"Aw Tropical, savannah",S3,0.00036782186,947,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,130,40,"Aw Tropical, savannah",S3,0.0002551147,564,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,70,0,"Aw Tropical, savannah",S4,0.006951392,1868,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,0,"BSh Arid, steppe, hot",S4,0.012441312,132,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,10,"Aw Tropical, savannah",S4,0.0033101735,1868,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,10,"BSh Arid, steppe, hot",S4,0.006791526,132,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,20,"Aw Tropical, savannah",S4,0.002428234,1868,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,20,"BSh Arid, steppe, hot",S4,0.016801395,132,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,30,"Aw Tropical, savannah",S4,0.0030242875,1868,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,30,"BSh Arid, steppe, hot",S4,0.009413662,132,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,40,"Aw Tropical, savannah",S4,0.0033338543,1868,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,40,"BSh Arid, steppe, hot",S4,0.0031863954,132,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,90,0,"Aw Tropical, savannah",S4,0.0036774362,1868,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,0,"BSh Arid, steppe, hot",S4,0.013907002,132,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,10,"Aw Tropical, savannah",S4,0.0023637773,1868,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,10,"BSh Arid, steppe, hot",S4,0.01337477,132,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,20,"Aw Tropical, savannah",S4,0.0036265985,1868,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,20,"BSh Arid, steppe, hot",S4,0.010596198,132,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,30,"Aw Tropical, savannah",S4,0.0028808939,1861,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,30,"BSh Arid, steppe, hot",S4,0.003293932,132,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,40,"Aw Tropical, savannah",S4,0.0034981398,1860,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,40,"BSh Arid, steppe, hot",S4,0.0034033577,131,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,110,0,"Aw Tropical, savannah",S4,0.002254324,1868,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,0,"BSh Arid, steppe, hot",S4,0.009680699,132,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,10,"Aw Tropical, savannah",S4,0.002625065,1861,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,10,"BSh Arid, steppe, hot",S4,0.0020168563,132,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,20,"Aw Tropical, savannah",S4,0.0023606336,1860,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,20,"BSh Arid, steppe, hot",S4,0.0036214602,131,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,30,"Aw Tropical, savannah",S4,0.0034504076,1841,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,30,"BSh Arid, steppe, hot",S4,0.0042257393,53,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,40,"Aw Tropical, savannah",S4,0.0022864249,1519,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,40,"BSh Arid, steppe, hot",S4,0.0,7,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,130,0,"Aw Tropical, savannah",S4,0.0010659125,1860,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,130,0,"BSh Arid, steppe, hot",S4,0.0011365823,131,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,130,10,"Aw Tropical, savannah",S4,0.0008083062,1841,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,130,10,"BSh Arid, steppe, hot",S4,0.0042257393,53,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,130,20,"Aw Tropical, savannah",S4,0.0022007944,1519,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,130,20,"BSh Arid, steppe, hot",S4,0.0,7,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,130,30,"Aw Tropical, savannah",S4,0.00023508054,947,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,130,40,"Aw Tropical, savannah",S4,0.0,564,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,70,0,"Aw Tropical, savannah",S5,0.0037374203,1868,6,boot,38,45,True
+kano_box,koppen,sorghum,70,0,"BSh Arid, steppe, hot",S5,0.007135879,132,6,boot,38,45,True
+kano_box,koppen,sorghum,70,10,"Aw Tropical, savannah",S5,0.0027892718,1868,6,boot,38,45,True
+kano_box,koppen,sorghum,70,10,"BSh Arid, steppe, hot",S5,0.017602025,132,6,boot,38,45,True
+kano_box,koppen,sorghum,70,20,"Aw Tropical, savannah",S5,0.0029836684,1868,6,boot,38,45,True
+kano_box,koppen,sorghum,70,20,"BSh Arid, steppe, hot",S5,0.013301621,132,6,boot,38,45,True
+kano_box,koppen,sorghum,70,30,"Aw Tropical, savannah",S5,0.0020213397,1868,6,boot,38,45,True
+kano_box,koppen,sorghum,70,30,"BSh Arid, steppe, hot",S5,0.0010784656,132,6,boot,38,45,True
+kano_box,koppen,sorghum,70,40,"Aw Tropical, savannah",S5,0.0071959784,1868,6,boot,38,45,True
+kano_box,koppen,sorghum,70,40,"BSh Arid, steppe, hot",S5,0.007996447,132,6,boot,38,45,True
+kano_box,koppen,sorghum,90,0,"Aw Tropical, savannah",S5,0.002391734,1868,6,boot,50,57,True
+kano_box,koppen,sorghum,90,0,"BSh Arid, steppe, hot",S5,0.016801395,132,6,boot,50,57,True
+kano_box,koppen,sorghum,90,10,"Aw Tropical, savannah",S5,0.0030242875,1868,6,boot,50,57,True
+kano_box,koppen,sorghum,90,10,"BSh Arid, steppe, hot",S5,0.009413662,132,6,boot,50,57,True
+kano_box,koppen,sorghum,90,20,"Aw Tropical, savannah",S5,0.0033338543,1868,6,boot,50,57,True
+kano_box,koppen,sorghum,90,20,"BSh Arid, steppe, hot",S5,0.0031863954,132,6,boot,50,57,True
+kano_box,koppen,sorghum,90,30,"Aw Tropical, savannah",S5,0.003987151,1861,6,boot,50,57,True
+kano_box,koppen,sorghum,90,30,"BSh Arid, steppe, hot",S5,0.003104538,132,6,boot,50,57,True
+kano_box,koppen,sorghum,90,40,"Aw Tropical, savannah",S5,0.0026062224,1860,6,boot,50,57,True
+kano_box,koppen,sorghum,90,40,"BSh Arid, steppe, hot",S5,0.0012113127,131,6,boot,50,57,True
+kano_box,koppen,sorghum,110,0,"Aw Tropical, savannah",S5,0.0037025097,1868,6,boot,61,71,True
+kano_box,koppen,sorghum,110,0,"BSh Arid, steppe, hot",S5,0.010596198,132,6,boot,61,71,True
+kano_box,koppen,sorghum,110,10,"Aw Tropical, savannah",S5,0.002524462,1861,6,boot,61,71,True
+kano_box,koppen,sorghum,110,10,"BSh Arid, steppe, hot",S5,0.0024290462,132,6,boot,61,71,True
+kano_box,koppen,sorghum,110,20,"Aw Tropical, savannah",S5,0.0035368542,1860,6,boot,61,71,True
+kano_box,koppen,sorghum,110,20,"BSh Arid, steppe, hot",S5,0.0034033577,131,6,boot,61,71,True
+kano_box,koppen,sorghum,110,30,"Aw Tropical, savannah",S5,0.0051842947,1841,6,boot,61,71,True
+kano_box,koppen,sorghum,110,30,"BSh Arid, steppe, hot",S5,0.0,53,6,boot,61,71,True
+kano_box,koppen,sorghum,110,40,"Aw Tropical, savannah",S5,0.006095582,1519,6,boot,61,71,True
+kano_box,koppen,sorghum,110,40,"BSh Arid, steppe, hot",S5,0.0,7,6,boot,61,71,True
+kano_box,koppen,sorghum,130,0,"Aw Tropical, savannah",S5,0.003912889,1860,6,boot,72,83,True
+kano_box,koppen,sorghum,130,0,"BSh Arid, steppe, hot",S5,0.0027113992,131,6,boot,72,83,True
+kano_box,koppen,sorghum,130,10,"Aw Tropical, savannah",S5,0.0032932907,1841,6,boot,72,83,True
+kano_box,koppen,sorghum,130,10,"BSh Arid, steppe, hot",S5,0.0042257393,53,6,boot,72,83,True
+kano_box,koppen,sorghum,130,20,"Aw Tropical, savannah",S5,0.005724305,1519,6,boot,72,83,True
+kano_box,koppen,sorghum,130,20,"BSh Arid, steppe, hot",S5,0.0,7,6,boot,72,83,True
+kano_box,koppen,sorghum,130,30,"Aw Tropical, savannah",S5,0.00041952834,947,6,boot,72,83,True
+kano_box,koppen,sorghum,130,40,"Aw Tropical, savannah",S5,0.0,564,6,boot,72,83,True
+kano_box,koppen,sorghum,70,0,"Aw Tropical, savannah",S6,0.004467701,1868,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,0,"BSh Arid, steppe, hot",S6,0.01742985,132,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,10,"Aw Tropical, savannah",S6,0.002655156,1868,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,10,"BSh Arid, steppe, hot",S6,0.012913223,132,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,20,"Aw Tropical, savannah",S6,0.0017163847,1868,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,20,"BSh Arid, steppe, hot",S6,0.0015736114,132,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,30,"Aw Tropical, savannah",S6,0.0043233936,1868,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,30,"BSh Arid, steppe, hot",S6,0.006662159,132,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,40,"Aw Tropical, savannah",S6,0.0074089784,1868,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,40,"BSh Arid, steppe, hot",S6,0.027967649,132,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,90,0,"Aw Tropical, savannah",S6,0.0030099822,1868,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,0,"BSh Arid, steppe, hot",S6,0.013301621,132,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,10,"Aw Tropical, savannah",S6,0.003688748,1868,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,10,"BSh Arid, steppe, hot",S6,0.0029764092,132,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,20,"Aw Tropical, savannah",S6,0.007592268,1868,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,20,"BSh Arid, steppe, hot",S6,0.008973066,132,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,30,"Aw Tropical, savannah",S6,0.0066145146,1861,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,30,"BSh Arid, steppe, hot",S6,0.031224485,132,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,40,"Aw Tropical, savannah",S6,0.017059596,1860,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,40,"BSh Arid, steppe, hot",S6,0.089214526,131,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,110,0,"Aw Tropical, savannah",S6,0.0028457742,1868,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,0,"BSh Arid, steppe, hot",S6,0.002705154,132,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,10,"Aw Tropical, savannah",S6,0.0038185304,1861,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,10,"BSh Arid, steppe, hot",S6,0.0033413877,132,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,20,"Aw Tropical, savannah",S6,0.0057012793,1860,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,20,"BSh Arid, steppe, hot",S6,0.004709209,131,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,30,"Aw Tropical, savannah",S6,0.0084443195,1841,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,30,"BSh Arid, steppe, hot",S6,0.026040925,53,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,40,"Aw Tropical, savannah",S6,0.009689523,1519,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,40,"BSh Arid, steppe, hot",S6,0.013122295,7,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,130,0,"Aw Tropical, savannah",S6,0.0030361095,1860,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,130,0,"BSh Arid, steppe, hot",S6,0.0015748168,131,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,130,10,"Aw Tropical, savannah",S6,0.006302584,1841,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,130,10,"BSh Arid, steppe, hot",S6,0.0,53,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,130,20,"Aw Tropical, savannah",S6,0.0064237067,1519,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,130,20,"BSh Arid, steppe, hot",S6,0.0,7,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,130,30,"Aw Tropical, savannah",S6,0.00080304453,947,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,130,40,"Aw Tropical, savannah",S6,0.0004663308,564,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,70,0,"Aw Tropical, savannah",S7,0.002777388,1868,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,0,"BSh Arid, steppe, hot",S7,0.016568968,132,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,10,"Aw Tropical, savannah",S7,0.00265459,1868,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,10,"BSh Arid, steppe, hot",S7,0.01569207,132,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,20,"Aw Tropical, savannah",S7,0.005205945,1868,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,20,"BSh Arid, steppe, hot",S7,0.01383817,132,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,30,"Aw Tropical, savannah",S7,0.009613584,1868,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,30,"BSh Arid, steppe, hot",S7,0.02380002,132,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,40,"Aw Tropical, savannah",S7,0.016788755,1868,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,40,"BSh Arid, steppe, hot",S7,0.124142475,132,8,soft dough,52,62,True
+kano_box,koppen,sorghum,90,0,"Aw Tropical, savannah",S7,0.004657315,1868,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,0,"BSh Arid, steppe, hot",S7,0.012977289,132,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,10,"Aw Tropical, savannah",S7,0.009947914,1868,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,10,"BSh Arid, steppe, hot",S7,0.023115316,132,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,20,"Aw Tropical, savannah",S7,0.017136576,1868,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,20,"BSh Arid, steppe, hot",S7,0.12520413,132,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,30,"Aw Tropical, savannah",S7,0.052596126,1861,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,30,"BSh Arid, steppe, hot",S7,0.28340417,132,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,40,"Aw Tropical, savannah",S7,0.1081638,1860,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,40,"BSh Arid, steppe, hot",S7,0.4877896,131,8,soft dough,68,80,True
+kano_box,koppen,sorghum,110,0,"Aw Tropical, savannah",S7,0.015709456,1868,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,0,"BSh Arid, steppe, hot",S7,0.09443674,132,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,10,"Aw Tropical, savannah",S7,0.04300767,1861,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,10,"BSh Arid, steppe, hot",S7,0.2523392,132,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,20,"Aw Tropical, savannah",S7,0.080946036,1860,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,20,"BSh Arid, steppe, hot",S7,0.38055134,131,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,30,"Aw Tropical, savannah",S7,0.16021985,1841,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,30,"BSh Arid, steppe, hot",S7,0.5233558,53,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,40,"Aw Tropical, savannah",S7,0.16213645,1519,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,40,"BSh Arid, steppe, hot",S7,0.27300984,7,8,soft dough,82,98,True
+kano_box,koppen,sorghum,130,0,"Aw Tropical, savannah",S7,0.063229024,1860,8,soft dough,98,116,True
+kano_box,koppen,sorghum,130,0,"BSh Arid, steppe, hot",S7,0.3511908,131,8,soft dough,98,116,True
+kano_box,koppen,sorghum,130,10,"Aw Tropical, savannah",S7,0.14282443,1841,8,soft dough,98,116,True
+kano_box,koppen,sorghum,130,10,"BSh Arid, steppe, hot",S7,0.47695252,53,8,soft dough,98,116,True
+kano_box,koppen,sorghum,130,20,"Aw Tropical, savannah",S7,0.13201572,1519,8,soft dough,98,116,True
+kano_box,koppen,sorghum,130,20,"BSh Arid, steppe, hot",S7,0.2188473,7,8,soft dough,98,116,True
+kano_box,koppen,sorghum,130,30,"Aw Tropical, savannah",S7,0.1435426,947,8,soft dough,98,116,True
+kano_box,koppen,sorghum,130,40,"Aw Tropical, savannah",S7,0.18709221,564,8,soft dough,98,116,True
+kano_box,koppen,sorghum,70,0,"Aw Tropical, savannah",S8,0.0010972606,1868,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,0,"BSh Arid, steppe, hot",S8,0.012913223,132,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,10,"Aw Tropical, savannah",S8,0.0015573292,1868,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,10,"BSh Arid, steppe, hot",S8,0.0027788456,132,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,20,"Aw Tropical, savannah",S8,0.0033192278,1868,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,20,"BSh Arid, steppe, hot",S8,0.013141457,132,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,30,"Aw Tropical, savannah",S8,0.0035973105,1868,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,30,"BSh Arid, steppe, hot",S8,0.017674599,132,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,40,"Aw Tropical, savannah",S8,0.011938303,1868,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,40,"BSh Arid, steppe, hot",S8,0.10533914,132,9,hard dough,63,69,False
+kano_box,koppen,sorghum,90,0,"Aw Tropical, savannah",S8,0.0037832845,1868,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,0,"BSh Arid, steppe, hot",S8,0.012280575,132,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,10,"Aw Tropical, savannah",S8,0.0068604234,1868,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,10,"BSh Arid, steppe, hot",S8,0.018749487,132,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,20,"Aw Tropical, savannah",S8,0.012516978,1868,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,20,"BSh Arid, steppe, hot",S8,0.10954786,132,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,30,"Aw Tropical, savannah",S8,0.04858089,1861,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,30,"BSh Arid, steppe, hot",S8,0.28062773,132,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,40,"Aw Tropical, savannah",S8,0.094507895,1860,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,40,"BSh Arid, steppe, hot",S8,0.46554375,131,9,hard dough,81,89,False
+kano_box,koppen,sorghum,110,0,"Aw Tropical, savannah",S8,0.012842579,1868,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,0,"BSh Arid, steppe, hot",S8,0.12171575,132,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,10,"Aw Tropical, savannah",S8,0.05122946,1861,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,10,"BSh Arid, steppe, hot",S8,0.2830558,132,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,20,"Aw Tropical, savannah",S8,0.098705806,1860,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,20,"BSh Arid, steppe, hot",S8,0.47387654,131,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,30,"Aw Tropical, savannah",S8,0.1890119,1841,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,30,"BSh Arid, steppe, hot",S8,0.59863293,53,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,40,"Aw Tropical, savannah",S8,0.1831552,1519,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,40,"BSh Arid, steppe, hot",S8,0.26683354,7,9,hard dough,99,109,False
+kano_box,koppen,sorghum,130,0,"Aw Tropical, savannah",S8,0.10062743,1860,9,hard dough,117,129,False
+kano_box,koppen,sorghum,130,0,"BSh Arid, steppe, hot",S8,0.48105776,131,9,hard dough,117,129,False
+kano_box,koppen,sorghum,130,10,"Aw Tropical, savannah",S8,0.19416754,1841,9,hard dough,117,129,False
+kano_box,koppen,sorghum,130,10,"BSh Arid, steppe, hot",S8,0.60659915,53,9,hard dough,117,129,False
+kano_box,koppen,sorghum,130,20,"Aw Tropical, savannah",S8,0.19410041,1519,9,hard dough,117,129,False
+kano_box,koppen,sorghum,130,20,"BSh Arid, steppe, hot",S8,0.28263813,7,9,hard dough,117,129,False
+kano_box,koppen,sorghum,130,30,"Aw Tropical, savannah",S8,0.20018119,947,9,hard dough,117,129,False
+kano_box,koppen,sorghum,130,40,"Aw Tropical, savannah",S8,0.22199951,564,9,hard dough,117,129,False
+kano_box,koppen,sorghum,70,0,ALL,SOW,0.00027378436,2000,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,10,ALL,SOW,0.0056247357,2000,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,20,ALL,SOW,0.00040037002,2000,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,30,ALL,SOW,0.0006781687,2000,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,70,40,ALL,SOW,3.4922396e-05,2000,0,sowing to emergence,0,2,False
+kano_box,koppen,sorghum,90,0,ALL,SOW,0.0004117462,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,10,ALL,SOW,0.006624665,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,20,ALL,SOW,0.00022888352,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,30,ALL,SOW,0.00070506457,1993,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,90,40,ALL,SOW,2.2830009e-05,1991,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,0,ALL,SOW,0.0004061798,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,10,ALL,SOW,0.0066543557,1993,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,20,ALL,SOW,0.00023971891,1991,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,30,ALL,SOW,0.0005413733,1894,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,110,40,ALL,SOW,3.360554e-05,1526,0,sowing to emergence,0,3,False
+kano_box,koppen,sorghum,130,0,ALL,SOW,0.0017435044,1991,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,130,10,ALL,SOW,0.007795157,1894,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,130,20,ALL,SOW,0.0009392601,1526,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,130,30,ALL,SOW,0.0014274584,947,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,130,40,ALL,SOW,0.0,564,0,sowing to emergence,0,4,False
+kano_box,koppen,sorghum,70,0,ALL,S0,0.004267731,2000,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,10,ALL,S0,0.012653302,2000,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,20,ALL,S0,0.0042013745,2000,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,30,ALL,S0,0.003806725,2000,1,emergence,3,9,False
+kano_box,koppen,sorghum,70,40,ALL,S0,0.00039235785,2000,1,emergence,3,9,False
+kano_box,koppen,sorghum,90,0,ALL,S0,0.008058342,2000,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,10,ALL,S0,0.01238461,2000,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,20,ALL,S0,0.0047087446,2000,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,30,ALL,S0,0.0035053375,1993,1,emergence,4,12,False
+kano_box,koppen,sorghum,90,40,ALL,S0,0.00010552082,1991,1,emergence,4,12,False
+kano_box,koppen,sorghum,110,0,ALL,S0,0.009312052,2000,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,10,ALL,S0,0.012883405,1993,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,20,ALL,S0,0.004148534,1991,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,30,ALL,S0,0.0035722794,1894,1,emergence,4,14,False
+kano_box,koppen,sorghum,110,40,ALL,S0,0.00017052598,1526,1,emergence,4,14,False
+kano_box,koppen,sorghum,130,0,ALL,S0,0.014375765,1991,1,emergence,5,17,False
+kano_box,koppen,sorghum,130,10,ALL,S0,0.016958984,1894,1,emergence,5,17,False
+kano_box,koppen,sorghum,130,20,ALL,S0,0.010612544,1526,1,emergence,5,17,False
+kano_box,koppen,sorghum,130,30,ALL,S0,0.009521047,947,1,emergence,5,17,False
+kano_box,koppen,sorghum,130,40,ALL,S0,0.0,564,1,emergence,5,17,False
+kano_box,koppen,sorghum,70,0,ALL,S1,0.013946139,2000,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,10,ALL,S1,0.0150164105,2000,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,20,ALL,S1,0.0067857145,2000,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,30,ALL,S1,0.0038978984,2000,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,70,40,ALL,S1,0.0027785557,2000,2,3-leaf,10,16,False
+kano_box,koppen,sorghum,90,0,ALL,S1,0.014645149,2000,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,10,ALL,S1,0.011703135,2000,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,20,ALL,S1,0.0073226974,2000,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,30,ALL,S1,0.0037930424,1993,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,90,40,ALL,S1,8.269081e-05,1991,2,3-leaf,13,21,False
+kano_box,koppen,sorghum,110,0,ALL,S1,0.015385654,2000,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,10,ALL,S1,0.009429482,1993,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,20,ALL,S1,0.0064745084,1991,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,30,ALL,S1,0.0031230804,1894,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,110,40,ALL,S1,0.00013692044,1526,2,3-leaf,15,25,False
+kano_box,koppen,sorghum,130,0,ALL,S1,0.016656285,1991,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,130,10,ALL,S1,0.008344994,1894,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,130,20,ALL,S1,0.005125673,1526,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,130,30,ALL,S1,0.00034069325,947,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,130,40,ALL,S1,0.0,564,2,3-leaf,18,30,False
+kano_box,koppen,sorghum,70,0,ALL,S2,0.013553949,2000,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,10,ALL,S2,0.0062838644,2000,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,20,ALL,S2,0.005559776,2000,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,30,ALL,S2,0.00444304,2000,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,70,40,ALL,S2,0.0027436332,2000,3,5-leaf,17,23,False
+kano_box,koppen,sorghum,90,0,ALL,S2,0.014222744,2000,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,10,ALL,S2,0.007661637,2000,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,20,ALL,S2,0.0033700657,2000,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,30,ALL,S2,0.0011814856,1993,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,90,40,ALL,S2,0.0011276985,1991,3,5-leaf,22,30,False
+kano_box,koppen,sorghum,110,0,ALL,S2,0.00965054,2000,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,10,ALL,S2,0.0068886196,1993,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,20,ALL,S2,0.0022931788,1991,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,30,ALL,S2,9.217429e-05,1894,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,110,40,ALL,S2,0.0001107579,1526,3,5-leaf,26,36,False
+kano_box,koppen,sorghum,130,0,ALL,S2,0.006751894,1991,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,130,10,ALL,S2,0.0032177253,1894,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,130,20,ALL,S2,0.00017052598,1526,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,130,30,ALL,S2,0.00013274132,947,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,130,40,ALL,S2,0.0,564,3,5-leaf,31,43,False
+kano_box,koppen,sorghum,70,0,ALL,S3,0.010941357,2000,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,10,ALL,S3,0.0075441715,2000,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,20,ALL,S3,0.0039165034,2000,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,30,ALL,S3,0.0026667563,2000,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,70,40,ALL,S3,0.0028432861,2000,4,growing point differentiation,24,30,False
+kano_box,koppen,sorghum,90,0,ALL,S3,0.0075603044,2000,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,10,ALL,S3,0.0038506645,2000,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,20,ALL,S3,0.0027785557,2000,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,30,ALL,S3,0.0023865108,1993,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,90,40,ALL,S3,0.002397931,1991,4,growing point differentiation,31,39,False
+kano_box,koppen,sorghum,110,0,ALL,S3,0.0051836395,2000,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,10,ALL,S3,0.0024857721,1993,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,20,ALL,S3,0.001002416,1991,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,30,ALL,S3,0.00094444514,1894,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,110,40,ALL,S3,0.002190699,1526,4,growing point differentiation,37,47,False
+kano_box,koppen,sorghum,130,0,ALL,S3,0.0028422826,1991,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,130,10,ALL,S3,5.1203933e-05,1894,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,130,20,ALL,S3,0.0001107579,1526,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,130,30,ALL,S3,0.00036782186,947,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,130,40,ALL,S3,0.0002551147,564,4,growing point differentiation,44,56,False
+kano_box,koppen,sorghum,70,0,ALL,S4,0.0073137274,2000,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,10,ALL,S4,0.0035399427,2000,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,20,ALL,S4,0.0033768625,2000,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,30,ALL,S4,0.0034459862,2000,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,70,40,ALL,S4,0.003324122,2000,5,flag leaf visible,31,37,True
+kano_box,koppen,sorghum,90,0,ALL,S4,0.0043525873,2000,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,10,ALL,S4,0.0030905027,2000,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,20,ALL,S4,0.0040865922,2000,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,30,ALL,S4,0.0029082499,1993,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,90,40,ALL,S4,0.0034919032,1991,5,flag leaf visible,40,49,True
+kano_box,koppen,sorghum,110,0,ALL,S4,0.0027444647,2000,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,10,ALL,S4,0.0025847822,1993,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,20,ALL,S4,0.002443591,1991,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,30,ALL,S4,0.003472104,1894,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,110,40,ALL,S4,0.0022759368,1526,5,flag leaf visible,48,60,True
+kano_box,koppen,sorghum,130,0,ALL,S4,0.0010705623,1991,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,130,10,ALL,S4,0.0009039366,1894,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,130,20,ALL,S4,0.002190699,1526,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,130,30,ALL,S4,0.00023508054,947,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,130,40,ALL,S4,0.0,564,5,flag leaf visible,57,71,True
+kano_box,koppen,sorghum,70,0,ALL,S5,0.0039617186,2000,6,boot,38,45,True
+kano_box,koppen,sorghum,70,10,ALL,S5,0.0037669134,2000,6,boot,38,45,True
+kano_box,koppen,sorghum,70,20,ALL,S5,0.0036646533,2000,6,boot,38,45,True
+kano_box,koppen,sorghum,70,30,ALL,S5,0.00195911,2000,6,boot,38,45,True
+kano_box,koppen,sorghum,70,40,ALL,S5,0.00724881,2000,6,boot,38,45,True
+kano_box,koppen,sorghum,90,0,ALL,S5,0.0033427717,2000,6,boot,50,57,True
+kano_box,koppen,sorghum,90,10,ALL,S5,0.0034459862,2000,6,boot,50,57,True
+kano_box,koppen,sorghum,90,20,ALL,S5,0.003324122,2000,6,boot,50,57,True
+kano_box,koppen,sorghum,90,30,ALL,S5,0.003928694,1993,6,boot,50,57,True
+kano_box,koppen,sorghum,90,40,ALL,S5,0.002514443,1991,6,boot,50,57,True
+kano_box,koppen,sorghum,110,0,ALL,S5,0.004157493,2000,6,boot,61,71,True
+kano_box,koppen,sorghum,110,10,ALL,S5,0.0025181426,1993,6,boot,61,71,True
+kano_box,koppen,sorghum,110,20,ALL,S5,0.0035280706,1991,6,boot,61,71,True
+kano_box,koppen,sorghum,110,30,ALL,S5,0.005039222,1894,6,boot,61,71,True
+kano_box,koppen,sorghum,110,40,ALL,S5,0.006067621,1526,6,boot,61,71,True
+kano_box,koppen,sorghum,130,0,ALL,S5,0.0038338357,1991,6,boot,72,83,True
+kano_box,koppen,sorghum,130,10,ALL,S5,0.0033193836,1894,6,boot,72,83,True
+kano_box,koppen,sorghum,130,20,ALL,S5,0.0056980466,1526,6,boot,72,83,True
+kano_box,koppen,sorghum,130,30,ALL,S5,0.00041952834,947,6,boot,72,83,True
+kano_box,koppen,sorghum,130,40,ALL,S5,0.0,564,6,boot,72,83,True
+kano_box,koppen,sorghum,70,0,ALL,S6,0.0053232033,2000,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,10,ALL,S6,0.0033321884,2000,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,20,ALL,S6,0.0017069617,2000,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,30,ALL,S6,0.0044777524,2000,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,70,40,ALL,S6,0.008765851,2000,7,half-bloom,46,51,True
+kano_box,koppen,sorghum,90,0,ALL,S6,0.0036892304,2000,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,10,ALL,S6,0.0036417337,2000,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,20,ALL,S6,0.0076834,2000,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,30,ALL,S6,0.008244477,1993,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,90,40,ALL,S6,0.021807106,1991,7,half-bloom,58,67,True
+kano_box,koppen,sorghum,110,0,ALL,S6,0.0028364933,2000,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,10,ALL,S6,0.0037869283,1993,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,20,ALL,S6,0.0056360047,1991,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,30,ALL,S6,0.0089367265,1894,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,110,40,ALL,S6,0.009705269,1526,7,half-bloom,72,81,True
+kano_box,koppen,sorghum,130,0,ALL,S6,0.002939962,1991,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,130,10,ALL,S6,0.006126218,1894,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,130,20,ALL,S6,0.00639424,1526,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,130,30,ALL,S6,0.00080304453,947,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,130,40,ALL,S6,0.0004663308,564,7,half-bloom,84,97,True
+kano_box,koppen,sorghum,70,0,ALL,S7,0.0036876323,2000,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,10,ALL,S7,0.0035150636,2000,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,20,ALL,S7,0.005775672,2000,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,30,ALL,S7,0.010549889,2000,8,soft dough,52,62,True
+kano_box,koppen,sorghum,70,40,ALL,S7,0.0238741,2000,8,soft dough,52,62,True
+kano_box,koppen,sorghum,90,0,ALL,S7,0.005206433,2000,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,10,ALL,S7,0.010816962,2000,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,20,ALL,S7,0.024269035,2000,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,30,ALL,S7,0.06788296,1993,8,soft dough,68,80,True
+kano_box,koppen,sorghum,90,40,ALL,S7,0.13314168,1991,8,soft dough,68,80,True
+kano_box,koppen,sorghum,110,0,ALL,S7,0.020905457,2000,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,10,ALL,S7,0.05687208,1993,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,20,ALL,S7,0.10065889,1991,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,30,ALL,S7,0.17038153,1894,8,soft dough,82,98,True
+kano_box,koppen,sorghum,110,40,ALL,S7,0.16264506,1526,8,soft dough,82,98,True
+kano_box,koppen,sorghum,130,0,ALL,S7,0.082175784,1991,8,soft dough,98,116,True
+kano_box,koppen,sorghum,130,10,ALL,S7,0.15217435,1894,8,soft dough,98,116,True
+kano_box,koppen,sorghum,130,20,ALL,S7,0.13241403,1526,8,soft dough,98,116,True
+kano_box,koppen,sorghum,130,30,ALL,S7,0.1435426,947,8,soft dough,98,116,True
+kano_box,koppen,sorghum,130,40,ALL,S7,0.18709221,564,8,soft dough,98,116,True
+kano_box,koppen,sorghum,70,0,ALL,S8,0.0018771142,2000,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,10,ALL,S8,0.0016379494,2000,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,20,ALL,S8,0.0039674947,2000,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,30,ALL,S8,0.0045264116,2000,9,hard dough,63,69,False
+kano_box,koppen,sorghum,70,40,ALL,S8,0.018102756,2000,9,hard dough,63,69,False
+kano_box,koppen,sorghum,90,0,ALL,S8,0.0043441057,2000,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,10,ALL,S8,0.0076451018,2000,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,20,ALL,S8,0.018921016,2000,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,30,ALL,S8,0.06394977,1993,9,hard dough,81,89,False
+kano_box,koppen,sorghum,90,40,ALL,S8,0.1189206,1991,9,hard dough,81,89,False
+kano_box,koppen,sorghum,110,0,ALL,S8,0.020028207,2000,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,10,ALL,S8,0.06658374,1993,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,20,ALL,S8,0.12339057,1991,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,30,ALL,S8,0.20047438,1894,9,hard dough,99,109,False
+kano_box,koppen,sorghum,110,40,ALL,S8,0.18353905,1526,9,hard dough,99,109,False
+kano_box,koppen,sorghum,130,0,ALL,S8,0.12565826,1991,9,hard dough,117,129,False
+kano_box,koppen,sorghum,130,10,ALL,S8,0.20570865,1894,9,hard dough,117,129,False
+kano_box,koppen,sorghum,130,20,ALL,S8,0.19450657,1526,9,hard dough,117,129,False
+kano_box,koppen,sorghum,130,30,ALL,S8,0.20018119,947,9,hard dough,117,129,False
+kano_box,koppen,sorghum,130,40,ALL,S8,0.22199951,564,9,hard dough,117,129,False
+kano_box,koppen,pearl_millet,70,0,"Aw Tropical, savannah",SOW,0.00034151462,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,0,"BSh Arid, steppe, hot",SOW,0.0022585033,132,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,10,"Aw Tropical, savannah",SOW,0.0068243505,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,10,"BSh Arid, steppe, hot",SOW,0.0034635467,132,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,20,"Aw Tropical, savannah",SOW,0.00046516157,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,20,"BSh Arid, steppe, hot",SOW,0.00017217631,132,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,30,"Aw Tropical, savannah",SOW,0.00055061094,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,30,"BSh Arid, steppe, hot",SOW,0.0024833046,132,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,40,"Aw Tropical, savannah",SOW,3.7390146e-05,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,40,"BSh Arid, steppe, hot",SOW,0.0,132,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,0,"Aw Tropical, savannah",SOW,0.00032934797,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,0,"BSh Arid, steppe, hot",SOW,0.0015778062,132,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,10,"Aw Tropical, savannah",SOW,0.0068463027,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,10,"BSh Arid, steppe, hot",SOW,0.0034881572,132,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,20,"Aw Tropical, savannah",SOW,0.0002323113,1868,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,20,"BSh Arid, steppe, hot",SOW,0.00018037518,132,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,30,"Aw Tropical, savannah",SOW,0.0005580174,1861,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,30,"BSh Arid, steppe, hot",SOW,0.002778207,132,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,40,"Aw Tropical, savannah",SOW,2.4437928e-05,1860,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,40,"BSh Arid, steppe, hot",SOW,0.0,131,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,110,0,"Aw Tropical, savannah",SOW,0.0014998339,1868,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,0,"BSh Arid, steppe, hot",SOW,0.0043193027,132,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,10,"Aw Tropical, savannah",SOW,0.009351653,1861,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,10,"BSh Arid, steppe, hot",SOW,0.007046812,132,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,20,"Aw Tropical, savannah",SOW,0.0017109313,1860,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,20,"BSh Arid, steppe, hot",SOW,0.0012898763,131,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,30,"Aw Tropical, savannah",SOW,0.00080409506,1841,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,30,"BSh Arid, steppe, hot",SOW,0.0,53,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,40,"Aw Tropical, savannah",SOW,3.3760403e-05,1519,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,40,"BSh Arid, steppe, hot",SOW,0.0,7,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,0,"Aw Tropical, savannah",SOW,0.001614631,1860,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,0,"BSh Arid, steppe, hot",SOW,0.004003457,131,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,10,"Aw Tropical, savannah",SOW,0.00996097,1841,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,10,"BSh Arid, steppe, hot",SOW,0.009440287,53,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,20,"Aw Tropical, savannah",SOW,0.002701533,1519,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,20,"BSh Arid, steppe, hot",SOW,0.028673658,7,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,30,"Aw Tropical, savannah",SOW,0.0021474443,947,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,40,"Aw Tropical, savannah",SOW,0.0,564,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,70,0,"Aw Tropical, savannah",P0,0.00345589,1868,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,0,"BSh Arid, steppe, hot",P0,0.00712768,132,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,10,"Aw Tropical, savannah",P0,0.012838064,1868,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,10,"BSh Arid, steppe, hot",P0,0.0078003686,132,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,20,"Aw Tropical, savannah",P0,0.0037891993,1868,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,20,"BSh Arid, steppe, hot",P0,0.009173394,132,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,30,"Aw Tropical, savannah",P0,0.0035708207,1868,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,30,"BSh Arid, steppe, hot",P0,0.003565556,132,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,40,"Aw Tropical, savannah",P0,3.7390146e-05,1868,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,40,"BSh Arid, steppe, hot",P0,0.0,132,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,90,0,"Aw Tropical, savannah",P0,0.00572639,1868,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,0,"BSh Arid, steppe, hot",P0,0.0073482865,132,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,10,"Aw Tropical, savannah",P0,0.012776321,1868,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,10,"BSh Arid, steppe, hot",P0,0.006841319,132,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,20,"Aw Tropical, savannah",P0,0.004144394,1868,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,20,"BSh Arid, steppe, hot",P0,0.010305854,132,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,30,"Aw Tropical, savannah",P0,0.0035569128,1861,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,30,"BSh Arid, steppe, hot",P0,0.002778207,132,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,40,"Aw Tropical, savannah",P0,0.00011295266,1860,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,40,"BSh Arid, steppe, hot",P0,0.0,131,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,110,0,"Aw Tropical, savannah",P0,0.0091750445,1868,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,0,"BSh Arid, steppe, hot",P0,0.008819237,132,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,10,"Aw Tropical, savannah",P0,0.012844312,1861,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,10,"BSh Arid, steppe, hot",P0,0.0072362064,132,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,20,"Aw Tropical, savannah",P0,0.0042642383,1860,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,20,"BSh Arid, steppe, hot",P0,0.0025057099,131,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,30,"Aw Tropical, savannah",P0,0.0036751206,1841,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,30,"BSh Arid, steppe, hot",P0,0.0,53,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,40,"Aw Tropical, savannah",P0,0.00017131181,1519,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,40,"BSh Arid, steppe, hot",P0,0.0,7,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,130,0,"Aw Tropical, savannah",P0,0.013854206,1860,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,130,0,"BSh Arid, steppe, hot",P0,0.0109106265,131,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,130,10,"Aw Tropical, savannah",P0,0.016341995,1841,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,130,10,"BSh Arid, steppe, hot",P0,0.013098181,53,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,130,20,"Aw Tropical, savannah",P0,0.009588106,1519,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,130,20,"BSh Arid, steppe, hot",P0,0.028673658,7,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,130,30,"Aw Tropical, savannah",P0,0.009521047,947,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,130,40,"Aw Tropical, savannah",P0,0.0,564,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,70,0,"Aw Tropical, savannah",P1,0.013888638,1868,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,0,"BSh Arid, steppe, hot",P1,0.014759877,132,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,10,"Aw Tropical, savannah",P1,0.015917353,1868,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,10,"BSh Arid, steppe, hot",P1,0.008833426,132,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,20,"Aw Tropical, savannah",P1,0.006626572,1868,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,20,"BSh Arid, steppe, hot",P1,0.011624475,132,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,30,"Aw Tropical, savannah",P1,0.0037055025,1868,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,30,"BSh Arid, steppe, hot",P1,0.006620593,132,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,40,"Aw Tropical, savannah",P1,0.002290824,1868,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,40,"BSh Arid, steppe, hot",P1,0.009680699,132,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,90,0,"Aw Tropical, savannah",P1,0.014987004,1868,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,0,"BSh Arid, steppe, hot",P1,0.011184787,132,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,10,"Aw Tropical, savannah",P1,0.014125912,1868,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,10,"BSh Arid, steppe, hot",P1,0.014932965,132,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,20,"Aw Tropical, savannah",P1,0.0069688614,1868,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,20,"BSh Arid, steppe, hot",P1,0.012330014,132,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,30,"Aw Tropical, savannah",P1,0.0040175077,1861,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,30,"BSh Arid, steppe, hot",P1,0.00080880016,132,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,40,"Aw Tropical, savannah",P1,8.851473e-05,1860,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,40,"BSh Arid, steppe, hot",P1,0.0,131,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,110,0,"Aw Tropical, savannah",P1,0.016016446,1868,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,0,"BSh Arid, steppe, hot",P1,0.0123499725,132,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,10,"Aw Tropical, savannah",P1,0.010655206,1861,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,10,"BSh Arid, steppe, hot",P1,0.017487,132,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,20,"Aw Tropical, savannah",P1,0.0069545233,1860,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,20,"BSh Arid, steppe, hot",P1,0.0022936657,131,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,30,"Aw Tropical, savannah",P1,0.00321299,1841,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,30,"BSh Arid, steppe, hot",P1,0.0,53,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,40,"Aw Tropical, savannah",P1,0.00013755141,1519,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,40,"BSh Arid, steppe, hot",P1,0.0,7,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,130,0,"Aw Tropical, savannah",P1,0.01737082,1860,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,130,0,"BSh Arid, steppe, hot",P1,0.008415149,131,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,130,10,"Aw Tropical, savannah",P1,0.0089575155,1841,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,130,10,"BSh Arid, steppe, hot",P1,0.003657895,53,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,130,20,"Aw Tropical, savannah",P1,0.0071300394,1519,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,130,20,"BSh Arid, steppe, hot",P1,0.0049261083,7,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,130,30,"Aw Tropical, savannah",P1,0.004008344,947,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,130,40,"Aw Tropical, savannah",P1,0.0,564,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,70,0,"Aw Tropical, savannah",P2,0.017087331,1868,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,0,"BSh Arid, steppe, hot",P2,0.019552594,132,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,10,"Aw Tropical, savannah",P2,0.008890697,1868,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,10,"BSh Arid, steppe, hot",P2,0.012785664,132,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,20,"Aw Tropical, savannah",P2,0.0049444637,1868,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,20,"BSh Arid, steppe, hot",P2,0.014267372,132,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,30,"Aw Tropical, savannah",P2,0.0038243395,1868,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,30,"BSh Arid, steppe, hot",P2,0.01337477,132,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,40,"Aw Tropical, savannah",P2,0.003271206,1868,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,40,"BSh Arid, steppe, hot",P2,0.009856879,132,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,90,0,"Aw Tropical, savannah",P2,0.016583044,1868,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,0,"BSh Arid, steppe, hot",P2,0.01668623,132,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,10,"Aw Tropical, savannah",P2,0.007102257,1868,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,10,"BSh Arid, steppe, hot",P2,0.015922062,132,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,20,"Aw Tropical, savannah",P2,0.005260939,1868,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,20,"BSh Arid, steppe, hot",P2,0.009680699,132,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,30,"Aw Tropical, savannah",P2,0.002139006,1861,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,30,"BSh Arid, steppe, hot",P2,0.0012086318,132,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,40,"Aw Tropical, savannah",P2,0.00122615,1860,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,40,"BSh Arid, steppe, hot",P2,0.002152162,131,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,110,0,"Aw Tropical, savannah",P2,0.010166847,1868,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,0,"BSh Arid, steppe, hot",P2,0.012699784,132,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,10,"Aw Tropical, savannah",P2,0.0075428537,1861,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,10,"BSh Arid, steppe, hot",P2,0.01477659,132,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,20,"Aw Tropical, savannah",P2,0.0024864231,1860,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,20,"BSh Arid, steppe, hot",P2,0.0,131,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,30,"Aw Tropical, savannah",P2,0.00018326669,1841,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,30,"BSh Arid, steppe, hot",P2,0.0,53,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,40,"Aw Tropical, savannah",P2,0.002153371,1519,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,40,"BSh Arid, steppe, hot",P2,0.0,7,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,130,0,"Aw Tropical, savannah",P2,0.007115048,1860,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,130,0,"BSh Arid, steppe, hot",P2,0.0022936657,131,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,130,10,"Aw Tropical, savannah",P2,0.0033103595,1841,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,130,10,"BSh Arid, steppe, hot",P2,0.0,53,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,130,20,"Aw Tropical, savannah",P2,0.00028258012,1519,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,130,20,"BSh Arid, steppe, hot",P2,0.0,7,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,130,30,"Aw Tropical, savannah",P2,0.0002364063,947,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,130,40,"Aw Tropical, savannah",P2,0.0002551147,564,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,70,0,"Aw Tropical, savannah",P3,0.007487573,1868,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,0,"BSh Arid, steppe, hot",P3,0.016269233,132,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,10,"Aw Tropical, savannah",P3,0.0037255366,1868,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,10,"BSh Arid, steppe, hot",P3,0.016777752,132,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,20,"Aw Tropical, savannah",P3,0.002428234,1868,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,20,"BSh Arid, steppe, hot",P3,0.016801395,132,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,30,"Aw Tropical, savannah",P3,0.0038220014,1868,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,30,"BSh Arid, steppe, hot",P3,0.010139767,132,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,40,"Aw Tropical, savannah",P3,0.0033946875,1868,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,40,"BSh Arid, steppe, hot",P3,0.00337117,132,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,90,0,"Aw Tropical, savannah",P3,0.007116632,1868,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,0,"BSh Arid, steppe, hot",P3,0.02687228,132,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,10,"Aw Tropical, savannah",P3,0.003763223,1868,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,10,"BSh Arid, steppe, hot",P3,0.01337477,132,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,20,"Aw Tropical, savannah",P3,0.004007241,1868,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,20,"BSh Arid, steppe, hot",P3,0.010596198,132,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,30,"Aw Tropical, savannah",P3,0.004077427,1861,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,30,"BSh Arid, steppe, hot",P3,0.0035043694,132,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,40,"Aw Tropical, savannah",P3,0.004417655,1860,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,40,"BSh Arid, steppe, hot",P3,0.0036214602,131,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,110,0,"Aw Tropical, savannah",P3,0.0052128797,1868,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,0,"BSh Arid, steppe, hot",P3,0.009680699,132,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,10,"Aw Tropical, savannah",P3,0.0027114039,1861,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,10,"BSh Arid, steppe, hot",P3,0.0020168563,132,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,20,"Aw Tropical, savannah",P3,0.004478605,1860,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,20,"BSh Arid, steppe, hot",P3,0.0036214602,131,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,30,"Aw Tropical, savannah",P3,0.0034630399,1841,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,30,"BSh Arid, steppe, hot",P3,0.0042257393,53,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,40,"Aw Tropical, savannah",P3,0.006551445,1519,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,40,"BSh Arid, steppe, hot",P3,0.0,7,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,130,0,"Aw Tropical, savannah",P3,0.0011649897,1860,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,130,0,"BSh Arid, steppe, hot",P3,0.002152162,131,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,130,10,"Aw Tropical, savannah",P3,0.0033564654,1841,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,130,10,"BSh Arid, steppe, hot",P3,0.0042257393,53,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,130,20,"Aw Tropical, savannah",P3,0.0022007944,1519,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,130,20,"BSh Arid, steppe, hot",P3,0.0,7,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,130,30,"Aw Tropical, savannah",P3,0.00023508054,947,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,130,40,"Aw Tropical, savannah",P3,0.0002551147,564,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,70,0,"Aw Tropical, savannah",P4,0.0033101735,1868,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,0,"BSh Arid, steppe, hot",P4,0.006791526,132,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,10,"Aw Tropical, savannah",P4,0.0027892718,1868,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,10,"BSh Arid, steppe, hot",P4,0.017602025,132,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,20,"Aw Tropical, savannah",P4,0.002898219,1868,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,20,"BSh Arid, steppe, hot",P4,0.013301621,132,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,30,"Aw Tropical, savannah",P4,0.0020213397,1868,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,30,"BSh Arid, steppe, hot",P4,0.0009022851,132,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,40,"Aw Tropical, savannah",P4,0.0063996348,1868,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,40,"BSh Arid, steppe, hot",P4,0.007820266,132,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,90,0,"Aw Tropical, savannah",P4,0.0023065675,1868,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,0,"BSh Arid, steppe, hot",P4,0.015756326,132,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,10,"Aw Tropical, savannah",P4,0.0019239144,1868,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,10,"BSh Arid, steppe, hot",P4,0.009413662,132,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,20,"Aw Tropical, savannah",P4,0.0033338543,1868,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,20,"BSh Arid, steppe, hot",P4,0.0031863954,132,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,30,"Aw Tropical, savannah",P4,0.0034391785,1861,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,30,"BSh Arid, steppe, hot",P4,0.003104538,132,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,40,"Aw Tropical, savannah",P4,0.0003810247,1860,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,40,"BSh Arid, steppe, hot",P4,0.0,131,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,110,0,"Aw Tropical, savannah",P4,0.002493932,1868,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,0,"BSh Arid, steppe, hot",P4,0.0033045898,132,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,10,"Aw Tropical, savannah",P4,0.002364849,1861,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,10,"BSh Arid, steppe, hot",P4,0.0024290462,132,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,20,"Aw Tropical, savannah",P4,0.0034405852,1860,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,20,"BSh Arid, steppe, hot",P4,0.0024848778,131,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,30,"Aw Tropical, savannah",P4,0.0029723195,1841,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,30,"BSh Arid, steppe, hot",P4,0.0,53,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,40,"Aw Tropical, savannah",P4,0.006095582,1519,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,40,"BSh Arid, steppe, hot",P4,0.0,7,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,130,0,"Aw Tropical, savannah",P4,0.0038600934,1860,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,130,0,"BSh Arid, steppe, hot",P4,0.0027113992,131,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,130,10,"Aw Tropical, savannah",P4,0.0030545245,1841,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,130,10,"BSh Arid, steppe, hot",P4,0.0042257393,53,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,130,20,"Aw Tropical, savannah",P4,0.0036971297,1519,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,130,20,"BSh Arid, steppe, hot",P4,0.0,7,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,130,30,"Aw Tropical, savannah",P4,0.00041952834,947,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,130,40,"Aw Tropical, savannah",P4,0.0,564,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,70,0,"Aw Tropical, savannah",P5,0.0024825593,1868,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,0,"BSh Arid, steppe, hot",P5,0.012092383,132,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,10,"Aw Tropical, savannah",P5,0.002655156,1868,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,10,"BSh Arid, steppe, hot",P5,0.012913223,132,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,20,"Aw Tropical, savannah",P5,0.0014973853,1868,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,20,"BSh Arid, steppe, hot",P5,0.0015736114,132,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,30,"Aw Tropical, savannah",P5,0.004237661,1868,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,30,"BSh Arid, steppe, hot",P5,0.0052307174,132,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,40,"Aw Tropical, savannah",P5,0.0061486224,1868,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,40,"BSh Arid, steppe, hot",P5,0.010522754,132,6,boot,46,49,True
+kano_box,koppen,pearl_millet,90,0,"Aw Tropical, savannah",P5,0.0022335679,1868,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,0,"BSh Arid, steppe, hot",P5,0.01312544,132,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,10,"Aw Tropical, savannah",P5,0.0018385572,1868,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,10,"BSh Arid, steppe, hot",P5,0.0010784656,132,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,20,"Aw Tropical, savannah",P5,0.0069936216,1868,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,20,"BSh Arid, steppe, hot",P5,0.0037462201,132,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,30,"Aw Tropical, savannah",P5,0.003573687,1861,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,30,"BSh Arid, steppe, hot",P5,0.009131715,132,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,40,"Aw Tropical, savannah",P5,0.007366403,1860,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,40,"BSh Arid, steppe, hot",P5,0.034301803,131,6,boot,58,64,True
+kano_box,koppen,pearl_millet,110,0,"Aw Tropical, savannah",P5,0.0027849409,1868,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,0,"BSh Arid, steppe, hot",P5,0.0023215099,132,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,10,"Aw Tropical, savannah",P5,0.003569658,1861,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,10,"BSh Arid, steppe, hot",P5,0.0022396522,132,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,20,"Aw Tropical, savannah",P5,0.002257376,1860,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,20,"BSh Arid, steppe, hot",P5,0.0,131,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,30,"Aw Tropical, savannah",P5,0.0059508807,1841,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,30,"BSh Arid, steppe, hot",P5,0.0,53,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,40,"Aw Tropical, savannah",P5,0.0063919756,1519,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,40,"BSh Arid, steppe, hot",P5,0.0,7,6,boot,72,78,True
+kano_box,koppen,pearl_millet,130,0,"Aw Tropical, savannah",P5,0.003010196,1860,6,boot,84,93,True
+kano_box,koppen,pearl_millet,130,0,"BSh Arid, steppe, hot",P5,0.0015748168,131,6,boot,84,93,True
+kano_box,koppen,pearl_millet,130,10,"Aw Tropical, savannah",P5,0.0031032,1841,6,boot,84,93,True
+kano_box,koppen,pearl_millet,130,10,"BSh Arid, steppe, hot",P5,0.0,53,6,boot,84,93,True
+kano_box,koppen,pearl_millet,130,20,"Aw Tropical, savannah",P5,0.0062893815,1519,6,boot,84,93,True
+kano_box,koppen,pearl_millet,130,20,"BSh Arid, steppe, hot",P5,0.0,7,6,boot,84,93,True
+kano_box,koppen,pearl_millet,130,30,"Aw Tropical, savannah",P5,0.0005731388,947,6,boot,84,93,True
+kano_box,koppen,pearl_millet,130,40,"Aw Tropical, savannah",P5,0.0,564,6,boot,84,93,True
+kano_box,koppen,pearl_millet,70,0,"Aw Tropical, savannah",P6,0.0028017212,1868,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,0,"BSh Arid, steppe, hot",P6,0.017602025,132,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,10,"Aw Tropical, savannah",P6,0.0035283242,1868,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,10,"BSh Arid, steppe, hot",P6,0.014642995,132,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,20,"Aw Tropical, savannah",P6,0.003411225,1868,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,20,"BSh Arid, steppe, hot",P6,0.0077839713,132,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,30,"Aw Tropical, savannah",P6,0.0077384533,1868,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,30,"BSh Arid, steppe, hot",P6,0.0117513435,132,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,40,"Aw Tropical, savannah",P6,0.011630483,1868,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,40,"BSh Arid, steppe, hot",P6,0.06256773,132,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,90,0,"Aw Tropical, savannah",P6,0.0027760137,1868,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,0,"BSh Arid, steppe, hot",P6,0.0044966047,132,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,10,"Aw Tropical, savannah",P6,0.0075792167,1868,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,10,"BSh Arid, steppe, hot",P6,0.0061496343,132,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,20,"Aw Tropical, savannah",P6,0.009635921,1868,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,20,"BSh Arid, steppe, hot",P6,0.035180688,132,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,30,"Aw Tropical, savannah",P6,0.014654641,1861,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,30,"BSh Arid, steppe, hot",P6,0.09797,132,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,40,"Aw Tropical, savannah",P6,0.04813928,1860,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,40,"BSh Arid, steppe, hot",P6,0.27518076,131,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,110,0,"Aw Tropical, savannah",P6,0.007012578,1868,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,0,"BSh Arid, steppe, hot",P6,0.010573368,132,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,10,"Aw Tropical, savannah",P6,0.008647217,1861,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,10,"BSh Arid, steppe, hot",P6,0.04086245,132,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,20,"Aw Tropical, savannah",P6,0.022081798,1860,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,20,"BSh Arid, steppe, hot",P6,0.13421525,131,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,30,"Aw Tropical, savannah",P6,0.045399047,1841,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,30,"BSh Arid, steppe, hot",P6,0.17689595,53,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,40,"Aw Tropical, savannah",P6,0.047722597,1519,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,40,"BSh Arid, steppe, hot",P6,0.090236016,7,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,130,0,"Aw Tropical, savannah",P6,0.011964871,1860,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,130,0,"BSh Arid, steppe, hot",P6,0.0816745,131,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,130,10,"Aw Tropical, savannah",P6,0.021246225,1841,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,130,10,"BSh Arid, steppe, hot",P6,0.07022001,53,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,130,20,"Aw Tropical, savannah",P6,0.027796796,1519,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,130,20,"BSh Arid, steppe, hot",P6,0.06847904,7,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,130,30,"Aw Tropical, savannah",P6,0.009334885,947,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,130,40,"Aw Tropical, savannah",P6,0.04725487,564,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,70,0,"Aw Tropical, savannah",P7,0.0026676052,1868,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,0,"BSh Arid, steppe, hot",P7,0.012913223,132,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,10,"Aw Tropical, savannah",P7,0.001630329,1868,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,10,"BSh Arid, steppe, hot",P7,0.002951022,132,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,20,"Aw Tropical, savannah",P7,0.0050356123,1868,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,20,"BSh Arid, steppe, hot",P7,0.013493818,132,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,30,"Aw Tropical, savannah",P7,0.007705876,1868,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,30,"BSh Arid, steppe, hot",P7,0.021524327,132,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,40,"Aw Tropical, savannah",P7,0.013011193,1868,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,40,"BSh Arid, steppe, hot",P7,0.12301909,132,8,milk,57,63,True
+kano_box,koppen,pearl_millet,90,0,"Aw Tropical, savannah",P7,0.004657315,1868,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,0,"BSh Arid, steppe, hot",P7,0.012801109,132,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,10,"Aw Tropical, savannah",P7,0.008279689,1868,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,10,"BSh Arid, steppe, hot",P7,0.022213032,132,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,20,"Aw Tropical, savannah",P7,0.013607658,1868,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,20,"BSh Arid, steppe, hot",P7,0.124142475,132,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,30,"Aw Tropical, savannah",P7,0.05252285,1861,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,30,"BSh Arid, steppe, hot",P7,0.28340417,132,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,40,"Aw Tropical, savannah",P7,0.103379615,1860,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,40,"BSh Arid, steppe, hot",P7,0.48697487,131,8,milk,74,82,True
+kano_box,koppen,pearl_millet,110,0,"Aw Tropical, savannah",P7,0.017087908,1868,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,0,"BSh Arid, steppe, hot",P7,0.12520413,132,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,10,"Aw Tropical, savannah",P7,0.052556086,1861,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,10,"BSh Arid, steppe, hot",P7,0.28340417,132,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,20,"Aw Tropical, savannah",P7,0.10812201,1860,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,20,"BSh Arid, steppe, hot",P7,0.48657376,131,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,30,"Aw Tropical, savannah",P7,0.19764785,1841,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,30,"BSh Arid, steppe, hot",P7,0.6144461,53,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,40,"Aw Tropical, savannah",P7,0.2018959,1519,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,40,"BSh Arid, steppe, hot",P7,0.3215932,7,8,milk,90,100,True
+kano_box,koppen,pearl_millet,130,0,"Aw Tropical, savannah",P7,0.093664624,1860,8,milk,107,119,True
+kano_box,koppen,pearl_millet,130,0,"BSh Arid, steppe, hot",P7,0.43678,131,8,milk,107,119,True
+kano_box,koppen,pearl_millet,130,10,"Aw Tropical, savannah",P7,0.18213846,1841,8,milk,107,119,True
+kano_box,koppen,pearl_millet,130,10,"BSh Arid, steppe, hot",P7,0.5539156,53,8,milk,107,119,True
+kano_box,koppen,pearl_millet,130,20,"Aw Tropical, savannah",P7,0.18499547,1519,8,milk,107,119,True
+kano_box,koppen,pearl_millet,130,20,"BSh Arid, steppe, hot",P7,0.30458638,7,8,milk,107,119,True
+kano_box,koppen,pearl_millet,130,30,"Aw Tropical, savannah",P7,0.1915119,947,8,milk,107,119,True
+kano_box,koppen,pearl_millet,130,40,"Aw Tropical, savannah",P7,0.22181806,564,8,milk,107,119,True
+kano_box,koppen,pearl_millet,70,0,"Aw Tropical, savannah",P8,0.0010972606,1868,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,0,"BSh Arid, steppe, hot",P8,0.005509642,132,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,10,"Aw Tropical, savannah",P8,0.0015573292,1868,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,10,"BSh Arid, steppe, hot",P8,0.0027788456,132,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,20,"Aw Tropical, savannah",P8,0.0033192278,1868,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,20,"BSh Arid, steppe, hot",P8,0.012440739,132,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,30,"Aw Tropical, savannah",P8,0.0035851442,1868,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,30,"BSh Arid, steppe, hot",P8,0.017674599,132,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,40,"Aw Tropical, savannah",P8,0.011752043,1868,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,40,"BSh Arid, steppe, hot",P8,0.10478921,132,9,dough,64,69,False
+kano_box,koppen,pearl_millet,90,0,"Aw Tropical, savannah",P8,0.0028679303,1868,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,0,"BSh Arid, steppe, hot",P8,0.012280575,132,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,10,"Aw Tropical, savannah",P8,0.0035973105,1868,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,10,"BSh Arid, steppe, hot",P8,0.017674599,132,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,20,"Aw Tropical, savannah",P8,0.011938303,1868,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,20,"BSh Arid, steppe, hot",P8,0.10533914,132,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,30,"Aw Tropical, savannah",P8,0.047403764,1861,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,30,"BSh Arid, steppe, hot",P8,0.28038335,132,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,40,"Aw Tropical, savannah",P8,0.09207397,1860,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,40,"BSh Arid, steppe, hot",P8,0.43395954,131,9,dough,83,89,False
+kano_box,koppen,pearl_millet,110,0,"Aw Tropical, savannah",P8,0.012516978,1868,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,0,"BSh Arid, steppe, hot",P8,0.10954786,132,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,10,"Aw Tropical, savannah",P8,0.04854085,1861,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,10,"BSh Arid, steppe, hot",P8,0.28062773,132,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,20,"Aw Tropical, savannah",P8,0.09449055,1860,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,20,"BSh Arid, steppe, hot",P8,0.46432793,131,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,30,"Aw Tropical, savannah",P8,0.17864464,1841,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,30,"BSh Arid, steppe, hot",P8,0.59178275,53,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,40,"Aw Tropical, savannah",P8,0.17340681,1519,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,40,"BSh Arid, steppe, hot",P8,0.26683354,7,9,dough,101,109,False
+kano_box,koppen,pearl_millet,130,0,"Aw Tropical, savannah",P8,0.09588171,1860,9,dough,120,129,False
+kano_box,koppen,pearl_millet,130,0,"BSh Arid, steppe, hot",P8,0.46817887,131,9,dough,120,129,False
+kano_box,koppen,pearl_millet,130,10,"Aw Tropical, savannah",P8,0.18489052,1841,9,dough,120,129,False
+kano_box,koppen,pearl_millet,130,10,"BSh Arid, steppe, hot",P8,0.5924334,53,9,dough,120,129,False
+kano_box,koppen,pearl_millet,130,20,"Aw Tropical, savannah",P8,0.17972463,1519,9,dough,120,129,False
+kano_box,koppen,pearl_millet,130,20,"BSh Arid, steppe, hot",P8,0.26683354,7,9,dough,120,129,False
+kano_box,koppen,pearl_millet,130,30,"Aw Tropical, savannah",P8,0.19616246,947,9,dough,120,129,False
+kano_box,koppen,pearl_millet,130,40,"Aw Tropical, savannah",P8,0.1980034,564,9,dough,120,129,False
+kano_box,koppen,pearl_millet,70,0,ALL,SOW,0.00046803584,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,10,ALL,SOW,0.0066025374,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,20,ALL,SOW,0.00044582452,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,30,ALL,SOW,0.0006781687,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,70,40,ALL,SOW,3.4922396e-05,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,0,ALL,SOW,0.0004117462,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,10,ALL,SOW,0.006624665,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,20,ALL,SOW,0.00022888352,2000,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,30,ALL,SOW,0.00070506457,1993,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,90,40,ALL,SOW,2.2830009e-05,1991,0,sowing to emergence,0,3,False
+kano_box,koppen,pearl_millet,110,0,ALL,SOW,0.0016859188,2000,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,10,ALL,SOW,0.009198999,1993,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,20,ALL,SOW,0.0016832275,1991,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,30,ALL,SOW,0.000781594,1894,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,110,40,ALL,SOW,3.360554e-05,1526,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,0,ALL,SOW,0.0017718064,1991,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,10,ALL,SOW,0.0099464,1894,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,20,ALL,SOW,0.002820671,1526,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,30,ALL,SOW,0.0021474443,947,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,130,40,ALL,SOW,0.0,564,0,sowing to emergence,0,5,False
+kano_box,koppen,pearl_millet,70,0,ALL,P0,0.0036982282,2000,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,10,ALL,P0,0.012505575,2000,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,20,ALL,P0,0.004144556,2000,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,30,ALL,P0,0.0035704733,2000,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,70,40,ALL,P0,3.4922396e-05,2000,1,emergence,4,8,False
+kano_box,koppen,pearl_millet,90,0,ALL,P0,0.005833435,2000,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,10,ALL,P0,0.01238461,2000,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,20,ALL,P0,0.0045510503,2000,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,30,ALL,P0,0.0035053375,1993,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,90,40,ALL,P0,0.00010552082,1991,1,emergence,4,11,False
+kano_box,koppen,pearl_millet,110,0,ALL,P0,0.009151561,2000,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,10,ALL,P0,0.012472877,1993,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,20,ALL,P0,0.004148534,1991,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,30,ALL,P0,0.0035722794,1894,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,110,40,ALL,P0,0.00017052598,1526,1,emergence,6,13,False
+kano_box,koppen,pearl_millet,130,0,ALL,P0,0.01366053,1991,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,130,10,ALL,P0,0.016251223,1894,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,130,20,ALL,P0,0.009675654,1526,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,130,30,ALL,P0,0.009521047,947,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,130,40,ALL,P0,0.0,564,1,emergence,6,16,False
+kano_box,koppen,pearl_millet,70,0,ALL,P1,0.013946139,2000,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,10,ALL,P1,0.015449814,2000,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,20,ALL,P1,0.0069564334,2000,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,30,ALL,P1,0.0038978984,2000,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,70,40,ALL,P1,0.0027785557,2000,2,3rd leaf,9,16,False
+kano_box,koppen,pearl_millet,90,0,ALL,P1,0.014736058,2000,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,10,ALL,P1,0.0141791785,2000,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,20,ALL,P1,0.0073226974,2000,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,30,ALL,P1,0.003804989,1993,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,90,40,ALL,P1,8.269081e-05,1991,2,3rd leaf,12,21,False
+kano_box,koppen,pearl_millet,110,0,ALL,P1,0.01577446,2000,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,10,ALL,P1,0.011107689,1993,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,20,ALL,P1,0.0066478574,1991,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,30,ALL,P1,0.0031230804,1894,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,110,40,ALL,P1,0.00013692044,1526,2,3rd leaf,14,25,False
+kano_box,koppen,pearl_millet,130,0,ALL,P1,0.016781574,1991,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,130,10,ALL,P1,0.008809215,1894,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,130,20,ALL,P1,0.0071199294,1526,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,130,30,ALL,P1,0.004008344,947,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,130,40,ALL,P1,0.0,564,2,3rd leaf,17,30,False
+kano_box,koppen,pearl_millet,70,0,ALL,P2,0.017250039,2000,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,10,ALL,P2,0.009147765,2000,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,20,ALL,P2,0.005559776,2000,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,30,ALL,P2,0.0044546677,2000,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,70,40,ALL,P2,0.0037058606,2000,3,5th leaf,17,28,False
+kano_box,koppen,pearl_millet,90,0,ALL,P2,0.016589854,2000,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,10,ALL,P2,0.0076843644,2000,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,20,ALL,P2,0.005552643,2000,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,30,ALL,P2,0.0020773858,1993,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,90,40,ALL,P2,0.0012870779,1991,3,5th leaf,22,36,False
+kano_box,koppen,pearl_millet,110,0,ALL,P2,0.0103340205,2000,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,10,ALL,P2,0.008021957,1993,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,20,ALL,P2,0.002322826,1991,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,30,ALL,P2,0.00017813832,1894,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,110,40,ALL,P2,0.0021434932,1526,3,5th leaf,26,44,False
+kano_box,koppen,pearl_millet,130,0,ALL,P2,0.00679782,1991,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,130,10,ALL,P2,0.0032177253,1894,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,130,20,ALL,P2,0.00028128386,1526,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,130,30,ALL,P2,0.0002364063,947,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,130,40,ALL,P2,0.0002551147,564,3,5th leaf,31,52,False
+kano_box,koppen,pearl_millet,70,0,ALL,P3,0.008067163,2000,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,10,ALL,P3,0.0045869825,2000,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,20,ALL,P3,0.0033768625,2000,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,30,ALL,P3,0.0042389743,2000,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,70,40,ALL,P3,0.0033931353,2000,4,panicle initiation,29,40,False
+kano_box,koppen,pearl_millet,90,0,ALL,P3,0.008420506,2000,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,10,ALL,P3,0.0043975855,2000,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,20,ALL,P3,0.0044421125,2000,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,30,ALL,P3,0.0040394724,1993,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,90,40,ALL,P3,0.0043652686,1991,4,panicle initiation,37,52,False
+kano_box,koppen,pearl_millet,110,0,ALL,P3,0.0055077556,2000,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,10,ALL,P3,0.0026654028,1993,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,20,ALL,P3,0.0044222083,1991,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,30,ALL,P3,0.0034843825,1894,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,110,40,ALL,P3,0.0065213926,1526,4,panicle initiation,45,64,False
+kano_box,koppen,pearl_millet,130,0,ALL,P3,0.0012299417,1991,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,130,10,ALL,P3,0.0033807904,1894,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,130,20,ALL,P3,0.002190699,1526,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,130,30,ALL,P3,0.00023508054,947,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,130,40,ALL,P3,0.0002551147,564,4,panicle initiation,53,76,False
+kano_box,koppen,pearl_millet,70,0,ALL,P4,0.0035399427,2000,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,10,ALL,P4,0.0037669134,2000,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,20,ALL,P4,0.0035848436,2000,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,30,ALL,P4,0.001947482,2000,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,70,40,ALL,P4,0.006493396,2000,5,flag leaf visible,41,45,False
+kano_box,koppen,pearl_millet,90,0,ALL,P4,0.0031942516,2000,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,10,ALL,P4,0.0024182377,2000,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,20,ALL,P4,0.003324122,2000,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,30,ALL,P4,0.0034170144,1993,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,90,40,ALL,P4,0.00035595478,1991,5,flag leaf visible,53,57,False
+kano_box,koppen,pearl_millet,110,0,ALL,P4,0.0025474352,2000,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,10,ALL,P4,0.0023691007,1993,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,20,ALL,P4,0.0033777035,1991,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,30,ALL,P4,0.0028891447,1894,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,110,40,ALL,P4,0.006067621,1526,5,flag leaf visible,65,71,False
+kano_box,koppen,pearl_millet,130,0,ALL,P4,0.003784514,1991,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,130,10,ALL,P4,0.0030872987,1894,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,130,20,ALL,P4,0.0036801705,1526,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,130,30,ALL,P4,0.00041952834,947,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,130,40,ALL,P4,0.0,564,5,flag leaf visible,77,83,False
+kano_box,koppen,pearl_millet,70,0,ALL,P5,0.0031168077,2000,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,10,ALL,P5,0.0033321884,2000,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,20,ALL,P5,0.0015024162,2000,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,30,ALL,P5,0.004303203,2000,6,boot,46,49,True
+kano_box,koppen,pearl_millet,70,40,ALL,P5,0.006437315,2000,6,boot,46,49,True
+kano_box,koppen,pearl_millet,90,0,ALL,P5,0.0029524313,2000,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,10,ALL,P5,0.0017883911,2000,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,20,ALL,P5,0.006779293,2000,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,30,ALL,P5,0.003941805,1993,6,boot,58,64,True
+kano_box,koppen,pearl_millet,90,40,ALL,P5,0.009138647,1991,6,boot,58,64,True
+kano_box,koppen,pearl_millet,110,0,ALL,P5,0.0027543544,2000,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,10,ALL,P5,0.003481569,1993,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,20,ALL,P5,0.0021088496,1991,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,30,ALL,P5,0.0057843565,1894,6,boot,72,78,True
+kano_box,koppen,pearl_millet,110,40,ALL,P5,0.0063626543,1526,6,boot,72,78,True
+kano_box,koppen,pearl_millet,130,0,ALL,P5,0.0029157533,1991,6,boot,84,93,True
+kano_box,koppen,pearl_millet,130,10,ALL,P5,0.003016363,1894,6,boot,84,93,True
+kano_box,koppen,pearl_millet,130,20,ALL,P5,0.0062605315,1526,6,boot,84,93,True
+kano_box,koppen,pearl_millet,130,30,ALL,P5,0.0005731388,947,6,boot,84,93,True
+kano_box,koppen,pearl_millet,130,40,ALL,P5,0.0,564,6,boot,84,93,True
+kano_box,koppen,pearl_millet,70,0,ALL,P6,0.0037785412,2000,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,10,ALL,P6,0.0042618923,2000,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,20,ALL,P6,0.0036998265,2000,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,30,ALL,P6,0.008003305,2000,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,70,40,ALL,P6,0.014992341,2000,7,50% flowering,50,56,True
+kano_box,koppen,pearl_millet,90,0,ALL,P6,0.0028895726,2000,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,10,ALL,P6,0.007484865,2000,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,20,ALL,P6,0.011321874,2000,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,30,ALL,P6,0.02017277,1993,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,90,40,ALL,P6,0.06307772,1991,7,50% flowering,65,73,True
+kano_box,koppen,pearl_millet,110,0,ALL,P6,0.00724759,2000,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,10,ALL,P6,0.0107808905,1993,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,20,ALL,P6,0.02945974,1991,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,30,ALL,P6,0.04907874,1894,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,110,40,ALL,P6,0.04791761,1526,7,50% flowering,79,89,True
+kano_box,koppen,pearl_millet,130,0,ALL,P6,0.01655149,1991,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,130,10,ALL,P6,0.022616664,1894,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,130,20,ALL,P6,0.027983412,1526,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,130,30,ALL,P6,0.009334885,947,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,130,40,ALL,P6,0.04725487,564,7,50% flowering,94,106,True
+kano_box,koppen,pearl_millet,70,0,ALL,P7,0.0033438164,2000,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,10,ALL,P7,0.0017174947,2000,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,20,ALL,P7,0.005593854,2000,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,30,ALL,P7,0.008617894,2000,8,milk,57,63,True
+kano_box,koppen,pearl_millet,70,40,ALL,P7,0.020271715,2000,8,milk,57,63,True
+kano_box,koppen,pearl_millet,90,0,ALL,P7,0.005194805,2000,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,10,ALL,P7,0.00919929,2000,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,20,ALL,P7,0.020902956,2000,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,30,ALL,P7,0.06781454,1993,8,milk,74,82,True
+kano_box,koppen,pearl_millet,90,40,ALL,P7,0.12861869,1991,8,milk,74,82,True
+kano_box,koppen,pearl_millet,110,0,ALL,P7,0.02422358,2000,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,10,ALL,P7,0.067845576,1993,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,20,ALL,P7,0.13302267,1991,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,30,ALL,P7,0.20931116,1894,8,milk,90,100,True
+kano_box,koppen,pearl_millet,110,40,ALL,P7,0.20244497,1526,8,milk,90,100,True
+kano_box,koppen,pearl_millet,130,0,ALL,P7,0.11624028,1991,8,milk,107,119,True
+kano_box,koppen,pearl_millet,130,10,ALL,P7,0.19254194,1894,8,milk,107,119,True
+kano_box,koppen,pearl_millet,130,20,ALL,P7,0.18554406,1526,8,milk,107,119,True
+kano_box,koppen,pearl_millet,130,30,ALL,P7,0.1915119,947,8,milk,107,119,True
+kano_box,koppen,pearl_millet,130,40,ALL,P7,0.22181806,564,8,milk,107,119,True
+kano_box,koppen,pearl_millet,70,0,ALL,P8,0.0013884779,2000,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,10,ALL,P8,0.0016379494,2000,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,20,ALL,P8,0.0039212476,2000,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,30,ALL,P8,0.004515048,2000,9,dough,64,69,False
+kano_box,koppen,pearl_millet,70,40,ALL,P8,0.017892497,2000,9,dough,64,69,False
+kano_box,koppen,pearl_millet,90,0,ALL,P8,0.003489165,2000,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,10,ALL,P8,0.0045264116,2000,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,20,ALL,P8,0.018102756,2000,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,30,ALL,P8,0.06283442,1993,9,dough,83,89,False
+kano_box,koppen,pearl_millet,90,40,ALL,P8,0.1145687,1991,9,dough,83,89,False
+kano_box,koppen,pearl_millet,110,0,ALL,P8,0.018921016,2000,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,10,ALL,P8,0.063912384,1993,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,20,ALL,P8,0.1188244,1991,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,30,ALL,P8,0.19020554,1894,9,dough,101,109,False
+kano_box,koppen,pearl_millet,110,40,ALL,P8,0.17383537,1526,9,dough,101,109,False
+kano_box,koppen,pearl_millet,130,0,ALL,P8,0.12037741,1991,9,dough,120,129,False
+kano_box,koppen,pearl_millet,130,10,ALL,P8,0.19629484,1894,9,dough,120,129,False
+kano_box,koppen,pearl_millet,130,20,ALL,P8,0.18012421,1526,9,dough,120,129,False
+kano_box,koppen,pearl_millet,130,30,ALL,P8,0.19616246,947,9,dough,120,129,False
+kano_box,koppen,pearl_millet,130,40,ALL,P8,0.1980034,564,9,dough,120,129,False
+kano_box,koppen,groundnut,70,0,"Aw Tropical, savannah",SOW,0.0015035697,1868,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,0,"BSh Arid, steppe, hot",SOW,0.0043446394,132,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,10,"Aw Tropical, savannah",SOW,0.0069825165,1868,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,10,"BSh Arid, steppe, hot",SOW,0.0036357231,132,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,20,"Aw Tropical, savannah",SOW,0.0009031604,1868,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,20,"BSh Arid, steppe, hot",SOW,0.00017217631,132,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,30,"Aw Tropical, savannah",SOW,0.00055061094,1868,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,30,"BSh Arid, steppe, hot",SOW,0.0024833046,132,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,40,"Aw Tropical, savannah",SOW,3.7390146e-05,1868,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,40,"BSh Arid, steppe, hot",SOW,0.0,132,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,90,0,"Aw Tropical, savannah",SOW,0.0014798157,1868,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,0,"BSh Arid, steppe, hot",SOW,0.004389066,132,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,10,"Aw Tropical, savannah",SOW,0.009348301,1868,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,10,"BSh Arid, steppe, hot",SOW,0.0066691427,132,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,20,"Aw Tropical, savannah",SOW,0.0016442068,1868,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,20,"BSh Arid, steppe, hot",SOW,0.0012134331,132,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,30,"Aw Tropical, savannah",SOW,0.000790621,1861,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,30,"BSh Arid, steppe, hot",SOW,0.002778207,132,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,40,"Aw Tropical, savannah",SOW,2.4437928e-05,1860,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,40,"BSh Arid, steppe, hot",SOW,0.0,131,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,110,0,"Aw Tropical, savannah",SOW,0.0027546503,1868,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,0,"BSh Arid, steppe, hot",SOW,0.0043193027,132,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,10,"Aw Tropical, savannah",SOW,0.012104492,1861,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,10,"BSh Arid, steppe, hot",SOW,0.0072362064,132,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,20,"Aw Tropical, savannah",SOW,0.0036360694,1860,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,20,"BSh Arid, steppe, hot",SOW,0.0012898763,131,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,30,"Aw Tropical, savannah",SOW,0.0036020668,1841,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,30,"BSh Arid, steppe, hot",SOW,0.0,53,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,40,"Aw Tropical, savannah",SOW,3.3760403e-05,1519,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,40,"BSh Arid, steppe, hot",SOW,0.0,7,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,130,0,"Aw Tropical, savannah",SOW,0.003612429,1860,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,130,0,"BSh Arid, steppe, hot",SOW,0.005081289,131,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,130,10,"Aw Tropical, savannah",SOW,0.013124128,1841,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,130,10,"BSh Arid, steppe, hot",SOW,0.010165976,53,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,130,20,"Aw Tropical, savannah",SOW,0.0056103095,1519,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,130,20,"BSh Arid, steppe, hot",SOW,0.028673658,7,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,130,30,"Aw Tropical, savannah",SOW,0.009439698,947,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,130,40,"Aw Tropical, savannah",SOW,0.0,564,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,70,0,"Aw Tropical, savannah",VE,0.00924353,1868,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,0,"BSh Arid, steppe, hot",VE,0.01059523,132,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,10,"Aw Tropical, savannah",VE,0.013750561,1868,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,10,"BSh Arid, steppe, hot",VE,0.0078003686,132,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,20,"Aw Tropical, savannah",VE,0.0043879105,1868,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,20,"BSh Arid, steppe, hot",VE,0.011624475,132,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,30,"Aw Tropical, savannah",VE,0.0037055025,1868,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,30,"BSh Arid, steppe, hot",VE,0.006620593,132,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,40,"Aw Tropical, savannah",VE,0.002290824,1868,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,40,"BSh Arid, steppe, hot",VE,0.009495924,132,1,emergence,5,14,False
+kano_box,koppen,groundnut,90,0,"Aw Tropical, savannah",VE,0.01493664,1868,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,0,"BSh Arid, steppe, hot",VE,0.012053677,132,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,10,"Aw Tropical, savannah",VE,0.016209858,1868,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,10,"BSh Arid, steppe, hot",VE,0.01614279,132,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,20,"Aw Tropical, savannah",VE,0.007128173,1868,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,20,"BSh Arid, steppe, hot",VE,0.01251039,132,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,30,"Aw Tropical, savannah",VE,0.0035569128,1861,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,30,"BSh Arid, steppe, hot",VE,0.002778207,132,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,40,"Aw Tropical, savannah",VE,0.00011295266,1860,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,40,"BSh Arid, steppe, hot",VE,0.0,131,1,emergence,6,19,False
+kano_box,koppen,groundnut,110,0,"Aw Tropical, savannah",VE,0.0151317185,1868,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,0,"BSh Arid, steppe, hot",VE,0.012206206,132,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,10,"Aw Tropical, savannah",VE,0.016794536,1861,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,10,"BSh Arid, steppe, hot",VE,0.021203997,132,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,20,"Aw Tropical, savannah",VE,0.0072831446,1860,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,20,"BSh Arid, steppe, hot",VE,0.0025057099,131,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,30,"Aw Tropical, savannah",VE,0.0037699486,1841,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,30,"BSh Arid, steppe, hot",VE,0.0,53,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,40,"Aw Tropical, savannah",VE,0.00017131181,1519,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,40,"BSh Arid, steppe, hot",VE,0.0,7,1,emergence,8,23,False
+kano_box,koppen,groundnut,130,0,"Aw Tropical, savannah",VE,0.018811585,1860,1,emergence,9,28,False
+kano_box,koppen,groundnut,130,0,"BSh Arid, steppe, hot",VE,0.01198846,131,1,emergence,9,28,False
+kano_box,koppen,groundnut,130,10,"Aw Tropical, savannah",VE,0.02077228,1841,1,emergence,9,28,False
+kano_box,koppen,groundnut,130,10,"BSh Arid, steppe, hot",VE,0.013098181,53,1,emergence,9,28,False
+kano_box,koppen,groundnut,130,20,"Aw Tropical, savannah",VE,0.01060426,1519,1,emergence,9,28,False
+kano_box,koppen,groundnut,130,20,"BSh Arid, steppe, hot",VE,0.028673658,7,1,emergence,9,28,False
+kano_box,koppen,groundnut,130,30,"Aw Tropical, savannah",VE,0.009780391,947,1,emergence,9,28,False
+kano_box,koppen,groundnut,130,40,"Aw Tropical, savannah",VE,0.0,564,1,emergence,9,28,False
+kano_box,koppen,groundnut,70,0,"Aw Tropical, savannah",R1,0.014318149,1868,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,0,"BSh Arid, steppe, hot",R1,0.013206285,132,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,10,"Aw Tropical, savannah",R1,0.009177887,1868,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,10,"BSh Arid, steppe, hot",R1,0.010510763,132,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,20,"Aw Tropical, savannah",R1,0.0067827576,1868,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,20,"BSh Arid, steppe, hot",R1,0.015472606,132,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,30,"Aw Tropical, savannah",R1,0.0032403409,1868,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,30,"BSh Arid, steppe, hot",R1,0.011112453,132,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,40,"Aw Tropical, savannah",R1,0.0022534337,1868,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,40,"BSh Arid, steppe, hot",R1,0.009680699,132,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,90,0,"Aw Tropical, savannah",R1,0.015206516,1868,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,0,"BSh Arid, steppe, hot",R1,0.007304051,132,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,10,"Aw Tropical, savannah",R1,0.006222809,1868,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,10,"BSh Arid, steppe, hot",R1,0.011784775,132,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,20,"Aw Tropical, savannah",R1,0.0035472075,1868,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,20,"BSh Arid, steppe, hot",R1,0.002574306,132,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,30,"Aw Tropical, savannah",R1,0.0012174186,1861,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,30,"BSh Arid, steppe, hot",R1,0.0010192378,132,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,40,"Aw Tropical, savannah",R1,0.00096914056,1860,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,40,"BSh Arid, steppe, hot",R1,0.0002181025,131,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,110,0,"Aw Tropical, savannah",R1,0.010369045,1868,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,0,"BSh Arid, steppe, hot",R1,0.015716983,132,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,10,"Aw Tropical, savannah",R1,0.0068386397,1861,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,10,"BSh Arid, steppe, hot",R1,0.013967791,132,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,20,"Aw Tropical, savannah",R1,0.003107421,1860,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,20,"BSh Arid, steppe, hot",R1,0.0,131,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,30,"Aw Tropical, savannah",R1,9.482787e-05,1841,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,30,"BSh Arid, steppe, hot",R1,0.0,53,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,40,"Aw Tropical, savannah",R1,0.0001112683,1519,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,40,"BSh Arid, steppe, hot",R1,0.0,7,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,130,0,"Aw Tropical, savannah",R1,0.0072331056,1860,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,130,0,"BSh Arid, steppe, hot",R1,0.0025057099,131,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,130,10,"Aw Tropical, savannah",R1,0.003645738,1841,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,130,10,"BSh Arid, steppe, hot",R1,0.0,53,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,130,20,"Aw Tropical, savannah",R1,0.00017131181,1519,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,130,20,"BSh Arid, steppe, hot",R1,0.0,7,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,130,30,"Aw Tropical, savannah",R1,0.00025934476,947,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,130,40,"Aw Tropical, savannah",R1,0.0,564,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,70,0,"Aw Tropical, savannah",R2,0.015368157,1868,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,0,"BSh Arid, steppe, hot",R2,0.008308889,132,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,10,"Aw Tropical, savannah",R2,0.006209228,1868,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,10,"BSh Arid, steppe, hot",R2,0.0114082545,132,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,20,"Aw Tropical, savannah",R2,0.0033347898,1868,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,20,"BSh Arid, steppe, hot",R2,0.006123032,132,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,30,"Aw Tropical, savannah",R2,0.0024002772,1868,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,30,"BSh Arid, steppe, hot",R2,0.01337477,132,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,40,"Aw Tropical, savannah",R2,0.0030741114,1868,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,40,"BSh Arid, steppe, hot",R2,0.009856879,132,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,90,0,"Aw Tropical, savannah",R2,0.0059011006,1868,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,0,"BSh Arid, steppe, hot",R2,0.011796651,132,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,10,"Aw Tropical, savannah",R2,0.0049232976,1868,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,10,"BSh Arid, steppe, hot",R2,0.014708821,132,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,20,"Aw Tropical, savannah",R2,0.0037154935,1868,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,20,"BSh Arid, steppe, hot",R2,0.009495924,132,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,30,"Aw Tropical, savannah",R2,0.0011929938,1861,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,30,"BSh Arid, steppe, hot",R2,0.0010192378,132,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,40,"Aw Tropical, savannah",R2,0.0011270728,1860,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,40,"BSh Arid, steppe, hot",R2,0.0011365823,131,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,110,0,"Aw Tropical, savannah",R2,0.0069442447,1868,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,0,"BSh Arid, steppe, hot",R2,0.012330014,132,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,10,"Aw Tropical, savannah",R2,0.0039430833,1861,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,10,"BSh Arid, steppe, hot",R2,0.00080880016,132,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,20,"Aw Tropical, savannah",R2,8.851473e-05,1860,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,20,"BSh Arid, steppe, hot",R2,0.0,131,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,30,"Aw Tropical, savannah",R2,8.843882e-05,1841,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,30,"BSh Arid, steppe, hot",R2,0.0,53,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,40,"Aw Tropical, savannah",R2,0.00017361947,1519,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,40,"BSh Arid, steppe, hot",R2,0.0,7,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,130,0,"Aw Tropical, savannah",R2,0.003544596,1860,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,130,0,"BSh Arid, steppe, hot",R2,0.0012158335,131,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,130,10,"Aw Tropical, savannah",R2,7.824312e-05,1841,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,130,10,"BSh Arid, steppe, hot",R2,0.0,53,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,130,20,"Aw Tropical, savannah",R2,0.00015360818,1519,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,130,20,"BSh Arid, steppe, hot",R2,0.0,7,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,130,30,"Aw Tropical, savannah",R2,0.00013274132,947,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,130,40,"Aw Tropical, savannah",R2,0.0002551147,564,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,70,0,"Aw Tropical, savannah",R3,0.005885256,1868,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,0,"BSh Arid, steppe, hot",R3,0.009649882,132,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,10,"Aw Tropical, savannah",R3,0.0049189986,1868,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,10,"BSh Arid, steppe, hot",R3,0.014891821,132,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,20,"Aw Tropical, savannah",R3,0.003255282,1868,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,20,"BSh Arid, steppe, hot",R3,0.016625214,132,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,30,"Aw Tropical, savannah",R3,0.0022024438,1868,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,30,"BSh Arid, steppe, hot",R3,0.009237482,132,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,40,"Aw Tropical, savannah",R3,0.0016321412,1868,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,40,"BSh Arid, steppe, hot",R3,0.0011002733,132,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,90,0,"Aw Tropical, savannah",R3,0.0068673575,1868,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,0,"BSh Arid, steppe, hot",R3,0.015472606,132,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,10,"Aw Tropical, savannah",R3,0.0031302753,1868,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,10,"BSh Arid, steppe, hot",R3,0.009319661,132,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,20,"Aw Tropical, savannah",R3,0.0022534337,1868,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,20,"BSh Arid, steppe, hot",R3,0.009680699,132,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,30,"Aw Tropical, savannah",R3,0.0018753153,1861,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,30,"BSh Arid, steppe, hot",R3,0.0020168563,132,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,40,"Aw Tropical, savannah",R3,0.0023117575,1860,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,40,"BSh Arid, steppe, hot",R3,0.0036214602,131,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,110,0,"Aw Tropical, savannah",R3,0.0029828888,1868,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,0,"BSh Arid, steppe, hot",R3,0.0054156887,132,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,10,"Aw Tropical, savannah",R3,0.0011563565,1861,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,10,"BSh Arid, steppe, hot",R3,0.0010192378,132,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,20,"Aw Tropical, savannah",R3,0.0010901318,1860,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,20,"BSh Arid, steppe, hot",R3,0.0011365823,131,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,30,"Aw Tropical, savannah",R3,0.0008499809,1841,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,30,"BSh Arid, steppe, hot",R3,0.0042257393,53,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,40,"Aw Tropical, savannah",R3,0.00212164,1519,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,40,"BSh Arid, steppe, hot",R3,0.0,7,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,130,0,"Aw Tropical, savannah",R3,7.359795e-05,1860,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,130,0,"BSh Arid, steppe, hot",R3,0.0,131,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,130,10,"Aw Tropical, savannah",R3,5.2678028e-05,1841,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,130,10,"BSh Arid, steppe, hot",R3,0.0,53,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,130,20,"Aw Tropical, savannah",R3,0.0001112683,1519,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,130,20,"BSh Arid, steppe, hot",R3,0.0,7,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,130,30,"Aw Tropical, savannah",R3,0.00036782186,947,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,130,40,"Aw Tropical, savannah",R3,0.0002551147,564,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,70,0,"Aw Tropical, savannah",R4,0.004201733,1868,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,0,"BSh Arid, steppe, hot",R4,0.0114082545,132,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,10,"Aw Tropical, savannah",R4,0.0031398404,1868,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,10,"BSh Arid, steppe, hot",R4,0.0046888012,132,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,20,"Aw Tropical, savannah",R4,0.0023430674,1868,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,20,"BSh Arid, steppe, hot",R4,0.015756326,132,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,30,"Aw Tropical, savannah",R4,0.0017637676,1868,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,30,"BSh Arid, steppe, hot",R4,0.009237482,132,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,40,"Aw Tropical, savannah",R4,0.0019977062,1868,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,40,"BSh Arid, steppe, hot",R4,0.00091549865,132,5,full pod,32,35,True
+kano_box,koppen,groundnut,90,0,"Aw Tropical, savannah",R4,0.0036774362,1868,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,0,"BSh Arid, steppe, hot",R4,0.0064713885,132,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,10,"Aw Tropical, savannah",R4,0.0023637773,1868,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,10,"BSh Arid, steppe, hot",R4,0.01337477,132,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,20,"Aw Tropical, savannah",R4,0.0030741114,1868,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,20,"BSh Arid, steppe, hot",R4,0.009856879,132,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,30,"Aw Tropical, savannah",R4,0.001671753,1861,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,30,"BSh Arid, steppe, hot",R4,0.0019043182,132,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,40,"Aw Tropical, savannah",R4,0.0034981398,1860,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,40,"BSh Arid, steppe, hot",R4,0.0034033577,131,5,full pod,40,46,True
+kano_box,koppen,groundnut,110,0,"Aw Tropical, savannah",R4,0.002254324,1868,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,0,"BSh Arid, steppe, hot",R4,0.009680699,132,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,10,"Aw Tropical, savannah",R4,0.0020532352,1861,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,10,"BSh Arid, steppe, hot",R4,0.0012086318,132,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,20,"Aw Tropical, savannah",R4,0.00122615,1860,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,20,"BSh Arid, steppe, hot",R4,0.002152162,131,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,30,"Aw Tropical, savannah",R4,0.0033998652,1841,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,30,"BSh Arid, steppe, hot",R4,0.0042257393,53,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,40,"Aw Tropical, savannah",R4,0.0020271752,1519,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,40,"BSh Arid, steppe, hot",R4,0.0,7,5,full pod,50,56,True
+kano_box,koppen,groundnut,130,0,"Aw Tropical, savannah",R4,0.0009079803,1860,5,full pod,58,67,True
+kano_box,koppen,groundnut,130,0,"BSh Arid, steppe, hot",R4,0.0002181025,131,5,full pod,58,67,True
+kano_box,koppen,groundnut,130,10,"Aw Tropical, savannah",R4,0.0007589259,1841,5,full pod,58,67,True
+kano_box,koppen,groundnut,130,10,"BSh Arid, steppe, hot",R4,0.0042257393,53,5,full pod,58,67,True
+kano_box,koppen,groundnut,130,20,"Aw Tropical, savannah",R4,0.0021847377,1519,5,full pod,58,67,True
+kano_box,koppen,groundnut,130,20,"BSh Arid, steppe, hot",R4,0.0,7,5,full pod,58,67,True
+kano_box,koppen,groundnut,130,30,"Aw Tropical, savannah",R4,0.00023508054,947,5,full pod,58,67,True
+kano_box,koppen,groundnut,130,40,"Aw Tropical, savannah",R4,0.0,564,5,full pod,58,67,True
+kano_box,koppen,groundnut,70,0,"Aw Tropical, savannah",R5,0.0065136766,1868,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,0,"BSh Arid, steppe, hot",R5,0.016097054,132,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,10,"Aw Tropical, savannah",R5,0.005064715,1868,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,10,"BSh Arid, steppe, hot",R5,0.01742985,132,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,20,"Aw Tropical, savannah",R5,0.0022332848,1868,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,20,"BSh Arid, steppe, hot",R5,0.012781088,132,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,30,"Aw Tropical, savannah",R5,0.0017412241,1868,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,30,"BSh Arid, steppe, hot",R5,0.0010784656,132,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,40,"Aw Tropical, savannah",R5,0.0057841586,1868,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,40,"BSh Arid, steppe, hot",R5,0.0035700395,132,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,90,0,"Aw Tropical, savannah",R5,0.0037911797,1868,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,0,"BSh Arid, steppe, hot",R5,0.016801395,132,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,10,"Aw Tropical, savannah",R5,0.0029130902,1868,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,10,"BSh Arid, steppe, hot",R5,0.009237482,132,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,20,"Aw Tropical, savannah",R5,0.0019977062,1868,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,20,"BSh Arid, steppe, hot",R5,0.0011002733,132,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,30,"Aw Tropical, savannah",R5,0.004784288,1861,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,30,"BSh Arid, steppe, hot",R5,0.003293932,132,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,40,"Aw Tropical, savannah",R5,0.0026550982,1860,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,40,"BSh Arid, steppe, hot",R5,0.0012113127,131,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,110,0,"Aw Tropical, savannah",R5,0.0030254447,1868,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,0,"BSh Arid, steppe, hot",R5,0.009856879,132,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,10,"Aw Tropical, savannah",R5,0.0024756126,1861,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,10,"BSh Arid, steppe, hot",R5,0.0026394837,132,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,20,"Aw Tropical, savannah",R5,0.0043527144,1860,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,20,"BSh Arid, steppe, hot",R5,0.0036214602,131,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,30,"Aw Tropical, savannah",R5,0.003070044,1841,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,30,"BSh Arid, steppe, hot",R5,0.0042257393,53,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,40,"Aw Tropical, savannah",R5,0.00601292,1519,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,40,"BSh Arid, steppe, hot",R5,0.0,7,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,130,0,"Aw Tropical, savannah",R5,0.0018199239,1860,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,130,0,"BSh Arid, steppe, hot",R5,0.0027113992,131,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,130,10,"Aw Tropical, savannah",R5,0.0033438331,1841,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,130,10,"BSh Arid, steppe, hot",R5,0.0042257393,53,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,130,20,"Aw Tropical, savannah",R5,0.0022864249,1519,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,130,20,"BSh Arid, steppe, hot",R5,0.0,7,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,130,30,"Aw Tropical, savannah",R5,4.7998466e-05,947,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,130,40,"Aw Tropical, savannah",R5,0.0,564,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,70,0,"Aw Tropical, savannah",R6,0.0057341633,1868,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,0,"BSh Arid, steppe, hot",R6,0.01742985,132,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,10,"Aw Tropical, savannah",R6,0.0028138878,1868,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,10,"BSh Arid, steppe, hot",R6,0.018122558,132,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,20,"Aw Tropical, savannah",R6,0.0029596451,1868,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,20,"BSh Arid, steppe, hot",R6,0.014178519,132,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,30,"Aw Tropical, savannah",R6,0.008299878,1868,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,30,"BSh Arid, steppe, hot",R6,0.007010516,132,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,40,"Aw Tropical, savannah",R6,0.009981492,1868,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,40,"BSh Arid, steppe, hot",R6,0.04132774,132,7,full seed,43,54,True
+kano_box,koppen,groundnut,90,0,"Aw Tropical, savannah",R6,0.0035968372,1868,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,0,"BSh Arid, steppe, hot",R6,0.014002338,132,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,10,"Aw Tropical, savannah",R6,0.00394453,1868,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,10,"BSh Arid, steppe, hot",R6,0.0045460165,132,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,20,"Aw Tropical, savannah",R6,0.00782943,1868,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,20,"BSh Arid, steppe, hot",R6,0.011438252,132,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,30,"Aw Tropical, savannah",R6,0.009654909,1861,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,30,"BSh Arid, steppe, hot",R6,0.04207169,132,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,40,"Aw Tropical, savannah",R6,0.022372575,1860,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,40,"BSh Arid, steppe, hot",R6,0.13421525,131,7,full seed,56,69,True
+kano_box,koppen,groundnut,110,0,"Aw Tropical, savannah",R6,0.006805515,1868,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,0,"BSh Arid, steppe, hot",R6,0.0073163356,132,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,10,"Aw Tropical, savannah",R6,0.0073022037,1861,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,10,"BSh Arid, steppe, hot",R6,0.019729966,132,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,20,"Aw Tropical, savannah",R6,0.011645656,1860,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,20,"BSh Arid, steppe, hot",R6,0.044669017,131,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,30,"Aw Tropical, savannah",R6,0.017524578,1841,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,30,"BSh Arid, steppe, hot",R6,0.07022001,53,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,40,"Aw Tropical, savannah",R6,0.029751414,1519,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,40,"BSh Arid, steppe, hot",R6,0.05760055,7,7,full seed,68,85,True
+kano_box,koppen,groundnut,130,0,"Aw Tropical, savannah",R6,0.0038258124,1860,7,full seed,81,100,True
+kano_box,koppen,groundnut,130,0,"BSh Arid, steppe, hot",R6,0.006963956,131,7,full seed,81,100,True
+kano_box,koppen,groundnut,130,10,"Aw Tropical, savannah",R6,0.010042257,1841,7,full seed,81,100,True
+kano_box,koppen,groundnut,130,10,"BSh Arid, steppe, hot",R6,0.017710317,53,7,full seed,81,100,True
+kano_box,koppen,groundnut,130,20,"Aw Tropical, savannah",R6,0.008505602,1519,7,full seed,81,100,True
+kano_box,koppen,groundnut,130,20,"BSh Arid, steppe, hot",R6,0.004464286,7,7,full seed,81,100,True
+kano_box,koppen,groundnut,130,30,"Aw Tropical, savannah",R6,0.0012178896,947,7,full seed,81,100,True
+kano_box,koppen,groundnut,130,40,"Aw Tropical, savannah",R6,0.0012100671,564,7,full seed,81,100,True
+kano_box,koppen,groundnut,70,0,"Aw Tropical, savannah",R7,0.0026676052,1868,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,0,"BSh Arid, steppe, hot",R7,0.012913223,132,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,10,"Aw Tropical, savannah",R7,0.0025682917,1868,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,10,"BSh Arid, steppe, hot",R7,0.0060501955,132,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,20,"Aw Tropical, savannah",R7,0.0050356123,1868,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,20,"BSh Arid, steppe, hot",R7,0.013493818,132,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,30,"Aw Tropical, savannah",R7,0.008743152,1868,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,30,"BSh Arid, steppe, hot",R7,0.023073914,132,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,40,"Aw Tropical, savannah",R7,0.013607658,1868,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,40,"BSh Arid, steppe, hot",R7,0.124142475,132,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,90,0,"Aw Tropical, savannah",R7,0.004657315,1868,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,0,"BSh Arid, steppe, hot",R7,0.012801109,132,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,10,"Aw Tropical, savannah",R7,0.00915012,1868,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,10,"BSh Arid, steppe, hot",R7,0.022939136,132,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,20,"Aw Tropical, savannah",R7,0.017087908,1868,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,20,"BSh Arid, steppe, hot",R7,0.12520413,132,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,30,"Aw Tropical, savannah",R7,0.052596126,1861,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,30,"BSh Arid, steppe, hot",R7,0.28340417,132,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,40,"Aw Tropical, savannah",R7,0.10813936,1860,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,40,"BSh Arid, steppe, hot",R7,0.4877896,131,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,110,0,"Aw Tropical, savannah",R7,0.017856387,1868,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,0,"BSh Arid, steppe, hot",R7,0.12554848,132,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,10,"Aw Tropical, savannah",R7,0.052825626,1861,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,10,"BSh Arid, steppe, hot",R7,0.28340417,132,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,20,"Aw Tropical, savannah",R7,0.10814645,1860,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,20,"BSh Arid, steppe, hot",R7,0.48657376,131,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,30,"Aw Tropical, savannah",R7,0.19960749,1841,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,30,"BSh Arid, steppe, hot",R7,0.6144461,53,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,40,"Aw Tropical, savannah",R7,0.20255178,1519,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,40,"BSh Arid, steppe, hot",R7,0.3215932,7,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,130,0,"Aw Tropical, savannah",R7,0.10807694,1860,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,130,0,"BSh Arid, steppe, hot",R7,0.48657376,131,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,130,10,"Aw Tropical, savannah",R7,0.20391054,1841,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,130,10,"BSh Arid, steppe, hot",R7,0.6144461,53,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,130,20,"Aw Tropical, savannah",R7,0.20272434,1519,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,130,20,"BSh Arid, steppe, hot",R7,0.3215932,7,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,130,30,"Aw Tropical, savannah",R7,0.20676951,947,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,130,40,"Aw Tropical, savannah",R7,0.24589263,564,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,70,0,"Aw Tropical, savannah",R8,0.0010109624,1868,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,0,"BSh Arid, steppe, hot",R8,0.00327135,132,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,10,"Aw Tropical, savannah",R8,0.0013869964,1868,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,10,"BSh Arid, steppe, hot",R8,0.0017457878,132,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,20,"Aw Tropical, savannah",R8,0.0033192278,1868,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,20,"BSh Arid, steppe, hot",R8,0.012440739,132,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,30,"Aw Tropical, savannah",R8,0.0035851442,1868,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,30,"BSh Arid, steppe, hot",R8,0.017674599,132,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,40,"Aw Tropical, savannah",R8,0.0114404755,1868,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,40,"BSh Arid, steppe, hot",R8,0.10368431,132,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,90,0,"Aw Tropical, savannah",R8,0.0028679303,1868,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,0,"BSh Arid, steppe, hot",R8,0.011579857,132,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,10,"Aw Tropical, savannah",R8,0.0035851442,1868,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,10,"BSh Arid, steppe, hot",R8,0.017674599,132,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,20,"Aw Tropical, savannah",R8,0.011752043,1868,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,20,"BSh Arid, steppe, hot",R8,0.10478921,132,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,30,"Aw Tropical, savannah",R8,0.043672904,1861,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,30,"BSh Arid, steppe, hot",R8,0.279657,132,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,40,"Aw Tropical, savannah",R8,0.08796988,1860,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,40,"BSh Arid, steppe, hot",R8,0.41827628,131,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,110,0,"Aw Tropical, savannah",R8,0.012148826,1868,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,0,"BSh Arid, steppe, hot",R8,0.10586387,132,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,10,"Aw Tropical, savannah",R8,0.048381522,1861,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,10,"BSh Arid, steppe, hot",R8,0.28062773,132,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,20,"Aw Tropical, savannah",R8,0.09275685,1860,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,20,"BSh Arid, steppe, hot",R8,0.44841966,131,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,30,"Aw Tropical, savannah",R8,0.17593355,1841,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,30,"BSh Arid, steppe, hot",R8,0.5862138,53,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,40,"Aw Tropical, savannah",R8,0.16987787,1519,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,40,"BSh Arid, steppe, hot",R8,0.26683354,7,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,130,0,"Aw Tropical, savannah",R8,0.09438335,1860,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,130,0,"BSh Arid, steppe, hot",R8,0.46432793,131,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,130,10,"Aw Tropical, savannah",R8,0.17838447,1841,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,130,10,"BSh Arid, steppe, hot",R8,0.59178275,53,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,130,20,"Aw Tropical, savannah",R8,0.17338558,1519,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,130,20,"BSh Arid, steppe, hot",R8,0.26683354,7,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,130,30,"Aw Tropical, savannah",R8,0.19415262,947,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,130,40,"Aw Tropical, savannah",R8,0.19138736,564,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,70,0,ALL,SOW,0.0016910803,2000,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,10,ALL,SOW,0.006761628,2000,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,20,ALL,SOW,0.0008549154,2000,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,30,ALL,SOW,0.0006781687,2000,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,70,40,ALL,SOW,3.4922396e-05,2000,0,sowing to emergence,0,4,False
+kano_box,koppen,groundnut,90,0,ALL,SOW,0.0016718262,2000,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,10,ALL,SOW,0.0091714775,2000,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,20,ALL,SOW,0.0016157757,2000,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,30,ALL,SOW,0.0009222624,1993,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,90,40,ALL,SOW,2.2830009e-05,1991,0,sowing to emergence,0,5,False
+kano_box,koppen,groundnut,110,0,ALL,SOW,0.0028579172,2000,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,10,ALL,SOW,0.011782056,1993,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,20,ALL,SOW,0.0034816992,1991,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,30,ALL,SOW,0.0035012697,1894,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,110,40,ALL,SOW,3.360554e-05,1526,0,sowing to emergence,0,7,False
+kano_box,koppen,groundnut,130,0,ALL,SOW,0.003709074,1991,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,130,10,ALL,SOW,0.01304135,1894,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,130,20,ALL,SOW,0.005716105,1526,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,130,30,ALL,SOW,0.009439698,947,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,130,40,ALL,SOW,0.0,564,0,sowing to emergence,0,8,False
+kano_box,koppen,groundnut,70,0,ALL,VE,0.009332742,2000,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,10,ALL,VE,0.013357848,2000,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,20,ALL,VE,0.0048655244,2000,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,30,ALL,VE,0.0038978984,2000,1,emergence,5,14,False
+kano_box,koppen,groundnut,70,40,ALL,VE,0.0027663605,2000,1,emergence,5,14,False
+kano_box,koppen,groundnut,90,0,ALL,VE,0.014746364,2000,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,10,ALL,VE,0.016205432,2000,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,20,ALL,VE,0.007483399,2000,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,30,ALL,VE,0.0035053375,1993,1,emergence,6,19,False
+kano_box,koppen,groundnut,90,40,ALL,VE,0.00010552082,1991,1,emergence,6,19,False
+kano_box,koppen,groundnut,110,0,ALL,VE,0.014938635,2000,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,10,ALL,VE,0.017086582,1993,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,20,ALL,VE,0.0069688084,1991,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,30,ALL,VE,0.0036644537,1894,1,emergence,8,23,False
+kano_box,koppen,groundnut,110,40,ALL,VE,0.00017052598,1526,1,emergence,8,23,False
+kano_box,koppen,groundnut,130,0,ALL,VE,0.018362653,1991,1,emergence,9,28,False
+kano_box,koppen,groundnut,130,10,ALL,VE,0.020557536,1894,1,emergence,9,28,False
+kano_box,koppen,groundnut,130,20,ALL,VE,0.010687147,1526,1,emergence,9,28,False
+kano_box,koppen,groundnut,130,30,ALL,VE,0.009780391,947,1,emergence,9,28,False
+kano_box,koppen,groundnut,130,40,ALL,VE,0.0,564,1,emergence,9,28,False
+kano_box,koppen,groundnut,70,0,ALL,R1,0.014244765,2000,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,10,ALL,R1,0.009265857,2000,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,20,ALL,R1,0.0073562874,2000,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,30,ALL,R1,0.0037599003,2000,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,70,40,ALL,R1,0.0027436332,2000,2,beginning bloom,15,20,False
+kano_box,koppen,groundnut,90,0,ALL,R1,0.014684953,2000,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,10,ALL,R1,0.006589899,2000,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,20,ALL,R1,0.003482996,2000,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,30,ALL,R1,0.0012042926,1993,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,90,40,ALL,R1,0.00091972516,1991,2,beginning bloom,20,26,False
+kano_box,koppen,groundnut,110,0,ALL,R1,0.0107220085,2000,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,10,ALL,R1,0.0073108166,1993,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,20,ALL,R1,0.002902965,1991,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,30,ALL,R1,9.217429e-05,1894,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,110,40,ALL,R1,0.0001107579,1526,2,beginning bloom,24,32,False
+kano_box,koppen,groundnut,130,0,ALL,R1,0.0069220616,1991,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,130,10,ALL,R1,0.0035437187,1894,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,130,20,ALL,R1,0.00017052598,1526,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,130,30,ALL,R1,0.00025934476,947,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,130,40,ALL,R1,0.0,564,2,beginning bloom,29,38,False
+kano_box,koppen,groundnut,70,0,ALL,R2,0.014902245,2000,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,10,ALL,R2,0.0065523633,2000,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,20,ALL,R2,0.0035188135,2000,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,30,ALL,R2,0.0031245938,2000,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,70,40,ALL,R2,0.003521774,2000,3,beginning peg,21,26,False
+kano_box,koppen,groundnut,90,0,ALL,R2,0.0062902067,2000,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,10,ALL,R2,0.0055691423,2000,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,20,ALL,R2,0.0040970016,2000,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,30,ALL,R2,0.0011814856,1993,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,90,40,ALL,R2,0.0011276985,1991,3,beginning peg,27,33,False
+kano_box,koppen,groundnut,110,0,ALL,R2,0.007299706,2000,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,10,ALL,R2,0.003735494,1993,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,20,ALL,R2,8.269081e-05,1991,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,30,ALL,R2,8.596403e-05,1894,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,110,40,ALL,R2,0.00017282304,1526,3,beginning peg,33,41,False
+kano_box,koppen,groundnut,130,0,ALL,R2,0.0033913727,1991,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,130,10,ALL,R2,7.6053635e-05,1894,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,130,20,ALL,R2,0.00015290357,1526,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,130,30,ALL,R2,0.00013274132,947,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,130,40,ALL,R2,0.0002551147,564,3,beginning peg,39,48,False
+kano_box,koppen,groundnut,70,0,ALL,R3,0.0061337207,2000,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,10,ALL,R3,0.0055772047,2000,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,20,ALL,R3,0.0041376976,2000,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,30,ALL,R3,0.0026667563,2000,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,70,40,ALL,R3,0.001597038,2000,4,beginning pod,27,31,True
+kano_box,koppen,groundnut,90,0,ALL,R3,0.007435304,2000,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,10,ALL,R3,0.0035387748,2000,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,20,ALL,R3,0.0027436332,2000,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,30,ALL,R3,0.0018846899,1993,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,90,40,ALL,R3,0.002397931,1991,4,beginning pod,34,39,True
+kano_box,koppen,groundnut,110,0,ALL,R3,0.0031434535,2000,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,10,ALL,R3,0.0011472749,1993,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,20,ALL,R3,0.001093188,1991,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,30,ALL,R3,0.00094444514,1894,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,110,40,ALL,R3,0.0021119076,1526,4,beginning pod,42,49,True
+kano_box,koppen,groundnut,130,0,ALL,R3,6.875549e-05,1991,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,130,10,ALL,R3,5.1203933e-05,1894,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,130,20,ALL,R3,0.0001107579,1526,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,130,30,ALL,R3,0.00036782186,947,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,130,40,ALL,R3,0.0002551147,564,4,beginning pod,49,57,True
+kano_box,koppen,groundnut,70,0,ALL,R4,0.004677363,2000,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,10,ALL,R4,0.003242072,2000,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,20,ALL,R4,0.0032283426,2000,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,30,ALL,R4,0.0022570326,2000,5,full pod,32,35,True
+kano_box,koppen,groundnut,70,40,ALL,R4,0.0019262804,2000,5,full pod,32,35,True
+kano_box,koppen,groundnut,90,0,ALL,R4,0.0038618369,2000,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,10,ALL,R4,0.0030905027,2000,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,20,ALL,R4,0.003521774,2000,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,30,ALL,R4,0.0016871563,1993,5,full pod,40,46,True
+kano_box,koppen,groundnut,90,40,ALL,R4,0.0034919032,1991,5,full pod,40,46,True
+kano_box,koppen,groundnut,110,0,ALL,R4,0.0027444647,2000,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,10,ALL,R4,0.0019972955,1993,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,20,ALL,R4,0.0012870779,1991,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,30,ALL,R4,0.0034229758,1894,5,full pod,50,56,True
+kano_box,koppen,groundnut,110,40,ALL,R4,0.0020178761,1526,5,full pod,50,56,True
+kano_box,koppen,groundnut,130,0,ALL,R4,0.00086258905,1991,5,full pod,58,67,True
+kano_box,koppen,groundnut,130,10,ALL,R4,0.0008559381,1894,5,full pod,58,67,True
+kano_box,koppen,groundnut,130,20,ALL,R4,0.002174716,1526,5,full pod,58,67,True
+kano_box,koppen,groundnut,130,30,ALL,R4,0.00023508054,947,5,full pod,58,67,True
+kano_box,koppen,groundnut,130,40,ALL,R4,0.0,564,5,full pod,58,67,True
+kano_box,koppen,groundnut,70,0,ALL,R5,0.0071461797,2000,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,10,ALL,R5,0.005880814,2000,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,20,ALL,R5,0.0029294398,2000,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,30,ALL,R5,0.001697482,2000,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,70,40,ALL,R5,0.0056380266,2000,6,beginning seed,36,42,True
+kano_box,koppen,groundnut,90,0,ALL,R5,0.0046498543,2000,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,10,ALL,R5,0.0033304999,2000,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,20,ALL,R5,0.0019384756,2000,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,30,ALL,R5,0.0046855784,1993,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,90,40,ALL,R5,0.0025601028,1991,6,beginning seed,47,55,True
+kano_box,koppen,groundnut,110,0,ALL,R5,0.0034763196,2000,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,10,ALL,R5,0.002486466,1993,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,20,ALL,R5,0.004304601,1991,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,30,ALL,R5,0.003102384,1894,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,110,40,ALL,R5,0.0059853373,1526,6,beginning seed,57,67,True
+kano_box,koppen,groundnut,130,0,ALL,R5,0.0018785794,1991,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,130,10,ALL,R5,0.0033685116,1894,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,130,20,ALL,R5,0.0022759368,1526,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,130,30,ALL,R5,4.7998466e-05,947,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,130,40,ALL,R5,0.0,564,6,beginning seed,68,80,True
+kano_box,koppen,groundnut,70,0,ALL,R6,0.0065060784,2000,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,10,ALL,R6,0.0038242603,2000,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,20,ALL,R6,0.0037000906,2000,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,30,ALL,R6,0.00821478,2000,7,full seed,43,54,True
+kano_box,koppen,groundnut,70,40,ALL,R6,0.012050344,2000,7,full seed,43,54,True
+kano_box,koppen,groundnut,90,0,ALL,R6,0.0042836005,2000,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,10,ALL,R6,0.0039842282,2000,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,20,ALL,R6,0.008067612,2000,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,30,ALL,R6,0.011801931,1993,7,full seed,56,69,True
+kano_box,koppen,groundnut,90,40,ALL,R6,0.029731387,1991,7,full seed,56,69,True
+kano_box,koppen,groundnut,110,0,ALL,R6,0.006839229,2000,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,10,ALL,R6,0.008125316,1993,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,20,ALL,R6,0.013818464,1991,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,30,ALL,R6,0.01899916,1894,7,full seed,68,85,True
+kano_box,koppen,groundnut,110,40,ALL,R6,0.029879164,1526,7,full seed,68,85,True
+kano_box,koppen,groundnut,130,0,ALL,R6,0.00403229,1991,7,full seed,81,100,True
+kano_box,koppen,groundnut,130,10,ALL,R6,0.010256833,1894,7,full seed,81,100,True
+kano_box,koppen,groundnut,130,20,ALL,R6,0.008487064,1526,7,full seed,81,100,True
+kano_box,koppen,groundnut,130,30,ALL,R6,0.0012178896,947,7,full seed,81,100,True
+kano_box,koppen,groundnut,130,40,ALL,R6,0.0012100671,564,7,full seed,81,100,True
+kano_box,koppen,groundnut,70,0,ALL,R7,0.0033438164,2000,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,10,ALL,R7,0.0027980974,2000,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,20,ALL,R7,0.005593854,2000,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,30,ALL,R7,0.009688983,2000,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,70,40,ALL,R7,0.020902956,2000,8,beginning maturity,55,64,False
+kano_box,koppen,groundnut,90,0,ALL,R7,0.005194805,2000,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,10,ALL,R7,0.010060195,2000,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,20,ALL,R7,0.02422358,2000,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,30,ALL,R7,0.06788296,1993,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,90,40,ALL,R7,0.13311885,1991,8,beginning maturity,70,83,False
+kano_box,koppen,groundnut,110,0,ALL,R7,0.024964066,2000,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,10,ALL,R7,0.068097256,1993,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,20,ALL,R7,0.13304548,1991,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,30,ALL,R7,0.21121596,1894,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,110,40,ALL,R7,0.20309784,1526,8,beginning maturity,86,101,False
+kano_box,koppen,groundnut,130,0,ALL,R7,0.13298056,1991,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,130,10,ALL,R7,0.21539861,1894,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,130,20,ALL,R7,0.20326962,1526,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,130,30,ALL,R7,0.20676951,947,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,130,40,ALL,R7,0.24589263,564,8,beginning maturity,101,120,False
+kano_box,koppen,groundnut,70,0,ALL,R8,0.0011601481,2000,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,10,ALL,R8,0.0014106766,2000,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,20,ALL,R8,0.0039212476,2000,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,30,ALL,R8,0.004515048,2000,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,70,40,ALL,R8,0.017528567,2000,9,harvest maturity,65,69,False
+kano_box,koppen,groundnut,90,0,ALL,R8,0.0034429175,2000,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,10,ALL,R8,0.004515048,2000,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,20,ALL,R8,0.017892497,2000,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,30,ALL,R8,0.059302557,1993,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,90,40,ALL,R8,0.10970274,1991,9,harvest maturity,84,89,False
+kano_box,koppen,groundnut,110,0,ALL,R8,0.018334018,2000,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,10,ALL,R8,0.0637636,1993,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,20,ALL,R8,0.116158076,1991,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,30,ALL,R8,0.18741447,1894,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,110,40,ALL,R8,0.17032263,1526,9,harvest maturity,102,109,False
+kano_box,koppen,groundnut,130,0,ALL,R8,0.118724264,1991,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,130,10,ALL,R8,0.18995263,1894,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,130,20,ALL,R8,0.17381422,1526,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,130,30,ALL,R8,0.19415262,947,9,harvest maturity,121,129,False
+kano_box,koppen,groundnut,130,40,ALL,R8,0.19138736,564,9,harvest maturity,121,129,False

@@ -1,0 +1,18 @@
+{
+  "unit": "zones_demo_sahel",
+  "iso3": null,
+  "target": {
+    "kind": "polygon",
+    "file": "zones_demo.gpkg",
+    "field": "NAME",
+    "value": "sahel",
+    "n_features": 1
+  },
+  "status": "ok",
+  "n_cells": 1040,
+  "n_analysed": 1040,
+  "n_few_seasons": 0,
+  "zones": "aez8",
+  "zone_source": "HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",
+  "minutes": 0.4
+}

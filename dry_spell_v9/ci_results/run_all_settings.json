@@ -1,0 +1,288 @@
+{
+  "AEZ_URL": "https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/HJYYTI/0I9GVI",
+  "ARID_MM": 150.0,
+  "BIMODAL_MAX_RATIO": 0.8,
+  "BOUNDARY_URLS": [
+    "https://naciscdn.org/naturalearth/50m/cultural/ne_50m_admin_0_countries.zip",
+    "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson"
+  ],
+  "CHIRPS_COG_URL": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/cogs/p05/{y}/chirps-v2.0.{y}.{m:02d}.{d:02d}.cog",
+  "CLIM_YEAR_MAX": 2024,
+  "CLIM_YEAR_MIN": 1981,
+  "CROPS": {
+    "sorghum": {
+      "label": "Sorghum",
+      "stages": [
+        [
+          "S0",
+          "emergence",
+          0.04
+        ],
+        [
+          "S1",
+          "3-leaf",
+          0.14
+        ],
+        [
+          "S2",
+          "5-leaf",
+          0.24
+        ],
+        [
+          "S3",
+          "growing point differentiation",
+          0.34
+        ],
+        [
+          "S4",
+          "flag leaf visible",
+          0.44
+        ],
+        [
+          "S5",
+          "boot",
+          0.55
+        ],
+        [
+          "S6",
+          "half-bloom",
+          0.65
+        ],
+        [
+          "S7",
+          "soft dough",
+          0.75
+        ],
+        [
+          "S8",
+          "hard dough",
+          0.9
+        ]
+      ],
+      "window": [
+        0.47,
+        0.79
+      ]
+    },
+    "pearl_millet": {
+      "label": "Pearl millet",
+      "stages": [
+        [
+          "P0",
+          "emergence",
+          0.05
+        ],
+        [
+          "P1",
+          "3rd leaf",
+          0.13
+        ],
+        [
+          "P2",
+          "5th leaf",
+          0.24
+        ],
+        [
+          "P3",
+          "panicle initiation",
+          0.41
+        ],
+        [
+          "P4",
+          "flag leaf visible",
+          0.59
+        ],
+        [
+          "P5",
+          "boot",
+          0.65
+        ],
+        [
+          "P6",
+          "50% flowering",
+          0.72
+        ],
+        [
+          "P7",
+          "milk",
+          0.82
+        ],
+        [
+          "P8",
+          "dough",
+          0.92
+        ]
+      ],
+      "window": [
+        0.65,
+        0.92
+      ]
+    },
+    "groundnut": {
+      "label": "Groundnut",
+      "stages": [
+        [
+          "VE",
+          "emergence",
+          0.07
+        ],
+        [
+          "R1",
+          "beginning bloom",
+          0.22
+        ],
+        [
+          "R2",
+          "beginning peg",
+          0.3
+        ],
+        [
+          "R3",
+          "beginning pod",
+          0.38
+        ],
+        [
+          "R4",
+          "full pod",
+          0.45
+        ],
+        [
+          "R5",
+          "beginning seed",
+          0.52
+        ],
+        [
+          "R6",
+          "full seed",
+          0.62
+        ],
+        [
+          "R7",
+          "beginning maturity",
+          0.78
+        ],
+        [
+          "R8",
+          "harvest maturity",
+          0.93
+        ]
+      ],
+      "window": [
+        0.38,
+        0.78
+      ]
+    }
+  },
+  "CYCLES": [
+    70,
+    90,
+    110,
+    130
+  ],
+  "DATA_ROOT": "dryspell_v9_data",
+  "DATA_YEAR_MAX": 2025,
+  "DATA_YEAR_MIN": 1981,
+  "DAY0": 0,
+  "DEMISE_ADJUST": "median_offset",
+  "DEMISE_GRACE": 0,
+  "DEMISE_MATCH_WINDOW": [
+    -30,
+    90
+  ],
+  "DEMISE_SHIFT_MAX": 30,
+  "DRY_MM": 1.0,
+  "FALSE_DEMISE_EXCLUDE": false,
+  "FALSE_DRY_DAYS": 10,
+  "FALSE_DRY_MODE": "spell",
+  "FALSE_START_EXCLUDE": false,
+  "FALSE_WINDOW_DAYS": 20,
+  "FEASIBLE_MIN_FRAC": 0.5,
+  "FIG_DPI": 170,
+  "KOPPEN_FILE": "koppen_geiger_0p00833333.tif",
+  "KOPPEN_PERIOD": "1991_2020",
+  "KOPPEN_URL": "https://ndownloader.figshare.com/files/61012822",
+  "MAJOR_SEASON_RULE": "wettest",
+  "MAX_MISSING_FRAC": 0.005,
+  "MIN_FEASIBLE_SEASONS": 5,
+  "MIN_SPELL_CROP": {
+    "sorghum": 10,
+    "pearl_millet": 10,
+    "groundnut": 10
+  },
+  "MIN_VALID_SEASONS": 5,
+  "NDVI_EOS_THRESHOLD": 0.5,
+  "NDVI_FILL": 65535,
+  "NDVI_MAX_GAP": 3,
+  "NDVI_MIN_AMPLITUDE": 0.05,
+  "NDVI_MIN_MEAN": 0.1,
+  "NDVI_PEAK_MIN_SEP": 3,
+  "NDVI_PRODUCT": "AVHRR_solely",
+  "NDVI_QC_BAD": [
+    2
+  ],
+  "NDVI_REGRID": "nearest",
+  "NDVI_SCALE": 0.001,
+  "NDVI_SMOOTH": 3,
+  "NDVI_SOS_THRESHOLD": 0.5,
+  "NDVI_YEAR_MAX": 2015,
+  "NDVI_YEAR_MIN": 1982,
+  "NDVI_ZENODO_RECORD": "8253971",
+  "NDVI_ZIPS": {
+    "AVHRR_solely": [
+      "1982_1990",
+      "1991_2000",
+      "2001_2010",
+      "2011_2015"
+    ],
+    "AVHRR_MODIS_consolidated": [
+      "1982_1990",
+      "1991_2000",
+      "2001_2010",
+      "2011_2022"
+    ]
+  },
+  "NDVI_ZIP_URL": "https://zenodo.org/records/{rec}/files/PKU_GIMMS_NDVI_{prod}_{period}.zip?download=1",
+  "OUT_ROOT": "dryspell_v9",
+  "PEAK_MIN_REL": 0.25,
+  "PEAK_MIN_SEP": 45,
+  "REGIME_SMOOTH_DAYS": 31,
+  "REGIME_SOURCE": "consensus",
+  "REGIONS": {
+    "ssa": [
+      -18.0,
+      -35.0,
+      52.0,
+      24.0
+    ],
+    "study": [
+      -18.0,
+      2.0,
+      38.7,
+      23.5
+    ],
+    "ci_nga": [
+      2.5,
+      4.5,
+      14.5,
+      14.5
+    ]
+  },
+  "ROWS_PER_TASK": 8,
+  "SEASON_LEN_MAX": 330,
+  "SEASON_LEN_MIN": 30,
+  "SEASON_YEAR_MAX": 2024,
+  "SEASON_YEAR_MIN": 1981,
+  "SOW_OFFSETS": [
+    0,
+    10,
+    20,
+    30,
+    40
+  ],
+  "SSA_NAME": "SSA",
+  "STEP1_MIN_SPELL": 5,
+  "SUMMARY_ZONES": "aez8",
+  "TRANSITION_MAX_RATIO": 0.95,
+  "USE_NDVI": true,
+  "WINDOW_MIN_COVER": 0.95
+}

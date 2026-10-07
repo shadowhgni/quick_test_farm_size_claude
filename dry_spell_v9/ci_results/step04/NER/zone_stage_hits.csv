@@ -1,0 +1,1411 @@
+unit,zone_scheme,crop,cycle,sow,zone,stage,p,n_cells,stage_idx,stage_name,das_start,das_end,overlaps_window
+NER,aez8,sorghum,70,0,Warm / arid,SOW,0.015430067,1620,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,0,Warm / semiarid,SOW,0.004043193,4185,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,10,Warm / arid,SOW,0.036807228,1443,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,10,Warm / semiarid,SOW,0.012986712,4185,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,20,Warm / arid,SOW,0.011268777,1366,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,20,Warm / semiarid,SOW,0.010889654,4185,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,30,Warm / arid,SOW,0.0011046652,677,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,30,Warm / semiarid,SOW,0.005538636,4177,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,40,Warm / arid,SOW,0.0017482518,26,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,40,Warm / semiarid,SOW,0.004506098,3729,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,90,0,Warm / arid,SOW,0.014571297,1366,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,90,0,Warm / semiarid,SOW,0.0069691027,4185,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,90,10,Warm / arid,SOW,0.0370944,677,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,90,10,Warm / semiarid,SOW,0.01630593,4177,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,90,20,Warm / arid,SOW,0.019426227,26,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,90,20,Warm / semiarid,SOW,0.0137051875,3729,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,90,30,Warm / semiarid,SOW,0.0049948976,2947,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,90,40,Warm / semiarid,SOW,0.004256962,1543,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,110,0,Warm / arid,SOW,0.0034965037,26,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,110,0,Warm / semiarid,SOW,0.007323124,3729,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,110,10,Warm / semiarid,SOW,0.017265033,2947,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,110,20,Warm / semiarid,SOW,0.012632276,1543,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,110,30,Warm / semiarid,SOW,0.00050147256,550,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,110,40,Warm / semiarid,SOW,0.0037838663,144,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,130,0,Warm / semiarid,SOW,0.0065279063,1543,0,sowing to emergence,0,4,False
+NER,aez8,sorghum,130,10,Warm / semiarid,SOW,0.010603588,550,0,sowing to emergence,0,4,False
+NER,aez8,sorghum,130,20,Warm / semiarid,SOW,0.0028540604,144,0,sowing to emergence,0,4,False
+NER,aez8,sorghum,130,30,Warm / semiarid,SOW,0.0011520737,31,0,sowing to emergence,0,4,False
+NER,aez8,sorghum,70,0,Warm / arid,S0,0.06183081,1620,1,emergence,3,9,False
+NER,aez8,sorghum,70,0,Warm / semiarid,S0,0.024176728,4185,1,emergence,3,9,False
+NER,aez8,sorghum,70,10,Warm / arid,S0,0.05911746,1443,1,emergence,3,9,False
+NER,aez8,sorghum,70,10,Warm / semiarid,S0,0.02832587,4185,1,emergence,3,9,False
+NER,aez8,sorghum,70,20,Warm / arid,S0,0.021767972,1366,1,emergence,3,9,False
+NER,aez8,sorghum,70,20,Warm / semiarid,S0,0.019444535,4185,1,emergence,3,9,False
+NER,aez8,sorghum,70,30,Warm / arid,S0,0.0018041718,677,1,emergence,3,9,False
+NER,aez8,sorghum,70,30,Warm / semiarid,S0,0.008729068,4177,1,emergence,3,9,False
+NER,aez8,sorghum,70,40,Warm / arid,S0,0.006854559,26,1,emergence,3,9,False
+NER,aez8,sorghum,70,40,Warm / semiarid,S0,0.006170349,3729,1,emergence,3,9,False
+NER,aez8,sorghum,90,0,Warm / arid,S0,0.0790136,1366,1,emergence,4,12,False
+NER,aez8,sorghum,90,0,Warm / semiarid,S0,0.03253954,4185,1,emergence,4,12,False
+NER,aez8,sorghum,90,10,Warm / arid,S0,0.072341464,677,1,emergence,4,12,False
+NER,aez8,sorghum,90,10,Warm / semiarid,S0,0.039168235,4177,1,emergence,4,12,False
+NER,aez8,sorghum,90,20,Warm / arid,S0,0.026752234,26,1,emergence,4,12,False
+NER,aez8,sorghum,90,20,Warm / semiarid,S0,0.025575073,3729,1,emergence,4,12,False
+NER,aez8,sorghum,90,30,Warm / semiarid,S0,0.011043744,2947,1,emergence,4,12,False
+NER,aez8,sorghum,90,40,Warm / semiarid,S0,0.0048444835,1543,1,emergence,4,12,False
+NER,aez8,sorghum,110,0,Warm / arid,S0,0.051297434,26,1,emergence,4,14,False
+NER,aez8,sorghum,110,0,Warm / semiarid,S0,0.03892768,3729,1,emergence,4,14,False
+NER,aez8,sorghum,110,10,Warm / semiarid,S0,0.04259427,2947,1,emergence,4,14,False
+NER,aez8,sorghum,110,20,Warm / semiarid,S0,0.02092106,1543,1,emergence,4,14,False
+NER,aez8,sorghum,110,30,Warm / semiarid,S0,0.0047780783,550,1,emergence,4,14,False
+NER,aez8,sorghum,110,40,Warm / semiarid,S0,0.003988115,144,1,emergence,4,14,False
+NER,aez8,sorghum,130,0,Warm / semiarid,S0,0.034071423,1543,1,emergence,5,17,False
+NER,aez8,sorghum,130,10,Warm / semiarid,S0,0.028191412,550,1,emergence,5,17,False
+NER,aez8,sorghum,130,20,Warm / semiarid,S0,0.003459069,144,1,emergence,5,17,False
+NER,aez8,sorghum,130,30,Warm / semiarid,S0,0.0037327188,31,1,emergence,5,17,False
+NER,aez8,sorghum,70,0,Warm / arid,S1,0.096503824,1620,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,0,Warm / semiarid,S1,0.041556526,4185,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,10,Warm / arid,S1,0.066830665,1443,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,10,Warm / semiarid,S1,0.039722025,4185,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,20,Warm / arid,S1,0.019680265,1366,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,20,Warm / semiarid,S1,0.0236598,4185,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,30,Warm / arid,S1,0.003461225,677,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,30,Warm / semiarid,S1,0.012236351,4177,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,40,Warm / arid,S1,0.01729611,26,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,40,Warm / semiarid,S1,0.0077334344,3729,2,3-leaf,10,16,False
+NER,aez8,sorghum,90,0,Warm / arid,S1,0.09765233,1366,2,3-leaf,13,21,False
+NER,aez8,sorghum,90,0,Warm / semiarid,S1,0.048110973,4185,2,3-leaf,13,21,False
+NER,aez8,sorghum,90,10,Warm / arid,S1,0.050603352,677,2,3-leaf,13,21,False
+NER,aez8,sorghum,90,10,Warm / semiarid,S1,0.040902052,4177,2,3-leaf,13,21,False
+NER,aez8,sorghum,90,20,Warm / arid,S1,0.012418741,26,2,3-leaf,13,21,False
+NER,aez8,sorghum,90,20,Warm / semiarid,S1,0.022915227,3729,2,3-leaf,13,21,False
+NER,aez8,sorghum,90,30,Warm / semiarid,S1,0.008751615,2947,2,3-leaf,13,21,False
+NER,aez8,sorghum,90,40,Warm / semiarid,S1,0.0034267989,1543,2,3-leaf,13,21,False
+NER,aez8,sorghum,110,0,Warm / arid,S1,0.08148374,26,2,3-leaf,15,25,False
+NER,aez8,sorghum,110,0,Warm / semiarid,S1,0.05647401,3729,2,3-leaf,15,25,False
+NER,aez8,sorghum,110,10,Warm / semiarid,S1,0.03520236,2947,2,3-leaf,15,25,False
+NER,aez8,sorghum,110,20,Warm / semiarid,S1,0.012909079,1543,2,3-leaf,15,25,False
+NER,aez8,sorghum,110,30,Warm / semiarid,S1,0.00517876,550,2,3-leaf,15,25,False
+NER,aez8,sorghum,110,40,Warm / semiarid,S1,0.00020424837,144,2,3-leaf,15,25,False
+NER,aez8,sorghum,130,0,Warm / semiarid,S1,0.039973505,1543,2,3-leaf,18,30,False
+NER,aez8,sorghum,130,10,Warm / semiarid,S1,0.0118255075,550,2,3-leaf,18,30,False
+NER,aez8,sorghum,130,20,Warm / semiarid,S1,0.004277467,144,2,3-leaf,18,30,False
+NER,aez8,sorghum,130,30,Warm / semiarid,S1,0.0037327188,31,2,3-leaf,18,30,False
+NER,aez8,sorghum,70,0,Warm / arid,S2,0.07076487,1620,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,0,Warm / semiarid,S2,0.042715393,4185,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,10,Warm / arid,S2,0.026783034,1443,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,10,Warm / semiarid,S2,0.027471844,4185,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,20,Warm / arid,S2,0.0068018176,1366,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,20,Warm / semiarid,S2,0.014492932,4185,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,30,Warm / arid,S2,0.0074315732,677,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,30,Warm / semiarid,S2,0.0077725733,4177,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,40,Warm / arid,S2,0.012044116,26,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,40,Warm / semiarid,S2,0.0042929812,3729,3,5-leaf,17,23,False
+NER,aez8,sorghum,90,0,Warm / arid,S2,0.049485102,1366,3,5-leaf,22,30,False
+NER,aez8,sorghum,90,0,Warm / semiarid,S2,0.039922453,4185,3,5-leaf,22,30,False
+NER,aez8,sorghum,90,10,Warm / arid,S2,0.012087531,677,3,5-leaf,22,30,False
+NER,aez8,sorghum,90,10,Warm / semiarid,S2,0.02131328,4177,3,5-leaf,22,30,False
+NER,aez8,sorghum,90,20,Warm / arid,S2,0.006854559,26,3,5-leaf,22,30,False
+NER,aez8,sorghum,90,20,Warm / semiarid,S2,0.009216294,3729,3,5-leaf,22,30,False
+NER,aez8,sorghum,90,30,Warm / semiarid,S2,0.004783322,2947,3,5-leaf,22,30,False
+NER,aez8,sorghum,90,40,Warm / semiarid,S2,0.0037551154,1543,3,5-leaf,22,30,False
+NER,aez8,sorghum,110,0,Warm / arid,S2,0.0301863,26,3,5-leaf,26,36,False
+NER,aez8,sorghum,110,0,Warm / semiarid,S2,0.03487635,3729,3,5-leaf,26,36,False
+NER,aez8,sorghum,110,10,Warm / semiarid,S2,0.013721241,2947,3,5-leaf,26,36,False
+NER,aez8,sorghum,110,20,Warm / semiarid,S2,0.0049864836,1543,3,5-leaf,26,36,False
+NER,aez8,sorghum,110,30,Warm / semiarid,S2,0.0016030241,550,3,5-leaf,26,36,False
+NER,aez8,sorghum,110,40,Warm / semiarid,S2,0.0005934343,144,3,5-leaf,26,36,False
+NER,aez8,sorghum,130,0,Warm / semiarid,S2,0.021014178,1543,3,5-leaf,31,43,False
+NER,aez8,sorghum,130,10,Warm / semiarid,S2,0.0053600804,550,3,5-leaf,31,43,False
+NER,aez8,sorghum,130,20,Warm / semiarid,S2,0.0028864413,144,3,5-leaf,31,43,False
+NER,aez8,sorghum,130,30,Warm / semiarid,S2,0.0011520737,31,3,5-leaf,31,43,False
+NER,aez8,sorghum,70,0,Warm / arid,S3,0.03650755,1620,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,0,Warm / semiarid,S3,0.0335914,4185,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,10,Warm / arid,S3,0.011153091,1443,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,10,Warm / semiarid,S3,0.014422713,4185,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,20,Warm / arid,S3,0.008482661,1366,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,20,Warm / semiarid,S3,0.0076735695,4185,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,30,Warm / arid,S3,0.016698679,677,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,30,Warm / semiarid,S3,0.0048720837,4177,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,40,Warm / arid,S3,0.006868132,26,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,40,Warm / semiarid,S3,0.004885002,3729,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,90,0,Warm / arid,S3,0.015109143,1366,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,90,0,Warm / semiarid,S3,0.021710407,4185,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,90,10,Warm / arid,S3,0.003685763,677,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,90,10,Warm / semiarid,S3,0.01033973,4177,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,90,20,Warm / arid,S3,0.01729611,26,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,90,20,Warm / semiarid,S3,0.0069573065,3729,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,90,30,Warm / semiarid,S3,0.0032978114,2947,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,90,40,Warm / semiarid,S3,0.0034925574,1543,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,110,0,Warm / arid,S3,0.0052519944,26,4,growing point differentiation,37,47,False
+NER,aez8,sorghum,110,0,Warm / semiarid,S3,0.0154883135,3729,4,growing point differentiation,37,47,False
+NER,aez8,sorghum,110,10,Warm / semiarid,S3,0.007342227,2947,4,growing point differentiation,37,47,False
+NER,aez8,sorghum,110,20,Warm / semiarid,S3,0.0039047103,1543,4,growing point differentiation,37,47,False
+NER,aez8,sorghum,110,30,Warm / semiarid,S3,0.0008309166,550,4,growing point differentiation,37,47,False
+NER,aez8,sorghum,110,40,Warm / semiarid,S3,0.0065006483,144,4,growing point differentiation,37,47,False
+NER,aez8,sorghum,130,0,Warm / semiarid,S3,0.005087312,1543,4,growing point differentiation,44,56,False
+NER,aez8,sorghum,130,10,Warm / semiarid,S3,0.0017647202,550,4,growing point differentiation,44,56,False
+NER,aez8,sorghum,130,20,Warm / semiarid,S3,0.0007976827,144,4,growing point differentiation,44,56,False
+NER,aez8,sorghum,130,30,Warm / semiarid,S3,0.0,31,4,growing point differentiation,44,56,False
+NER,aez8,sorghum,70,0,Warm / arid,S4,0.01470979,1620,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,0,Warm / semiarid,S4,0.0207817,4185,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,10,Warm / arid,S4,0.010696648,1443,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,10,Warm / semiarid,S4,0.00986513,4185,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,20,Warm / arid,S4,0.020751247,1366,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,20,Warm / semiarid,S4,0.0071204077,4185,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,30,Warm / arid,S4,0.026562098,677,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,30,Warm / semiarid,S4,0.005978619,4177,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,40,Warm / arid,S4,0.012279388,26,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,40,Warm / semiarid,S4,0.007505049,3729,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,90,0,Warm / arid,S4,0.006606509,1366,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,90,0,Warm / semiarid,S4,0.011958265,4185,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,90,10,Warm / arid,S4,0.01610174,677,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,90,10,Warm / semiarid,S4,0.009002964,4177,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,90,20,Warm / arid,S4,0.013646679,26,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,90,20,Warm / semiarid,S4,0.0053935456,3729,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,90,30,Warm / semiarid,S4,0.004516784,2947,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,90,40,Warm / semiarid,S4,0.005127477,1543,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,110,0,Warm / arid,S4,0.01729611,26,5,flag leaf visible,48,60,True
+NER,aez8,sorghum,110,0,Warm / semiarid,S4,0.009047393,3729,5,flag leaf visible,48,60,True
+NER,aez8,sorghum,110,10,Warm / semiarid,S4,0.0035933966,2947,5,flag leaf visible,48,60,True
+NER,aez8,sorghum,110,20,Warm / semiarid,S4,0.004181581,1543,5,flag leaf visible,48,60,True
+NER,aez8,sorghum,110,30,Warm / semiarid,S4,0.008366888,550,5,flag leaf visible,48,60,True
+NER,aez8,sorghum,110,40,Warm / semiarid,S4,0.014098131,144,5,flag leaf visible,48,60,True
+NER,aez8,sorghum,130,0,Warm / semiarid,S4,0.0043331697,1543,5,flag leaf visible,57,71,True
+NER,aez8,sorghum,130,10,Warm / semiarid,S4,0.0008309166,550,5,flag leaf visible,57,71,True
+NER,aez8,sorghum,130,20,Warm / semiarid,S4,0.014691565,144,5,flag leaf visible,57,71,True
+NER,aez8,sorghum,130,30,Warm / semiarid,S4,0.0011520737,31,5,flag leaf visible,57,71,True
+NER,aez8,sorghum,70,0,Warm / arid,S5,0.013059383,1620,6,boot,38,45,True
+NER,aez8,sorghum,70,0,Warm / semiarid,S5,0.01337769,4185,6,boot,38,45,True
+NER,aez8,sorghum,70,10,Warm / arid,S5,0.024008464,1443,6,boot,38,45,True
+NER,aez8,sorghum,70,10,Warm / semiarid,S5,0.009110832,4185,6,boot,38,45,True
+NER,aez8,sorghum,70,20,Warm / arid,S5,0.032606814,1366,6,boot,38,45,True
+NER,aez8,sorghum,70,20,Warm / semiarid,S5,0.0072899284,4185,6,boot,38,45,True
+NER,aez8,sorghum,70,30,Warm / arid,S5,0.044994265,677,6,boot,38,45,True
+NER,aez8,sorghum,70,30,Warm / semiarid,S5,0.012795903,4177,6,boot,38,45,True
+NER,aez8,sorghum,70,40,Warm / arid,S5,0.03354812,26,6,boot,38,45,True
+NER,aez8,sorghum,70,40,Warm / semiarid,S5,0.017430482,3729,6,boot,38,45,True
+NER,aez8,sorghum,90,0,Warm / arid,S5,0.018663025,1366,6,boot,50,57,True
+NER,aez8,sorghum,90,0,Warm / semiarid,S5,0.008370759,4185,6,boot,50,57,True
+NER,aez8,sorghum,90,10,Warm / arid,S5,0.025277833,677,6,boot,50,57,True
+NER,aez8,sorghum,90,10,Warm / semiarid,S5,0.0059652566,4177,6,boot,50,57,True
+NER,aez8,sorghum,90,20,Warm / arid,S5,0.012279388,26,6,boot,50,57,True
+NER,aez8,sorghum,90,20,Warm / semiarid,S5,0.0075991363,3729,6,boot,50,57,True
+NER,aez8,sorghum,90,30,Warm / semiarid,S5,0.0068481285,2947,6,boot,50,57,True
+NER,aez8,sorghum,90,40,Warm / semiarid,S5,0.00773031,1543,6,boot,50,57,True
+NER,aez8,sorghum,110,0,Warm / arid,S5,0.013646679,26,6,boot,61,71,True
+NER,aez8,sorghum,110,0,Warm / semiarid,S5,0.006717862,3729,6,boot,61,71,True
+NER,aez8,sorghum,110,10,Warm / semiarid,S5,0.0047575166,2947,6,boot,61,71,True
+NER,aez8,sorghum,110,20,Warm / semiarid,S5,0.0055024237,1543,6,boot,61,71,True
+NER,aez8,sorghum,110,30,Warm / semiarid,S5,0.010049146,550,6,boot,61,71,True
+NER,aez8,sorghum,110,40,Warm / semiarid,S5,0.0043576737,144,6,boot,61,71,True
+NER,aez8,sorghum,130,0,Warm / semiarid,S5,0.003588814,1543,6,boot,72,83,True
+NER,aez8,sorghum,130,10,Warm / semiarid,S5,0.008422048,550,6,boot,72,83,True
+NER,aez8,sorghum,130,20,Warm / semiarid,S5,0.014428818,144,6,boot,72,83,True
+NER,aez8,sorghum,130,30,Warm / semiarid,S5,0.0,31,6,boot,72,83,True
+NER,aez8,sorghum,70,0,Warm / arid,S6,0.020778943,1620,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,0,Warm / semiarid,S6,0.007169694,4185,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,10,Warm / arid,S6,0.03915004,1443,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,10,Warm / semiarid,S6,0.0073730405,4185,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,20,Warm / arid,S6,0.056784086,1366,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,20,Warm / semiarid,S6,0.01003944,4185,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,30,Warm / arid,S6,0.075479046,677,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,30,Warm / semiarid,S6,0.023784848,4177,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,40,Warm / arid,S6,0.14425774,26,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,40,Warm / semiarid,S6,0.041881178,3729,7,half-bloom,46,51,True
+NER,aez8,sorghum,90,0,Warm / arid,S6,0.03710425,1366,7,half-bloom,58,67,True
+NER,aez8,sorghum,90,0,Warm / semiarid,S6,0.008674509,4185,7,half-bloom,58,67,True
+NER,aez8,sorghum,90,10,Warm / arid,S6,0.04927406,677,7,half-bloom,58,67,True
+NER,aez8,sorghum,90,10,Warm / semiarid,S6,0.015320713,4177,7,half-bloom,58,67,True
+NER,aez8,sorghum,90,20,Warm / arid,S6,0.057418413,26,7,half-bloom,58,67,True
+NER,aez8,sorghum,90,20,Warm / semiarid,S6,0.025004799,3729,7,half-bloom,58,67,True
+NER,aez8,sorghum,90,30,Warm / semiarid,S6,0.044429924,2947,7,half-bloom,58,67,True
+NER,aez8,sorghum,90,40,Warm / semiarid,S6,0.062313795,1543,7,half-bloom,58,67,True
+NER,aez8,sorghum,110,0,Warm / arid,S6,0.017690642,26,7,half-bloom,72,81,True
+NER,aez8,sorghum,110,0,Warm / semiarid,S6,0.010175845,3729,7,half-bloom,72,81,True
+NER,aez8,sorghum,110,10,Warm / semiarid,S6,0.010792266,2947,7,half-bloom,72,81,True
+NER,aez8,sorghum,110,20,Warm / semiarid,S6,0.015512804,1543,7,half-bloom,72,81,True
+NER,aez8,sorghum,110,30,Warm / semiarid,S6,0.014620644,550,7,half-bloom,72,81,True
+NER,aez8,sorghum,110,40,Warm / semiarid,S6,0.0247395,144,7,half-bloom,72,81,True
+NER,aez8,sorghum,130,0,Warm / semiarid,S6,0.0076268697,1543,7,half-bloom,84,97,True
+NER,aez8,sorghum,130,10,Warm / semiarid,S6,0.01682446,550,7,half-bloom,84,97,True
+NER,aez8,sorghum,130,20,Warm / semiarid,S6,0.0043576737,144,7,half-bloom,84,97,True
+NER,aez8,sorghum,130,30,Warm / semiarid,S6,0.0,31,7,half-bloom,84,97,True
+NER,aez8,sorghum,70,0,Warm / arid,S7,0.058786556,1620,8,soft dough,52,62,True
+NER,aez8,sorghum,70,0,Warm / semiarid,S7,0.009602824,4185,8,soft dough,52,62,True
+NER,aez8,sorghum,70,10,Warm / arid,S7,0.10250227,1443,8,soft dough,52,62,True
+NER,aez8,sorghum,70,10,Warm / semiarid,S7,0.01352458,4185,8,soft dough,52,62,True
+NER,aez8,sorghum,70,20,Warm / arid,S7,0.16625132,1366,8,soft dough,52,62,True
+NER,aez8,sorghum,70,20,Warm / semiarid,S7,0.0395114,4185,8,soft dough,52,62,True
+NER,aez8,sorghum,70,30,Warm / arid,S7,0.24193344,677,8,soft dough,52,62,True
+NER,aez8,sorghum,70,30,Warm / semiarid,S7,0.09340003,4177,8,soft dough,52,62,True
+NER,aez8,sorghum,70,40,Warm / arid,S7,0.40761992,26,8,soft dough,52,62,True
+NER,aez8,sorghum,70,40,Warm / semiarid,S7,0.17044404,3729,8,soft dough,52,62,True
+NER,aez8,sorghum,90,0,Warm / arid,S7,0.16044945,1366,8,soft dough,68,80,True
+NER,aez8,sorghum,90,0,Warm / semiarid,S7,0.04071944,4185,8,soft dough,68,80,True
+NER,aez8,sorghum,90,10,Warm / arid,S7,0.23933643,677,8,soft dough,68,80,True
+NER,aez8,sorghum,90,10,Warm / semiarid,S7,0.09408573,4177,8,soft dough,68,80,True
+NER,aez8,sorghum,90,20,Warm / arid,S7,0.41128296,26,8,soft dough,68,80,True
+NER,aez8,sorghum,90,20,Warm / semiarid,S7,0.1719479,3729,8,soft dough,68,80,True
+NER,aez8,sorghum,90,30,Warm / semiarid,S7,0.2705844,2947,8,soft dough,68,80,True
+NER,aez8,sorghum,90,40,Warm / semiarid,S7,0.32844353,1543,8,soft dough,68,80,True
+NER,aez8,sorghum,110,0,Warm / arid,S7,0.37782273,26,8,soft dough,82,98,True
+NER,aez8,sorghum,110,0,Warm / semiarid,S7,0.13976803,3729,8,soft dough,82,98,True
+NER,aez8,sorghum,110,10,Warm / semiarid,S7,0.22889039,2947,8,soft dough,82,98,True
+NER,aez8,sorghum,110,20,Warm / semiarid,S7,0.2696988,1543,8,soft dough,82,98,True
+NER,aez8,sorghum,110,30,Warm / semiarid,S7,0.3199527,550,8,soft dough,82,98,True
+NER,aez8,sorghum,110,40,Warm / semiarid,S7,0.27759653,144,8,soft dough,82,98,True
+NER,aez8,sorghum,130,0,Warm / semiarid,S7,0.22299327,1543,8,soft dough,98,116,True
+NER,aez8,sorghum,130,10,Warm / semiarid,S7,0.26887295,550,8,soft dough,98,116,True
+NER,aez8,sorghum,130,20,Warm / semiarid,S7,0.23982869,144,8,soft dough,98,116,True
+NER,aez8,sorghum,130,30,Warm / semiarid,S7,0.28118882,31,8,soft dough,98,116,True
+NER,aez8,sorghum,70,0,Warm / arid,S8,0.041865252,1620,9,hard dough,63,69,False
+NER,aez8,sorghum,70,0,Warm / semiarid,S8,0.0064949086,4185,9,hard dough,63,69,False
+NER,aez8,sorghum,70,10,Warm / arid,S8,0.074447274,1443,9,hard dough,63,69,False
+NER,aez8,sorghum,70,10,Warm / semiarid,S8,0.006923879,4185,9,hard dough,63,69,False
+NER,aez8,sorghum,70,20,Warm / arid,S8,0.13133653,1366,9,hard dough,63,69,False
+NER,aez8,sorghum,70,20,Warm / semiarid,S8,0.031247955,4185,9,hard dough,63,69,False
+NER,aez8,sorghum,70,30,Warm / arid,S8,0.2062847,677,9,hard dough,63,69,False
+NER,aez8,sorghum,70,30,Warm / semiarid,S8,0.07844879,4177,9,hard dough,63,69,False
+NER,aez8,sorghum,70,40,Warm / arid,S8,0.37239233,26,9,hard dough,63,69,False
+NER,aez8,sorghum,70,40,Warm / semiarid,S8,0.15278877,3729,9,hard dough,63,69,False
+NER,aez8,sorghum,90,0,Warm / arid,S8,0.13604406,1366,9,hard dough,81,89,False
+NER,aez8,sorghum,90,0,Warm / semiarid,S8,0.034263436,4185,9,hard dough,81,89,False
+NER,aez8,sorghum,90,10,Warm / arid,S8,0.21008305,677,9,hard dough,81,89,False
+NER,aez8,sorghum,90,10,Warm / semiarid,S8,0.082416415,4177,9,hard dough,81,89,False
+NER,aez8,sorghum,90,20,Warm / arid,S8,0.3825217,26,9,hard dough,81,89,False
+NER,aez8,sorghum,90,20,Warm / semiarid,S8,0.15762353,3729,9,hard dough,81,89,False
+NER,aez8,sorghum,90,30,Warm / semiarid,S8,0.24425052,2947,9,hard dough,81,89,False
+NER,aez8,sorghum,90,40,Warm / semiarid,S8,0.28457323,1543,9,hard dough,81,89,False
+NER,aez8,sorghum,110,0,Warm / arid,S8,0.3826882,26,9,hard dough,99,109,False
+NER,aez8,sorghum,110,0,Warm / semiarid,S8,0.16038096,3729,9,hard dough,99,109,False
+NER,aez8,sorghum,110,10,Warm / semiarid,S8,0.2502992,2947,9,hard dough,99,109,False
+NER,aez8,sorghum,110,20,Warm / semiarid,S8,0.29575822,1543,9,hard dough,99,109,False
+NER,aez8,sorghum,110,30,Warm / semiarid,S8,0.35420594,550,9,hard dough,99,109,False
+NER,aez8,sorghum,110,40,Warm / semiarid,S8,0.31960905,144,9,hard dough,99,109,False
+NER,aez8,sorghum,130,0,Warm / semiarid,S8,0.3024857,1543,9,hard dough,117,129,False
+NER,aez8,sorghum,130,10,Warm / semiarid,S8,0.36108482,550,9,hard dough,117,129,False
+NER,aez8,sorghum,130,20,Warm / semiarid,S8,0.3238527,144,9,hard dough,117,129,False
+NER,aez8,sorghum,130,30,Warm / semiarid,S8,0.37173757,31,9,hard dough,117,129,False
+NER,aez8,sorghum,70,0,ALL,SOW,0.007220925,5805,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,10,ALL,SOW,0.01909421,5628,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,20,ALL,SOW,0.010982949,5551,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,30,ALL,SOW,0.0049202186,4854,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,70,40,ALL,SOW,0.0044870023,3755,0,sowing to emergence,0,2,False
+NER,aez8,sorghum,90,0,ALL,SOW,0.008839864,5551,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,90,10,ALL,SOW,0.019205352,4854,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,90,20,ALL,SOW,0.0137448,3755,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,90,30,ALL,SOW,0.0049948976,2947,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,90,40,ALL,SOW,0.004256962,1543,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,110,0,ALL,SOW,0.0072966283,3755,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,110,10,ALL,SOW,0.017265033,2947,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,110,20,ALL,SOW,0.012632276,1543,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,110,30,ALL,SOW,0.00050147256,550,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,110,40,ALL,SOW,0.0037838663,144,0,sowing to emergence,0,3,False
+NER,aez8,sorghum,130,0,ALL,SOW,0.0065279063,1543,0,sowing to emergence,0,4,False
+NER,aez8,sorghum,130,10,ALL,SOW,0.010603588,550,0,sowing to emergence,0,4,False
+NER,aez8,sorghum,130,20,ALL,SOW,0.0028540604,144,0,sowing to emergence,0,4,False
+NER,aez8,sorghum,130,30,ALL,SOW,0.0011520737,31,0,sowing to emergence,0,4,False
+NER,aez8,sorghum,70,0,ALL,S0,0.034684844,5805,1,emergence,3,9,False
+NER,aez8,sorghum,70,10,ALL,S0,0.03622073,5628,1,emergence,3,9,False
+NER,aez8,sorghum,70,20,ALL,S0,0.020016288,5551,1,emergence,3,9,False
+NER,aez8,sorghum,70,30,ALL,S0,0.0077632344,4854,1,emergence,3,9,False
+NER,aez8,sorghum,70,40,ALL,S0,0.006175087,3755,1,emergence,3,9,False
+NER,aez8,sorghum,90,0,ALL,S0,0.043975957,5551,1,emergence,4,12,False
+NER,aez8,sorghum,90,10,ALL,S0,0.04379499,4854,1,emergence,4,12,False
+NER,aez8,sorghum,90,20,ALL,S0,0.025583223,3755,1,emergence,4,12,False
+NER,aez8,sorghum,90,30,ALL,S0,0.011043744,2947,1,emergence,4,12,False
+NER,aez8,sorghum,90,40,ALL,S0,0.0048444835,1543,1,emergence,4,12,False
+NER,aez8,sorghum,110,0,ALL,S0,0.03901333,3755,1,emergence,4,14,False
+NER,aez8,sorghum,110,10,ALL,S0,0.04259427,2947,1,emergence,4,14,False
+NER,aez8,sorghum,110,20,ALL,S0,0.02092106,1543,1,emergence,4,14,False
+NER,aez8,sorghum,110,30,ALL,S0,0.0047780783,550,1,emergence,4,14,False
+NER,aez8,sorghum,110,40,ALL,S0,0.003988115,144,1,emergence,4,14,False
+NER,aez8,sorghum,130,0,ALL,S0,0.034071423,1543,1,emergence,5,17,False
+NER,aez8,sorghum,130,10,ALL,S0,0.028191412,550,1,emergence,5,17,False
+NER,aez8,sorghum,130,20,ALL,S0,0.003459069,144,1,emergence,5,17,False
+NER,aez8,sorghum,130,30,ALL,S0,0.0037327188,31,1,emergence,5,17,False
+NER,aez8,sorghum,70,0,ALL,S1,0.056890655,5805,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,10,ALL,S1,0.046672586,5628,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,20,ALL,S1,0.02268051,5551,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,30,ALL,S1,0.011012462,4854,2,3-leaf,10,16,False
+NER,aez8,sorghum,70,40,ALL,S1,0.0077996473,3755,2,3-leaf,10,16,False
+NER,aez8,sorghum,90,0,ALL,S1,0.060302194,5551,2,3-leaf,13,21,False
+NER,aez8,sorghum,90,10,ALL,S1,0.04225512,4854,2,3-leaf,13,21,False
+NER,aez8,sorghum,90,20,ALL,S1,0.022842549,3755,2,3-leaf,13,21,False
+NER,aez8,sorghum,90,30,ALL,S1,0.008751615,2947,2,3-leaf,13,21,False
+NER,aez8,sorghum,90,40,ALL,S1,0.0034267989,1543,2,3-leaf,13,21,False
+NER,aez8,sorghum,110,0,ALL,S1,0.056647185,3755,2,3-leaf,15,25,False
+NER,aez8,sorghum,110,10,ALL,S1,0.03520236,2947,2,3-leaf,15,25,False
+NER,aez8,sorghum,110,20,ALL,S1,0.012909079,1543,2,3-leaf,15,25,False
+NER,aez8,sorghum,110,30,ALL,S1,0.00517876,550,2,3-leaf,15,25,False
+NER,aez8,sorghum,110,40,ALL,S1,0.00020424837,144,2,3-leaf,15,25,False
+NER,aez8,sorghum,130,0,ALL,S1,0.039973505,1543,2,3-leaf,18,30,False
+NER,aez8,sorghum,130,10,ALL,S1,0.0118255075,550,2,3-leaf,18,30,False
+NER,aez8,sorghum,130,20,ALL,S1,0.004277467,144,2,3-leaf,18,30,False
+NER,aez8,sorghum,130,30,ALL,S1,0.0037327188,31,2,3-leaf,18,30,False
+NER,aez8,sorghum,70,0,ALL,S2,0.050543148,5805,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,10,ALL,S2,0.027295236,5628,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,20,ALL,S2,0.01260029,5551,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,30,ALL,S2,0.0077250134,4854,3,5-leaf,17,23,False
+NER,aez8,sorghum,70,40,ALL,S2,0.004346651,3755,3,5-leaf,17,23,False
+NER,aez8,sorghum,90,0,ALL,S2,0.04227565,5551,3,5-leaf,22,30,False
+NER,aez8,sorghum,90,10,ALL,S2,0.020026542,4854,3,5-leaf,22,30,False
+NER,aez8,sorghum,90,20,ALL,S2,0.009199941,3755,3,5-leaf,22,30,False
+NER,aez8,sorghum,90,30,ALL,S2,0.004783322,2947,3,5-leaf,22,30,False
+NER,aez8,sorghum,90,40,ALL,S2,0.0037551154,1543,3,5-leaf,22,30,False
+NER,aez8,sorghum,110,0,ALL,S2,0.034843877,3755,3,5-leaf,26,36,False
+NER,aez8,sorghum,110,10,ALL,S2,0.013721241,2947,3,5-leaf,26,36,False
+NER,aez8,sorghum,110,20,ALL,S2,0.0049864836,1543,3,5-leaf,26,36,False
+NER,aez8,sorghum,110,30,ALL,S2,0.0016030241,550,3,5-leaf,26,36,False
+NER,aez8,sorghum,110,40,ALL,S2,0.0005934343,144,3,5-leaf,26,36,False
+NER,aez8,sorghum,130,0,ALL,S2,0.021014178,1543,3,5-leaf,31,43,False
+NER,aez8,sorghum,130,10,ALL,S2,0.0053600804,550,3,5-leaf,31,43,False
+NER,aez8,sorghum,130,20,ALL,S2,0.0028864413,144,3,5-leaf,31,43,False
+NER,aez8,sorghum,130,30,ALL,S2,0.0011520737,31,3,5-leaf,31,43,False
+NER,aez8,sorghum,70,0,ALL,S3,0.034405213,5805,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,10,ALL,S3,0.013584393,5628,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,20,ALL,S3,0.007872673,5551,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,30,ALL,S3,0.0065215696,4854,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,70,40,ALL,S3,0.0048987335,3755,4,growing point differentiation,24,30,False
+NER,aez8,sorghum,90,0,ALL,S3,0.020085957,5551,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,90,10,ALL,S3,0.009411683,4854,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,90,20,ALL,S3,0.0070288936,3755,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,90,30,ALL,S3,0.0032978114,2947,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,90,40,ALL,S3,0.0034925574,1543,4,growing point differentiation,31,39,False
+NER,aez8,sorghum,110,0,ALL,S3,0.015417436,3755,4,growing point differentiation,37,47,False
+NER,aez8,sorghum,110,10,ALL,S3,0.007342227,2947,4,growing point differentiation,37,47,False
+NER,aez8,sorghum,110,20,ALL,S3,0.0039047103,1543,4,growing point differentiation,37,47,False
+NER,aez8,sorghum,110,30,ALL,S3,0.0008309166,550,4,growing point differentiation,37,47,False
+NER,aez8,sorghum,110,40,ALL,S3,0.0065006483,144,4,growing point differentiation,37,47,False
+NER,aez8,sorghum,130,0,ALL,S3,0.005087312,1543,4,growing point differentiation,44,56,False
+NER,aez8,sorghum,130,10,ALL,S3,0.0017647202,550,4,growing point differentiation,44,56,False
+NER,aez8,sorghum,130,20,ALL,S3,0.0007976827,144,4,growing point differentiation,44,56,False
+NER,aez8,sorghum,130,30,ALL,S3,0.0,31,4,growing point differentiation,44,56,False
+NER,aez8,sorghum,70,0,ALL,S4,0.019087214,5805,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,10,ALL,S4,0.010078329,5628,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,20,ALL,S4,0.010474709,5551,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,30,ALL,S4,0.00884945,4854,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,70,40,ALL,S4,0.0075381068,3755,5,flag leaf visible,31,37,True
+NER,aez8,sorghum,90,0,ALL,S4,0.0106412945,5551,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,90,10,ALL,S4,0.009993049,4854,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,90,20,ALL,S4,0.005450691,3755,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,90,30,ALL,S4,0.004516784,2947,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,90,40,ALL,S4,0.005127477,1543,5,flag leaf visible,40,49,True
+NER,aez8,sorghum,110,0,ALL,S4,0.009104507,3755,5,flag leaf visible,48,60,True
+NER,aez8,sorghum,110,10,ALL,S4,0.0035933966,2947,5,flag leaf visible,48,60,True
+NER,aez8,sorghum,110,20,ALL,S4,0.004181581,1543,5,flag leaf visible,48,60,True
+NER,aez8,sorghum,110,30,ALL,S4,0.008366888,550,5,flag leaf visible,48,60,True
+NER,aez8,sorghum,110,40,ALL,S4,0.014098131,144,5,flag leaf visible,48,60,True
+NER,aez8,sorghum,130,0,ALL,S4,0.0043331697,1543,5,flag leaf visible,57,71,True
+NER,aez8,sorghum,130,10,ALL,S4,0.0008309166,550,5,flag leaf visible,57,71,True
+NER,aez8,sorghum,130,20,ALL,S4,0.014691565,144,5,flag leaf visible,57,71,True
+NER,aez8,sorghum,130,30,ALL,S4,0.0011520737,31,5,flag leaf visible,57,71,True
+NER,aez8,sorghum,70,0,ALL,S5,0.013288859,5805,6,boot,38,45,True
+NER,aez8,sorghum,70,10,ALL,S5,0.012930535,5628,6,boot,38,45,True
+NER,aez8,sorghum,70,20,ALL,S5,0.013519954,5551,6,boot,38,45,True
+NER,aez8,sorghum,70,30,ALL,S5,0.017286694,4854,6,boot,38,45,True
+NER,aez8,sorghum,70,40,ALL,S5,0.017542081,3755,6,boot,38,45,True
+NER,aez8,sorghum,90,0,ALL,S5,0.010903498,5551,6,boot,50,57,True
+NER,aez8,sorghum,90,10,ALL,S5,0.008658832,4854,6,boot,50,57,True
+NER,aez8,sorghum,90,20,ALL,S5,0.0076315426,3755,6,boot,50,57,True
+NER,aez8,sorghum,90,30,ALL,S5,0.0068481285,2947,6,boot,50,57,True
+NER,aez8,sorghum,90,40,ALL,S5,0.00773031,1543,6,boot,50,57,True
+NER,aez8,sorghum,110,0,ALL,S5,0.006765838,3755,6,boot,61,71,True
+NER,aez8,sorghum,110,10,ALL,S5,0.0047575166,2947,6,boot,61,71,True
+NER,aez8,sorghum,110,20,ALL,S5,0.0055024237,1543,6,boot,61,71,True
+NER,aez8,sorghum,110,30,ALL,S5,0.010049146,550,6,boot,61,71,True
+NER,aez8,sorghum,110,40,ALL,S5,0.0043576737,144,6,boot,61,71,True
+NER,aez8,sorghum,130,0,ALL,S5,0.003588814,1543,6,boot,72,83,True
+NER,aez8,sorghum,130,10,ALL,S5,0.008422048,550,6,boot,72,83,True
+NER,aez8,sorghum,130,20,ALL,S5,0.014428818,144,6,boot,72,83,True
+NER,aez8,sorghum,130,30,ALL,S5,0.0,31,6,boot,72,83,True
+NER,aez8,sorghum,70,0,ALL,S6,0.010967624,5805,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,10,ALL,S6,0.015520555,5628,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,20,ALL,S6,0.021542445,5551,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,30,ALL,S6,0.030994773,4854,7,half-bloom,46,51,True
+NER,aez8,sorghum,70,40,ALL,S6,0.042590044,3755,7,half-bloom,46,51,True
+NER,aez8,sorghum,90,0,ALL,S6,0.015670551,5551,7,half-bloom,58,67,True
+NER,aez8,sorghum,90,10,ALL,S6,0.020056274,4854,7,half-bloom,58,67,True
+NER,aez8,sorghum,90,20,ALL,S6,0.025229236,3755,7,half-bloom,58,67,True
+NER,aez8,sorghum,90,30,ALL,S6,0.044429924,2947,7,half-bloom,58,67,True
+NER,aez8,sorghum,90,40,ALL,S6,0.062313795,1543,7,half-bloom,58,67,True
+NER,aez8,sorghum,110,0,ALL,S6,0.010227878,3755,7,half-bloom,72,81,True
+NER,aez8,sorghum,110,10,ALL,S6,0.010792266,2947,7,half-bloom,72,81,True
+NER,aez8,sorghum,110,20,ALL,S6,0.015512804,1543,7,half-bloom,72,81,True
+NER,aez8,sorghum,110,30,ALL,S6,0.014620644,550,7,half-bloom,72,81,True
+NER,aez8,sorghum,110,40,ALL,S6,0.0247395,144,7,half-bloom,72,81,True
+NER,aez8,sorghum,130,0,ALL,S6,0.0076268697,1543,7,half-bloom,84,97,True
+NER,aez8,sorghum,130,10,ALL,S6,0.01682446,550,7,half-bloom,84,97,True
+NER,aez8,sorghum,130,20,ALL,S6,0.0043576737,144,7,half-bloom,84,97,True
+NER,aez8,sorghum,130,30,ALL,S6,0.0,31,7,half-bloom,84,97,True
+NER,aez8,sorghum,70,0,ALL,S7,0.023328517,5805,8,soft dough,52,62,True
+NER,aez8,sorghum,70,10,ALL,S7,0.036338154,5628,8,soft dough,52,62,True
+NER,aez8,sorghum,70,20,ALL,S7,0.07069978,5551,8,soft dough,52,62,True
+NER,aez8,sorghum,70,30,ALL,S7,0.11411638,4854,8,soft dough,52,62,True
+NER,aez8,sorghum,70,40,ALL,S7,0.17208625,3755,8,soft dough,52,62,True
+NER,aez8,sorghum,90,0,ALL,S7,0.07018281,5551,8,soft dough,68,80,True
+NER,aez8,sorghum,90,10,ALL,S7,0.114344224,4854,8,soft dough,68,80,True
+NER,aez8,sorghum,90,20,ALL,S7,0.17360508,3755,8,soft dough,68,80,True
+NER,aez8,sorghum,90,30,ALL,S7,0.2705844,2947,8,soft dough,68,80,True
+NER,aez8,sorghum,90,40,ALL,S7,0.32844353,1543,8,soft dough,68,80,True
+NER,aez8,sorghum,110,0,ALL,S7,0.14141636,3755,8,soft dough,82,98,True
+NER,aez8,sorghum,110,10,ALL,S7,0.22889039,2947,8,soft dough,82,98,True
+NER,aez8,sorghum,110,20,ALL,S7,0.2696988,1543,8,soft dough,82,98,True
+NER,aez8,sorghum,110,30,ALL,S7,0.3199527,550,8,soft dough,82,98,True
+NER,aez8,sorghum,110,40,ALL,S7,0.27759653,144,8,soft dough,82,98,True
+NER,aez8,sorghum,130,0,ALL,S7,0.22299327,1543,8,soft dough,98,116,True
+NER,aez8,sorghum,130,10,ALL,S7,0.26887295,550,8,soft dough,98,116,True
+NER,aez8,sorghum,130,20,ALL,S7,0.23982869,144,8,soft dough,98,116,True
+NER,aez8,sorghum,130,30,ALL,S7,0.28118882,31,8,soft dough,98,116,True
+NER,aez8,sorghum,70,0,ALL,S8,0.016365703,5805,9,hard dough,63,69,False
+NER,aez8,sorghum,70,10,ALL,S8,0.024236647,5628,9,hard dough,63,69,False
+NER,aez8,sorghum,70,20,ALL,S8,0.05587793,5551,9,hard dough,63,69,False
+NER,aez8,sorghum,70,30,ALL,S8,0.09627839,4854,9,hard dough,63,69,False
+NER,aez8,sorghum,70,40,ALL,S8,0.15430933,3755,9,hard dough,63,69,False
+NER,aez8,sorghum,90,0,ALL,S8,0.059309795,5551,9,hard dough,81,89,False
+NER,aez8,sorghum,90,10,ALL,S8,0.10022241,4854,9,hard dough,81,89,False
+NER,aez8,sorghum,90,20,ALL,S8,0.15918075,3755,9,hard dough,81,89,False
+NER,aez8,sorghum,90,30,ALL,S8,0.24425052,2947,9,hard dough,81,89,False
+NER,aez8,sorghum,90,40,ALL,S8,0.28457323,1543,9,hard dough,81,89,False
+NER,aez8,sorghum,110,0,ALL,S8,0.16192023,3755,9,hard dough,99,109,False
+NER,aez8,sorghum,110,10,ALL,S8,0.2502992,2947,9,hard dough,99,109,False
+NER,aez8,sorghum,110,20,ALL,S8,0.29575822,1543,9,hard dough,99,109,False
+NER,aez8,sorghum,110,30,ALL,S8,0.35420594,550,9,hard dough,99,109,False
+NER,aez8,sorghum,110,40,ALL,S8,0.31960905,144,9,hard dough,99,109,False
+NER,aez8,sorghum,130,0,ALL,S8,0.3024857,1543,9,hard dough,117,129,False
+NER,aez8,sorghum,130,10,ALL,S8,0.36108482,550,9,hard dough,117,129,False
+NER,aez8,sorghum,130,20,ALL,S8,0.3238527,144,9,hard dough,117,129,False
+NER,aez8,sorghum,130,30,ALL,S8,0.37173757,31,9,hard dough,117,129,False
+NER,aez8,pearl_millet,70,0,Warm / arid,SOW,0.023593362,1620,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,0,Warm / semiarid,SOW,0.006918971,4185,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,10,Warm / arid,SOW,0.0396873,1443,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,10,Warm / semiarid,SOW,0.015398333,4185,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,20,Warm / arid,SOW,0.013536254,1366,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,20,Warm / semiarid,SOW,0.012032379,4185,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,30,Warm / arid,SOW,0.0011046652,677,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,30,Warm / semiarid,SOW,0.0062928856,4177,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,40,Warm / arid,SOW,0.0035797535,26,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,40,Warm / semiarid,SOW,0.005261786,3729,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,0,Warm / arid,SOW,0.014571297,1366,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,0,Warm / semiarid,SOW,0.0069691027,4185,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,10,Warm / arid,SOW,0.0370944,677,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,10,Warm / semiarid,SOW,0.01630593,4177,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,20,Warm / arid,SOW,0.019426227,26,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,20,Warm / semiarid,SOW,0.0137051875,3729,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,30,Warm / semiarid,SOW,0.0049948976,2947,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,40,Warm / semiarid,SOW,0.004256962,1543,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,110,0,Warm / arid,SOW,0.00899101,26,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,110,0,Warm / semiarid,SOW,0.012983487,3729,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,110,10,Warm / semiarid,SOW,0.02203051,2947,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,110,20,Warm / semiarid,SOW,0.0151292,1543,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,110,30,Warm / semiarid,SOW,0.0006291782,550,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,110,40,Warm / semiarid,SOW,0.0037838663,144,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,130,0,Warm / semiarid,SOW,0.009841095,1543,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,130,10,Warm / semiarid,SOW,0.011172551,550,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,130,20,Warm / semiarid,SOW,0.0028540604,144,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,130,30,Warm / semiarid,SOW,0.0011520737,31,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,70,0,Warm / arid,P0,0.05479797,1620,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,0,Warm / semiarid,P0,0.021073595,4185,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,10,Warm / arid,P0,0.05830277,1443,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,10,Warm / semiarid,P0,0.026415536,4185,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,20,Warm / arid,P0,0.02146901,1366,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,20,Warm / semiarid,P0,0.01873065,4185,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,30,Warm / arid,P0,0.0014944138,677,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,30,Warm / semiarid,P0,0.008461551,4177,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,40,Warm / arid,P0,0.006854559,26,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,40,Warm / semiarid,P0,0.0060937745,3729,1,emergence,4,8,False
+NER,aez8,pearl_millet,90,0,Warm / arid,P0,0.06820679,1366,1,emergence,4,11,False
+NER,aez8,pearl_millet,90,0,Warm / semiarid,P0,0.029648378,4185,1,emergence,4,11,False
+NER,aez8,pearl_millet,90,10,Warm / arid,P0,0.07162752,677,1,emergence,4,11,False
+NER,aez8,pearl_millet,90,10,Warm / semiarid,P0,0.033654924,4177,1,emergence,4,11,False
+NER,aez8,pearl_millet,90,20,Warm / arid,P0,0.026752234,26,1,emergence,4,11,False
+NER,aez8,pearl_millet,90,20,Warm / semiarid,P0,0.024483198,3729,1,emergence,4,11,False
+NER,aez8,pearl_millet,90,30,Warm / semiarid,P0,0.009786378,2947,1,emergence,4,11,False
+NER,aez8,pearl_millet,90,40,Warm / semiarid,P0,0.0047855666,1543,1,emergence,4,11,False
+NER,aez8,pearl_millet,110,0,Warm / arid,P0,0.049465932,26,1,emergence,6,13,False
+NER,aez8,pearl_millet,110,0,Warm / semiarid,P0,0.03620757,3729,1,emergence,6,13,False
+NER,aez8,pearl_millet,110,10,Warm / semiarid,P0,0.04150895,2947,1,emergence,6,13,False
+NER,aez8,pearl_millet,110,20,Warm / semiarid,P0,0.020856937,1543,1,emergence,6,13,False
+NER,aez8,pearl_millet,110,30,Warm / semiarid,P0,0.0046163825,550,1,emergence,6,13,False
+NER,aez8,pearl_millet,110,40,Warm / semiarid,P0,0.003988115,144,1,emergence,6,13,False
+NER,aez8,pearl_millet,130,0,Warm / semiarid,P0,0.032642957,1543,1,emergence,6,16,False
+NER,aez8,pearl_millet,130,10,Warm / semiarid,P0,0.028191412,550,1,emergence,6,16,False
+NER,aez8,pearl_millet,130,20,Warm / semiarid,P0,0.0031434123,144,1,emergence,6,16,False
+NER,aez8,pearl_millet,130,30,Warm / semiarid,P0,0.0037327188,31,1,emergence,6,16,False
+NER,aez8,pearl_millet,70,0,Warm / arid,P1,0.096503824,1620,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,0,Warm / semiarid,P1,0.041556526,4185,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,10,Warm / arid,P1,0.07084737,1443,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,10,Warm / semiarid,P1,0.042178195,4185,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,20,Warm / arid,P1,0.022516916,1366,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,20,Warm / semiarid,P1,0.025236964,4185,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,30,Warm / arid,P1,0.0043282844,677,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,30,Warm / semiarid,P1,0.013448241,4177,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,40,Warm / arid,P1,0.01729611,26,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,40,Warm / semiarid,P1,0.008381834,3729,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,90,0,Warm / arid,P1,0.09894641,1366,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,90,0,Warm / semiarid,P1,0.049698535,4185,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,90,10,Warm / arid,P1,0.056648444,677,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,90,10,Warm / semiarid,P1,0.043150444,4177,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,90,20,Warm / arid,P1,0.014090981,26,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,90,20,Warm / semiarid,P1,0.025536185,3729,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,90,30,Warm / semiarid,P1,0.009238095,2947,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,90,40,Warm / semiarid,P1,0.0052125454,1543,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,110,0,Warm / arid,P1,0.08148374,26,2,3rd leaf,14,25,False
+NER,aez8,pearl_millet,110,0,Warm / semiarid,P1,0.057928283,3729,2,3rd leaf,14,25,False
+NER,aez8,pearl_millet,110,10,Warm / semiarid,P1,0.038482465,2947,2,3rd leaf,14,25,False
+NER,aez8,pearl_millet,110,20,Warm / semiarid,P1,0.014398324,1543,2,3rd leaf,14,25,False
+NER,aez8,pearl_millet,110,30,Warm / semiarid,P1,0.0052307076,550,2,3rd leaf,14,25,False
+NER,aez8,pearl_millet,110,40,Warm / semiarid,P1,0.00020424837,144,2,3rd leaf,14,25,False
+NER,aez8,pearl_millet,130,0,Warm / semiarid,P1,0.04319507,1543,2,3rd leaf,17,30,False
+NER,aez8,pearl_millet,130,10,Warm / semiarid,P1,0.014565522,550,2,3rd leaf,17,30,False
+NER,aez8,pearl_millet,130,20,Warm / semiarid,P1,0.004277467,144,2,3rd leaf,17,30,False
+NER,aez8,pearl_millet,130,30,Warm / semiarid,P1,0.0037327188,31,2,3rd leaf,17,30,False
+NER,aez8,pearl_millet,70,0,Warm / arid,P2,0.07611505,1620,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,0,Warm / semiarid,P2,0.049000114,4185,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,10,Warm / arid,P2,0.02771008,1443,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,10,Warm / semiarid,P2,0.02954901,4185,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,20,Warm / arid,P2,0.010953998,1366,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,20,Warm / semiarid,P2,0.01550415,4185,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,30,Warm / arid,P2,0.015285248,677,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,30,Warm / semiarid,P2,0.009911226,4177,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,40,Warm / arid,P2,0.012044116,26,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,40,Warm / semiarid,P2,0.0053588627,3729,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,90,0,Warm / arid,P2,0.050032906,1366,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,90,0,Warm / semiarid,P2,0.043554045,4185,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,90,10,Warm / arid,P2,0.013748144,677,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,90,10,Warm / semiarid,P2,0.025570339,4177,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,90,20,Warm / arid,P2,0.01729611,26,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,90,20,Warm / semiarid,P2,0.011263474,3729,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,90,30,Warm / semiarid,P2,0.0059965267,2947,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,90,40,Warm / semiarid,P2,0.004533612,1543,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,110,0,Warm / arid,P2,0.033766054,26,3,5th leaf,26,44,False
+NER,aez8,pearl_millet,110,0,Warm / semiarid,P2,0.03968278,3729,3,5th leaf,26,44,False
+NER,aez8,pearl_millet,110,10,Warm / semiarid,P2,0.014527233,2947,3,5th leaf,26,44,False
+NER,aez8,pearl_millet,110,20,Warm / semiarid,P2,0.007993447,1543,3,5th leaf,26,44,False
+NER,aez8,pearl_millet,110,30,Warm / semiarid,P2,0.0017059674,550,3,5th leaf,26,44,False
+NER,aez8,pearl_millet,110,40,Warm / semiarid,P2,0.00090909086,144,3,5th leaf,26,44,False
+NER,aez8,pearl_millet,130,0,Warm / semiarid,P2,0.021601701,1543,3,5th leaf,31,52,False
+NER,aez8,pearl_millet,130,10,Warm / semiarid,P2,0.0060090027,550,3,5th leaf,31,52,False
+NER,aez8,pearl_millet,130,20,Warm / semiarid,P2,0.0034798756,144,3,5th leaf,31,52,False
+NER,aez8,pearl_millet,130,30,Warm / semiarid,P2,0.0011520737,31,3,5th leaf,31,52,False
+NER,aez8,pearl_millet,70,0,Warm / arid,P3,0.019299937,1620,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,0,Warm / semiarid,P3,0.025041498,4185,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,10,Warm / arid,P3,0.014128299,1443,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,10,Warm / semiarid,P3,0.013346855,4185,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,20,Warm / arid,P3,0.028190047,1366,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,20,Warm / semiarid,P3,0.010472982,4185,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,30,Warm / arid,P3,0.037778087,677,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,30,Warm / semiarid,P3,0.00736797,4177,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,40,Warm / arid,P3,0.01585914,26,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,40,Warm / semiarid,P3,0.010150798,3729,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,90,0,Warm / arid,P3,0.014047021,1366,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,90,0,Warm / semiarid,P3,0.016163593,4185,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,90,10,Warm / arid,P3,0.021283934,677,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,90,10,Warm / semiarid,P3,0.010756554,4177,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,90,20,Warm / arid,P3,0.02074375,26,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,90,20,Warm / semiarid,P3,0.0074899695,3729,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,90,30,Warm / semiarid,P3,0.006441085,2947,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,90,40,Warm / semiarid,P3,0.006954486,1543,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,110,0,Warm / arid,P3,0.01729611,26,4,panicle initiation,45,64,False
+NER,aez8,pearl_millet,110,0,Warm / semiarid,P3,0.011094007,3729,4,panicle initiation,45,64,False
+NER,aez8,pearl_millet,110,10,Warm / semiarid,P3,0.0051507223,2947,4,panicle initiation,45,64,False
+NER,aez8,pearl_millet,110,20,Warm / semiarid,P3,0.005347054,1543,4,panicle initiation,45,64,False
+NER,aez8,pearl_millet,110,30,Warm / semiarid,P3,0.0087439995,550,4,panicle initiation,45,64,False
+NER,aez8,pearl_millet,110,40,Warm / semiarid,P3,0.014428818,144,4,panicle initiation,45,64,False
+NER,aez8,pearl_millet,130,0,Warm / semiarid,P3,0.0050317617,1543,4,panicle initiation,53,76,False
+NER,aez8,pearl_millet,130,10,Warm / semiarid,P3,0.0033795214,550,4,panicle initiation,53,76,False
+NER,aez8,pearl_millet,130,20,Warm / semiarid,P3,0.014691565,144,4,panicle initiation,53,76,False
+NER,aez8,pearl_millet,130,30,Warm / semiarid,P3,0.0011520737,31,4,panicle initiation,53,76,False
+NER,aez8,pearl_millet,70,0,Warm / arid,P4,0.009693427,1620,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,0,Warm / semiarid,P4,0.0091622975,4185,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,10,Warm / arid,P4,0.0229884,1443,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,10,Warm / semiarid,P4,0.0069149947,4185,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,20,Warm / arid,P4,0.031163106,1366,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,20,Warm / semiarid,P4,0.0070111887,4185,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,30,Warm / arid,P4,0.042032376,677,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,30,Warm / semiarid,P4,0.011639962,4177,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,40,Warm / arid,P4,0.03354812,26,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,40,Warm / semiarid,P4,0.016509213,3729,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,90,0,Warm / arid,P4,0.017501134,1366,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,90,0,Warm / semiarid,P4,0.004508643,4185,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,90,10,Warm / arid,P4,0.023136122,677,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,90,10,Warm / semiarid,P4,0.0053919577,4177,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,90,20,Warm / arid,P4,0.012279388,26,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,90,20,Warm / semiarid,P4,0.0068559498,3729,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,90,30,Warm / semiarid,P4,0.005822355,2947,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,90,40,Warm / semiarid,P4,0.0072873225,1543,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,110,0,Warm / arid,P4,0.006868132,26,5,flag leaf visible,65,71,False
+NER,aez8,pearl_millet,110,0,Warm / semiarid,P4,0.005139747,3729,5,flag leaf visible,65,71,False
+NER,aez8,pearl_millet,110,10,Warm / semiarid,P4,0.0037665453,2947,5,flag leaf visible,65,71,False
+NER,aez8,pearl_millet,110,20,Warm / semiarid,P4,0.0050321026,1543,5,flag leaf visible,65,71,False
+NER,aez8,pearl_millet,110,30,Warm / semiarid,P4,0.008980115,550,5,flag leaf visible,65,71,False
+NER,aez8,pearl_millet,110,40,Warm / semiarid,P4,0.0043576737,144,5,flag leaf visible,65,71,False
+NER,aez8,pearl_millet,130,0,Warm / semiarid,P4,0.0017364015,1543,5,flag leaf visible,77,83,False
+NER,aez8,pearl_millet,130,10,Warm / semiarid,P4,0.008342996,550,5,flag leaf visible,77,83,False
+NER,aez8,pearl_millet,130,20,Warm / semiarid,P4,0.008521604,144,5,flag leaf visible,77,83,False
+NER,aez8,pearl_millet,130,30,Warm / semiarid,P4,0.0,31,5,flag leaf visible,77,83,False
+NER,aez8,pearl_millet,70,0,Warm / arid,P5,0.015782086,1620,6,boot,46,49,True
+NER,aez8,pearl_millet,70,0,Warm / semiarid,P5,0.006675499,4185,6,boot,46,49,True
+NER,aez8,pearl_millet,70,10,Warm / arid,P5,0.02948844,1443,6,boot,46,49,True
+NER,aez8,pearl_millet,70,10,Warm / semiarid,P5,0.006043606,4185,6,boot,46,49,True
+NER,aez8,pearl_millet,70,20,Warm / arid,P5,0.04345769,1366,6,boot,46,49,True
+NER,aez8,pearl_millet,70,20,Warm / semiarid,P5,0.007586186,4185,6,boot,46,49,True
+NER,aez8,pearl_millet,70,30,Warm / arid,P5,0.05922246,677,6,boot,46,49,True
+NER,aez8,pearl_millet,70,30,Warm / semiarid,P5,0.01771338,4177,6,boot,46,49,True
+NER,aez8,pearl_millet,70,40,Warm / arid,P5,0.09396021,26,6,boot,46,49,True
+NER,aez8,pearl_millet,70,40,Warm / semiarid,P5,0.030026533,3729,6,boot,46,49,True
+NER,aez8,pearl_millet,90,0,Warm / arid,P5,0.02873829,1366,6,boot,58,64,True
+NER,aez8,pearl_millet,90,0,Warm / semiarid,P5,0.006920206,4185,6,boot,58,64,True
+NER,aez8,pearl_millet,90,10,Warm / arid,P5,0.035570145,677,6,boot,58,64,True
+NER,aez8,pearl_millet,90,10,Warm / semiarid,P5,0.011469085,4177,6,boot,58,64,True
+NER,aez8,pearl_millet,90,20,Warm / arid,P5,0.026598403,26,6,boot,58,64,True
+NER,aez8,pearl_millet,90,20,Warm / semiarid,P5,0.015180352,3729,6,boot,58,64,True
+NER,aez8,pearl_millet,90,30,Warm / semiarid,P5,0.025623761,2947,6,boot,58,64,True
+NER,aez8,pearl_millet,90,40,Warm / semiarid,P5,0.030012362,1543,6,boot,58,64,True
+NER,aez8,pearl_millet,110,0,Warm / arid,P5,0.010531136,26,6,boot,72,78,True
+NER,aez8,pearl_millet,110,0,Warm / semiarid,P5,0.007589035,3729,6,boot,72,78,True
+NER,aez8,pearl_millet,110,10,Warm / semiarid,P5,0.0065277806,2947,6,boot,72,78,True
+NER,aez8,pearl_millet,110,20,Warm / semiarid,P5,0.009054425,1543,6,boot,72,78,True
+NER,aez8,pearl_millet,110,30,Warm / semiarid,P5,0.010278701,550,6,boot,72,78,True
+NER,aez8,pearl_millet,110,40,Warm / semiarid,P5,0.0043576737,144,6,boot,72,78,True
+NER,aez8,pearl_millet,130,0,Warm / semiarid,P5,0.006370926,1543,6,boot,84,93,True
+NER,aez8,pearl_millet,130,10,Warm / semiarid,P5,0.010806331,550,6,boot,84,93,True
+NER,aez8,pearl_millet,130,20,Warm / semiarid,P5,0.0043576737,144,6,boot,84,93,True
+NER,aez8,pearl_millet,130,30,Warm / semiarid,P5,0.0,31,6,boot,84,93,True
+NER,aez8,pearl_millet,70,0,Warm / arid,P6,0.039837938,1620,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,0,Warm / semiarid,P6,0.00961256,4185,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,10,Warm / arid,P6,0.058657475,1443,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,10,Warm / semiarid,P6,0.010604568,4185,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,20,Warm / arid,P6,0.10550779,1366,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,20,Warm / semiarid,P6,0.023868691,4185,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,30,Warm / arid,P6,0.14457342,677,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,30,Warm / semiarid,P6,0.06222446,4177,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,40,Warm / arid,P6,0.33012375,26,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,40,Warm / semiarid,P6,0.10562558,3729,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,90,0,Warm / arid,P6,0.071055576,1366,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,90,0,Warm / semiarid,P6,0.01643998,4185,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,90,10,Warm / arid,P6,0.09371829,677,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,90,10,Warm / semiarid,P6,0.03871392,4177,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,90,20,Warm / arid,P6,0.22735971,26,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,90,20,Warm / semiarid,P6,0.06572757,3729,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,90,30,Warm / semiarid,P6,0.11172859,2947,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,90,40,Warm / semiarid,P6,0.17378345,1543,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,110,0,Warm / arid,P6,0.10091159,26,7,50% flowering,79,89,True
+NER,aez8,pearl_millet,110,0,Warm / semiarid,P6,0.034632683,3729,7,50% flowering,79,89,True
+NER,aez8,pearl_millet,110,10,Warm / semiarid,P6,0.055862635,2947,7,50% flowering,79,89,True
+NER,aez8,pearl_millet,110,20,Warm / semiarid,P6,0.09142216,1543,7,50% flowering,79,89,True
+NER,aez8,pearl_millet,110,30,Warm / semiarid,P6,0.09813605,550,7,50% flowering,79,89,True
+NER,aez8,pearl_millet,110,40,Warm / semiarid,P6,0.11135595,144,7,50% flowering,79,89,True
+NER,aez8,pearl_millet,130,0,Warm / semiarid,P6,0.053557202,1543,7,50% flowering,94,106,True
+NER,aez8,pearl_millet,130,10,Warm / semiarid,P6,0.051705286,550,7,50% flowering,94,106,True
+NER,aez8,pearl_millet,130,20,Warm / semiarid,P6,0.06210959,144,7,50% flowering,94,106,True
+NER,aez8,pearl_millet,130,30,Warm / semiarid,P6,0.041277453,31,7,50% flowering,94,106,True
+NER,aez8,pearl_millet,70,0,Warm / arid,P7,0.053021464,1620,8,milk,57,63,True
+NER,aez8,pearl_millet,70,0,Warm / semiarid,P7,0.007345404,4185,8,milk,57,63,True
+NER,aez8,pearl_millet,70,10,Warm / arid,P7,0.09100735,1443,8,milk,57,63,True
+NER,aez8,pearl_millet,70,10,Warm / semiarid,P7,0.011037205,4185,8,milk,57,63,True
+NER,aez8,pearl_millet,70,20,Warm / arid,P7,0.15371102,1366,8,milk,57,63,True
+NER,aez8,pearl_millet,70,20,Warm / semiarid,P7,0.036920033,4185,8,milk,57,63,True
+NER,aez8,pearl_millet,70,30,Warm / arid,P7,0.22324568,677,8,milk,57,63,True
+NER,aez8,pearl_millet,70,30,Warm / semiarid,P7,0.08630014,4177,8,milk,57,63,True
+NER,aez8,pearl_millet,70,40,Warm / arid,P7,0.40037715,26,8,milk,57,63,True
+NER,aez8,pearl_millet,70,40,Warm / semiarid,P7,0.16713487,3729,8,milk,57,63,True
+NER,aez8,pearl_millet,90,0,Warm / arid,P7,0.1535034,1366,8,milk,74,82,True
+NER,aez8,pearl_millet,90,0,Warm / semiarid,P7,0.038047627,4185,8,milk,74,82,True
+NER,aez8,pearl_millet,90,10,Warm / arid,P7,0.22365928,677,8,milk,74,82,True
+NER,aez8,pearl_millet,90,10,Warm / semiarid,P7,0.08760381,4177,8,milk,74,82,True
+NER,aez8,pearl_millet,90,20,Warm / arid,P7,0.40578842,26,8,milk,74,82,True
+NER,aez8,pearl_millet,90,20,Warm / semiarid,P7,0.16860048,3729,8,milk,74,82,True
+NER,aez8,pearl_millet,90,30,Warm / semiarid,P7,0.26514062,2947,8,milk,74,82,True
+NER,aez8,pearl_millet,90,40,Warm / semiarid,P7,0.32088348,1543,8,milk,74,82,True
+NER,aez8,pearl_millet,110,0,Warm / arid,P7,0.40412343,26,8,milk,90,100,True
+NER,aez8,pearl_millet,110,0,Warm / semiarid,P7,0.16904944,3729,8,milk,90,100,True
+NER,aez8,pearl_millet,110,10,Warm / semiarid,P7,0.26686633,2947,8,milk,90,100,True
+NER,aez8,pearl_millet,110,20,Warm / semiarid,P7,0.32483247,1543,8,milk,90,100,True
+NER,aez8,pearl_millet,110,30,Warm / semiarid,P7,0.3787152,550,8,milk,90,100,True
+NER,aez8,pearl_millet,110,40,Warm / semiarid,P7,0.3344396,144,8,milk,90,100,True
+NER,aez8,pearl_millet,130,0,Warm / semiarid,P7,0.30149394,1543,8,milk,107,119,True
+NER,aez8,pearl_millet,130,10,Warm / semiarid,P7,0.350823,550,8,milk,107,119,True
+NER,aez8,pearl_millet,130,20,Warm / semiarid,P7,0.3022002,144,8,milk,107,119,True
+NER,aez8,pearl_millet,130,30,Warm / semiarid,P7,0.3443856,31,8,milk,107,119,True
+NER,aez8,pearl_millet,70,0,Warm / arid,P8,0.039008517,1620,9,dough,64,69,False
+NER,aez8,pearl_millet,70,0,Warm / semiarid,P8,0.0057501188,4185,9,dough,64,69,False
+NER,aez8,pearl_millet,70,10,Warm / arid,P8,0.0721003,1443,9,dough,64,69,False
+NER,aez8,pearl_millet,70,10,Warm / semiarid,P8,0.0067807636,4185,9,dough,64,69,False
+NER,aez8,pearl_millet,70,20,Warm / arid,P8,0.12628263,1366,9,dough,64,69,False
+NER,aez8,pearl_millet,70,20,Warm / semiarid,P8,0.028330453,4185,9,dough,64,69,False
+NER,aez8,pearl_millet,70,30,Warm / arid,P8,0.20007949,677,9,dough,64,69,False
+NER,aez8,pearl_millet,70,30,Warm / semiarid,P8,0.077232346,4177,9,dough,64,69,False
+NER,aez8,pearl_millet,70,40,Warm / arid,P8,0.36872932,26,9,dough,64,69,False
+NER,aez8,pearl_millet,70,40,Warm / semiarid,P8,0.14881505,3729,9,dough,64,69,False
+NER,aez8,pearl_millet,90,0,Warm / arid,P8,0.12574884,1366,9,dough,83,89,False
+NER,aez8,pearl_millet,90,0,Warm / semiarid,P8,0.03057914,4185,9,dough,83,89,False
+NER,aez8,pearl_millet,90,10,Warm / arid,P8,0.20059635,677,9,dough,83,89,False
+NER,aez8,pearl_millet,90,10,Warm / semiarid,P8,0.07802089,4177,9,dough,83,89,False
+NER,aez8,pearl_millet,90,20,Warm / arid,P8,0.37239233,26,9,dough,83,89,False
+NER,aez8,pearl_millet,90,20,Warm / semiarid,P8,0.15176047,3729,9,dough,83,89,False
+NER,aez8,pearl_millet,90,30,Warm / semiarid,P8,0.23519996,2947,9,dough,83,89,False
+NER,aez8,pearl_millet,90,40,Warm / semiarid,P8,0.2605789,1543,9,dough,83,89,False
+NER,aez8,pearl_millet,110,0,Warm / arid,P8,0.37902516,26,9,dough,101,109,False
+NER,aez8,pearl_millet,110,0,Warm / semiarid,P8,0.15638065,3729,9,dough,101,109,False
+NER,aez8,pearl_millet,110,10,Warm / semiarid,P8,0.24213389,2947,9,dough,101,109,False
+NER,aez8,pearl_millet,110,20,Warm / semiarid,P8,0.281935,1543,9,dough,101,109,False
+NER,aez8,pearl_millet,110,30,Warm / semiarid,P8,0.341496,550,9,dough,101,109,False
+NER,aez8,pearl_millet,110,40,Warm / semiarid,P8,0.30872923,144,9,dough,101,109,False
+NER,aez8,pearl_millet,130,0,Warm / semiarid,P8,0.28382707,1543,9,dough,120,129,False
+NER,aez8,pearl_millet,130,10,Warm / semiarid,P8,0.34553894,550,9,dough,120,129,False
+NER,aez8,pearl_millet,130,20,Warm / semiarid,P8,0.3169723,144,9,dough,120,129,False
+NER,aez8,pearl_millet,130,30,Warm / semiarid,P8,0.37173757,31,9,dough,120,129,False
+NER,aez8,pearl_millet,70,0,ALL,SOW,0.011572289,5805,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,10,ALL,SOW,0.021625942,5628,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,20,ALL,SOW,0.012402454,5551,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,30,ALL,SOW,0.005569271,4854,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,70,40,ALL,SOW,0.0052501387,3755,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,0,ALL,SOW,0.008839864,5551,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,10,ALL,SOW,0.019205352,4854,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,20,ALL,SOW,0.0137448,3755,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,30,ALL,SOW,0.0049948976,2947,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,90,40,ALL,SOW,0.004256962,1543,0,sowing to emergence,0,3,False
+NER,aez8,pearl_millet,110,0,ALL,SOW,0.0129558435,3755,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,110,10,ALL,SOW,0.02203051,2947,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,110,20,ALL,SOW,0.0151292,1543,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,110,30,ALL,SOW,0.0006291782,550,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,110,40,ALL,SOW,0.0037838663,144,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,130,0,ALL,SOW,0.009841095,1543,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,130,10,ALL,SOW,0.011172551,550,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,130,20,ALL,SOW,0.0028540604,144,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,130,30,ALL,SOW,0.0011520737,31,0,sowing to emergence,0,5,False
+NER,aez8,pearl_millet,70,0,ALL,P0,0.030485047,5805,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,10,ALL,P0,0.034591313,5628,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,20,ALL,P0,0.01940451,5551,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,30,ALL,P0,0.0074898265,4854,1,emergence,4,8,False
+NER,aez8,pearl_millet,70,40,ALL,P0,0.0060990416,3755,1,emergence,4,8,False
+NER,aez8,pearl_millet,90,0,ALL,P0,0.0391369,5551,1,emergence,4,11,False
+NER,aez8,pearl_millet,90,10,ALL,P0,0.038951058,4854,1,emergence,4,11,False
+NER,aez8,pearl_millet,90,20,ALL,P0,0.024498908,3755,1,emergence,4,11,False
+NER,aez8,pearl_millet,90,30,ALL,P0,0.009786378,2947,1,emergence,4,11,False
+NER,aez8,pearl_millet,90,40,ALL,P0,0.0047855666,1543,1,emergence,4,11,False
+NER,aez8,pearl_millet,110,0,ALL,P0,0.03629937,3755,1,emergence,6,13,False
+NER,aez8,pearl_millet,110,10,ALL,P0,0.04150895,2947,1,emergence,6,13,False
+NER,aez8,pearl_millet,110,20,ALL,P0,0.020856937,1543,1,emergence,6,13,False
+NER,aez8,pearl_millet,110,30,ALL,P0,0.0046163825,550,1,emergence,6,13,False
+NER,aez8,pearl_millet,110,40,ALL,P0,0.003988115,144,1,emergence,6,13,False
+NER,aez8,pearl_millet,130,0,ALL,P0,0.032642957,1543,1,emergence,6,16,False
+NER,aez8,pearl_millet,130,10,ALL,P0,0.028191412,550,1,emergence,6,16,False
+NER,aez8,pearl_millet,130,20,ALL,P0,0.0031434123,144,1,emergence,6,16,False
+NER,aez8,pearl_millet,130,30,ALL,P0,0.0037327188,31,1,emergence,6,16,False
+NER,aez8,pearl_millet,70,0,ALL,P1,0.056890655,5805,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,10,ALL,P1,0.049528874,5628,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,20,ALL,P1,0.02456761,5551,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,30,ALL,P1,0.012176257,4854,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,70,40,ALL,P1,0.008443558,3755,2,3rd leaf,9,16,False
+NER,aez8,pearl_millet,90,0,ALL,P1,0.06181754,5551,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,90,10,ALL,P1,0.045033045,4854,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,90,20,ALL,P1,0.025456939,3755,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,90,30,ALL,P1,0.009238095,2947,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,90,40,ALL,P1,0.0052125454,1543,2,3rd leaf,12,21,False
+NER,aez8,pearl_millet,110,0,ALL,P1,0.058091383,3755,2,3rd leaf,14,25,False
+NER,aez8,pearl_millet,110,10,ALL,P1,0.038482465,2947,2,3rd leaf,14,25,False
+NER,aez8,pearl_millet,110,20,ALL,P1,0.014398324,1543,2,3rd leaf,14,25,False
+NER,aez8,pearl_millet,110,30,ALL,P1,0.0052307076,550,2,3rd leaf,14,25,False
+NER,aez8,pearl_millet,110,40,ALL,P1,0.00020424837,144,2,3rd leaf,14,25,False
+NER,aez8,pearl_millet,130,0,ALL,P1,0.04319507,1543,2,3rd leaf,17,30,False
+NER,aez8,pearl_millet,130,10,ALL,P1,0.014565522,550,2,3rd leaf,17,30,False
+NER,aez8,pearl_millet,130,20,ALL,P1,0.004277467,144,2,3rd leaf,17,30,False
+NER,aez8,pearl_millet,130,30,ALL,P1,0.0037327188,31,2,3rd leaf,17,30,False
+NER,aez8,pearl_millet,70,0,ALL,P2,0.056567073,5805,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,10,ALL,P2,0.029077515,5628,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,20,ALL,P2,0.014384441,5551,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,30,ALL,P2,0.010660755,4854,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,70,40,ALL,P2,0.0054051518,3755,3,5th leaf,17,28,False
+NER,aez8,pearl_millet,90,0,ALL,P2,0.045148373,5551,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,90,10,ALL,P2,0.023921467,4854,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,90,20,ALL,P2,0.011305245,3755,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,90,30,ALL,P2,0.0059965267,2947,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,90,40,ALL,P2,0.004533612,1543,3,5th leaf,22,36,False
+NER,aez8,pearl_millet,110,0,ALL,P2,0.039641812,3755,3,5th leaf,26,44,False
+NER,aez8,pearl_millet,110,10,ALL,P2,0.014527233,2947,3,5th leaf,26,44,False
+NER,aez8,pearl_millet,110,20,ALL,P2,0.007993447,1543,3,5th leaf,26,44,False
+NER,aez8,pearl_millet,110,30,ALL,P2,0.0017059674,550,3,5th leaf,26,44,False
+NER,aez8,pearl_millet,110,40,ALL,P2,0.00090909086,144,3,5th leaf,26,44,False
+NER,aez8,pearl_millet,130,0,ALL,P2,0.021601701,1543,3,5th leaf,31,52,False
+NER,aez8,pearl_millet,130,10,ALL,P2,0.0060090027,550,3,5th leaf,31,52,False
+NER,aez8,pearl_millet,130,20,ALL,P2,0.0034798756,144,3,5th leaf,31,52,False
+NER,aez8,pearl_millet,130,30,ALL,P2,0.0011520737,31,3,5th leaf,31,52,False
+NER,aez8,pearl_millet,70,0,ALL,P3,0.0234392,5805,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,10,ALL,P3,0.013547214,5628,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,20,ALL,P3,0.014832828,5551,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,30,ALL,P3,0.0116093485,4854,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,70,40,ALL,P3,0.010190323,3755,4,panicle initiation,29,40,False
+NER,aez8,pearl_millet,90,0,ALL,P3,0.015642744,5551,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,90,10,ALL,P3,0.012224835,4854,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,90,20,ALL,P3,0.0075817397,3755,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,90,30,ALL,P3,0.006441085,2947,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,90,40,ALL,P3,0.006954486,1543,4,panicle initiation,37,52,False
+NER,aez8,pearl_millet,110,0,ALL,P3,0.011136951,3755,4,panicle initiation,45,64,False
+NER,aez8,pearl_millet,110,10,ALL,P3,0.0051507223,2947,4,panicle initiation,45,64,False
+NER,aez8,pearl_millet,110,20,ALL,P3,0.005347054,1543,4,panicle initiation,45,64,False
+NER,aez8,pearl_millet,110,30,ALL,P3,0.0087439995,550,4,panicle initiation,45,64,False
+NER,aez8,pearl_millet,110,40,ALL,P3,0.014428818,144,4,panicle initiation,45,64,False
+NER,aez8,pearl_millet,130,0,ALL,P3,0.0050317617,1543,4,panicle initiation,53,76,False
+NER,aez8,pearl_millet,130,10,ALL,P3,0.0033795214,550,4,panicle initiation,53,76,False
+NER,aez8,pearl_millet,130,20,ALL,P3,0.014691565,144,4,panicle initiation,53,76,False
+NER,aez8,pearl_millet,130,30,ALL,P3,0.0011520737,31,4,panicle initiation,53,76,False
+NER,aez8,pearl_millet,70,0,ALL,P4,0.009310519,5805,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,10,ALL,P4,0.01103616,5628,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,20,ALL,P4,0.012954536,5551,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,30,ALL,P4,0.01587887,4854,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,70,40,ALL,P4,0.016627192,3755,5,flag leaf visible,41,45,False
+NER,aez8,pearl_millet,90,0,ALL,P4,0.007705859,5551,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,90,10,ALL,P4,0.007866783,4854,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,90,20,ALL,P4,0.0068935016,3755,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,90,30,ALL,P4,0.005822355,2947,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,90,40,ALL,P4,0.0072873225,1543,5,flag leaf visible,53,57,False
+NER,aez8,pearl_millet,110,0,ALL,P4,0.0051517147,3755,5,flag leaf visible,65,71,False
+NER,aez8,pearl_millet,110,10,ALL,P4,0.0037665453,2947,5,flag leaf visible,65,71,False
+NER,aez8,pearl_millet,110,20,ALL,P4,0.0050321026,1543,5,flag leaf visible,65,71,False
+NER,aez8,pearl_millet,110,30,ALL,P4,0.008980115,550,5,flag leaf visible,65,71,False
+NER,aez8,pearl_millet,110,40,ALL,P4,0.0043576737,144,5,flag leaf visible,65,71,False
+NER,aez8,pearl_millet,130,0,ALL,P4,0.0017364015,1543,5,flag leaf visible,77,83,False
+NER,aez8,pearl_millet,130,10,ALL,P4,0.008342996,550,5,flag leaf visible,77,83,False
+NER,aez8,pearl_millet,130,20,ALL,P4,0.008521604,144,5,flag leaf visible,77,83,False
+NER,aez8,pearl_millet,130,30,ALL,P4,0.0,31,5,flag leaf visible,77,83,False
+NER,aez8,pearl_millet,70,0,ALL,P5,0.009216872,5805,6,boot,46,49,True
+NER,aez8,pearl_millet,70,10,ALL,P5,0.0120547805,5628,6,boot,46,49,True
+NER,aez8,pearl_millet,70,20,ALL,P5,0.01641351,5551,6,boot,46,49,True
+NER,aez8,pearl_millet,70,30,ALL,P5,0.023502758,4854,6,boot,46,49,True
+NER,aez8,pearl_millet,70,40,ALL,P5,0.030469216,3755,6,boot,46,49,True
+NER,aez8,pearl_millet,90,0,ALL,P5,0.012289239,5551,6,boot,58,64,True
+NER,aez8,pearl_millet,90,10,ALL,P5,0.014830523,4854,6,boot,58,64,True
+NER,aez8,pearl_millet,90,20,ALL,P5,0.015259412,3755,6,boot,58,64,True
+NER,aez8,pearl_millet,90,30,ALL,P5,0.025623761,2947,6,boot,58,64,True
+NER,aez8,pearl_millet,90,40,ALL,P5,0.030012362,1543,6,boot,58,64,True
+NER,aez8,pearl_millet,110,0,ALL,P5,0.007609407,3755,6,boot,72,78,True
+NER,aez8,pearl_millet,110,10,ALL,P5,0.0065277806,2947,6,boot,72,78,True
+NER,aez8,pearl_millet,110,20,ALL,P5,0.009054425,1543,6,boot,72,78,True
+NER,aez8,pearl_millet,110,30,ALL,P5,0.010278701,550,6,boot,72,78,True
+NER,aez8,pearl_millet,110,40,ALL,P5,0.0043576737,144,6,boot,72,78,True
+NER,aez8,pearl_millet,130,0,ALL,P5,0.006370926,1543,6,boot,84,93,True
+NER,aez8,pearl_millet,130,10,ALL,P5,0.010806331,550,6,boot,84,93,True
+NER,aez8,pearl_millet,130,20,ALL,P5,0.0043576737,144,6,boot,84,93,True
+NER,aez8,pearl_millet,130,30,ALL,P5,0.0,31,6,boot,84,93,True
+NER,aez8,pearl_millet,70,0,ALL,P6,0.018047549,5805,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,10,ALL,P6,0.02292517,5628,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,20,ALL,P6,0.043958586,5551,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,30,ALL,P6,0.07370988,4854,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,70,40,ALL,P6,0.10718003,3755,7,50% flowering,50,56,True
+NER,aez8,pearl_millet,90,0,ALL,P6,0.029879885,5551,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,90,10,ALL,P6,0.046385523,4854,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,90,20,ALL,P6,0.06684673,3755,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,90,30,ALL,P6,0.11172859,2947,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,90,40,ALL,P6,0.17378345,1543,7,50% flowering,65,73,True
+NER,aez8,pearl_millet,110,0,ALL,P6,0.035091605,3755,7,50% flowering,79,89,True
+NER,aez8,pearl_millet,110,10,ALL,P6,0.055862635,2947,7,50% flowering,79,89,True
+NER,aez8,pearl_millet,110,20,ALL,P6,0.09142216,1543,7,50% flowering,79,89,True
+NER,aez8,pearl_millet,110,30,ALL,P6,0.09813605,550,7,50% flowering,79,89,True
+NER,aez8,pearl_millet,110,40,ALL,P6,0.11135595,144,7,50% flowering,79,89,True
+NER,aez8,pearl_millet,130,0,ALL,P6,0.053557202,1543,7,50% flowering,94,106,True
+NER,aez8,pearl_millet,130,10,ALL,P6,0.051705286,550,7,50% flowering,94,106,True
+NER,aez8,pearl_millet,130,20,ALL,P6,0.06210959,144,7,50% flowering,94,106,True
+NER,aez8,pearl_millet,130,30,ALL,P6,0.041277453,31,7,50% flowering,94,106,True
+NER,aez8,pearl_millet,70,0,ALL,P7,0.020092212,5805,8,milk,57,63,True
+NER,aez8,pearl_millet,70,10,ALL,P7,0.031541277,5628,8,milk,57,63,True
+NER,aez8,pearl_millet,70,20,ALL,P7,0.065660164,5551,8,milk,57,63,True
+NER,aez8,pearl_millet,70,30,ALL,P7,0.105400294,4854,8,milk,57,63,True
+NER,aez8,pearl_millet,70,40,ALL,P7,0.16874987,3755,8,milk,57,63,True
+NER,aez8,pearl_millet,90,0,ALL,P7,0.066459194,5551,8,milk,74,82,True
+NER,aez8,pearl_millet,90,10,ALL,P7,0.10657982,4854,8,milk,74,82,True
+NER,aez8,pearl_millet,90,20,ALL,P7,0.17024279,3755,8,milk,74,82,True
+NER,aez8,pearl_millet,90,30,ALL,P7,0.26514062,2947,8,milk,74,82,True
+NER,aez8,pearl_millet,90,40,ALL,P7,0.32088348,1543,8,milk,74,82,True
+NER,aez8,pearl_millet,110,0,ALL,P7,0.17067714,3755,8,milk,90,100,True
+NER,aez8,pearl_millet,110,10,ALL,P7,0.26686633,2947,8,milk,90,100,True
+NER,aez8,pearl_millet,110,20,ALL,P7,0.32483247,1543,8,milk,90,100,True
+NER,aez8,pearl_millet,110,30,ALL,P7,0.3787152,550,8,milk,90,100,True
+NER,aez8,pearl_millet,110,40,ALL,P7,0.3344396,144,8,milk,90,100,True
+NER,aez8,pearl_millet,130,0,ALL,P7,0.30149394,1543,8,milk,107,119,True
+NER,aez8,pearl_millet,130,10,ALL,P7,0.350823,550,8,milk,107,119,True
+NER,aez8,pearl_millet,130,20,ALL,P7,0.3022002,144,8,milk,107,119,True
+NER,aez8,pearl_millet,130,30,ALL,P7,0.3443856,31,8,milk,107,119,True
+NER,aez8,pearl_millet,70,0,ALL,P8,0.015031531,5805,9,dough,64,69,False
+NER,aez8,pearl_millet,70,10,ALL,P8,0.02352847,5628,9,dough,64,69,False
+NER,aez8,pearl_millet,70,20,ALL,P8,0.0524347,5551,9,dough,64,69,False
+NER,aez8,pearl_millet,70,30,ALL,P8,0.094366156,4854,9,dough,64,69,False
+NER,aez8,pearl_millet,70,40,ALL,P8,0.15033777,3755,9,dough,64,69,False
+NER,aez8,pearl_millet,90,0,ALL,P8,0.053998668,5551,9,dough,83,89,False
+NER,aez8,pearl_millet,90,10,ALL,P8,0.09511682,4854,9,dough,83,89,False
+NER,aez8,pearl_millet,90,20,ALL,P8,0.15328814,3755,9,dough,83,89,False
+NER,aez8,pearl_millet,90,30,ALL,P8,0.23519996,2947,9,dough,83,89,False
+NER,aez8,pearl_millet,90,40,ALL,P8,0.2605789,1543,9,dough,83,89,False
+NER,aez8,pearl_millet,110,0,ALL,P8,0.15792227,3755,9,dough,101,109,False
+NER,aez8,pearl_millet,110,10,ALL,P8,0.24213389,2947,9,dough,101,109,False
+NER,aez8,pearl_millet,110,20,ALL,P8,0.281935,1543,9,dough,101,109,False
+NER,aez8,pearl_millet,110,30,ALL,P8,0.341496,550,9,dough,101,109,False
+NER,aez8,pearl_millet,110,40,ALL,P8,0.30872923,144,9,dough,101,109,False
+NER,aez8,pearl_millet,130,0,ALL,P8,0.28382707,1543,9,dough,120,129,False
+NER,aez8,pearl_millet,130,10,ALL,P8,0.34553894,550,9,dough,120,129,False
+NER,aez8,pearl_millet,130,20,ALL,P8,0.3169723,144,9,dough,120,129,False
+NER,aez8,pearl_millet,130,30,ALL,P8,0.37173757,31,9,dough,120,129,False
+NER,aez8,groundnut,70,0,Warm / arid,SOW,0.030387511,1620,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,0,Warm / semiarid,SOW,0.011249707,4185,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,10,Warm / arid,SOW,0.04365734,1443,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,10,Warm / semiarid,SOW,0.017998109,4185,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,20,Warm / arid,SOW,0.016453288,1366,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,20,Warm / semiarid,SOW,0.013352019,4185,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,30,Warm / arid,SOW,0.0011046652,677,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,30,Warm / semiarid,SOW,0.006460186,4177,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,40,Warm / arid,SOW,0.0035797535,26,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,40,Warm / semiarid,SOW,0.0054072016,3729,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,90,0,Warm / arid,SOW,0.029450169,1366,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,90,0,Warm / semiarid,SOW,0.013548372,4185,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,90,10,Warm / arid,SOW,0.048757043,677,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,90,10,Warm / semiarid,SOW,0.021578275,4177,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,90,20,Warm / arid,SOW,0.024920732,26,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,90,20,Warm / semiarid,SOW,0.017318511,3729,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,90,30,Warm / semiarid,SOW,0.0057365196,2947,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,90,40,Warm / semiarid,SOW,0.0044124313,1543,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,110,0,Warm / arid,SOW,0.021264063,26,0,sowing to emergence,0,7,False
+NER,aez8,groundnut,110,0,Warm / semiarid,SOW,0.019237794,3729,0,sowing to emergence,0,7,False
+NER,aez8,groundnut,110,10,Warm / semiarid,SOW,0.025921404,2947,0,sowing to emergence,0,7,False
+NER,aez8,groundnut,110,20,Warm / semiarid,SOW,0.016950723,1543,0,sowing to emergence,0,7,False
+NER,aez8,groundnut,110,30,Warm / semiarid,SOW,0.0011063416,550,0,sowing to emergence,0,7,False
+NER,aez8,groundnut,110,40,Warm / semiarid,SOW,0.0037838663,144,0,sowing to emergence,0,7,False
+NER,aez8,groundnut,130,0,Warm / semiarid,SOW,0.01607605,1543,0,sowing to emergence,0,8,False
+NER,aez8,groundnut,130,10,Warm / semiarid,SOW,0.020639803,550,0,sowing to emergence,0,8,False
+NER,aez8,groundnut,130,20,Warm / semiarid,SOW,0.0028540604,144,0,sowing to emergence,0,8,False
+NER,aez8,groundnut,130,30,Warm / semiarid,SOW,0.0011520737,31,0,sowing to emergence,0,8,False
+NER,aez8,groundnut,70,0,Warm / arid,VE,0.09077995,1620,1,emergence,5,14,False
+NER,aez8,groundnut,70,0,Warm / semiarid,VE,0.037158154,4185,1,emergence,5,14,False
+NER,aez8,groundnut,70,10,Warm / arid,VE,0.06820845,1443,1,emergence,5,14,False
+NER,aez8,groundnut,70,10,Warm / semiarid,VE,0.039252847,4185,1,emergence,5,14,False
+NER,aez8,groundnut,70,20,Warm / arid,VE,0.022365334,1366,1,emergence,5,14,False
+NER,aez8,groundnut,70,20,Warm / semiarid,VE,0.023926305,4185,1,emergence,5,14,False
+NER,aez8,groundnut,70,30,Warm / arid,VE,0.003491302,677,1,emergence,5,14,False
+NER,aez8,groundnut,70,30,Warm / semiarid,VE,0.013018959,4177,1,emergence,5,14,False
+NER,aez8,groundnut,70,40,Warm / arid,VE,0.01729611,26,1,emergence,5,14,False
+NER,aez8,groundnut,70,40,Warm / semiarid,VE,0.007827467,3729,1,emergence,5,14,False
+NER,aez8,groundnut,90,0,Warm / arid,VE,0.10191668,1366,1,emergence,6,19,False
+NER,aez8,groundnut,90,0,Warm / semiarid,VE,0.048020247,4185,1,emergence,6,19,False
+NER,aez8,groundnut,90,10,Warm / arid,VE,0.078873254,677,1,emergence,6,19,False
+NER,aez8,groundnut,90,10,Warm / semiarid,VE,0.048009414,4177,1,emergence,6,19,False
+NER,aez8,groundnut,90,20,Warm / arid,VE,0.026752234,26,1,emergence,6,19,False
+NER,aez8,groundnut,90,20,Warm / semiarid,VE,0.028647566,3729,1,emergence,6,19,False
+NER,aez8,groundnut,90,30,Warm / semiarid,VE,0.012853386,2947,1,emergence,6,19,False
+NER,aez8,groundnut,90,40,Warm / semiarid,VE,0.0059588253,1543,1,emergence,6,19,False
+NER,aez8,groundnut,110,0,Warm / arid,VE,0.07598923,26,1,emergence,8,23,False
+NER,aez8,groundnut,110,0,Warm / semiarid,VE,0.059973083,3729,1,emergence,8,23,False
+NER,aez8,groundnut,110,10,Warm / semiarid,VE,0.05082558,2947,1,emergence,8,23,False
+NER,aez8,groundnut,110,20,Warm / semiarid,VE,0.025076838,1543,1,emergence,8,23,False
+NER,aez8,groundnut,110,30,Warm / semiarid,VE,0.0057321806,550,1,emergence,8,23,False
+NER,aez8,groundnut,110,40,Warm / semiarid,VE,0.003988115,144,1,emergence,8,23,False
+NER,aez8,groundnut,130,0,Warm / semiarid,VE,0.05216743,1543,1,emergence,9,28,False
+NER,aez8,groundnut,130,10,Warm / semiarid,VE,0.030055972,550,1,emergence,9,28,False
+NER,aez8,groundnut,130,20,Warm / semiarid,VE,0.006927279,144,1,emergence,9,28,False
+NER,aez8,groundnut,130,30,Warm / semiarid,VE,0.004884793,31,1,emergence,9,28,False
+NER,aez8,groundnut,70,0,Warm / arid,R1,0.07825795,1620,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,0,Warm / semiarid,R1,0.040523928,4185,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,10,Warm / arid,R1,0.035252318,1443,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,10,Warm / semiarid,R1,0.031273615,4185,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,20,Warm / arid,R1,0.007591679,1366,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,20,Warm / semiarid,R1,0.014045879,4185,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,30,Warm / arid,R1,0.0053822333,677,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,30,Warm / semiarid,R1,0.007662563,4177,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,40,Warm / arid,R1,0.013716356,26,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,40,Warm / semiarid,R1,0.0040821168,3729,2,beginning bloom,15,20,False
+NER,aez8,groundnut,90,0,Warm / arid,R1,0.06838818,1366,2,beginning bloom,20,26,False
+NER,aez8,groundnut,90,0,Warm / semiarid,R1,0.039783724,4185,2,beginning bloom,20,26,False
+NER,aez8,groundnut,90,10,Warm / arid,R1,0.018582508,677,2,beginning bloom,20,26,False
+NER,aez8,groundnut,90,10,Warm / semiarid,R1,0.024461482,4177,2,beginning bloom,20,26,False
+NER,aez8,groundnut,90,20,Warm / arid,R1,0.0052519944,26,2,beginning bloom,20,26,False
+NER,aez8,groundnut,90,20,Warm / semiarid,R1,0.012592995,3729,2,beginning bloom,20,26,False
+NER,aez8,groundnut,90,30,Warm / semiarid,R1,0.0063663977,2947,2,beginning bloom,20,26,False
+NER,aez8,groundnut,90,40,Warm / semiarid,R1,0.0037708029,1543,2,beginning bloom,20,26,False
+NER,aez8,groundnut,110,0,Warm / arid,R1,0.033766054,26,2,beginning bloom,24,32,False
+NER,aez8,groundnut,110,0,Warm / semiarid,R1,0.03919782,3729,2,beginning bloom,24,32,False
+NER,aez8,groundnut,110,10,Warm / semiarid,R1,0.016757349,2947,2,beginning bloom,24,32,False
+NER,aez8,groundnut,110,20,Warm / semiarid,R1,0.0047433,1543,2,beginning bloom,24,32,False
+NER,aez8,groundnut,110,30,Warm / semiarid,R1,0.0017647202,550,2,beginning bloom,24,32,False
+NER,aez8,groundnut,110,40,Warm / semiarid,R1,0.0007976827,144,2,beginning bloom,24,32,False
+NER,aez8,groundnut,130,0,Warm / semiarid,R1,0.022165552,1543,2,beginning bloom,29,38,False
+NER,aez8,groundnut,130,10,Warm / semiarid,R1,0.0050164605,550,2,beginning bloom,29,38,False
+NER,aez8,groundnut,130,20,Warm / semiarid,R1,0.003988115,144,2,beginning bloom,29,38,False
+NER,aez8,groundnut,130,30,Warm / semiarid,R1,0.0011520737,31,2,beginning bloom,29,38,False
+NER,aez8,groundnut,70,0,Warm / arid,R2,0.0558133,1620,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,0,Warm / semiarid,R2,0.03728167,4185,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,10,Warm / arid,R2,0.016600408,1443,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,10,Warm / semiarid,R2,0.02055284,4185,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,20,Warm / arid,R2,0.0053285724,1366,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,20,Warm / semiarid,R2,0.010047484,4185,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,30,Warm / arid,R2,0.012706377,677,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,30,Warm / semiarid,R2,0.0065761977,4177,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,40,Warm / arid,R2,0.010441551,26,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,40,Warm / semiarid,R2,0.00458328,3729,3,beginning peg,21,26,False
+NER,aez8,groundnut,90,0,Warm / arid,R2,0.024847925,1366,3,beginning peg,27,33,False
+NER,aez8,groundnut,90,0,Warm / semiarid,R2,0.027654957,4185,3,beginning peg,27,33,False
+NER,aez8,groundnut,90,10,Warm / arid,R2,0.005136323,677,3,beginning peg,27,33,False
+NER,aez8,groundnut,90,10,Warm / semiarid,R2,0.014464505,4177,3,beginning peg,27,33,False
+NER,aez8,groundnut,90,20,Warm / arid,R2,0.013633107,26,3,beginning peg,27,33,False
+NER,aez8,groundnut,90,20,Warm / semiarid,R2,0.007365593,3729,3,beginning peg,27,33,False
+NER,aez8,groundnut,90,30,Warm / semiarid,R2,0.002888346,2947,3,beginning peg,27,33,False
+NER,aez8,groundnut,90,40,Warm / semiarid,R2,0.0038610012,1543,3,beginning peg,27,33,False
+NER,aez8,groundnut,110,0,Warm / arid,R2,0.012418741,26,3,beginning peg,33,41,False
+NER,aez8,groundnut,110,0,Warm / semiarid,R2,0.02259061,3729,3,beginning peg,33,41,False
+NER,aez8,groundnut,110,10,Warm / semiarid,R2,0.0084379185,2947,3,beginning peg,33,41,False
+NER,aez8,groundnut,110,20,Warm / semiarid,R2,0.0032862483,1543,3,beginning peg,33,41,False
+NER,aez8,groundnut,110,30,Warm / semiarid,R2,0.0012471676,550,3,beginning peg,33,41,False
+NER,aez8,groundnut,110,40,Warm / semiarid,R2,0.0005934343,144,3,beginning peg,33,41,False
+NER,aez8,groundnut,130,0,Warm / semiarid,R2,0.008871855,1543,3,beginning peg,39,48,False
+NER,aez8,groundnut,130,10,Warm / semiarid,R2,0.0047935983,550,3,beginning peg,39,48,False
+NER,aez8,groundnut,130,20,Warm / semiarid,R2,0.00020424837,144,3,beginning peg,39,48,False
+NER,aez8,groundnut,130,30,Warm / semiarid,R2,0.0,31,3,beginning peg,39,48,False
+NER,aez8,groundnut,70,0,Warm / arid,R3,0.021930056,1620,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,0,Warm / semiarid,R3,0.025276141,4185,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,10,Warm / arid,R3,0.006867993,1443,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,10,Warm / semiarid,R3,0.012334574,4185,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,20,Warm / arid,R3,0.010599089,1366,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,20,Warm / semiarid,R3,0.0066497494,4185,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,30,Warm / arid,R3,0.018964952,677,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,30,Warm / semiarid,R3,0.004898282,4177,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,40,Warm / arid,R3,0.0032051282,26,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,40,Warm / semiarid,R3,0.00495717,3729,4,beginning pod,27,31,True
+NER,aez8,groundnut,90,0,Warm / arid,R3,0.00907648,1366,4,beginning pod,34,39,True
+NER,aez8,groundnut,90,0,Warm / semiarid,R3,0.014331547,4185,4,beginning pod,34,39,True
+NER,aez8,groundnut,90,10,Warm / arid,R3,0.0036215412,677,4,beginning pod,34,39,True
+NER,aez8,groundnut,90,10,Warm / semiarid,R3,0.0072903754,4177,4,beginning pod,34,39,True
+NER,aez8,groundnut,90,20,Warm / arid,R3,0.015464609,26,4,beginning pod,34,39,True
+NER,aez8,groundnut,90,20,Warm / semiarid,R3,0.0039376426,3729,4,beginning pod,34,39,True
+NER,aez8,groundnut,90,30,Warm / semiarid,R3,0.0030015972,2947,4,beginning pod,34,39,True
+NER,aez8,groundnut,90,40,Warm / semiarid,R3,0.0016422813,1543,4,beginning pod,34,39,True
+NER,aez8,groundnut,110,0,Warm / arid,R3,0.006854559,26,4,beginning pod,42,49,True
+NER,aez8,groundnut,110,0,Warm / semiarid,R3,0.008782019,3729,4,beginning pod,42,49,True
+NER,aez8,groundnut,110,10,Warm / semiarid,R3,0.004407233,2947,4,beginning pod,42,49,True
+NER,aez8,groundnut,110,20,Warm / semiarid,R3,0.0037551154,1543,4,beginning pod,42,49,True
+NER,aez8,groundnut,110,30,Warm / semiarid,R3,0.0007482719,550,4,beginning pod,42,49,True
+NER,aez8,groundnut,110,40,Warm / semiarid,R3,0.013480541,144,4,beginning pod,42,49,True
+NER,aez8,groundnut,130,0,Warm / semiarid,R3,0.0047956123,1543,4,beginning pod,49,57,True
+NER,aez8,groundnut,130,10,Warm / semiarid,R3,0.0014688763,550,4,beginning pod,49,57,True
+NER,aez8,groundnut,130,20,Warm / semiarid,R3,0.0005934343,144,4,beginning pod,49,57,True
+NER,aez8,groundnut,130,30,Warm / semiarid,R3,0.0011520737,31,4,beginning pod,49,57,True
+NER,aez8,groundnut,70,0,Warm / arid,R4,0.012835472,1620,5,full pod,32,35,True
+NER,aez8,groundnut,70,0,Warm / semiarid,R4,0.017923832,4185,5,full pod,32,35,True
+NER,aez8,groundnut,70,10,Warm / arid,R4,0.007427834,1443,5,full pod,32,35,True
+NER,aez8,groundnut,70,10,Warm / semiarid,R4,0.0077811363,4185,5,full pod,32,35,True
+NER,aez8,groundnut,70,20,Warm / arid,R4,0.019178962,1366,5,full pod,32,35,True
+NER,aez8,groundnut,70,20,Warm / semiarid,R4,0.005093282,4185,5,full pod,32,35,True
+NER,aez8,groundnut,70,30,Warm / arid,R4,0.019670347,677,5,full pod,32,35,True
+NER,aez8,groundnut,70,30,Warm / semiarid,R4,0.0049740034,4177,5,full pod,32,35,True
+NER,aez8,groundnut,70,40,Warm / arid,R4,0.010531136,26,5,full pod,32,35,True
+NER,aez8,groundnut,70,40,Warm / semiarid,R4,0.0069915717,3729,5,full pod,32,35,True
+NER,aez8,groundnut,90,0,Warm / arid,R4,0.004034308,1366,5,full pod,40,46,True
+NER,aez8,groundnut,90,0,Warm / semiarid,R4,0.011577284,4185,5,full pod,40,46,True
+NER,aez8,groundnut,90,10,Warm / arid,R4,0.010868532,677,5,full pod,40,46,True
+NER,aez8,groundnut,90,10,Warm / semiarid,R4,0.0077241585,4177,5,full pod,40,46,True
+NER,aez8,groundnut,90,20,Warm / arid,R4,0.010441551,26,5,full pod,40,46,True
+NER,aez8,groundnut,90,20,Warm / semiarid,R4,0.0045631104,3729,5,full pod,40,46,True
+NER,aez8,groundnut,90,30,Warm / semiarid,R4,0.0033188572,2947,5,full pod,40,46,True
+NER,aez8,groundnut,90,40,Warm / semiarid,R4,0.0028070854,1543,5,full pod,40,46,True
+NER,aez8,groundnut,110,0,Warm / arid,R4,0.01729611,26,5,full pod,50,56,True
+NER,aez8,groundnut,110,0,Warm / semiarid,R4,0.0073860353,3729,5,full pod,50,56,True
+NER,aez8,groundnut,110,10,Warm / semiarid,R4,0.0029037474,2947,5,full pod,50,56,True
+NER,aez8,groundnut,110,20,Warm / semiarid,R4,0.0032763132,1543,5,full pod,50,56,True
+NER,aez8,groundnut,110,30,Warm / semiarid,R4,0.0021323538,550,5,full pod,50,56,True
+NER,aez8,groundnut,110,40,Warm / semiarid,R4,0.014098131,144,5,full pod,50,56,True
+NER,aez8,groundnut,130,0,Warm / semiarid,R4,0.0039047103,1543,5,full pod,58,67,True
+NER,aez8,groundnut,130,10,Warm / semiarid,R4,0.0008309166,550,5,full pod,58,67,True
+NER,aez8,groundnut,130,20,Warm / semiarid,R4,0.0065006483,144,5,full pod,58,67,True
+NER,aez8,groundnut,130,30,Warm / semiarid,R4,0.0011520737,31,5,full pod,58,67,True
+NER,aez8,groundnut,70,0,Warm / arid,R5,0.010830987,1620,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,0,Warm / semiarid,R5,0.013693251,4185,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,10,Warm / arid,R5,0.017070755,1443,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,10,Warm / semiarid,R5,0.008612684,4185,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,20,Warm / arid,R5,0.031215692,1366,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,20,Warm / semiarid,R5,0.006773996,4185,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,30,Warm / arid,R5,0.03629138,677,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,30,Warm / semiarid,R5,0.006819515,4177,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,40,Warm / arid,R5,0.019438894,26,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,40,Warm / semiarid,R5,0.011171108,3729,6,beginning seed,36,42,True
+NER,aez8,groundnut,90,0,Warm / arid,R5,0.017599586,1366,6,beginning seed,47,55,True
+NER,aez8,groundnut,90,0,Warm / semiarid,R5,0.0083834,4185,6,beginning seed,47,55,True
+NER,aez8,groundnut,90,10,Warm / arid,R5,0.021029096,677,6,beginning seed,47,55,True
+NER,aez8,groundnut,90,10,Warm / semiarid,R5,0.0054872357,4177,6,beginning seed,47,55,True
+NER,aez8,groundnut,90,20,Warm / arid,R5,0.010531136,26,6,beginning seed,47,55,True
+NER,aez8,groundnut,90,20,Warm / semiarid,R5,0.008579567,3729,6,beginning seed,47,55,True
+NER,aez8,groundnut,90,30,Warm / semiarid,R5,0.005161589,2947,6,beginning seed,47,55,True
+NER,aez8,groundnut,90,40,Warm / semiarid,R5,0.00717904,1543,6,beginning seed,47,55,True
+NER,aez8,groundnut,110,0,Warm / arid,R5,0.012044116,26,6,beginning seed,57,67,True
+NER,aez8,groundnut,110,0,Warm / semiarid,R5,0.005037723,3729,6,beginning seed,57,67,True
+NER,aez8,groundnut,110,10,Warm / semiarid,R5,0.0041055633,2947,6,beginning seed,57,67,True
+NER,aez8,groundnut,110,20,Warm / semiarid,R5,0.003888726,1543,6,beginning seed,57,67,True
+NER,aez8,groundnut,110,30,Warm / semiarid,R5,0.0086247,550,6,beginning seed,57,67,True
+NER,aez8,groundnut,110,40,Warm / semiarid,R5,0.011969887,144,6,beginning seed,57,67,True
+NER,aez8,groundnut,130,0,Warm / semiarid,R5,0.004181581,1543,6,beginning seed,68,80,True
+NER,aez8,groundnut,130,10,Warm / semiarid,R5,0.008306283,550,6,beginning seed,68,80,True
+NER,aez8,groundnut,130,20,Warm / semiarid,R5,0.014098131,144,6,beginning seed,68,80,True
+NER,aez8,groundnut,130,30,Warm / semiarid,R5,0.0,31,6,beginning seed,68,80,True
+NER,aez8,groundnut,70,0,Warm / arid,R6,0.03304473,1620,7,full seed,43,54,True
+NER,aez8,groundnut,70,0,Warm / semiarid,R6,0.011198244,4185,7,full seed,43,54,True
+NER,aez8,groundnut,70,10,Warm / arid,R6,0.057376556,1443,7,full seed,43,54,True
+NER,aez8,groundnut,70,10,Warm / semiarid,R6,0.010046094,4185,7,full seed,43,54,True
+NER,aez8,groundnut,70,20,Warm / arid,R6,0.091393664,1366,7,full seed,43,54,True
+NER,aez8,groundnut,70,20,Warm / semiarid,R6,0.022531232,4185,7,full seed,43,54,True
+NER,aez8,groundnut,70,30,Warm / arid,R6,0.12682754,677,7,full seed,43,54,True
+NER,aez8,groundnut,70,30,Warm / semiarid,R6,0.04531384,4177,7,full seed,43,54,True
+NER,aez8,groundnut,70,40,Warm / arid,R6,0.26550573,26,7,full seed,43,54,True
+NER,aez8,groundnut,70,40,Warm / semiarid,R6,0.087961495,3729,7,full seed,43,54,True
+NER,aez8,groundnut,90,0,Warm / arid,R6,0.05321979,1366,7,full seed,56,69,True
+NER,aez8,groundnut,90,0,Warm / semiarid,R6,0.009810586,4185,7,full seed,56,69,True
+NER,aez8,groundnut,90,10,Warm / arid,R6,0.06871824,677,7,full seed,56,69,True
+NER,aez8,groundnut,90,10,Warm / semiarid,R6,0.020963503,4177,7,full seed,56,69,True
+NER,aez8,groundnut,90,20,Warm / arid,R6,0.10265984,26,7,full seed,56,69,True
+NER,aez8,groundnut,90,20,Warm / semiarid,R6,0.035548944,3729,7,full seed,56,69,True
+NER,aez8,groundnut,90,30,Warm / semiarid,R6,0.0577066,2947,7,full seed,56,69,True
+NER,aez8,groundnut,90,40,Warm / semiarid,R6,0.094632685,1543,7,full seed,56,69,True
+NER,aez8,groundnut,110,0,Warm / arid,R6,0.031799868,26,7,full seed,68,85,True
+NER,aez8,groundnut,110,0,Warm / semiarid,R6,0.019735102,3729,7,full seed,68,85,True
+NER,aez8,groundnut,110,10,Warm / semiarid,R6,0.03245048,2947,7,full seed,68,85,True
+NER,aez8,groundnut,110,20,Warm / semiarid,R6,0.04179068,1543,7,full seed,68,85,True
+NER,aez8,groundnut,110,30,Warm / semiarid,R6,0.04765691,550,7,full seed,68,85,True
+NER,aez8,groundnut,110,40,Warm / semiarid,R6,0.054070793,144,7,full seed,68,85,True
+NER,aez8,groundnut,130,0,Warm / semiarid,R6,0.012734327,1543,7,full seed,81,100,True
+NER,aez8,groundnut,130,10,Warm / semiarid,R6,0.01979212,550,7,full seed,81,100,True
+NER,aez8,groundnut,130,20,Warm / semiarid,R6,0.0070117605,144,7,full seed,81,100,True
+NER,aez8,groundnut,130,30,Warm / semiarid,R6,0.0,31,7,full seed,81,100,True
+NER,aez8,groundnut,70,0,Warm / arid,R7,0.055978436,1620,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,0,Warm / semiarid,R7,0.0077777584,4185,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,10,Warm / arid,R7,0.09495739,1443,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,10,Warm / semiarid,R7,0.011659157,4185,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,20,Warm / arid,R7,0.15837258,1366,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,20,Warm / semiarid,R7,0.03849043,4185,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,30,Warm / arid,R7,0.22762579,677,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,30,Warm / semiarid,R7,0.08693806,4177,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,40,Warm / arid,R7,0.40578842,26,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,40,Warm / semiarid,R7,0.16891772,3729,8,beginning maturity,55,64,False
+NER,aez8,groundnut,90,0,Warm / arid,R7,0.15795651,1366,8,beginning maturity,70,83,False
+NER,aez8,groundnut,90,0,Warm / semiarid,R7,0.039584897,4185,8,beginning maturity,70,83,False
+NER,aez8,groundnut,90,10,Warm / arid,R7,0.23561704,677,8,beginning maturity,70,83,False
+NER,aez8,groundnut,90,10,Warm / semiarid,R7,0.09369642,4177,8,beginning maturity,70,83,False
+NER,aez8,groundnut,90,20,Warm / arid,R7,0.40761992,26,8,beginning maturity,70,83,False
+NER,aez8,groundnut,90,20,Warm / semiarid,R7,0.1705318,3729,8,beginning maturity,70,83,False
+NER,aez8,groundnut,90,30,Warm / semiarid,R7,0.2694038,2947,8,beginning maturity,70,83,False
+NER,aez8,groundnut,90,40,Warm / semiarid,R7,0.32778275,1543,8,beginning maturity,70,83,False
+NER,aez8,groundnut,110,0,Warm / arid,R7,0.40778643,26,8,beginning maturity,86,101,False
+NER,aez8,groundnut,110,0,Warm / semiarid,R7,0.17082115,3729,8,beginning maturity,86,101,False
+NER,aez8,groundnut,110,10,Warm / semiarid,R7,0.2698605,2947,8,beginning maturity,86,101,False
+NER,aez8,groundnut,110,20,Warm / semiarid,R7,0.32790306,1543,8,beginning maturity,86,101,False
+NER,aez8,groundnut,110,30,Warm / semiarid,R7,0.3827145,550,8,beginning maturity,86,101,False
+NER,aez8,groundnut,110,40,Warm / semiarid,R7,0.3344396,144,8,beginning maturity,86,101,False
+NER,aez8,groundnut,130,0,Warm / semiarid,R7,0.32499212,1543,8,beginning maturity,101,120,False
+NER,aez8,groundnut,130,10,Warm / semiarid,R7,0.38424492,550,8,beginning maturity,101,120,False
+NER,aez8,groundnut,130,20,Warm / semiarid,R7,0.3335684,144,8,beginning maturity,101,120,False
+NER,aez8,groundnut,130,30,Warm / semiarid,R7,0.3782435,31,8,beginning maturity,101,120,False
+NER,aez8,groundnut,70,0,Warm / arid,R8,0.03549553,1620,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,0,Warm / semiarid,R8,0.004868435,4185,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,10,Warm / arid,R8,0.06504884,1443,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,10,Warm / semiarid,R8,0.006204155,4185,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,20,Warm / arid,R8,0.12314274,1366,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,20,Warm / semiarid,R8,0.025929825,4185,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,30,Warm / arid,R8,0.18927038,677,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,30,Warm / semiarid,R8,0.07353185,4177,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,40,Warm / arid,R8,0.36156982,26,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,40,Warm / semiarid,R8,0.14595687,3729,9,harvest maturity,65,69,False
+NER,aez8,groundnut,90,0,Warm / arid,R8,0.12084008,1366,9,harvest maturity,84,89,False
+NER,aez8,groundnut,90,0,Warm / semiarid,R8,0.027699204,4185,9,harvest maturity,84,89,False
+NER,aez8,groundnut,90,10,Warm / arid,R8,0.19471997,677,9,harvest maturity,84,89,False
+NER,aez8,groundnut,90,10,Warm / semiarid,R8,0.07686674,4177,9,harvest maturity,84,89,False
+NER,aez8,groundnut,90,20,Warm / arid,R8,0.36872932,26,9,harvest maturity,84,89,False
+NER,aez8,groundnut,90,20,Warm / semiarid,R8,0.14778675,3729,9,harvest maturity,84,89,False
+NER,aez8,groundnut,90,30,Warm / semiarid,R8,0.23018089,2947,9,harvest maturity,84,89,False
+NER,aez8,groundnut,90,40,Warm / semiarid,R8,0.25418675,1543,9,harvest maturity,84,89,False
+NER,aez8,groundnut,110,0,Warm / arid,R8,0.37384287,26,9,harvest maturity,102,109,False
+NER,aez8,groundnut,110,0,Warm / semiarid,R8,0.15395527,3729,9,harvest maturity,102,109,False
+NER,aez8,groundnut,110,10,Warm / semiarid,R8,0.23812306,2947,9,harvest maturity,102,109,False
+NER,aez8,groundnut,110,20,Warm / semiarid,R8,0.26802325,1543,9,harvest maturity,102,109,False
+NER,aez8,groundnut,110,30,Warm / semiarid,R8,0.3364838,550,9,harvest maturity,102,109,False
+NER,aez8,groundnut,110,40,Warm / semiarid,R8,0.29671112,144,9,harvest maturity,102,109,False
+NER,aez8,groundnut,130,0,Warm / semiarid,R8,0.2776119,1543,9,harvest maturity,121,129,False
+NER,aez8,groundnut,130,10,Warm / semiarid,R8,0.33990732,550,9,harvest maturity,121,129,False
+NER,aez8,groundnut,130,20,Warm / semiarid,R8,0.30785802,144,9,harvest maturity,121,129,False
+NER,aez8,groundnut,130,30,Warm / semiarid,R8,0.36652195,31,9,harvest maturity,121,129,False
+NER,aez8,groundnut,70,0,ALL,SOW,0.01659049,5805,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,10,ALL,SOW,0.024577048,5628,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,20,ALL,SOW,0.0141151855,5551,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,30,ALL,SOW,0.0057132374,4854,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,70,40,ALL,SOW,0.005394548,3755,0,sowing to emergence,0,4,False
+NER,aez8,groundnut,90,0,ALL,SOW,0.017461516,5551,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,90,10,ALL,SOW,0.02536897,4854,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,90,20,ALL,SOW,0.01737115,3755,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,90,30,ALL,SOW,0.0057365196,2947,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,90,40,ALL,SOW,0.0044124313,1543,0,sowing to emergence,0,5,False
+NER,aez8,groundnut,110,0,ALL,SOW,0.019251823,3755,0,sowing to emergence,0,7,False
+NER,aez8,groundnut,110,10,ALL,SOW,0.025921404,2947,0,sowing to emergence,0,7,False
+NER,aez8,groundnut,110,20,ALL,SOW,0.016950723,1543,0,sowing to emergence,0,7,False
+NER,aez8,groundnut,110,30,ALL,SOW,0.0011063416,550,0,sowing to emergence,0,7,False
+NER,aez8,groundnut,110,40,ALL,SOW,0.0037838663,144,0,sowing to emergence,0,7,False
+NER,aez8,groundnut,130,0,ALL,SOW,0.01607605,1543,0,sowing to emergence,0,8,False
+NER,aez8,groundnut,130,10,ALL,SOW,0.020639803,550,0,sowing to emergence,0,8,False
+NER,aez8,groundnut,130,20,ALL,SOW,0.0028540604,144,0,sowing to emergence,0,8,False
+NER,aez8,groundnut,130,30,ALL,SOW,0.0011520737,31,0,sowing to emergence,0,8,False
+NER,aez8,groundnut,70,0,ALL,VE,0.052122377,5805,1,emergence,5,14,False
+NER,aez8,groundnut,70,10,ALL,VE,0.04667696,5628,1,emergence,5,14,False
+NER,aez8,groundnut,70,20,ALL,VE,0.023542179,5551,1,emergence,5,14,False
+NER,aez8,groundnut,70,30,ALL,VE,0.011690112,4854,1,emergence,5,14,False
+NER,aez8,groundnut,70,40,ALL,VE,0.00789303,3755,1,emergence,5,14,False
+NER,aez8,groundnut,90,0,ALL,VE,0.06128318,5551,1,emergence,6,19,False
+NER,aez8,groundnut,90,10,ALL,VE,0.052314077,4854,1,emergence,6,19,False
+NER,aez8,groundnut,90,20,ALL,VE,0.028634442,3755,1,emergence,6,19,False
+NER,aez8,groundnut,90,30,ALL,VE,0.012853386,2947,1,emergence,6,19,False
+NER,aez8,groundnut,90,40,ALL,VE,0.0059588253,1543,1,emergence,6,19,False
+NER,aez8,groundnut,110,0,ALL,VE,0.06008398,3755,1,emergence,8,23,False
+NER,aez8,groundnut,110,10,ALL,VE,0.05082558,2947,1,emergence,8,23,False
+NER,aez8,groundnut,110,20,ALL,VE,0.025076838,1543,1,emergence,8,23,False
+NER,aez8,groundnut,110,30,ALL,VE,0.0057321806,550,1,emergence,8,23,False
+NER,aez8,groundnut,110,40,ALL,VE,0.003988115,144,1,emergence,8,23,False
+NER,aez8,groundnut,130,0,ALL,VE,0.05216743,1543,1,emergence,9,28,False
+NER,aez8,groundnut,130,10,ALL,VE,0.030055972,550,1,emergence,9,28,False
+NER,aez8,groundnut,130,20,ALL,VE,0.006927279,144,1,emergence,9,28,False
+NER,aez8,groundnut,130,30,ALL,VE,0.004884793,31,1,emergence,9,28,False
+NER,aez8,groundnut,70,0,ALL,R1,0.05105435,5805,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,10,ALL,R1,0.03229374,5628,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,20,ALL,R1,0.012457618,5551,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,30,ALL,R1,0.0073445197,4854,2,beginning bloom,15,20,False
+NER,aez8,groundnut,70,40,ALL,R1,0.004148825,3755,2,beginning bloom,15,20,False
+NER,aez8,groundnut,90,0,ALL,R1,0.04682276,5551,2,beginning bloom,20,26,False
+NER,aez8,groundnut,90,10,ALL,R1,0.023641527,4854,2,beginning bloom,20,26,False
+NER,aez8,groundnut,90,20,ALL,R1,0.012542166,3755,2,beginning bloom,20,26,False
+NER,aez8,groundnut,90,30,ALL,R1,0.0063663977,2947,2,beginning bloom,20,26,False
+NER,aez8,groundnut,90,40,ALL,R1,0.0037708029,1543,2,beginning bloom,20,26,False
+NER,aez8,groundnut,110,0,ALL,R1,0.03916021,3755,2,beginning bloom,24,32,False
+NER,aez8,groundnut,110,10,ALL,R1,0.016757349,2947,2,beginning bloom,24,32,False
+NER,aez8,groundnut,110,20,ALL,R1,0.0047433,1543,2,beginning bloom,24,32,False
+NER,aez8,groundnut,110,30,ALL,R1,0.0017647202,550,2,beginning bloom,24,32,False
+NER,aez8,groundnut,110,40,ALL,R1,0.0007976827,144,2,beginning bloom,24,32,False
+NER,aez8,groundnut,130,0,ALL,R1,0.022165552,1543,2,beginning bloom,29,38,False
+NER,aez8,groundnut,130,10,ALL,R1,0.0050164605,550,2,beginning bloom,29,38,False
+NER,aez8,groundnut,130,20,ALL,R1,0.003988115,144,2,beginning bloom,29,38,False
+NER,aez8,groundnut,130,30,ALL,R1,0.0011520737,31,2,beginning bloom,29,38,False
+NER,aez8,groundnut,70,0,ALL,R2,0.042453285,5805,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,10,ALL,R2,0.01953945,5628,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,20,ALL,R2,0.008886246,5551,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,30,ALL,R2,0.00743119,4854,3,beginning peg,21,26,False
+NER,aez8,groundnut,70,40,ALL,R2,0.0046238434,3755,3,beginning peg,21,26,False
+NER,aez8,groundnut,90,0,ALL,R2,0.026964197,5551,3,beginning peg,27,33,False
+NER,aez8,groundnut,90,10,ALL,R2,0.013163479,4854,3,beginning peg,27,33,False
+NER,aez8,groundnut,90,20,ALL,R2,0.0074089905,3755,3,beginning peg,27,33,False
+NER,aez8,groundnut,90,30,ALL,R2,0.002888346,2947,3,beginning peg,27,33,False
+NER,aez8,groundnut,90,40,ALL,R2,0.0038610012,1543,3,beginning peg,27,33,False
+NER,aez8,groundnut,110,0,ALL,R2,0.022520177,3755,3,beginning peg,33,41,False
+NER,aez8,groundnut,110,10,ALL,R2,0.0084379185,2947,3,beginning peg,33,41,False
+NER,aez8,groundnut,110,20,ALL,R2,0.0032862483,1543,3,beginning peg,33,41,False
+NER,aez8,groundnut,110,30,ALL,R2,0.0012471676,550,3,beginning peg,33,41,False
+NER,aez8,groundnut,110,40,ALL,R2,0.0005934343,144,3,beginning peg,33,41,False
+NER,aez8,groundnut,130,0,ALL,R2,0.008871855,1543,3,beginning peg,39,48,False
+NER,aez8,groundnut,130,10,ALL,R2,0.0047935983,550,3,beginning peg,39,48,False
+NER,aez8,groundnut,130,20,ALL,R2,0.00020424837,144,3,beginning peg,39,48,False
+NER,aez8,groundnut,130,30,ALL,R2,0.0,31,3,beginning peg,39,48,False
+NER,aez8,groundnut,70,0,ALL,R3,0.02434235,5805,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,10,ALL,R3,0.010932961,5628,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,20,ALL,R3,0.0076216096,5551,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,30,ALL,R3,0.006860197,4854,4,beginning pod,27,31,True
+NER,aez8,groundnut,70,40,ALL,R3,0.004945039,3755,4,beginning pod,27,31,True
+NER,aez8,groundnut,90,0,ALL,R3,0.013038372,5551,4,beginning pod,34,39,True
+NER,aez8,groundnut,90,10,ALL,R3,0.0067786737,4854,4,beginning pod,34,39,True
+NER,aez8,groundnut,90,20,ALL,R3,0.0040174564,3755,4,beginning pod,34,39,True
+NER,aez8,groundnut,90,30,ALL,R3,0.0030015972,2947,4,beginning pod,34,39,True
+NER,aez8,groundnut,90,40,ALL,R3,0.0016422813,1543,4,beginning pod,34,39,True
+NER,aez8,groundnut,110,0,ALL,R3,0.008768673,3755,4,beginning pod,42,49,True
+NER,aez8,groundnut,110,10,ALL,R3,0.004407233,2947,4,beginning pod,42,49,True
+NER,aez8,groundnut,110,20,ALL,R3,0.0037551154,1543,4,beginning pod,42,49,True
+NER,aez8,groundnut,110,30,ALL,R3,0.0007482719,550,4,beginning pod,42,49,True
+NER,aez8,groundnut,110,40,ALL,R3,0.013480541,144,4,beginning pod,42,49,True
+NER,aez8,groundnut,130,0,ALL,R3,0.0047956123,1543,4,beginning pod,49,57,True
+NER,aez8,groundnut,130,10,ALL,R3,0.0014688763,550,4,beginning pod,49,57,True
+NER,aez8,groundnut,130,20,ALL,R3,0.0005934343,144,4,beginning pod,49,57,True
+NER,aez8,groundnut,130,30,ALL,R3,0.0011520737,31,4,beginning pod,49,57,True
+NER,aez8,groundnut,70,0,ALL,R4,0.016503824,5805,5,full pod,32,35,True
+NER,aez8,groundnut,70,10,ALL,R4,0.007690551,5628,5,full pod,32,35,True
+NER,aez8,groundnut,70,20,ALL,R4,0.008559512,5551,5,full pod,32,35,True
+NER,aez8,groundnut,70,30,ALL,R4,0.007023741,4854,5,full pod,32,35,True
+NER,aez8,groundnut,70,40,ALL,R4,0.00701608,3755,5,full pod,32,35,True
+NER,aez8,groundnut,90,0,ALL,R4,0.009721095,5551,5,full pod,40,46,True
+NER,aez8,groundnut,90,10,ALL,R4,0.008162713,4854,5,full pod,40,46,True
+NER,aez8,groundnut,90,20,ALL,R4,0.0046038134,3755,5,full pod,40,46,True
+NER,aez8,groundnut,90,30,ALL,R4,0.0033188572,2947,5,full pod,40,46,True
+NER,aez8,groundnut,90,40,ALL,R4,0.0028070854,1543,5,full pod,40,46,True
+NER,aez8,groundnut,110,0,ALL,R4,0.0074546533,3755,5,full pod,50,56,True
+NER,aez8,groundnut,110,10,ALL,R4,0.0029037474,2947,5,full pod,50,56,True
+NER,aez8,groundnut,110,20,ALL,R4,0.0032763132,1543,5,full pod,50,56,True
+NER,aez8,groundnut,110,30,ALL,R4,0.0021323538,550,5,full pod,50,56,True
+NER,aez8,groundnut,110,40,ALL,R4,0.014098131,144,5,full pod,50,56,True
+NER,aez8,groundnut,130,0,ALL,R4,0.0039047103,1543,5,full pod,58,67,True
+NER,aez8,groundnut,130,10,ALL,R4,0.0008309166,550,5,full pod,58,67,True
+NER,aez8,groundnut,130,20,ALL,R4,0.0065006483,144,5,full pod,58,67,True
+NER,aez8,groundnut,130,30,ALL,R4,0.0011520737,31,5,full pod,58,67,True
+NER,aez8,groundnut,70,0,ALL,R5,0.01289448,5805,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,10,ALL,R5,0.010781304,5628,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,20,ALL,R5,0.012788653,5551,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,30,ALL,R5,0.0109300325,4854,6,beginning seed,36,42,True
+NER,aez8,groundnut,70,40,ALL,R5,0.011228355,3755,6,beginning seed,36,42,True
+NER,aez8,groundnut,90,0,ALL,R5,0.010651336,5551,6,beginning seed,47,55,True
+NER,aez8,groundnut,90,10,ALL,R5,0.0076548997,4854,6,beginning seed,47,55,True
+NER,aez8,groundnut,90,20,ALL,R5,0.00859308,3755,6,beginning seed,47,55,True
+NER,aez8,groundnut,90,30,ALL,R5,0.005161589,2947,6,beginning seed,47,55,True
+NER,aez8,groundnut,90,40,ALL,R5,0.00717904,1543,6,beginning seed,47,55,True
+NER,aez8,groundnut,110,0,ALL,R5,0.0050862357,3755,6,beginning seed,57,67,True
+NER,aez8,groundnut,110,10,ALL,R5,0.0041055633,2947,6,beginning seed,57,67,True
+NER,aez8,groundnut,110,20,ALL,R5,0.003888726,1543,6,beginning seed,57,67,True
+NER,aez8,groundnut,110,30,ALL,R5,0.0086247,550,6,beginning seed,57,67,True
+NER,aez8,groundnut,110,40,ALL,R5,0.011969887,144,6,beginning seed,57,67,True
+NER,aez8,groundnut,130,0,ALL,R5,0.004181581,1543,6,beginning seed,68,80,True
+NER,aez8,groundnut,130,10,ALL,R5,0.008306283,550,6,beginning seed,68,80,True
+NER,aez8,groundnut,130,20,ALL,R5,0.014098131,144,6,beginning seed,68,80,True
+NER,aez8,groundnut,130,30,ALL,R5,0.0,31,6,beginning seed,68,80,True
+NER,aez8,groundnut,70,0,ALL,R6,0.017294938,5805,7,full seed,43,54,True
+NER,aez8,groundnut,70,10,ALL,R6,0.022181462,5628,7,full seed,43,54,True
+NER,aez8,groundnut,70,20,ALL,R6,0.039477024,5551,7,full seed,43,54,True
+NER,aez8,groundnut,70,30,ALL,R6,0.05668277,4854,7,full seed,43,54,True
+NER,aez8,groundnut,70,40,ALL,R6,0.08919083,3755,7,full seed,43,54,True
+NER,aez8,groundnut,90,0,ALL,R6,0.020492801,5551,7,full seed,56,69,True
+NER,aez8,groundnut,90,10,ALL,R6,0.02762398,4854,7,full seed,56,69,True
+NER,aez8,groundnut,90,20,ALL,R6,0.03601362,3755,7,full seed,56,69,True
+NER,aez8,groundnut,90,30,ALL,R6,0.0577066,2947,7,full seed,56,69,True
+NER,aez8,groundnut,90,40,ALL,R6,0.094632685,1543,7,full seed,56,69,True
+NER,aez8,groundnut,110,0,ALL,R6,0.01981864,3755,7,full seed,68,85,True
+NER,aez8,groundnut,110,10,ALL,R6,0.03245048,2947,7,full seed,68,85,True
+NER,aez8,groundnut,110,20,ALL,R6,0.04179068,1543,7,full seed,68,85,True
+NER,aez8,groundnut,110,30,ALL,R6,0.04765691,550,7,full seed,68,85,True
+NER,aez8,groundnut,110,40,ALL,R6,0.054070793,144,7,full seed,68,85,True
+NER,aez8,groundnut,130,0,ALL,R6,0.012734327,1543,7,full seed,81,100,True
+NER,aez8,groundnut,130,10,ALL,R6,0.01979212,550,7,full seed,81,100,True
+NER,aez8,groundnut,130,20,ALL,R6,0.0070117605,144,7,full seed,81,100,True
+NER,aez8,groundnut,130,30,ALL,R6,0.0,31,7,full seed,81,100,True
+NER,aez8,groundnut,70,0,ALL,R7,0.02122911,5805,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,10,ALL,R7,0.03301654,5628,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,20,ALL,R7,0.06799124,5551,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,30,ALL,R7,0.10656014,4854,8,beginning maturity,55,64,False
+NER,aez8,groundnut,70,40,ALL,R7,0.17055783,3755,8,beginning maturity,55,64,False
+NER,aez8,groundnut,90,0,ALL,R7,0.068714,5551,8,beginning maturity,70,83,False
+NER,aez8,groundnut,90,10,ALL,R7,0.11349046,4854,8,beginning maturity,70,83,False
+NER,aez8,groundnut,90,20,ALL,R7,0.17217341,3755,8,beginning maturity,70,83,False
+NER,aez8,groundnut,90,30,ALL,R7,0.2694038,2947,8,beginning maturity,70,83,False
+NER,aez8,groundnut,90,40,ALL,R7,0.32778275,1543,8,beginning maturity,70,83,False
+NER,aez8,groundnut,110,0,ALL,R7,0.17246193,3755,8,beginning maturity,86,101,False
+NER,aez8,groundnut,110,10,ALL,R7,0.2698605,2947,8,beginning maturity,86,101,False
+NER,aez8,groundnut,110,20,ALL,R7,0.32790306,1543,8,beginning maturity,86,101,False
+NER,aez8,groundnut,110,30,ALL,R7,0.3827145,550,8,beginning maturity,86,101,False
+NER,aez8,groundnut,110,40,ALL,R7,0.3344396,144,8,beginning maturity,86,101,False
+NER,aez8,groundnut,130,0,ALL,R7,0.32499212,1543,8,beginning maturity,101,120,False
+NER,aez8,groundnut,130,10,ALL,R7,0.38424492,550,8,beginning maturity,101,120,False
+NER,aez8,groundnut,130,20,ALL,R7,0.3335684,144,8,beginning maturity,101,120,False
+NER,aez8,groundnut,130,30,ALL,R7,0.3782435,31,8,beginning maturity,101,120,False
+NER,aez8,groundnut,70,0,ALL,R8,0.013415531,5805,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,10,ALL,R8,0.021291733,5628,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,20,ALL,R8,0.049852155,5551,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,30,ALL,R8,0.089674205,4854,9,harvest maturity,65,69,False
+NER,aez8,groundnut,70,40,ALL,R8,0.1474498,3755,9,harvest maturity,65,69,False
+NER,aez8,groundnut,90,0,ALL,R8,0.050619476,5551,9,harvest maturity,84,89,False
+NER,aez8,groundnut,90,10,ALL,R8,0.09330403,4854,9,harvest maturity,84,89,False
+NER,aez8,groundnut,90,20,ALL,R8,0.14931656,3755,9,harvest maturity,84,89,False
+NER,aez8,groundnut,90,30,ALL,R8,0.23018089,2947,9,harvest maturity,84,89,False
+NER,aez8,groundnut,90,40,ALL,R8,0.25418675,1543,9,harvest maturity,84,89,False
+NER,aez8,groundnut,110,0,ALL,R8,0.15547779,3755,9,harvest maturity,102,109,False
+NER,aez8,groundnut,110,10,ALL,R8,0.23812306,2947,9,harvest maturity,102,109,False
+NER,aez8,groundnut,110,20,ALL,R8,0.26802325,1543,9,harvest maturity,102,109,False
+NER,aez8,groundnut,110,30,ALL,R8,0.3364838,550,9,harvest maturity,102,109,False
+NER,aez8,groundnut,110,40,ALL,R8,0.29671112,144,9,harvest maturity,102,109,False
+NER,aez8,groundnut,130,0,ALL,R8,0.2776119,1543,9,harvest maturity,121,129,False
+NER,aez8,groundnut,130,10,ALL,R8,0.33990732,550,9,harvest maturity,121,129,False
+NER,aez8,groundnut,130,20,ALL,R8,0.30785802,144,9,harvest maturity,121,129,False
+NER,aez8,groundnut,130,30,ALL,R8,0.36652195,31,9,harvest maturity,121,129,False
