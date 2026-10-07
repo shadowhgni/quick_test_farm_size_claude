@@ -1,6 +1,6 @@
 zone,n_pixels,nb_median_p10,nb_median_p50,nb_median_p90,nb_mean_avg,label
-1,34427,0.0,0.0,0.0,0.058830201625823975,Z1: median 0-0 spells/season (mean 0.1)
-2,6609,0.0,0.0,0.0,0.37996044754981995,Z2: median 0-0 spells/season (mean 0.4)
+1,34427,0.0,0.0,0.0,0.0588301345705986,Z1: median 0-0 spells/season (mean 0.1)
+2,6609,0.0,0.0,0.0,0.37996605038642883,Z2: median 0-0 spells/season (mean 0.4)
 3,1840,0.5,1.0,1.0,0.7970468401908875,Z3: median 0.5-1 spells/season (mean 0.8)
 4,1234,1.0,1.0,1.0,1.2433274984359741,Z4: median 1-1 spells/season (mean 1.2)
 5,245,1.0,2.0,2.0,1.5249354839324951,Z5: median 1-2 spells/season (mean 1.5)

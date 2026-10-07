@@ -1,17 +1,17 @@
-03:11:38 [MainProcess] INFO - ======================================================================
-03:11:38 [MainProcess] INFO - v7 STEP3  region=nga bbox=(2.5, 4.5, 14.5, 14.5) grid 240x200
-03:11:38 [MainProcess] INFO -   masks: bimodal ratio >= 1.0, >= 10 seasons, median season >= 60 d, clip=['BEN', 'BFA', 'CIV', 'GMB', 'GHA', 'GIN', 'GNB', 'LBR', 'MLI', 'MRT', 'NER', 'NGA', 'SEN', 'SLE', 'TGO', 'CMR', 'TCD', 'CAF', 'SDN', 'SSD']
-03:11:38 [MainProcess] INFO - ======================================================================
-03:11:38 [MainProcess] INFO - Boundaries loaded from Spatial_data_repository/ne_50m_admin_0_countries.zip (6 polygons)
-03:11:38 [MainProcess] WARNING - Countries not found in boundaries: ['BFA', 'CIV', 'GHA', 'GIN', 'GMB', 'GNB', 'LBR', 'MLI', 'MRT', 'SDN', 'SEN', 'SLE', 'SSD', 'TGO']
-03:11:38 [MainProcess] INFO -   pixels ok                               44,355
-03:11:38 [MainProcess] INFO -   pixels no CHIRPS data                        6
-03:11:38 [MainProcess] INFO -   pixels no valid RADS season              1,514
-03:11:38 [MainProcess] INFO -   pixels bimodal (hidden)                      3
-03:11:38 [MainProcess] INFO -   pixels outside study countries           2,122
-03:12:35 [MainProcess] INFO - Created 5 records
-03:12:35 [MainProcess] INFO - Created 5 records
-03:12:35 [MainProcess] INFO - Created 2 records
-03:12:35 [MainProcess] INFO - Written dryspell_v7/nga/step3_nga/zones.gpkg
-03:12:37 [MainProcess] INFO - valid pixels zoned: 44,355
-03:12:37 [MainProcess] INFO - STEP3 done -> dryspell_v7/nga/step3_nga
+03:38:11 [MainProcess] INFO - ======================================================================
+03:38:11 [MainProcess] INFO - v7 STEP3  region=nga bbox=(2.5, 4.5, 14.5, 14.5) grid 240x200
+03:38:11 [MainProcess] INFO -   masks: bimodal ratio >= 1.0, >= 10 seasons, median season >= 60 d, clip=['BEN', 'BFA', 'CIV', 'GMB', 'GHA', 'GIN', 'GNB', 'LBR', 'MLI', 'MRT', 'NER', 'NGA', 'SEN', 'SLE', 'TGO', 'CMR', 'TCD', 'CAF', 'SDN', 'SSD']
+03:38:11 [MainProcess] INFO - ======================================================================
+03:38:11 [MainProcess] INFO - Boundaries loaded from Spatial_data_repository/ne_50m_admin_0_countries.zip (6 polygons)
+03:38:11 [MainProcess] WARNING - Countries not found in boundaries: ['BFA', 'CIV', 'GHA', 'GIN', 'GMB', 'GNB', 'LBR', 'MLI', 'MRT', 'SDN', 'SEN', 'SLE', 'SSD', 'TGO']
+03:38:11 [MainProcess] INFO -   pixels ok                               44,355
+03:38:11 [MainProcess] INFO -   pixels no CHIRPS data                        6
+03:38:11 [MainProcess] INFO -   pixels no valid RADS season              1,514
+03:38:11 [MainProcess] INFO -   pixels bimodal (hidden)                      3
+03:38:11 [MainProcess] INFO -   pixels outside study countries           2,122
+03:39:03 [MainProcess] INFO - Created 5 records
+03:39:03 [MainProcess] INFO - Created 5 records
+03:39:03 [MainProcess] INFO - Created 2 records
+03:39:03 [MainProcess] INFO - Written dryspell_v7/nga/step3_nga/zones.gpkg
+03:39:05 [MainProcess] INFO - valid pixels zoned: 44,355
+03:39:05 [MainProcess] INFO - STEP3 done -> dryspell_v7/nga/step3_nga
