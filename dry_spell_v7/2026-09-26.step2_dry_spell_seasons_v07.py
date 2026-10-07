@@ -59,6 +59,7 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 logger = logging.getLogger("dryspell_v7")
 
 SENT = np.iinfo(np.int32).min
+RADS_PLACEHOLDER_DAYS = 366     # dates more than a year before 1981-01-01 (e.g. 1970-01-01) = missing
 _G = {}
 
 
@@ -102,6 +103,8 @@ def _rads_year(args):
             ci = C.nearest_index(ds[lonn].values, lon, 0.6 * step)
             sub = vals[np.ix_(np.maximum(ri, 0), np.maximum(ci, 0))]
             idx = C.day_index(sub)
+            # placeholder dates (e.g. 1970-01-01 written for "no onset") are missing values
+            idx[idx < -RADS_PLACEHOLDER_DAYS] = SENT
             idx[ri < 0, :] = SENT
             idx[:, ci < 0] = SENT
             out[key] = idx
@@ -115,25 +118,103 @@ def _rads_year(args):
     return year, out["onset"], out["demise"], info
 
 
+def _year_of(idx):
+    """day index -> calendar year (SENT -> -1)."""
+    y = (C.index_to_date(np.where(idx == SENT, 0, idx)).astype("datetime64[Y]").astype(int) + 1970)
+    return np.where(idx == SENT, -1, y)
+
+
+def pair_seasons(on_f, de_f, years_out):
+    """
+    Re-pair RADS onset and demise dates into seasons.
+
+    RADS files do not all store a season's onset and demise in the same yearly file: in the
+    africa_RainyAndDrySeason.pentad.CHIRPS files the file of year Y holds the onset of the
+    season starting in Y+1 and the demise of the season ending in Y (the RADS code finds
+    demises backwards in time). So every onset (file k) is paired with the EARLIEST demise
+    after it, taken from file k-1, k or k+1, that gives a plausible season length; the
+    season is then indexed by the calendar year of its onset. Works for both layouts.
+
+    on_f, de_f: (K, ...) day indices by FILE year. Returns onset, demise (Y, ...) by SEASON
+    year (years_out), and how many seasons used a demise from file k-1 / k / k+1.
+    """
+    K = on_f.shape[0]
+    best = np.full(on_f.shape, SENT, dtype=np.int32)
+    bestlen = np.full(on_f.shape, np.iinfo(np.int32).max, dtype=np.int64)
+    used = {}
+    src = np.zeros(on_f.shape, dtype=np.int8)
+    for shift in (-1, 0, 1):
+        D = np.full_like(de_f, SENT)
+        if shift < 0:
+            D[1:] = de_f[:-1]
+        elif shift > 0:
+            D[:-1] = de_f[1:]
+        else:
+            D[:] = de_f
+        ln = D.astype(np.int64) - on_f + 1
+        ok = ((on_f != SENT) & (D != SENT) & (ln >= C.SEASON_LEN_MIN_SANITY) &
+              (ln <= C.SEASON_LEN_MAX_SANITY) & (ln < bestlen))
+        best[ok], bestlen[ok], src[ok] = D[ok], ln[ok], shift
+    paired = best != SENT
+    for shift in (-1, 0, 1):
+        used[f"file{shift:+d}"] = int((paired & (src == shift)).sum())
+    used["onset_without_demise"] = int(((on_f != SENT) & ~paired).sum())
+    Y = len(years_out)
+    onset = np.full((Y,) + on_f.shape[1:], SENT, dtype=np.int32)
+    demise = np.full_like(onset, SENT)
+    yi = _year_of(on_f) - years_out[0]
+    m = paired & (yi >= 0) & (yi < Y)
+    k, *rest = np.nonzero(m)
+    order = np.argsort(-k, kind="stable")                 # assign latest files first, earliest wins
+    sel = tuple(r[order] for r in rest)
+    onset[(yi[m][order],) + sel] = on_f[m][order]
+    demise[(yi[m][order],) + sel] = best[m][order]
+    return onset, demise, used
+
+
 def load_rads(lon, lat, workers):
     files, d = C.find_rads_files()
-    years = [y for y in range(C.SEASON_YEAR_MIN, C.SEASON_YEAR_MAX + 1) if y in files]
-    logger.info(f"RADS: {len(years)} years {years[0]}-{years[-1]} from {d}")
-    Y = len(years)
-    onset = np.full((Y, len(lat), len(lon)), SENT, dtype=np.int32)
-    demise = np.full_like(onset, SENT)
+    # every available file: a season's onset and demise may sit in neighbouring files
+    fyears = sorted(y for y in files if C.SEASON_YEAR_MIN - 1 <= y <= C.SEASON_YEAR_MAX + 1)
+    years = [y for y in range(C.SEASON_YEAR_MIN, C.SEASON_YEAR_MAX + 1)
+             if y in files or y - 1 in files]
+    logger.info(f"RADS: {len(fyears)} files {fyears[0]}-{fyears[-1]} from {d}")
+    K = len(fyears)
+    on_f = np.full((K, len(lat), len(lon)), SENT, dtype=np.int32)
+    de_f = np.full_like(on_f, SENT)
     infos = []
-    with ProcessPoolExecutor(max_workers=min(workers, Y), mp_context=mp.get_context("fork")) as pool:
-        futs = [pool.submit(_rads_year, (y, files[y], lon, lat)) for y in years]
+    with ProcessPoolExecutor(max_workers=min(workers, K), mp_context=mp.get_context("fork")) as pool:
+        futs = [pool.submit(_rads_year, (y, files[y], lon, lat)) for y in fyears]
         for f in as_completed(futs):
             y, on, de, info = f.result()
-            k = years.index(y)
-            onset[k], demise[k] = on, de
+            k = fyears.index(y)
+            on_f[k], de_f[k] = on, de
             infos.append(info)
     infos = pd.DataFrame(infos).sort_values("year")
     for col in ("onset_dims", "onset_extra_dim", "demise_extra_dim"):
         if col in infos:
             logger.info(f"  RADS {col}: {infos[col].dropna().unique().tolist()}")
+    onset, demise, used = pair_seasons(on_f, de_f, np.array(years))
+    logger.info(f"  RADS seasons paired (demise taken from the file before / same / after the onset file): "
+                f"{used['file-1']:,} / {used['file+0']:,} / {used['file+1']:,}; onsets without a plausible "
+                f"demise: {used['onset_without_demise']:,}")
+    # onset diagnostics: a real onset varies from year to year
+    ok = onset != SENT
+    if ok.any():
+        d = C.index_to_date(np.where(ok, onset, 0))
+        doy = np.where(ok, (d - d.astype("datetime64[Y]")).astype(int) + 1, np.nan).reshape(len(years), -1)
+        top = pd.Series(doy[np.isfinite(doy)]).value_counts(normalize=True).head(5)
+        logger.info("  RADS onset day-of-year, most frequent: " +
+                    ", ".join(f"{int(k)} ({v:.0%})" for k, v in top.items()))
+        n_on = np.isfinite(doy).sum(0)
+        with np.errstate(invalid="ignore"):
+            sd = np.nanstd(doy, axis=0)
+        frozen = (n_on >= 5) & (sd < 1)
+        logger.info(f"  RADS cells whose onset day-of-year never changes (sd < 1 d, >= 5 seasons): "
+                    f"{frozen.sum():,} of {(n_on >= 5).sum():,}")
+        if frozen.sum() > 0.2 * max(1, (n_on >= 5).sum()):
+            logger.warning("  MANY RADS onsets fall on the same day every year - check the RADS files "
+                           "(onset_date / onset_pentad); sowing dates relative to onset are meaningless there")
     return np.array(years), onset, demise, infos
 
 
