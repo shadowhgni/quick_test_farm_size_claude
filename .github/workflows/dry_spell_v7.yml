@@ -1,0 +1,134 @@
+name: Dry-spell v7 - Nigeria end-to-end on real CHIRPS
+
+# Real CHIRPS v2.0 daily 1981-2025 for the Nigeria box (COG windows from data.chc.ucsb.edu),
+# RADS-style seasons rebuilt from it with the RADS algorithm, Natural Earth boundaries and the
+# HarvestChoice AEZ map; then steps 1 -> 4 and an independent re-computation of step 4.
+on:
+  push:
+    branches: ['claude/**']
+    paths:
+      - 'dry_spell_v7/**'
+      - '.github/workflows/dry_spell_v7.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: dry-spell-v7-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  nigeria:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    permissions:
+      contents: write   # commit the small results back (dry_spell_v7/ci_results)
+    env:
+      W: ${{ github.workspace }}/work
+      CODE: ${{ github.workspace }}/dry_spell_v7
+      BBOX: '2.5 4.5 14.5 14.5'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'dry_spell_v7/requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          pip install -r dry_spell_v7/requirements.txt
+          python --version; nproc; free -g; df -h .
+
+      - name: Cache CHIRPS download
+        uses: actions/cache@v4
+        with:
+          path: work/chirps_data_cache
+          key: chirps-v2-daily-nga-2.5-4.5-14.5-14.5-1981-2025-v1
+
+      - name: Real CHIRPS daily 1981-2025 (Nigeria box)
+        run: |
+          mkdir -p "$W" && cd "$W"
+          python "$CODE/tests/fetch_chirps_cog.py" --bbox $BBOX --iso3 NGA --y0 1981 --y1 2025 --threads 32
+          ls -la chirps_data_cache
+
+      - name: RADS seasons from CHIRPS (RADS algorithm, pentads)
+        run: |
+          cd "$W"
+          python "$CODE/tests/make_rads_from_chirps.py" chirps_data_cache/chirps_NGA_1981_2025.nc chirps_africa --y0 1981 --y1 2024
+
+      - name: Boundaries (Natural Earth) and AEZ (HarvestChoice)
+        run: |
+          cd "$W" && mkdir -p Spatial_data_repository aez
+          UA="Mozilla/5.0 (GitHub Actions; dry_spell_v7 CI)"
+          curl -fsSL --retry 3 -A "$UA" -o Spatial_data_repository/ne_50m_admin_0_countries.zip \
+            https://naciscdn.org/naturalearth/50m/cultural/ne_50m_admin_0_countries.zip \
+          || { echo "naciscdn failed - using the GitHub GeoJSON mirror";
+               curl -fsSL --retry 3 -o ne.geojson \
+                 https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson;
+               python -c "import geopandas as g; g.read_file('ne.geojson').to_file('Spatial_data_repository/ne.shp')";
+               (cd Spatial_data_repository && zip -q ne_50m_admin_0_countries.zip ne.*); }
+          curl -fsSL --retry 3 -o aez/003_afr-aez_09.zip \
+            "https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/HJYYTI/0I9GVI" \
+            && unzip -l aez/003_afr-aez_09.zip || { echo "::warning::AEZ download failed - step 4 will use the rainfall proxy"; rm -f aez/003_afr-aez_09.zip; }
+
+      - name: Step 1 - inspect
+        run: cd "$W" && python "$CODE/2026-09-26.step1_dry_spell_extract_v07.py" --inspect --bbox $BBOX --region nga
+
+      - name: Step 1 - dry spells
+        run: cd "$W" && python "$CODE/2026-09-26.step1_dry_spell_extract_v07.py" --bbox $BBOX --region nga --workers 4 --io_workers 1
+
+      - name: Step 2 - seasons
+        run: cd "$W" && python "$CODE/2026-09-26.step2_dry_spell_seasons_v07.py" --bbox $BBOX --region nga --workers 4
+
+      - name: Step 3 - zoning
+        run: cd "$W" && python "$CODE/2026-09-26.step3_bbox_zoning_v07.py" --region nga --bbox $BBOX --name nga
+
+      - name: Step 4 - sowing date x crop x cycle (NGA)
+        run: |
+          cd "$W"
+          AEZ=""; [ -f aez/003_afr-aez_09.zip ] && AEZ="--aez aez/003_afr-aez_09.zip"
+          python "$CODE/2026-10-06.step4_sowing_date_stage_risk_v07.py" --region nga --iso3 NGA --workers 4 $AEZ
+
+      - name: Independent check of step 4
+        run: |
+          cd "$W"
+          for c in sorghum pearl_millet groundnut; do
+            python "$CODE/tests/check_step4.py" --region nga --iso3 NGA --crop $c --cells 6
+          done
+
+      - name: Summary
+        if: always()
+        run: |
+          cd "$W"
+          python - <<'EOF' >> "$GITHUB_STEP_SUMMARY" || true
+          import pandas as pd
+          s = pd.read_csv("dryspell_v7/nga/step4_NGA/aez_summary.csv")
+          n = s[s.aez == "ALL"]
+          print("## Nigeria, national (possible cells)\n")
+          cols = ["crop", "cycle", "sow", "pct_cells_impossible", "p_hit_window_mean", "most_hit_stage",
+                  "most_hit_stage_name", "most_hit_das_start", "most_hit_das_end", "most_hit_p", "window_stages"]
+          print("```\n" + n[cols].round(3).to_string(index=False) + "\n```")
+          EOF
+          tail -n 25 dryspell_v7/nga/step2/step2.log >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Collect small results
+        if: always()
+        run: |
+          R=dry_spell_v7/ci_results; rm -rf "$R"; mkdir -p "$R/png"
+          cd "$W/dryspell_v7/nga" || exit 0
+          cp step1/step1.log step2/step2.log step3_nga/step3.log step4_NGA/step4.log "$GITHUB_WORKSPACE/$R/" 2>/dev/null || true
+          cp step2/*.csv step3_nga/zone_summary_*.csv step4_NGA/*.csv "$GITHUB_WORKSPACE/$R/" 2>/dev/null || true
+          cp step4_NGA/png/*.png step2/png/onset_doy_median.png step2/png/season_len_median.png \
+             step2/png/nb_spells_median.png step1/diagnostics/bimodal_ratio.png "$GITHUB_WORKSPACE/$R/png/" 2>/dev/null || true
+          du -sh "$GITHUB_WORKSPACE/$R"
+
+      - name: Commit small results
+        if: always() && github.event_name == 'push'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dry_spell_v7/ci_results || true
+          git diff --cached --quiet && exit 0
+          git commit -m "ci: dry_spell_v7 Nigeria results [skip ci]"
+          for i in 1 2 3; do git pull --rebase origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && break; sleep 5; done
