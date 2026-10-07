@@ -21,6 +21,7 @@ Sections
   C. Time periods                 H. NDVI phenology and its use (regime refinement, demise)
   D. Dry spells                   I. Crops, stages, sowing dates, cycles (step 4)
   E. Data quality                 J. Spatial summaries (zones), figures, performance
+                                  K. Dry spells inside the season: maps, PDFs (step 6)
 """
 
 # =============================================================================
@@ -223,3 +224,19 @@ SUMMARY_ZONES = "aez8"
 SSA_NAME = "SSA"                 # folder of the aggregate (step 5)
 ROWS_PER_TASK = 8                # grid rows per worker task (steps 3-4)
 FIG_DPI = 170
+
+# =============================================================================
+# K. DRY SPELLS INSIDE THE SEASON: MAPS, PDFs, LATITUDE / ZONE SUMMARIES (step 6)
+# =============================================================================
+# Crop-independent statistics of every valid (major) season, as in v7: spells are clipped to the
+# window [onset + EXCLUDE_FIRST, demise - EXCLUDE_LAST] and kept if >= SPELL_STATS_MIN days long.
+SPELL_STATS_MIN = 10             # days (< DRY_MM each); must be >= STEP1_MIN_SPELL
+SPELL_STATS_EXCLUDE_FIRST = 10   # v7 default: ignore the first 10 days after onset (onset = day 0)
+SPELL_STATS_EXCLUDE_LAST = 10    # ... and the last 10 days before the demise
+SPELL_STATS_DEMISE = "rain"      # "rain": rainfall demise (spells are about the RAINY season);
+                                 # "adjusted": NDVI-adjusted demise (section H) - adds the dry-down
+SPELL_STATS_MIN_COND = 3         # a cell median of first / last / longest needs >= 3 seasons with it
+LAT_BAND_DEG = 1.0               # latitude bands of the tables and the latitude profile
+PDF_LAT_BAND_DEG = 2.0           # coarser bands for the PDF curves (one curve each)
+PDF_SMOOTH_DAYS = 3              # Gaussian smoothing (sd, days) of the PDF curves; 0 = raw histogram
+

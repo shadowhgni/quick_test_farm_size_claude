@@ -30,6 +30,7 @@ This version builds on v8: it starts from scratch with the same RADS-style onset
 | 3 | `v9_03_spells_seasons.py` | dry spells; regime (rain, then refined with NDVI); window of the major season; onset and demise per year; false start/demise flags; NDVI demise adjustment | `step03/` (spells, seasons, `grid_meta.nc`, diagnostics) |
 | 4 | `v9_04_sowing_risk.py` | for one target: feasibility, the longest dry spell inside each crop cycle, which stages it hits, and the vulnerable window | `step04/<name>/` |
 | 5 | `v9_05_aggregate.py` | pools every **country** folder of step 4 into `step04/SSA/` (bbox, polygon and point runs are ignored) | `step04/SSA/` |
+| 6 | `v9_06_spell_stats.py` | crop-independent dry spells inside each valid season: number, start and duration of the first, last and longest spell, dry share. Maps, probability density functions, and summaries by latitude band and by zone | `step06/<region or target>/` |
 | — | `run_all.py` | everything, resumable, with a country loop or a single target | `run_all.log`, `run_all_status.csv` |
 
 New columns and layers in step 3:
@@ -37,6 +38,36 @@ New columns and layers in step 3:
 * `grid_meta.nc`: `rain_regime`, `ndvi_n_seasons`, `false_start_share`, `false_demise_share`, `demise_shift_median`, `ndvi_eos_offset_median` (before clipping), `ndvi_eos_match_share`.
 
 The step 3 log prints how many cells hit the 30-day cap, so you can see whether `DEMISE_SHIFT_MAX` binds.
+
+## Step 6: dry spells inside the season (the v7 maps, plus PDFs)
+
+Settings are in `v9_config.py` section K. The defaults follow v7:
+* spells are at least 10 days long (< 1 mm per day);
+* the first and last 10 days of the season are ignored;
+* days are counted after the onset (onset = day 0);
+* the season ends at the **rainfall** demise, because the NDVI-adjusted demise would add the post-rain dry-down. Set `SPELL_STATS_DEMISE = "adjusted"` to use the adjusted demise instead.
+
+| Metric | Defined for | Map (per-cell median) |
+|---|---|---|
+| number of dry spells per season (plus mean, P(≥1), P(≥2)) | every season | `map_n_spells_median/mean`, `map_p_ge1`, `map_p_ge2` |
+| start and duration of the 1st spell | seasons with ≥ 1 spell | `map_first_start_median`, `map_first_len_median` |
+| start and duration of the last spell | seasons with ≥ 2 spells | `map_last_start_median`, `map_last_len_median` |
+| start and duration of the longest spell (ties go to the earliest) | seasons with ≥ 1 spell | `map_longest_start_median`, `map_longest_len_median` |
+| share of the season spent in dry spells | every season | `map_dry_frac_median` |
+
+A cell median needs at least `SPELL_STATS_MIN_COND` (3) seasons where the metric is defined. Every map also has a GeoTIFF (`cog/`) and a layer in `cells_spell_stats.nc`.
+
+Pooled over all seasons of the cells in a group:
+* `summary_by_zone.csv` gives the zones of `SUMMARY_ZONES` (AEZ8 by default, or `--zones koppen`), plus "ALL";
+* `summary_by_latitude.csv` gives latitude bands of `LAT_BAND_DEG` (1°);
+* both have the number of cells, seasons and seasons where the metric is defined, plus the mean, p10, p25, median, p75 and p90. The quantiles are exact, computed from 1-day histograms;
+* the histograms themselves are in `hist_by_*.csv`, so you can redraw the PDFs in R or elsewhere.
+
+Figures:
+* `png/pdf_<metric>.png`: PDFs by zone (the 8 largest zones, the rest grouped as "other zones") and by `PDF_LAT_BAND_DEG` (2°) latitude bands;
+* `png/latitude_profile.png`: median and interquartile range of every metric against latitude, with the mean added for the two metrics that are mostly 0.
+
+Step 6 runs on the whole region by default (`run_all` does this after step 5). Like step 4, it can also run on `--iso3`, `--bbox`, `--polygon` or `--point`. `tests/check_spell_stats.py` recomputes the spells from the raw CHIRPS cache for sampled cells and checks them against step 6.
 
 ## Running
 

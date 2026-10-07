@@ -53,6 +53,11 @@ def fingerprint(region, name="SSA"):
     out["pooled"] = ps[ps.zone == "ALL"][["crop", "cycle", "sow", "n_cells", "pct_cells_impossible",
                                          "p_hit_window_mean", "most_hit_stage", "most_hit_p"]] \
         .sort_values(["crop", "cycle", "sow"])
+    s6 = rdir / "step06" / region / "summary_by_zone.csv"
+    if s6.exists():
+        z = pd.read_csv(s6)
+        out["spells"] = z[z.zone == "ALL"][["metric", "n_seasons", "n_defined", "mean", "p25", "median", "p75"]] \
+            .sort_values("metric")
     return out
 
 
@@ -93,6 +98,9 @@ def main():
     ref = Path(a.reference) if a.reference else HERE / "reference" / a.region
     bad = 0
     for k, v in fp.items():
+        if not (ref / f"{k}.csv").exists():
+            print(f"{k:<10} not in the reference (older version) - skipped")
+            continue
         r = pd.read_csv(ref / f"{k}.csv")
         v = pd.read_csv(pd.io.common.StringIO(v.to_csv(index=False)))      # same dtypes as the reference
         d = compare(v, r)

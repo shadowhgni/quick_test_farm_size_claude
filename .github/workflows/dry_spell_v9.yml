@@ -61,7 +61,7 @@ jobs:
           echo '{"NOT_A_SETTING": 1}' > bad.json
           ! python "$CODE/run_all.py" --region ci_nga --config bad.json --dry_run 2>/dev/null
 
-      - name: run_all.py (steps 1-5, 5 countries)
+      - name: run_all.py (steps 1-6, 5 countries)
         run: |
           cd "$W"
           python "$CODE/run_all.py" --region ci_nga --countries NGA BEN NER CMR TCD \
@@ -97,6 +97,7 @@ jobs:
             python "$CODE/tests/check_sowing.py" --region ci_nga --iso3 NGA --crop $c --cells 6
           done
           python "$CODE/tests/check_aggregate.py" --region ci_nga
+          python "$CODE/tests/check_spell_stats.py" --region ci_nga --cells 15
 
       - name: Compare with the previous reference (information only)
         if: always()
@@ -132,10 +133,11 @@ jobs:
             mkdir -p "$R/$s" && cp $s/*.log "$R/$s/" 2>/dev/null || true
             cp $s/diagnostics/*.png "$R/$s/" 2>/dev/null || true
           done
-          for d in step04/*/; do
-            n=$(basename "$d"); mkdir -p "$R/step04/$n"
-            cp "$d"/*.csv "$d"/*.json "$d"/*.log "$R/step04/$n/" 2>/dev/null || true
-            [ -d "$d/png" ] && cp -r "$d/png" "$R/step04/$n/"
+          for d in step04/*/ step06/*/; do
+            n="${d%/}"; mkdir -p "$R/$n"
+            cp "$d"/*.json "$d"/*.log "$R/$n/" 2>/dev/null || true
+            for f in "$d"/*.csv; do [ -f "$f" ] && [ "$(stat -c%s "$f")" -lt 3000000 ] && cp "$f" "$R/$n/"; done
+            [ -d "$d/png" ] && cp -r "$d/png" "$R/$n/"
           done
           du -sh "$R"
 

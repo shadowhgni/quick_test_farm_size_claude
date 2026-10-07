@@ -10,6 +10,9 @@ run_all.py - the whole v9 dry-spell workflow, from scratch
   step 4  v9_04_sowing_risk.py      ONE RUN PER COUNTRY -> dryspell_v9/<region>/step04/<ISO3>/
                                     or ONE target: --target_bbox / --target_polygon / --target_point
   step 5  v9_05_aggregate.py        all countries -> dryspell_v9/<region>/step04/<SSA_NAME>/
+  step 6  v9_06_spell_stats.py      dry spells inside the season (number, first / last / longest start
+                                    and duration): maps, PDFs, summaries by latitude and zone, for the
+                                    whole region (or the single target) -> step06/<region or target>/
 
 Settings: v9_config.py; --config my_settings.json overrides any of them for every step
 (e.g. {"FALSE_START_EXCLUDE": true, "SUMMARY_ZONES": "koppen", "DEMISE_ADJUST": "none"}).
@@ -60,7 +63,8 @@ sys.path.insert(0, str(HERE))
 import v9_common as C   # noqa: E402
 
 SCRIPTS = {1: HERE / "v9_01_download.py", 2: HERE / "v9_02_ndvi_phenology.py",
-           3: HERE / "v9_03_spells_seasons.py", 4: HERE / "v9_04_sowing_risk.py", 5: HERE / "v9_05_aggregate.py"}
+           3: HERE / "v9_03_spells_seasons.py", 4: HERE / "v9_04_sowing_risk.py", 5: HERE / "v9_05_aggregate.py",
+           6: HERE / "v9_06_spell_stats.py"}
 SKIP_EXIT = 3      # step 4: nothing to analyse in this country / target
 
 # Sub-Saharan Africa (UN M49), ISO 3166-1 alpha-3. SOL = Somaliland, drawn by Natural Earth as a
@@ -108,11 +112,11 @@ def main():
     ap.add_argument("--region", default="ssa", help=f"one of {list(C.REGIONS)} or a new name with --bbox")
     ap.add_argument("--bbox", nargs=4, type=float, metavar=("LON_MIN", "LAT_MIN", "LON_MAX", "LAT_MAX"),
                     help="extent of a NEW region (data download + steps 2-3)")
-    ap.add_argument("--steps", nargs="+", type=int, default=[1, 2, 3, 4, 5], choices=[1, 2, 3, 4, 5])
+    ap.add_argument("--steps", nargs="+", type=int, default=[1, 2, 3, 4, 5, 6], choices=[1, 2, 3, 4, 5, 6])
     ap.add_argument("--countries", nargs="+", default=None, help="ISO3 codes (default: all SSA countries in the region)")
     tg = ap.add_mutually_exclusive_group()
     tg.add_argument("--target_bbox", nargs=4, type=float, metavar=("W", "S", "E", "N"),
-                    help="step 4 for this box only (no country loop, no step 5)")
+                    help="steps 4 and 6 for this box only (no country loop, no step 5)")
     tg.add_argument("--target_polygon", default=None, help="step 4 for this polygon file only")
     tg.add_argument("--target_point", nargs=2, type=float, metavar=("LAT", "LON"), help="step 4 for one cell")
     ap.add_argument("--polygon_field", default=None)
@@ -122,6 +126,7 @@ def main():
     ap.add_argument("--threads", type=int, default=32, help="parallel downloads in step 1")
     ap.add_argument("--country_jobs", type=int, default=1, help="countries run at the same time in step 4")
     ap.add_argument("--step4_args", default="", help='extra step 4 options, e.g. "--grace 10 --zones koppen"')
+    ap.add_argument("--step6_args", default="", help='extra step 6 options, e.g. "--zones koppen"')
     ap.add_argument("--name", default=C.SSA_NAME, help="step 5 output folder (step04/<name>)")
     ap.add_argument("--resume", action="store_true", help="skip work that is already done")
     ap.add_argument("--dry_run", action="store_true", help="print the plan and exit")
@@ -137,6 +142,15 @@ def main():
     py = sys.executable
     reg = ["--region", name] + (["--bbox", *map(str, a.bbox)] if a.bbox else [])
     single = a.target_bbox or a.target_polygon or a.target_point
+    target_args = []
+    if a.target_bbox:
+        target_args = ["--bbox", *a.target_bbox]
+    elif a.target_polygon:
+        target_args = ["--polygon", a.target_polygon]
+        if a.polygon_field:
+            target_args += ["--polygon_field", a.polygon_field, "--polygon_value", a.polygon_value]
+    elif a.target_point:
+        target_args = ["--point", *a.target_point]
     steps = [s for s in a.steps if not (s == 2 and not C.USE_NDVI) and not (s == 5 and single)]
     status = []
     t_all = time.time()
@@ -204,15 +218,7 @@ def main():
 
     # ---------------------------------------------------------------- step 4
     if 4 in steps and single:
-        cmd = [py, SCRIPTS[4], "--region", name, "--workers", a.workers]
-        if a.target_bbox:
-            cmd += ["--bbox", *a.target_bbox]
-        elif a.target_polygon:
-            cmd += ["--polygon", a.target_polygon]
-            if a.polygon_field:
-                cmd += ["--polygon_field", a.polygon_field, "--polygon_value", a.polygon_value]
-        else:
-            cmd += ["--point", *a.target_point]
+        cmd = [py, SCRIPTS[4], "--region", name, "--workers", a.workers, *target_args]
         if a.target_name:
             cmd += ["--name", a.target_name]
         cmd += shlex.split(a.step4_args)
@@ -275,6 +281,19 @@ def main():
                 logger.error(f"step 5 FAILED (exit {rc}):\n{tail(logs / 'step5.log')}")
             else:
                 logger.info(f"step 5: done in {mins} min -> {rdir / 'step04' / a.name}")
+
+    # ---------------------------------------------------------------- step 6
+    if 6 in steps:
+        cmd = [py, SCRIPTS[6], "--region", name, "--workers", a.workers] + shlex.split(a.step6_args)
+        if single:
+            cmd += [str(x) for x in target_args] + (["--name", a.target_name] if a.target_name else [])
+        logger.info(f"step 6: {' '.join(map(str, cmd[1:]))}")
+        if not a.dry_run:
+            rc, mins = run(cmd, logs / "step6.log")
+            state = {0: "ok", SKIP_EXIT: "skipped"}.get(rc, "failed")
+            record(6, a.target_name or ("target" if single else name), rc, mins, state)
+            (logger.error if state == "failed" else logger.info)(
+                f"step 6: {state} in {mins} min\n{tail(logs / 'step6.log', 3)}")
 
     logger.info(f"run_all finished in {(time.time() - t_all) / 60:.1f} min - status: {rdir / 'run_all_status.csv'}")
     if any(s["status"] == "failed" for s in status):
