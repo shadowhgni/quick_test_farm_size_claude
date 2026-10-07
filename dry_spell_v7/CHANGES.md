@@ -38,6 +38,12 @@ What to check before trusting the numbers:
   - Download `003_afr-aez_09.zip` (an ESRI ASCII grid, 0.00833° ≈ 1 km) and pass the zip directly: `--aez path/003_afr-aez_09.zip`.
   - Class codes such as 311–314 (Tropic-warm arid → humid) and 321–324 (Tropic-cool) are labelled automatically.
   - The map is resampled to the 0.05° grid by taking the most common class in each cell.
+  - **The downloaded `afr_aez09.asc` is damaged** (checked on the file from Dataverse):
+    - Its rows wrap over several lines.
+    - It holds 275 fewer values than its header says.
+    - About 1.8 MB of binary garbage sits at grid rows 4166–4203 (≈ 3.8–3.5°N, in the Gulf of Guinea).
+
+    GDAL refuses to read it ("File short"), so step 4 parses ASCII grids itself. It keeps everything before the first bad byte and treats the rest as no-data, with a warning in the log. Nigeria (north of 4.3°N) lies entirely in the clean part. For a country south of 3.8°N, the map would come out empty; ask IFPRI for a clean copy or use another layer.
   - Another class raster also works, e.g. FAO/IIASA GAEZ v4 "Dominant AEZ, 33 classes". Add `--aez_legend codes.csv` (code,label) for its labels.
   - Without `--aez`, the summary falls back to rainfall bands, labelled as a proxy.
 - **Grace period**: the default is now 10 days (`--grace`): maturity may fall up to 10 days after RADS demise. Use `--grace 0` for the strict version. During those days the crop is in the early dry season, so late stages are more likely to be hit.

@@ -123,16 +123,6 @@ jobs:
              step2/png/nb_spells_median.png step1/diagnostics/bimodal_ratio.png "$GITHUB_WORKSPACE/$R/png/" 2>/dev/null || true
           du -sh "$GITHUB_WORKSPACE/$R"
 
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: dry-spell-v7-nga
-          path: |
-            dry_spell_v7/ci_results
-            work/dryspell_v7/nga/step4_NGA/*.parquet
-            work/dryspell_v7/nga/step4_NGA/*.nc
-          retention-days: 14
-
       - name: Commit small results
         if: always() && github.event_name == 'push'
         run: |

@@ -392,6 +392,80 @@ def _read_legend(path):
     return {int(c): str(l) for c, l in zip(d.iloc[:, 0], d.iloc[:, 1])}
 
 
+def _read_ascii_grid(raw, bounds, margin=0.5):
+    """
+    ESRI ASCII grid (bytes) -> (array, transform, nodata) cropped to bounds + margin.
+    Parsed here instead of by GDAL because real files are not always regular: the
+    HarvestChoice Africa AEZ grid wraps rows over several lines and holds 275 values
+    fewer than its header says, which GDAL rejects ("File short").
+    """
+    from rasterio.transform import from_origin
+    lines = raw.split(b"\n", 6)
+    hdr = {}
+    for ln in lines[:6]:
+        k, v = ln.split()[:2]
+        hdr[k.decode().lower()] = float(v)
+    nc, nr, cs = int(hdr["ncols"]), int(hdr["nrows"]), hdr["cellsize"]
+    x0 = hdr.get("xllcorner", hdr.get("xllcenter", 0) - cs / 2)
+    y0 = hdr.get("yllcorner", hdr.get("yllcenter", 0) - cs / 2)
+    nod = hdr.get("nodata_value", -9999)
+    body = lines[6]
+    del raw, lines
+    import re
+    bad = re.search(rb"[^0-9eE+\-.\s]", body)
+    if bad:
+        # corrupted bytes: keep only the clean part before them (cut at the last separator so a
+        # half-written number is dropped); everything after becomes no-data - the token count
+        # after a corrupted block cannot be trusted
+        cut = max(body.rfind(b" ", 0, bad.start()), body.rfind(b"\n", 0, bad.start()))
+        body = body[:max(cut, 0)]
+    vals = np.fromstring(body.decode("ascii"), dtype=np.int32, sep=" ")   # any whitespace separates
+    del body
+    n = nr * nc
+    if bad:
+        r_ok = vals.size // nc
+        logger.warning(f"ASCII grid is corrupted from row {r_ok} (lat ~{y0 + (nr - r_ok) * cs:.2f}); "
+                       f"rows from there on are treated as no-data")
+    elif vals.size != n:
+        logger.warning(f"ASCII grid holds {vals.size:,} values, header says {n:,} - "
+                       f"{'padding the end with no-data' if vals.size < n else 'ignoring the excess'}")
+    vals = np.r_[vals, np.full(max(0, n - vals.size), int(nod), np.int32)][:n]
+    a = vals.reshape(nr, nc)
+    top = y0 + nr * cs
+    c0 = max(0, int(np.floor((bounds[0] - margin - x0) / cs)))
+    c1 = min(nc, int(np.ceil((bounds[2] + margin - x0) / cs)))
+    r0 = max(0, int(np.floor((top - bounds[3] - margin) / cs)))
+    r1 = min(nr, int(np.ceil((top - bounds[1] + margin) / cs)))
+    if c0 >= c1 or r0 >= r1:
+        sys.exit("AEZ grid does not cover the country")
+    return a[r0:r1, c0:c1].copy(), from_origin(x0 + c0 * cs, top - r0 * cs, cs, cs), nod
+
+
+def _read_class_raster(p, bounds):
+    """Class raster (file or first raster inside a .zip) -> (array, transform, crs, nodata, label)."""
+    import rasterio
+    from rasterio.windows import from_bounds
+    uri = _raster_uri(p)
+    name = uri.split("!")[-1]
+    if name.lower().endswith(".asc") or (p.suffix.lower() == ".asc"):
+        if uri.startswith("zip://"):
+            import zipfile
+            with zipfile.ZipFile(p) as z:
+                raw = z.read(name)
+        else:
+            raw = p.read_bytes()
+        a, tr, nod = _read_ascii_grid(raw, bounds)
+        return a, tr, "EPSG:4326", nod, uri                  # ESRI .asc usually ships without CRS
+    with rasterio.open(uri) as src:
+        crs = src.crs or "EPSG:4326"
+        if crs == "EPSG:4326" or (hasattr(crs, "to_epsg") and crs.to_epsg() == 4326):
+            w = from_bounds(bounds[0] - 0.5, bounds[1] - 0.5, bounds[2] + 0.5, bounds[3] + 0.5,
+                            transform=src.transform).round_offsets().round_lengths()
+            w = w.intersection(rasterio.windows.Window(0, 0, src.width, src.height))
+            return src.read(1, window=w), src.window_transform(w), crs, src.nodata, uri
+        return src.read(1), src.transform, crs, src.nodata, uri
+
+
 def load_aez(path, field, lon, lat, mean_rain, cmask, legend=None):
     """Return (codes int16 grid, {code: label}, source description)."""
     if path is None:
@@ -407,18 +481,14 @@ def load_aez(path, field, lon, lat, mean_rain, cmask, legend=None):
     p = Path(path)
     if p.suffix.lower() in RASTER_EXT:
         # class raster -> step grid by MAJORITY (mode) of the source pixels in each 0.05 deg cell
-        import rasterio
         from rasterio.warp import reproject, Resampling
-        uri = _raster_uri(p)
-        with rasterio.open(uri) as src:
-            band = src.read(1)
-            nod = src.nodata
-            src_crs = src.crs or "EPSG:4326"          # ESRI .asc often ships without CRS
-            dst = np.full((len(lat), len(lon)), -1, dtype=np.int32)
-            reproject(band.astype(np.int32), dst, src_transform=src.transform, src_crs=src_crs,
-                      src_nodata=(int(nod) if nod is not None and np.isfinite(nod) else -9999),
-                      dst_transform=C.grid_transform(lon, lat), dst_crs="EPSG:4326",
-                      dst_nodata=-1, resampling=Resampling.mode)
+        bounds = (lon.min(), lat.min(), lon.max(), lat.max())
+        band, src_tr, src_crs, nod, uri = _read_class_raster(p, bounds)
+        dst = np.full((len(lat), len(lon)), -1, dtype=np.int32)
+        reproject(band.astype(np.int32), dst, src_transform=src_tr, src_crs=src_crs,
+                  src_nodata=(int(nod) if nod is not None and np.isfinite(nod) else -9999),
+                  dst_transform=C.grid_transform(lon, lat), dst_crs="EPSG:4326",
+                  dst_nodata=-1, resampling=Resampling.mode)
         codes = dst[::-1]                              # north-up -> ascending lat
         codes = np.where(cmask & (codes > 0), codes, -1).astype(np.int16)
         present = [int(c) for c in np.unique(codes) if c >= 0]

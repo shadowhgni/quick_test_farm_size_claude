@@ -40,4 +40,4 @@ On every push to `claude/**` that touches this folder, the workflow runs steps 1
 - **RADS (rebuilt, not the official files):** `tests/make_rads_from_chirps.py` rebuilds RADS-style onset and demise from that CHIRPS, using the first pass of the RADS algorithm on pentads, including the bimodal harmonic mask. The official RADS files are only shared through a Dropbox folder, which CI cannot list.
 - **Boundaries and AEZ (real):** Natural Earth boundaries and the HarvestChoice AEZ zip are downloaded.
 - **Independent check:** `tests/check_step4.py` recomputes step 4 with plain loops for sampled cells and fails the job on any mismatch.
-- **Results:** small results (CSV tables, logs, PNGs) are committed to `ci_results/`. The NetCDF and Parquet outputs are uploaded as a run artifact instead.
+- **Results:** small results (CSV tables, logs, PNGs) are committed to `ci_results/`. The NetCDF and Parquet outputs are not kept (the account's artifact storage quota is full).
