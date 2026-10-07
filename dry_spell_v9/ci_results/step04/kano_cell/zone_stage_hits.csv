@@ -5,18 +5,32 @@ kano_cell,aez8,sorghum,70,20,unassigned,SOW,0.0,1,0,sowing to emergence,0,2,Fals
 kano_cell,aez8,sorghum,70,30,unassigned,SOW,0.0,1,0,sowing to emergence,0,2,False
 kano_cell,aez8,sorghum,70,40,unassigned,SOW,0.0,1,0,sowing to emergence,0,2,False
 kano_cell,aez8,sorghum,90,0,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
-kano_cell,aez8,sorghum,90,10,unassigned,SOW,0.023809524,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,90,10,unassigned,SOW,0.023255814,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,sorghum,90,20,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,90,30,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,90,40,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,sorghum,110,0,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,110,10,unassigned,SOW,0.023255814,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,110,20,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,110,30,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,130,0,unassigned,SOW,0.0,1,0,sowing to emergence,0,4,False
+kano_cell,aez8,sorghum,130,10,unassigned,SOW,0.029411765,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,sorghum,70,0,unassigned,S0,0.023255814,1,1,emergence,3,9,False
 kano_cell,aez8,sorghum,70,10,unassigned,S0,0.023255814,1,1,emergence,3,9,False
 kano_cell,aez8,sorghum,70,20,unassigned,S0,0.0,1,1,emergence,3,9,False
 kano_cell,aez8,sorghum,70,30,unassigned,S0,0.0,1,1,emergence,3,9,False
 kano_cell,aez8,sorghum,70,40,unassigned,S0,0.0,1,1,emergence,3,9,False
 kano_cell,aez8,sorghum,90,0,unassigned,S0,0.046511628,1,1,emergence,4,12,False
-kano_cell,aez8,sorghum,90,10,unassigned,S0,0.023809524,1,1,emergence,4,12,False
+kano_cell,aez8,sorghum,90,10,unassigned,S0,0.023255814,1,1,emergence,4,12,False
 kano_cell,aez8,sorghum,90,20,unassigned,S0,0.0,1,1,emergence,4,12,False
-kano_cell,aez8,sorghum,110,0,unassigned,S0,0.05882353,1,1,emergence,4,14,False
+kano_cell,aez8,sorghum,90,30,unassigned,S0,0.0,1,1,emergence,4,12,False
+kano_cell,aez8,sorghum,90,40,unassigned,S0,0.0,1,1,emergence,4,12,False
+kano_cell,aez8,sorghum,110,0,unassigned,S0,0.046511628,1,1,emergence,4,14,False
+kano_cell,aez8,sorghum,110,10,unassigned,S0,0.023255814,1,1,emergence,4,14,False
+kano_cell,aez8,sorghum,110,20,unassigned,S0,0.0,1,1,emergence,4,14,False
+kano_cell,aez8,sorghum,110,30,unassigned,S0,0.0,1,1,emergence,4,14,False
+kano_cell,aez8,sorghum,130,0,unassigned,S0,0.04761905,1,1,emergence,5,17,False
+kano_cell,aez8,sorghum,130,10,unassigned,S0,0.029411765,1,1,emergence,5,17,False
 kano_cell,aez8,sorghum,70,0,unassigned,S1,0.046511628,1,2,3-leaf,10,16,False
 kano_cell,aez8,sorghum,70,10,unassigned,S1,0.023255814,1,2,3-leaf,10,16,False
 kano_cell,aez8,sorghum,70,20,unassigned,S1,0.0,1,2,3-leaf,10,16,False
@@ -25,7 +39,14 @@ kano_cell,aez8,sorghum,70,40,unassigned,S1,0.0,1,2,3-leaf,10,16,False
 kano_cell,aez8,sorghum,90,0,unassigned,S1,0.046511628,1,2,3-leaf,13,21,False
 kano_cell,aez8,sorghum,90,10,unassigned,S1,0.0,1,2,3-leaf,13,21,False
 kano_cell,aez8,sorghum,90,20,unassigned,S1,0.0,1,2,3-leaf,13,21,False
-kano_cell,aez8,sorghum,110,0,unassigned,S1,0.05882353,1,2,3-leaf,15,25,False
+kano_cell,aez8,sorghum,90,30,unassigned,S1,0.0,1,2,3-leaf,13,21,False
+kano_cell,aez8,sorghum,90,40,unassigned,S1,0.0,1,2,3-leaf,13,21,False
+kano_cell,aez8,sorghum,110,0,unassigned,S1,0.046511628,1,2,3-leaf,15,25,False
+kano_cell,aez8,sorghum,110,10,unassigned,S1,0.0,1,2,3-leaf,15,25,False
+kano_cell,aez8,sorghum,110,20,unassigned,S1,0.0,1,2,3-leaf,15,25,False
+kano_cell,aez8,sorghum,110,30,unassigned,S1,0.0,1,2,3-leaf,15,25,False
+kano_cell,aez8,sorghum,130,0,unassigned,S1,0.04761905,1,2,3-leaf,18,30,False
+kano_cell,aez8,sorghum,130,10,unassigned,S1,0.0,1,2,3-leaf,18,30,False
 kano_cell,aez8,sorghum,70,0,unassigned,S2,0.046511628,1,3,5-leaf,17,23,False
 kano_cell,aez8,sorghum,70,10,unassigned,S2,0.0,1,3,5-leaf,17,23,False
 kano_cell,aez8,sorghum,70,20,unassigned,S2,0.0,1,3,5-leaf,17,23,False
@@ -34,7 +55,14 @@ kano_cell,aez8,sorghum,70,40,unassigned,S2,0.0,1,3,5-leaf,17,23,False
 kano_cell,aez8,sorghum,90,0,unassigned,S2,0.023255814,1,3,5-leaf,22,30,False
 kano_cell,aez8,sorghum,90,10,unassigned,S2,0.0,1,3,5-leaf,22,30,False
 kano_cell,aez8,sorghum,90,20,unassigned,S2,0.0,1,3,5-leaf,22,30,False
+kano_cell,aez8,sorghum,90,30,unassigned,S2,0.0,1,3,5-leaf,22,30,False
+kano_cell,aez8,sorghum,90,40,unassigned,S2,0.0,1,3,5-leaf,22,30,False
 kano_cell,aez8,sorghum,110,0,unassigned,S2,0.0,1,3,5-leaf,26,36,False
+kano_cell,aez8,sorghum,110,10,unassigned,S2,0.0,1,3,5-leaf,26,36,False
+kano_cell,aez8,sorghum,110,20,unassigned,S2,0.0,1,3,5-leaf,26,36,False
+kano_cell,aez8,sorghum,110,30,unassigned,S2,0.0,1,3,5-leaf,26,36,False
+kano_cell,aez8,sorghum,130,0,unassigned,S2,0.0,1,3,5-leaf,31,43,False
+kano_cell,aez8,sorghum,130,10,unassigned,S2,0.0,1,3,5-leaf,31,43,False
 kano_cell,aez8,sorghum,70,0,unassigned,S3,0.0,1,4,growing point differentiation,24,30,False
 kano_cell,aez8,sorghum,70,10,unassigned,S3,0.0,1,4,growing point differentiation,24,30,False
 kano_cell,aez8,sorghum,70,20,unassigned,S3,0.0,1,4,growing point differentiation,24,30,False
@@ -43,7 +71,14 @@ kano_cell,aez8,sorghum,70,40,unassigned,S3,0.0,1,4,growing point differentiation
 kano_cell,aez8,sorghum,90,0,unassigned,S3,0.0,1,4,growing point differentiation,31,39,False
 kano_cell,aez8,sorghum,90,10,unassigned,S3,0.0,1,4,growing point differentiation,31,39,False
 kano_cell,aez8,sorghum,90,20,unassigned,S3,0.0,1,4,growing point differentiation,31,39,False
+kano_cell,aez8,sorghum,90,30,unassigned,S3,0.0,1,4,growing point differentiation,31,39,False
+kano_cell,aez8,sorghum,90,40,unassigned,S3,0.0,1,4,growing point differentiation,31,39,False
 kano_cell,aez8,sorghum,110,0,unassigned,S3,0.0,1,4,growing point differentiation,37,47,False
+kano_cell,aez8,sorghum,110,10,unassigned,S3,0.0,1,4,growing point differentiation,37,47,False
+kano_cell,aez8,sorghum,110,20,unassigned,S3,0.0,1,4,growing point differentiation,37,47,False
+kano_cell,aez8,sorghum,110,30,unassigned,S3,0.0,1,4,growing point differentiation,37,47,False
+kano_cell,aez8,sorghum,130,0,unassigned,S3,0.0,1,4,growing point differentiation,44,56,False
+kano_cell,aez8,sorghum,130,10,unassigned,S3,0.0,1,4,growing point differentiation,44,56,False
 kano_cell,aez8,sorghum,70,0,unassigned,S4,0.0,1,5,flag leaf visible,31,37,True
 kano_cell,aez8,sorghum,70,10,unassigned,S4,0.0,1,5,flag leaf visible,31,37,True
 kano_cell,aez8,sorghum,70,20,unassigned,S4,0.0,1,5,flag leaf visible,31,37,True
@@ -52,61 +87,110 @@ kano_cell,aez8,sorghum,70,40,unassigned,S4,0.0,1,5,flag leaf visible,31,37,True
 kano_cell,aez8,sorghum,90,0,unassigned,S4,0.0,1,5,flag leaf visible,40,49,True
 kano_cell,aez8,sorghum,90,10,unassigned,S4,0.0,1,5,flag leaf visible,40,49,True
 kano_cell,aez8,sorghum,90,20,unassigned,S4,0.0,1,5,flag leaf visible,40,49,True
+kano_cell,aez8,sorghum,90,30,unassigned,S4,0.0,1,5,flag leaf visible,40,49,True
+kano_cell,aez8,sorghum,90,40,unassigned,S4,0.023809524,1,5,flag leaf visible,40,49,True
 kano_cell,aez8,sorghum,110,0,unassigned,S4,0.0,1,5,flag leaf visible,48,60,True
+kano_cell,aez8,sorghum,110,10,unassigned,S4,0.0,1,5,flag leaf visible,48,60,True
+kano_cell,aez8,sorghum,110,20,unassigned,S4,0.0,1,5,flag leaf visible,48,60,True
+kano_cell,aez8,sorghum,110,30,unassigned,S4,0.029411765,1,5,flag leaf visible,48,60,True
+kano_cell,aez8,sorghum,130,0,unassigned,S4,0.0,1,5,flag leaf visible,57,71,True
+kano_cell,aez8,sorghum,130,10,unassigned,S4,0.0,1,5,flag leaf visible,57,71,True
 kano_cell,aez8,sorghum,70,0,unassigned,S5,0.0,1,6,boot,38,45,True
 kano_cell,aez8,sorghum,70,10,unassigned,S5,0.0,1,6,boot,38,45,True
 kano_cell,aez8,sorghum,70,20,unassigned,S5,0.0,1,6,boot,38,45,True
 kano_cell,aez8,sorghum,70,30,unassigned,S5,0.0,1,6,boot,38,45,True
-kano_cell,aez8,sorghum,70,40,unassigned,S5,0.029411765,1,6,boot,38,45,True
+kano_cell,aez8,sorghum,70,40,unassigned,S5,0.023255814,1,6,boot,38,45,True
 kano_cell,aez8,sorghum,90,0,unassigned,S5,0.0,1,6,boot,50,57,True
 kano_cell,aez8,sorghum,90,10,unassigned,S5,0.0,1,6,boot,50,57,True
 kano_cell,aez8,sorghum,90,20,unassigned,S5,0.0,1,6,boot,50,57,True
+kano_cell,aez8,sorghum,90,30,unassigned,S5,0.023255814,1,6,boot,50,57,True
+kano_cell,aez8,sorghum,90,40,unassigned,S5,0.023809524,1,6,boot,50,57,True
 kano_cell,aez8,sorghum,110,0,unassigned,S5,0.0,1,6,boot,61,71,True
+kano_cell,aez8,sorghum,110,10,unassigned,S5,0.0,1,6,boot,61,71,True
+kano_cell,aez8,sorghum,110,20,unassigned,S5,0.023809524,1,6,boot,61,71,True
+kano_cell,aez8,sorghum,110,30,unassigned,S5,0.029411765,1,6,boot,61,71,True
+kano_cell,aez8,sorghum,130,0,unassigned,S5,0.023809524,1,6,boot,72,83,True
+kano_cell,aez8,sorghum,130,10,unassigned,S5,0.029411765,1,6,boot,72,83,True
 kano_cell,aez8,sorghum,70,0,unassigned,S6,0.0,1,7,half-bloom,46,51,True
 kano_cell,aez8,sorghum,70,10,unassigned,S6,0.0,1,7,half-bloom,46,51,True
 kano_cell,aez8,sorghum,70,20,unassigned,S6,0.0,1,7,half-bloom,46,51,True
 kano_cell,aez8,sorghum,70,30,unassigned,S6,0.0,1,7,half-bloom,46,51,True
-kano_cell,aez8,sorghum,70,40,unassigned,S6,0.029411765,1,7,half-bloom,46,51,True
+kano_cell,aez8,sorghum,70,40,unassigned,S6,0.023255814,1,7,half-bloom,46,51,True
 kano_cell,aez8,sorghum,90,0,unassigned,S6,0.0,1,7,half-bloom,58,67,True
 kano_cell,aez8,sorghum,90,10,unassigned,S6,0.0,1,7,half-bloom,58,67,True
-kano_cell,aez8,sorghum,90,20,unassigned,S6,0.029411765,1,7,half-bloom,58,67,True
+kano_cell,aez8,sorghum,90,20,unassigned,S6,0.023255814,1,7,half-bloom,58,67,True
+kano_cell,aez8,sorghum,90,30,unassigned,S6,0.046511628,1,7,half-bloom,58,67,True
+kano_cell,aez8,sorghum,90,40,unassigned,S6,0.023809524,1,7,half-bloom,58,67,True
 kano_cell,aez8,sorghum,110,0,unassigned,S6,0.0,1,7,half-bloom,72,81,True
+kano_cell,aez8,sorghum,110,10,unassigned,S6,0.023255814,1,7,half-bloom,72,81,True
+kano_cell,aez8,sorghum,110,20,unassigned,S6,0.023809524,1,7,half-bloom,72,81,True
+kano_cell,aez8,sorghum,110,30,unassigned,S6,0.029411765,1,7,half-bloom,72,81,True
+kano_cell,aez8,sorghum,130,0,unassigned,S6,0.023809524,1,7,half-bloom,84,97,True
+kano_cell,aez8,sorghum,130,10,unassigned,S6,0.029411765,1,7,half-bloom,84,97,True
 kano_cell,aez8,sorghum,70,0,unassigned,S7,0.0,1,8,soft dough,52,62,True
 kano_cell,aez8,sorghum,70,10,unassigned,S7,0.0,1,8,soft dough,52,62,True
 kano_cell,aez8,sorghum,70,20,unassigned,S7,0.0,1,8,soft dough,52,62,True
-kano_cell,aez8,sorghum,70,30,unassigned,S7,0.023809524,1,8,soft dough,52,62,True
-kano_cell,aez8,sorghum,70,40,unassigned,S7,0.029411765,1,8,soft dough,52,62,True
+kano_cell,aez8,sorghum,70,30,unassigned,S7,0.023255814,1,8,soft dough,52,62,True
+kano_cell,aez8,sorghum,70,40,unassigned,S7,0.046511628,1,8,soft dough,52,62,True
 kano_cell,aez8,sorghum,90,0,unassigned,S7,0.0,1,8,soft dough,68,80,True
-kano_cell,aez8,sorghum,90,10,unassigned,S7,0.023809524,1,8,soft dough,68,80,True
-kano_cell,aez8,sorghum,90,20,unassigned,S7,0.029411765,1,8,soft dough,68,80,True
-kano_cell,aez8,sorghum,110,0,unassigned,S7,0.029411765,1,8,soft dough,82,98,True
+kano_cell,aez8,sorghum,90,10,unassigned,S7,0.023255814,1,8,soft dough,68,80,True
+kano_cell,aez8,sorghum,90,20,unassigned,S7,0.046511628,1,8,soft dough,68,80,True
+kano_cell,aez8,sorghum,90,30,unassigned,S7,0.069767445,1,8,soft dough,68,80,True
+kano_cell,aez8,sorghum,90,40,unassigned,S7,0.26190478,1,8,soft dough,68,80,True
+kano_cell,aez8,sorghum,110,0,unassigned,S7,0.046511628,1,8,soft dough,82,98,True
+kano_cell,aez8,sorghum,110,10,unassigned,S7,0.093023255,1,8,soft dough,82,98,True
+kano_cell,aez8,sorghum,110,20,unassigned,S7,0.21428572,1,8,soft dough,82,98,True
+kano_cell,aez8,sorghum,110,30,unassigned,S7,0.4117647,1,8,soft dough,82,98,True
+kano_cell,aez8,sorghum,130,0,unassigned,S7,0.1904762,1,8,soft dough,98,116,True
+kano_cell,aez8,sorghum,130,10,unassigned,S7,0.29411766,1,8,soft dough,98,116,True
 kano_cell,aez8,sorghum,70,0,unassigned,S8,0.0,1,9,hard dough,63,69,False
 kano_cell,aez8,sorghum,70,10,unassigned,S8,0.0,1,9,hard dough,63,69,False
 kano_cell,aez8,sorghum,70,20,unassigned,S8,0.0,1,9,hard dough,63,69,False
 kano_cell,aez8,sorghum,70,30,unassigned,S8,0.0,1,9,hard dough,63,69,False
-kano_cell,aez8,sorghum,70,40,unassigned,S8,0.0,1,9,hard dough,63,69,False
+kano_cell,aez8,sorghum,70,40,unassigned,S8,0.023255814,1,9,hard dough,63,69,False
 kano_cell,aez8,sorghum,90,0,unassigned,S8,0.0,1,9,hard dough,81,89,False
-kano_cell,aez8,sorghum,90,10,unassigned,S8,0.023809524,1,9,hard dough,81,89,False
-kano_cell,aez8,sorghum,90,20,unassigned,S8,0.0,1,9,hard dough,81,89,False
-kano_cell,aez8,sorghum,110,0,unassigned,S8,0.0,1,9,hard dough,99,109,False
+kano_cell,aez8,sorghum,90,10,unassigned,S8,0.023255814,1,9,hard dough,81,89,False
+kano_cell,aez8,sorghum,90,20,unassigned,S8,0.023255814,1,9,hard dough,81,89,False
+kano_cell,aez8,sorghum,90,30,unassigned,S8,0.046511628,1,9,hard dough,81,89,False
+kano_cell,aez8,sorghum,90,40,unassigned,S8,0.23809524,1,9,hard dough,81,89,False
+kano_cell,aez8,sorghum,110,0,unassigned,S8,0.023255814,1,9,hard dough,99,109,False
+kano_cell,aez8,sorghum,110,10,unassigned,S8,0.069767445,1,9,hard dough,99,109,False
+kano_cell,aez8,sorghum,110,20,unassigned,S8,0.23809524,1,9,hard dough,99,109,False
+kano_cell,aez8,sorghum,110,30,unassigned,S8,0.4117647,1,9,hard dough,99,109,False
+kano_cell,aez8,sorghum,130,0,unassigned,S8,0.23809524,1,9,hard dough,117,129,False
+kano_cell,aez8,sorghum,130,10,unassigned,S8,0.4117647,1,9,hard dough,117,129,False
 kano_cell,aez8,sorghum,70,0,ALL,SOW,0.0,1,0,sowing to emergence,0,2,False
 kano_cell,aez8,sorghum,70,10,ALL,SOW,0.023255814,1,0,sowing to emergence,0,2,False
 kano_cell,aez8,sorghum,70,20,ALL,SOW,0.0,1,0,sowing to emergence,0,2,False
 kano_cell,aez8,sorghum,70,30,ALL,SOW,0.0,1,0,sowing to emergence,0,2,False
 kano_cell,aez8,sorghum,70,40,ALL,SOW,0.0,1,0,sowing to emergence,0,2,False
 kano_cell,aez8,sorghum,90,0,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
-kano_cell,aez8,sorghum,90,10,ALL,SOW,0.023809524,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,90,10,ALL,SOW,0.023255814,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,sorghum,90,20,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,90,30,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,90,40,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,sorghum,110,0,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,110,10,ALL,SOW,0.023255814,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,110,20,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,110,30,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,sorghum,130,0,ALL,SOW,0.0,1,0,sowing to emergence,0,4,False
+kano_cell,aez8,sorghum,130,10,ALL,SOW,0.029411765,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,sorghum,70,0,ALL,S0,0.023255814,1,1,emergence,3,9,False
 kano_cell,aez8,sorghum,70,10,ALL,S0,0.023255814,1,1,emergence,3,9,False
 kano_cell,aez8,sorghum,70,20,ALL,S0,0.0,1,1,emergence,3,9,False
 kano_cell,aez8,sorghum,70,30,ALL,S0,0.0,1,1,emergence,3,9,False
 kano_cell,aez8,sorghum,70,40,ALL,S0,0.0,1,1,emergence,3,9,False
 kano_cell,aez8,sorghum,90,0,ALL,S0,0.046511628,1,1,emergence,4,12,False
-kano_cell,aez8,sorghum,90,10,ALL,S0,0.023809524,1,1,emergence,4,12,False
+kano_cell,aez8,sorghum,90,10,ALL,S0,0.023255814,1,1,emergence,4,12,False
 kano_cell,aez8,sorghum,90,20,ALL,S0,0.0,1,1,emergence,4,12,False
-kano_cell,aez8,sorghum,110,0,ALL,S0,0.05882353,1,1,emergence,4,14,False
+kano_cell,aez8,sorghum,90,30,ALL,S0,0.0,1,1,emergence,4,12,False
+kano_cell,aez8,sorghum,90,40,ALL,S0,0.0,1,1,emergence,4,12,False
+kano_cell,aez8,sorghum,110,0,ALL,S0,0.046511628,1,1,emergence,4,14,False
+kano_cell,aez8,sorghum,110,10,ALL,S0,0.023255814,1,1,emergence,4,14,False
+kano_cell,aez8,sorghum,110,20,ALL,S0,0.0,1,1,emergence,4,14,False
+kano_cell,aez8,sorghum,110,30,ALL,S0,0.0,1,1,emergence,4,14,False
+kano_cell,aez8,sorghum,130,0,ALL,S0,0.04761905,1,1,emergence,5,17,False
+kano_cell,aez8,sorghum,130,10,ALL,S0,0.029411765,1,1,emergence,5,17,False
 kano_cell,aez8,sorghum,70,0,ALL,S1,0.046511628,1,2,3-leaf,10,16,False
 kano_cell,aez8,sorghum,70,10,ALL,S1,0.023255814,1,2,3-leaf,10,16,False
 kano_cell,aez8,sorghum,70,20,ALL,S1,0.0,1,2,3-leaf,10,16,False
@@ -115,7 +199,14 @@ kano_cell,aez8,sorghum,70,40,ALL,S1,0.0,1,2,3-leaf,10,16,False
 kano_cell,aez8,sorghum,90,0,ALL,S1,0.046511628,1,2,3-leaf,13,21,False
 kano_cell,aez8,sorghum,90,10,ALL,S1,0.0,1,2,3-leaf,13,21,False
 kano_cell,aez8,sorghum,90,20,ALL,S1,0.0,1,2,3-leaf,13,21,False
-kano_cell,aez8,sorghum,110,0,ALL,S1,0.05882353,1,2,3-leaf,15,25,False
+kano_cell,aez8,sorghum,90,30,ALL,S1,0.0,1,2,3-leaf,13,21,False
+kano_cell,aez8,sorghum,90,40,ALL,S1,0.0,1,2,3-leaf,13,21,False
+kano_cell,aez8,sorghum,110,0,ALL,S1,0.046511628,1,2,3-leaf,15,25,False
+kano_cell,aez8,sorghum,110,10,ALL,S1,0.0,1,2,3-leaf,15,25,False
+kano_cell,aez8,sorghum,110,20,ALL,S1,0.0,1,2,3-leaf,15,25,False
+kano_cell,aez8,sorghum,110,30,ALL,S1,0.0,1,2,3-leaf,15,25,False
+kano_cell,aez8,sorghum,130,0,ALL,S1,0.04761905,1,2,3-leaf,18,30,False
+kano_cell,aez8,sorghum,130,10,ALL,S1,0.0,1,2,3-leaf,18,30,False
 kano_cell,aez8,sorghum,70,0,ALL,S2,0.046511628,1,3,5-leaf,17,23,False
 kano_cell,aez8,sorghum,70,10,ALL,S2,0.0,1,3,5-leaf,17,23,False
 kano_cell,aez8,sorghum,70,20,ALL,S2,0.0,1,3,5-leaf,17,23,False
@@ -124,7 +215,14 @@ kano_cell,aez8,sorghum,70,40,ALL,S2,0.0,1,3,5-leaf,17,23,False
 kano_cell,aez8,sorghum,90,0,ALL,S2,0.023255814,1,3,5-leaf,22,30,False
 kano_cell,aez8,sorghum,90,10,ALL,S2,0.0,1,3,5-leaf,22,30,False
 kano_cell,aez8,sorghum,90,20,ALL,S2,0.0,1,3,5-leaf,22,30,False
+kano_cell,aez8,sorghum,90,30,ALL,S2,0.0,1,3,5-leaf,22,30,False
+kano_cell,aez8,sorghum,90,40,ALL,S2,0.0,1,3,5-leaf,22,30,False
 kano_cell,aez8,sorghum,110,0,ALL,S2,0.0,1,3,5-leaf,26,36,False
+kano_cell,aez8,sorghum,110,10,ALL,S2,0.0,1,3,5-leaf,26,36,False
+kano_cell,aez8,sorghum,110,20,ALL,S2,0.0,1,3,5-leaf,26,36,False
+kano_cell,aez8,sorghum,110,30,ALL,S2,0.0,1,3,5-leaf,26,36,False
+kano_cell,aez8,sorghum,130,0,ALL,S2,0.0,1,3,5-leaf,31,43,False
+kano_cell,aez8,sorghum,130,10,ALL,S2,0.0,1,3,5-leaf,31,43,False
 kano_cell,aez8,sorghum,70,0,ALL,S3,0.0,1,4,growing point differentiation,24,30,False
 kano_cell,aez8,sorghum,70,10,ALL,S3,0.0,1,4,growing point differentiation,24,30,False
 kano_cell,aez8,sorghum,70,20,ALL,S3,0.0,1,4,growing point differentiation,24,30,False
@@ -133,7 +231,14 @@ kano_cell,aez8,sorghum,70,40,ALL,S3,0.0,1,4,growing point differentiation,24,30,
 kano_cell,aez8,sorghum,90,0,ALL,S3,0.0,1,4,growing point differentiation,31,39,False
 kano_cell,aez8,sorghum,90,10,ALL,S3,0.0,1,4,growing point differentiation,31,39,False
 kano_cell,aez8,sorghum,90,20,ALL,S3,0.0,1,4,growing point differentiation,31,39,False
+kano_cell,aez8,sorghum,90,30,ALL,S3,0.0,1,4,growing point differentiation,31,39,False
+kano_cell,aez8,sorghum,90,40,ALL,S3,0.0,1,4,growing point differentiation,31,39,False
 kano_cell,aez8,sorghum,110,0,ALL,S3,0.0,1,4,growing point differentiation,37,47,False
+kano_cell,aez8,sorghum,110,10,ALL,S3,0.0,1,4,growing point differentiation,37,47,False
+kano_cell,aez8,sorghum,110,20,ALL,S3,0.0,1,4,growing point differentiation,37,47,False
+kano_cell,aez8,sorghum,110,30,ALL,S3,0.0,1,4,growing point differentiation,37,47,False
+kano_cell,aez8,sorghum,130,0,ALL,S3,0.0,1,4,growing point differentiation,44,56,False
+kano_cell,aez8,sorghum,130,10,ALL,S3,0.0,1,4,growing point differentiation,44,56,False
 kano_cell,aez8,sorghum,70,0,ALL,S4,0.0,1,5,flag leaf visible,31,37,True
 kano_cell,aez8,sorghum,70,10,ALL,S4,0.0,1,5,flag leaf visible,31,37,True
 kano_cell,aez8,sorghum,70,20,ALL,S4,0.0,1,5,flag leaf visible,31,37,True
@@ -142,70 +247,126 @@ kano_cell,aez8,sorghum,70,40,ALL,S4,0.0,1,5,flag leaf visible,31,37,True
 kano_cell,aez8,sorghum,90,0,ALL,S4,0.0,1,5,flag leaf visible,40,49,True
 kano_cell,aez8,sorghum,90,10,ALL,S4,0.0,1,5,flag leaf visible,40,49,True
 kano_cell,aez8,sorghum,90,20,ALL,S4,0.0,1,5,flag leaf visible,40,49,True
+kano_cell,aez8,sorghum,90,30,ALL,S4,0.0,1,5,flag leaf visible,40,49,True
+kano_cell,aez8,sorghum,90,40,ALL,S4,0.023809524,1,5,flag leaf visible,40,49,True
 kano_cell,aez8,sorghum,110,0,ALL,S4,0.0,1,5,flag leaf visible,48,60,True
+kano_cell,aez8,sorghum,110,10,ALL,S4,0.0,1,5,flag leaf visible,48,60,True
+kano_cell,aez8,sorghum,110,20,ALL,S4,0.0,1,5,flag leaf visible,48,60,True
+kano_cell,aez8,sorghum,110,30,ALL,S4,0.029411765,1,5,flag leaf visible,48,60,True
+kano_cell,aez8,sorghum,130,0,ALL,S4,0.0,1,5,flag leaf visible,57,71,True
+kano_cell,aez8,sorghum,130,10,ALL,S4,0.0,1,5,flag leaf visible,57,71,True
 kano_cell,aez8,sorghum,70,0,ALL,S5,0.0,1,6,boot,38,45,True
 kano_cell,aez8,sorghum,70,10,ALL,S5,0.0,1,6,boot,38,45,True
 kano_cell,aez8,sorghum,70,20,ALL,S5,0.0,1,6,boot,38,45,True
 kano_cell,aez8,sorghum,70,30,ALL,S5,0.0,1,6,boot,38,45,True
-kano_cell,aez8,sorghum,70,40,ALL,S5,0.029411765,1,6,boot,38,45,True
+kano_cell,aez8,sorghum,70,40,ALL,S5,0.023255814,1,6,boot,38,45,True
 kano_cell,aez8,sorghum,90,0,ALL,S5,0.0,1,6,boot,50,57,True
 kano_cell,aez8,sorghum,90,10,ALL,S5,0.0,1,6,boot,50,57,True
 kano_cell,aez8,sorghum,90,20,ALL,S5,0.0,1,6,boot,50,57,True
+kano_cell,aez8,sorghum,90,30,ALL,S5,0.023255814,1,6,boot,50,57,True
+kano_cell,aez8,sorghum,90,40,ALL,S5,0.023809524,1,6,boot,50,57,True
 kano_cell,aez8,sorghum,110,0,ALL,S5,0.0,1,6,boot,61,71,True
+kano_cell,aez8,sorghum,110,10,ALL,S5,0.0,1,6,boot,61,71,True
+kano_cell,aez8,sorghum,110,20,ALL,S5,0.023809524,1,6,boot,61,71,True
+kano_cell,aez8,sorghum,110,30,ALL,S5,0.029411765,1,6,boot,61,71,True
+kano_cell,aez8,sorghum,130,0,ALL,S5,0.023809524,1,6,boot,72,83,True
+kano_cell,aez8,sorghum,130,10,ALL,S5,0.029411765,1,6,boot,72,83,True
 kano_cell,aez8,sorghum,70,0,ALL,S6,0.0,1,7,half-bloom,46,51,True
 kano_cell,aez8,sorghum,70,10,ALL,S6,0.0,1,7,half-bloom,46,51,True
 kano_cell,aez8,sorghum,70,20,ALL,S6,0.0,1,7,half-bloom,46,51,True
 kano_cell,aez8,sorghum,70,30,ALL,S6,0.0,1,7,half-bloom,46,51,True
-kano_cell,aez8,sorghum,70,40,ALL,S6,0.029411765,1,7,half-bloom,46,51,True
+kano_cell,aez8,sorghum,70,40,ALL,S6,0.023255814,1,7,half-bloom,46,51,True
 kano_cell,aez8,sorghum,90,0,ALL,S6,0.0,1,7,half-bloom,58,67,True
 kano_cell,aez8,sorghum,90,10,ALL,S6,0.0,1,7,half-bloom,58,67,True
-kano_cell,aez8,sorghum,90,20,ALL,S6,0.029411765,1,7,half-bloom,58,67,True
+kano_cell,aez8,sorghum,90,20,ALL,S6,0.023255814,1,7,half-bloom,58,67,True
+kano_cell,aez8,sorghum,90,30,ALL,S6,0.046511628,1,7,half-bloom,58,67,True
+kano_cell,aez8,sorghum,90,40,ALL,S6,0.023809524,1,7,half-bloom,58,67,True
 kano_cell,aez8,sorghum,110,0,ALL,S6,0.0,1,7,half-bloom,72,81,True
+kano_cell,aez8,sorghum,110,10,ALL,S6,0.023255814,1,7,half-bloom,72,81,True
+kano_cell,aez8,sorghum,110,20,ALL,S6,0.023809524,1,7,half-bloom,72,81,True
+kano_cell,aez8,sorghum,110,30,ALL,S6,0.029411765,1,7,half-bloom,72,81,True
+kano_cell,aez8,sorghum,130,0,ALL,S6,0.023809524,1,7,half-bloom,84,97,True
+kano_cell,aez8,sorghum,130,10,ALL,S6,0.029411765,1,7,half-bloom,84,97,True
 kano_cell,aez8,sorghum,70,0,ALL,S7,0.0,1,8,soft dough,52,62,True
 kano_cell,aez8,sorghum,70,10,ALL,S7,0.0,1,8,soft dough,52,62,True
 kano_cell,aez8,sorghum,70,20,ALL,S7,0.0,1,8,soft dough,52,62,True
-kano_cell,aez8,sorghum,70,30,ALL,S7,0.023809524,1,8,soft dough,52,62,True
-kano_cell,aez8,sorghum,70,40,ALL,S7,0.029411765,1,8,soft dough,52,62,True
+kano_cell,aez8,sorghum,70,30,ALL,S7,0.023255814,1,8,soft dough,52,62,True
+kano_cell,aez8,sorghum,70,40,ALL,S7,0.046511628,1,8,soft dough,52,62,True
 kano_cell,aez8,sorghum,90,0,ALL,S7,0.0,1,8,soft dough,68,80,True
-kano_cell,aez8,sorghum,90,10,ALL,S7,0.023809524,1,8,soft dough,68,80,True
-kano_cell,aez8,sorghum,90,20,ALL,S7,0.029411765,1,8,soft dough,68,80,True
-kano_cell,aez8,sorghum,110,0,ALL,S7,0.029411765,1,8,soft dough,82,98,True
+kano_cell,aez8,sorghum,90,10,ALL,S7,0.023255814,1,8,soft dough,68,80,True
+kano_cell,aez8,sorghum,90,20,ALL,S7,0.046511628,1,8,soft dough,68,80,True
+kano_cell,aez8,sorghum,90,30,ALL,S7,0.069767445,1,8,soft dough,68,80,True
+kano_cell,aez8,sorghum,90,40,ALL,S7,0.26190478,1,8,soft dough,68,80,True
+kano_cell,aez8,sorghum,110,0,ALL,S7,0.046511628,1,8,soft dough,82,98,True
+kano_cell,aez8,sorghum,110,10,ALL,S7,0.093023255,1,8,soft dough,82,98,True
+kano_cell,aez8,sorghum,110,20,ALL,S7,0.21428572,1,8,soft dough,82,98,True
+kano_cell,aez8,sorghum,110,30,ALL,S7,0.4117647,1,8,soft dough,82,98,True
+kano_cell,aez8,sorghum,130,0,ALL,S7,0.1904762,1,8,soft dough,98,116,True
+kano_cell,aez8,sorghum,130,10,ALL,S7,0.29411766,1,8,soft dough,98,116,True
 kano_cell,aez8,sorghum,70,0,ALL,S8,0.0,1,9,hard dough,63,69,False
 kano_cell,aez8,sorghum,70,10,ALL,S8,0.0,1,9,hard dough,63,69,False
 kano_cell,aez8,sorghum,70,20,ALL,S8,0.0,1,9,hard dough,63,69,False
 kano_cell,aez8,sorghum,70,30,ALL,S8,0.0,1,9,hard dough,63,69,False
-kano_cell,aez8,sorghum,70,40,ALL,S8,0.0,1,9,hard dough,63,69,False
+kano_cell,aez8,sorghum,70,40,ALL,S8,0.023255814,1,9,hard dough,63,69,False
 kano_cell,aez8,sorghum,90,0,ALL,S8,0.0,1,9,hard dough,81,89,False
-kano_cell,aez8,sorghum,90,10,ALL,S8,0.023809524,1,9,hard dough,81,89,False
-kano_cell,aez8,sorghum,90,20,ALL,S8,0.0,1,9,hard dough,81,89,False
-kano_cell,aez8,sorghum,110,0,ALL,S8,0.0,1,9,hard dough,99,109,False
+kano_cell,aez8,sorghum,90,10,ALL,S8,0.023255814,1,9,hard dough,81,89,False
+kano_cell,aez8,sorghum,90,20,ALL,S8,0.023255814,1,9,hard dough,81,89,False
+kano_cell,aez8,sorghum,90,30,ALL,S8,0.046511628,1,9,hard dough,81,89,False
+kano_cell,aez8,sorghum,90,40,ALL,S8,0.23809524,1,9,hard dough,81,89,False
+kano_cell,aez8,sorghum,110,0,ALL,S8,0.023255814,1,9,hard dough,99,109,False
+kano_cell,aez8,sorghum,110,10,ALL,S8,0.069767445,1,9,hard dough,99,109,False
+kano_cell,aez8,sorghum,110,20,ALL,S8,0.23809524,1,9,hard dough,99,109,False
+kano_cell,aez8,sorghum,110,30,ALL,S8,0.4117647,1,9,hard dough,99,109,False
+kano_cell,aez8,sorghum,130,0,ALL,S8,0.23809524,1,9,hard dough,117,129,False
+kano_cell,aez8,sorghum,130,10,ALL,S8,0.4117647,1,9,hard dough,117,129,False
 kano_cell,aez8,pearl_millet,70,0,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,70,10,unassigned,SOW,0.023255814,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,70,20,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,70,30,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,70,40,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,90,0,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
-kano_cell,aez8,pearl_millet,90,10,unassigned,SOW,0.023809524,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,pearl_millet,90,10,unassigned,SOW,0.023255814,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,90,20,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,pearl_millet,90,30,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,pearl_millet,90,40,unassigned,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,110,0,unassigned,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,pearl_millet,110,10,unassigned,SOW,0.023255814,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,pearl_millet,110,20,unassigned,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,pearl_millet,110,30,unassigned,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,pearl_millet,130,0,unassigned,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,pearl_millet,130,10,unassigned,SOW,0.029411765,1,0,sowing to emergence,0,5,False
 kano_cell,aez8,pearl_millet,70,0,unassigned,P0,0.0,1,1,emergence,4,8,False
 kano_cell,aez8,pearl_millet,70,10,unassigned,P0,0.023255814,1,1,emergence,4,8,False
 kano_cell,aez8,pearl_millet,70,20,unassigned,P0,0.0,1,1,emergence,4,8,False
 kano_cell,aez8,pearl_millet,70,30,unassigned,P0,0.0,1,1,emergence,4,8,False
 kano_cell,aez8,pearl_millet,70,40,unassigned,P0,0.0,1,1,emergence,4,8,False
 kano_cell,aez8,pearl_millet,90,0,unassigned,P0,0.046511628,1,1,emergence,4,11,False
-kano_cell,aez8,pearl_millet,90,10,unassigned,P0,0.023809524,1,1,emergence,4,11,False
+kano_cell,aez8,pearl_millet,90,10,unassigned,P0,0.023255814,1,1,emergence,4,11,False
 kano_cell,aez8,pearl_millet,90,20,unassigned,P0,0.0,1,1,emergence,4,11,False
-kano_cell,aez8,pearl_millet,110,0,unassigned,P0,0.05882353,1,1,emergence,6,13,False
+kano_cell,aez8,pearl_millet,90,30,unassigned,P0,0.0,1,1,emergence,4,11,False
+kano_cell,aez8,pearl_millet,90,40,unassigned,P0,0.0,1,1,emergence,4,11,False
+kano_cell,aez8,pearl_millet,110,0,unassigned,P0,0.046511628,1,1,emergence,6,13,False
+kano_cell,aez8,pearl_millet,110,10,unassigned,P0,0.023255814,1,1,emergence,6,13,False
+kano_cell,aez8,pearl_millet,110,20,unassigned,P0,0.0,1,1,emergence,6,13,False
+kano_cell,aez8,pearl_millet,110,30,unassigned,P0,0.0,1,1,emergence,6,13,False
+kano_cell,aez8,pearl_millet,130,0,unassigned,P0,0.04761905,1,1,emergence,6,16,False
+kano_cell,aez8,pearl_millet,130,10,unassigned,P0,0.029411765,1,1,emergence,6,16,False
 kano_cell,aez8,pearl_millet,70,0,unassigned,P1,0.046511628,1,2,3rd leaf,9,16,False
 kano_cell,aez8,pearl_millet,70,10,unassigned,P1,0.023255814,1,2,3rd leaf,9,16,False
 kano_cell,aez8,pearl_millet,70,20,unassigned,P1,0.0,1,2,3rd leaf,9,16,False
 kano_cell,aez8,pearl_millet,70,30,unassigned,P1,0.0,1,2,3rd leaf,9,16,False
 kano_cell,aez8,pearl_millet,70,40,unassigned,P1,0.0,1,2,3rd leaf,9,16,False
 kano_cell,aez8,pearl_millet,90,0,unassigned,P1,0.046511628,1,2,3rd leaf,12,21,False
-kano_cell,aez8,pearl_millet,90,10,unassigned,P1,0.023809524,1,2,3rd leaf,12,21,False
+kano_cell,aez8,pearl_millet,90,10,unassigned,P1,0.023255814,1,2,3rd leaf,12,21,False
 kano_cell,aez8,pearl_millet,90,20,unassigned,P1,0.0,1,2,3rd leaf,12,21,False
-kano_cell,aez8,pearl_millet,110,0,unassigned,P1,0.05882353,1,2,3rd leaf,14,25,False
+kano_cell,aez8,pearl_millet,90,30,unassigned,P1,0.0,1,2,3rd leaf,12,21,False
+kano_cell,aez8,pearl_millet,90,40,unassigned,P1,0.0,1,2,3rd leaf,12,21,False
+kano_cell,aez8,pearl_millet,110,0,unassigned,P1,0.046511628,1,2,3rd leaf,14,25,False
+kano_cell,aez8,pearl_millet,110,10,unassigned,P1,0.0,1,2,3rd leaf,14,25,False
+kano_cell,aez8,pearl_millet,110,20,unassigned,P1,0.0,1,2,3rd leaf,14,25,False
+kano_cell,aez8,pearl_millet,110,30,unassigned,P1,0.0,1,2,3rd leaf,14,25,False
+kano_cell,aez8,pearl_millet,130,0,unassigned,P1,0.04761905,1,2,3rd leaf,17,30,False
+kano_cell,aez8,pearl_millet,130,10,unassigned,P1,0.0,1,2,3rd leaf,17,30,False
 kano_cell,aez8,pearl_millet,70,0,unassigned,P2,0.046511628,1,3,5th leaf,17,28,False
 kano_cell,aez8,pearl_millet,70,10,unassigned,P2,0.0,1,3,5th leaf,17,28,False
 kano_cell,aez8,pearl_millet,70,20,unassigned,P2,0.0,1,3,5th leaf,17,28,False
@@ -214,7 +375,14 @@ kano_cell,aez8,pearl_millet,70,40,unassigned,P2,0.0,1,3,5th leaf,17,28,False
 kano_cell,aez8,pearl_millet,90,0,unassigned,P2,0.023255814,1,3,5th leaf,22,36,False
 kano_cell,aez8,pearl_millet,90,10,unassigned,P2,0.0,1,3,5th leaf,22,36,False
 kano_cell,aez8,pearl_millet,90,20,unassigned,P2,0.0,1,3,5th leaf,22,36,False
+kano_cell,aez8,pearl_millet,90,30,unassigned,P2,0.0,1,3,5th leaf,22,36,False
+kano_cell,aez8,pearl_millet,90,40,unassigned,P2,0.0,1,3,5th leaf,22,36,False
 kano_cell,aez8,pearl_millet,110,0,unassigned,P2,0.0,1,3,5th leaf,26,44,False
+kano_cell,aez8,pearl_millet,110,10,unassigned,P2,0.0,1,3,5th leaf,26,44,False
+kano_cell,aez8,pearl_millet,110,20,unassigned,P2,0.0,1,3,5th leaf,26,44,False
+kano_cell,aez8,pearl_millet,110,30,unassigned,P2,0.0,1,3,5th leaf,26,44,False
+kano_cell,aez8,pearl_millet,130,0,unassigned,P2,0.0,1,3,5th leaf,31,52,False
+kano_cell,aez8,pearl_millet,130,10,unassigned,P2,0.0,1,3,5th leaf,31,52,False
 kano_cell,aez8,pearl_millet,70,0,unassigned,P3,0.0,1,4,panicle initiation,29,40,False
 kano_cell,aez8,pearl_millet,70,10,unassigned,P3,0.0,1,4,panicle initiation,29,40,False
 kano_cell,aez8,pearl_millet,70,20,unassigned,P3,0.0,1,4,panicle initiation,29,40,False
@@ -223,79 +391,142 @@ kano_cell,aez8,pearl_millet,70,40,unassigned,P3,0.0,1,4,panicle initiation,29,40
 kano_cell,aez8,pearl_millet,90,0,unassigned,P3,0.0,1,4,panicle initiation,37,52,False
 kano_cell,aez8,pearl_millet,90,10,unassigned,P3,0.0,1,4,panicle initiation,37,52,False
 kano_cell,aez8,pearl_millet,90,20,unassigned,P3,0.0,1,4,panicle initiation,37,52,False
+kano_cell,aez8,pearl_millet,90,30,unassigned,P3,0.023255814,1,4,panicle initiation,37,52,False
+kano_cell,aez8,pearl_millet,90,40,unassigned,P3,0.023809524,1,4,panicle initiation,37,52,False
 kano_cell,aez8,pearl_millet,110,0,unassigned,P3,0.0,1,4,panicle initiation,45,64,False
+kano_cell,aez8,pearl_millet,110,10,unassigned,P3,0.0,1,4,panicle initiation,45,64,False
+kano_cell,aez8,pearl_millet,110,20,unassigned,P3,0.023809524,1,4,panicle initiation,45,64,False
+kano_cell,aez8,pearl_millet,110,30,unassigned,P3,0.029411765,1,4,panicle initiation,45,64,False
+kano_cell,aez8,pearl_millet,130,0,unassigned,P3,0.0,1,4,panicle initiation,53,76,False
+kano_cell,aez8,pearl_millet,130,10,unassigned,P3,0.029411765,1,4,panicle initiation,53,76,False
 kano_cell,aez8,pearl_millet,70,0,unassigned,P4,0.0,1,5,flag leaf visible,41,45,False
 kano_cell,aez8,pearl_millet,70,10,unassigned,P4,0.0,1,5,flag leaf visible,41,45,False
 kano_cell,aez8,pearl_millet,70,20,unassigned,P4,0.0,1,5,flag leaf visible,41,45,False
 kano_cell,aez8,pearl_millet,70,30,unassigned,P4,0.0,1,5,flag leaf visible,41,45,False
-kano_cell,aez8,pearl_millet,70,40,unassigned,P4,0.029411765,1,5,flag leaf visible,41,45,False
+kano_cell,aez8,pearl_millet,70,40,unassigned,P4,0.023255814,1,5,flag leaf visible,41,45,False
 kano_cell,aez8,pearl_millet,90,0,unassigned,P4,0.0,1,5,flag leaf visible,53,57,False
 kano_cell,aez8,pearl_millet,90,10,unassigned,P4,0.0,1,5,flag leaf visible,53,57,False
 kano_cell,aez8,pearl_millet,90,20,unassigned,P4,0.0,1,5,flag leaf visible,53,57,False
+kano_cell,aez8,pearl_millet,90,30,unassigned,P4,0.023255814,1,5,flag leaf visible,53,57,False
+kano_cell,aez8,pearl_millet,90,40,unassigned,P4,0.0,1,5,flag leaf visible,53,57,False
 kano_cell,aez8,pearl_millet,110,0,unassigned,P4,0.0,1,5,flag leaf visible,65,71,False
+kano_cell,aez8,pearl_millet,110,10,unassigned,P4,0.0,1,5,flag leaf visible,65,71,False
+kano_cell,aez8,pearl_millet,110,20,unassigned,P4,0.023809524,1,5,flag leaf visible,65,71,False
+kano_cell,aez8,pearl_millet,110,30,unassigned,P4,0.0,1,5,flag leaf visible,65,71,False
+kano_cell,aez8,pearl_millet,130,0,unassigned,P4,0.023809524,1,5,flag leaf visible,77,83,False
+kano_cell,aez8,pearl_millet,130,10,unassigned,P4,0.029411765,1,5,flag leaf visible,77,83,False
 kano_cell,aez8,pearl_millet,70,0,unassigned,P5,0.0,1,6,boot,46,49,True
 kano_cell,aez8,pearl_millet,70,10,unassigned,P5,0.0,1,6,boot,46,49,True
 kano_cell,aez8,pearl_millet,70,20,unassigned,P5,0.0,1,6,boot,46,49,True
 kano_cell,aez8,pearl_millet,70,30,unassigned,P5,0.0,1,6,boot,46,49,True
-kano_cell,aez8,pearl_millet,70,40,unassigned,P5,0.029411765,1,6,boot,46,49,True
+kano_cell,aez8,pearl_millet,70,40,unassigned,P5,0.023255814,1,6,boot,46,49,True
 kano_cell,aez8,pearl_millet,90,0,unassigned,P5,0.0,1,6,boot,58,64,True
 kano_cell,aez8,pearl_millet,90,10,unassigned,P5,0.0,1,6,boot,58,64,True
-kano_cell,aez8,pearl_millet,90,20,unassigned,P5,0.029411765,1,6,boot,58,64,True
+kano_cell,aez8,pearl_millet,90,20,unassigned,P5,0.023255814,1,6,boot,58,64,True
+kano_cell,aez8,pearl_millet,90,30,unassigned,P5,0.023255814,1,6,boot,58,64,True
+kano_cell,aez8,pearl_millet,90,40,unassigned,P5,0.023809524,1,6,boot,58,64,True
 kano_cell,aez8,pearl_millet,110,0,unassigned,P5,0.0,1,6,boot,72,78,True
+kano_cell,aez8,pearl_millet,110,10,unassigned,P5,0.023255814,1,6,boot,72,78,True
+kano_cell,aez8,pearl_millet,110,20,unassigned,P5,0.023809524,1,6,boot,72,78,True
+kano_cell,aez8,pearl_millet,110,30,unassigned,P5,0.029411765,1,6,boot,72,78,True
+kano_cell,aez8,pearl_millet,130,0,unassigned,P5,0.023809524,1,6,boot,84,93,True
+kano_cell,aez8,pearl_millet,130,10,unassigned,P5,0.0,1,6,boot,84,93,True
 kano_cell,aez8,pearl_millet,70,0,unassigned,P6,0.0,1,7,50% flowering,50,56,True
 kano_cell,aez8,pearl_millet,70,10,unassigned,P6,0.0,1,7,50% flowering,50,56,True
 kano_cell,aez8,pearl_millet,70,20,unassigned,P6,0.0,1,7,50% flowering,50,56,True
-kano_cell,aez8,pearl_millet,70,30,unassigned,P6,0.023809524,1,7,50% flowering,50,56,True
-kano_cell,aez8,pearl_millet,70,40,unassigned,P6,0.029411765,1,7,50% flowering,50,56,True
+kano_cell,aez8,pearl_millet,70,30,unassigned,P6,0.023255814,1,7,50% flowering,50,56,True
+kano_cell,aez8,pearl_millet,70,40,unassigned,P6,0.046511628,1,7,50% flowering,50,56,True
 kano_cell,aez8,pearl_millet,90,0,unassigned,P6,0.0,1,7,50% flowering,65,73,True
-kano_cell,aez8,pearl_millet,90,10,unassigned,P6,0.023809524,1,7,50% flowering,65,73,True
-kano_cell,aez8,pearl_millet,90,20,unassigned,P6,0.029411765,1,7,50% flowering,65,73,True
-kano_cell,aez8,pearl_millet,110,0,unassigned,P6,0.029411765,1,7,50% flowering,79,89,True
+kano_cell,aez8,pearl_millet,90,10,unassigned,P6,0.023255814,1,7,50% flowering,65,73,True
+kano_cell,aez8,pearl_millet,90,20,unassigned,P6,0.023255814,1,7,50% flowering,65,73,True
+kano_cell,aez8,pearl_millet,90,30,unassigned,P6,0.023255814,1,7,50% flowering,65,73,True
+kano_cell,aez8,pearl_millet,90,40,unassigned,P6,0.11904762,1,7,50% flowering,65,73,True
+kano_cell,aez8,pearl_millet,110,0,unassigned,P6,0.023255814,1,7,50% flowering,79,89,True
+kano_cell,aez8,pearl_millet,110,10,unassigned,P6,0.046511628,1,7,50% flowering,79,89,True
+kano_cell,aez8,pearl_millet,110,20,unassigned,P6,0.04761905,1,7,50% flowering,79,89,True
+kano_cell,aez8,pearl_millet,110,30,unassigned,P6,0.11764706,1,7,50% flowering,79,89,True
+kano_cell,aez8,pearl_millet,130,0,unassigned,P6,0.023809524,1,7,50% flowering,94,106,True
+kano_cell,aez8,pearl_millet,130,10,unassigned,P6,0.0882353,1,7,50% flowering,94,106,True
 kano_cell,aez8,pearl_millet,70,0,unassigned,P7,0.0,1,8,milk,57,63,True
 kano_cell,aez8,pearl_millet,70,10,unassigned,P7,0.0,1,8,milk,57,63,True
 kano_cell,aez8,pearl_millet,70,20,unassigned,P7,0.0,1,8,milk,57,63,True
-kano_cell,aez8,pearl_millet,70,30,unassigned,P7,0.023809524,1,8,milk,57,63,True
-kano_cell,aez8,pearl_millet,70,40,unassigned,P7,0.0,1,8,milk,57,63,True
+kano_cell,aez8,pearl_millet,70,30,unassigned,P7,0.023255814,1,8,milk,57,63,True
+kano_cell,aez8,pearl_millet,70,40,unassigned,P7,0.023255814,1,8,milk,57,63,True
 kano_cell,aez8,pearl_millet,90,0,unassigned,P7,0.0,1,8,milk,74,82,True
-kano_cell,aez8,pearl_millet,90,10,unassigned,P7,0.023809524,1,8,milk,74,82,True
-kano_cell,aez8,pearl_millet,90,20,unassigned,P7,0.0,1,8,milk,74,82,True
-kano_cell,aez8,pearl_millet,110,0,unassigned,P7,0.029411765,1,8,milk,90,100,True
+kano_cell,aez8,pearl_millet,90,10,unassigned,P7,0.023255814,1,8,milk,74,82,True
+kano_cell,aez8,pearl_millet,90,20,unassigned,P7,0.023255814,1,8,milk,74,82,True
+kano_cell,aez8,pearl_millet,90,30,unassigned,P7,0.069767445,1,8,milk,74,82,True
+kano_cell,aez8,pearl_millet,90,40,unassigned,P7,0.23809524,1,8,milk,74,82,True
+kano_cell,aez8,pearl_millet,110,0,unassigned,P7,0.046511628,1,8,milk,90,100,True
+kano_cell,aez8,pearl_millet,110,10,unassigned,P7,0.069767445,1,8,milk,90,100,True
+kano_cell,aez8,pearl_millet,110,20,unassigned,P7,0.26190478,1,8,milk,90,100,True
+kano_cell,aez8,pearl_millet,110,30,unassigned,P7,0.4117647,1,8,milk,90,100,True
+kano_cell,aez8,pearl_millet,130,0,unassigned,P7,0.23809524,1,8,milk,107,119,True
+kano_cell,aez8,pearl_millet,130,10,unassigned,P7,0.4117647,1,8,milk,107,119,True
 kano_cell,aez8,pearl_millet,70,0,unassigned,P8,0.0,1,9,dough,64,69,False
 kano_cell,aez8,pearl_millet,70,10,unassigned,P8,0.0,1,9,dough,64,69,False
 kano_cell,aez8,pearl_millet,70,20,unassigned,P8,0.0,1,9,dough,64,69,False
 kano_cell,aez8,pearl_millet,70,30,unassigned,P8,0.0,1,9,dough,64,69,False
-kano_cell,aez8,pearl_millet,70,40,unassigned,P8,0.0,1,9,dough,64,69,False
+kano_cell,aez8,pearl_millet,70,40,unassigned,P8,0.023255814,1,9,dough,64,69,False
 kano_cell,aez8,pearl_millet,90,0,unassigned,P8,0.0,1,9,dough,83,89,False
 kano_cell,aez8,pearl_millet,90,10,unassigned,P8,0.0,1,9,dough,83,89,False
-kano_cell,aez8,pearl_millet,90,20,unassigned,P8,0.0,1,9,dough,83,89,False
-kano_cell,aez8,pearl_millet,110,0,unassigned,P8,0.0,1,9,dough,101,109,False
+kano_cell,aez8,pearl_millet,90,20,unassigned,P8,0.023255814,1,9,dough,83,89,False
+kano_cell,aez8,pearl_millet,90,30,unassigned,P8,0.046511628,1,9,dough,83,89,False
+kano_cell,aez8,pearl_millet,90,40,unassigned,P8,0.23809524,1,9,dough,83,89,False
+kano_cell,aez8,pearl_millet,110,0,unassigned,P8,0.023255814,1,9,dough,101,109,False
+kano_cell,aez8,pearl_millet,110,10,unassigned,P8,0.046511628,1,9,dough,101,109,False
+kano_cell,aez8,pearl_millet,110,20,unassigned,P8,0.23809524,1,9,dough,101,109,False
+kano_cell,aez8,pearl_millet,110,30,unassigned,P8,0.4117647,1,9,dough,101,109,False
+kano_cell,aez8,pearl_millet,130,0,unassigned,P8,0.23809524,1,9,dough,120,129,False
+kano_cell,aez8,pearl_millet,130,10,unassigned,P8,0.4117647,1,9,dough,120,129,False
 kano_cell,aez8,pearl_millet,70,0,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,70,10,ALL,SOW,0.023255814,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,70,20,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,70,30,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,70,40,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,90,0,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
-kano_cell,aez8,pearl_millet,90,10,ALL,SOW,0.023809524,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,pearl_millet,90,10,ALL,SOW,0.023255814,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,90,20,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,pearl_millet,90,30,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
+kano_cell,aez8,pearl_millet,90,40,ALL,SOW,0.0,1,0,sowing to emergence,0,3,False
 kano_cell,aez8,pearl_millet,110,0,ALL,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,pearl_millet,110,10,ALL,SOW,0.023255814,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,pearl_millet,110,20,ALL,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,pearl_millet,110,30,ALL,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,pearl_millet,130,0,ALL,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,pearl_millet,130,10,ALL,SOW,0.029411765,1,0,sowing to emergence,0,5,False
 kano_cell,aez8,pearl_millet,70,0,ALL,P0,0.0,1,1,emergence,4,8,False
 kano_cell,aez8,pearl_millet,70,10,ALL,P0,0.023255814,1,1,emergence,4,8,False
 kano_cell,aez8,pearl_millet,70,20,ALL,P0,0.0,1,1,emergence,4,8,False
 kano_cell,aez8,pearl_millet,70,30,ALL,P0,0.0,1,1,emergence,4,8,False
 kano_cell,aez8,pearl_millet,70,40,ALL,P0,0.0,1,1,emergence,4,8,False
 kano_cell,aez8,pearl_millet,90,0,ALL,P0,0.046511628,1,1,emergence,4,11,False
-kano_cell,aez8,pearl_millet,90,10,ALL,P0,0.023809524,1,1,emergence,4,11,False
+kano_cell,aez8,pearl_millet,90,10,ALL,P0,0.023255814,1,1,emergence,4,11,False
 kano_cell,aez8,pearl_millet,90,20,ALL,P0,0.0,1,1,emergence,4,11,False
-kano_cell,aez8,pearl_millet,110,0,ALL,P0,0.05882353,1,1,emergence,6,13,False
+kano_cell,aez8,pearl_millet,90,30,ALL,P0,0.0,1,1,emergence,4,11,False
+kano_cell,aez8,pearl_millet,90,40,ALL,P0,0.0,1,1,emergence,4,11,False
+kano_cell,aez8,pearl_millet,110,0,ALL,P0,0.046511628,1,1,emergence,6,13,False
+kano_cell,aez8,pearl_millet,110,10,ALL,P0,0.023255814,1,1,emergence,6,13,False
+kano_cell,aez8,pearl_millet,110,20,ALL,P0,0.0,1,1,emergence,6,13,False
+kano_cell,aez8,pearl_millet,110,30,ALL,P0,0.0,1,1,emergence,6,13,False
+kano_cell,aez8,pearl_millet,130,0,ALL,P0,0.04761905,1,1,emergence,6,16,False
+kano_cell,aez8,pearl_millet,130,10,ALL,P0,0.029411765,1,1,emergence,6,16,False
 kano_cell,aez8,pearl_millet,70,0,ALL,P1,0.046511628,1,2,3rd leaf,9,16,False
 kano_cell,aez8,pearl_millet,70,10,ALL,P1,0.023255814,1,2,3rd leaf,9,16,False
 kano_cell,aez8,pearl_millet,70,20,ALL,P1,0.0,1,2,3rd leaf,9,16,False
 kano_cell,aez8,pearl_millet,70,30,ALL,P1,0.0,1,2,3rd leaf,9,16,False
 kano_cell,aez8,pearl_millet,70,40,ALL,P1,0.0,1,2,3rd leaf,9,16,False
 kano_cell,aez8,pearl_millet,90,0,ALL,P1,0.046511628,1,2,3rd leaf,12,21,False
-kano_cell,aez8,pearl_millet,90,10,ALL,P1,0.023809524,1,2,3rd leaf,12,21,False
+kano_cell,aez8,pearl_millet,90,10,ALL,P1,0.023255814,1,2,3rd leaf,12,21,False
 kano_cell,aez8,pearl_millet,90,20,ALL,P1,0.0,1,2,3rd leaf,12,21,False
-kano_cell,aez8,pearl_millet,110,0,ALL,P1,0.05882353,1,2,3rd leaf,14,25,False
+kano_cell,aez8,pearl_millet,90,30,ALL,P1,0.0,1,2,3rd leaf,12,21,False
+kano_cell,aez8,pearl_millet,90,40,ALL,P1,0.0,1,2,3rd leaf,12,21,False
+kano_cell,aez8,pearl_millet,110,0,ALL,P1,0.046511628,1,2,3rd leaf,14,25,False
+kano_cell,aez8,pearl_millet,110,10,ALL,P1,0.0,1,2,3rd leaf,14,25,False
+kano_cell,aez8,pearl_millet,110,20,ALL,P1,0.0,1,2,3rd leaf,14,25,False
+kano_cell,aez8,pearl_millet,110,30,ALL,P1,0.0,1,2,3rd leaf,14,25,False
+kano_cell,aez8,pearl_millet,130,0,ALL,P1,0.04761905,1,2,3rd leaf,17,30,False
+kano_cell,aez8,pearl_millet,130,10,ALL,P1,0.0,1,2,3rd leaf,17,30,False
 kano_cell,aez8,pearl_millet,70,0,ALL,P2,0.046511628,1,3,5th leaf,17,28,False
 kano_cell,aez8,pearl_millet,70,10,ALL,P2,0.0,1,3,5th leaf,17,28,False
 kano_cell,aez8,pearl_millet,70,20,ALL,P2,0.0,1,3,5th leaf,17,28,False
@@ -304,7 +535,14 @@ kano_cell,aez8,pearl_millet,70,40,ALL,P2,0.0,1,3,5th leaf,17,28,False
 kano_cell,aez8,pearl_millet,90,0,ALL,P2,0.023255814,1,3,5th leaf,22,36,False
 kano_cell,aez8,pearl_millet,90,10,ALL,P2,0.0,1,3,5th leaf,22,36,False
 kano_cell,aez8,pearl_millet,90,20,ALL,P2,0.0,1,3,5th leaf,22,36,False
+kano_cell,aez8,pearl_millet,90,30,ALL,P2,0.0,1,3,5th leaf,22,36,False
+kano_cell,aez8,pearl_millet,90,40,ALL,P2,0.0,1,3,5th leaf,22,36,False
 kano_cell,aez8,pearl_millet,110,0,ALL,P2,0.0,1,3,5th leaf,26,44,False
+kano_cell,aez8,pearl_millet,110,10,ALL,P2,0.0,1,3,5th leaf,26,44,False
+kano_cell,aez8,pearl_millet,110,20,ALL,P2,0.0,1,3,5th leaf,26,44,False
+kano_cell,aez8,pearl_millet,110,30,ALL,P2,0.0,1,3,5th leaf,26,44,False
+kano_cell,aez8,pearl_millet,130,0,ALL,P2,0.0,1,3,5th leaf,31,52,False
+kano_cell,aez8,pearl_millet,130,10,ALL,P2,0.0,1,3,5th leaf,31,52,False
 kano_cell,aez8,pearl_millet,70,0,ALL,P3,0.0,1,4,panicle initiation,29,40,False
 kano_cell,aez8,pearl_millet,70,10,ALL,P3,0.0,1,4,panicle initiation,29,40,False
 kano_cell,aez8,pearl_millet,70,20,ALL,P3,0.0,1,4,panicle initiation,29,40,False
@@ -313,70 +551,126 @@ kano_cell,aez8,pearl_millet,70,40,ALL,P3,0.0,1,4,panicle initiation,29,40,False
 kano_cell,aez8,pearl_millet,90,0,ALL,P3,0.0,1,4,panicle initiation,37,52,False
 kano_cell,aez8,pearl_millet,90,10,ALL,P3,0.0,1,4,panicle initiation,37,52,False
 kano_cell,aez8,pearl_millet,90,20,ALL,P3,0.0,1,4,panicle initiation,37,52,False
+kano_cell,aez8,pearl_millet,90,30,ALL,P3,0.023255814,1,4,panicle initiation,37,52,False
+kano_cell,aez8,pearl_millet,90,40,ALL,P3,0.023809524,1,4,panicle initiation,37,52,False
 kano_cell,aez8,pearl_millet,110,0,ALL,P3,0.0,1,4,panicle initiation,45,64,False
+kano_cell,aez8,pearl_millet,110,10,ALL,P3,0.0,1,4,panicle initiation,45,64,False
+kano_cell,aez8,pearl_millet,110,20,ALL,P3,0.023809524,1,4,panicle initiation,45,64,False
+kano_cell,aez8,pearl_millet,110,30,ALL,P3,0.029411765,1,4,panicle initiation,45,64,False
+kano_cell,aez8,pearl_millet,130,0,ALL,P3,0.0,1,4,panicle initiation,53,76,False
+kano_cell,aez8,pearl_millet,130,10,ALL,P3,0.029411765,1,4,panicle initiation,53,76,False
 kano_cell,aez8,pearl_millet,70,0,ALL,P4,0.0,1,5,flag leaf visible,41,45,False
 kano_cell,aez8,pearl_millet,70,10,ALL,P4,0.0,1,5,flag leaf visible,41,45,False
 kano_cell,aez8,pearl_millet,70,20,ALL,P4,0.0,1,5,flag leaf visible,41,45,False
 kano_cell,aez8,pearl_millet,70,30,ALL,P4,0.0,1,5,flag leaf visible,41,45,False
-kano_cell,aez8,pearl_millet,70,40,ALL,P4,0.029411765,1,5,flag leaf visible,41,45,False
+kano_cell,aez8,pearl_millet,70,40,ALL,P4,0.023255814,1,5,flag leaf visible,41,45,False
 kano_cell,aez8,pearl_millet,90,0,ALL,P4,0.0,1,5,flag leaf visible,53,57,False
 kano_cell,aez8,pearl_millet,90,10,ALL,P4,0.0,1,5,flag leaf visible,53,57,False
 kano_cell,aez8,pearl_millet,90,20,ALL,P4,0.0,1,5,flag leaf visible,53,57,False
+kano_cell,aez8,pearl_millet,90,30,ALL,P4,0.023255814,1,5,flag leaf visible,53,57,False
+kano_cell,aez8,pearl_millet,90,40,ALL,P4,0.0,1,5,flag leaf visible,53,57,False
 kano_cell,aez8,pearl_millet,110,0,ALL,P4,0.0,1,5,flag leaf visible,65,71,False
+kano_cell,aez8,pearl_millet,110,10,ALL,P4,0.0,1,5,flag leaf visible,65,71,False
+kano_cell,aez8,pearl_millet,110,20,ALL,P4,0.023809524,1,5,flag leaf visible,65,71,False
+kano_cell,aez8,pearl_millet,110,30,ALL,P4,0.0,1,5,flag leaf visible,65,71,False
+kano_cell,aez8,pearl_millet,130,0,ALL,P4,0.023809524,1,5,flag leaf visible,77,83,False
+kano_cell,aez8,pearl_millet,130,10,ALL,P4,0.029411765,1,5,flag leaf visible,77,83,False
 kano_cell,aez8,pearl_millet,70,0,ALL,P5,0.0,1,6,boot,46,49,True
 kano_cell,aez8,pearl_millet,70,10,ALL,P5,0.0,1,6,boot,46,49,True
 kano_cell,aez8,pearl_millet,70,20,ALL,P5,0.0,1,6,boot,46,49,True
 kano_cell,aez8,pearl_millet,70,30,ALL,P5,0.0,1,6,boot,46,49,True
-kano_cell,aez8,pearl_millet,70,40,ALL,P5,0.029411765,1,6,boot,46,49,True
+kano_cell,aez8,pearl_millet,70,40,ALL,P5,0.023255814,1,6,boot,46,49,True
 kano_cell,aez8,pearl_millet,90,0,ALL,P5,0.0,1,6,boot,58,64,True
 kano_cell,aez8,pearl_millet,90,10,ALL,P5,0.0,1,6,boot,58,64,True
-kano_cell,aez8,pearl_millet,90,20,ALL,P5,0.029411765,1,6,boot,58,64,True
+kano_cell,aez8,pearl_millet,90,20,ALL,P5,0.023255814,1,6,boot,58,64,True
+kano_cell,aez8,pearl_millet,90,30,ALL,P5,0.023255814,1,6,boot,58,64,True
+kano_cell,aez8,pearl_millet,90,40,ALL,P5,0.023809524,1,6,boot,58,64,True
 kano_cell,aez8,pearl_millet,110,0,ALL,P5,0.0,1,6,boot,72,78,True
+kano_cell,aez8,pearl_millet,110,10,ALL,P5,0.023255814,1,6,boot,72,78,True
+kano_cell,aez8,pearl_millet,110,20,ALL,P5,0.023809524,1,6,boot,72,78,True
+kano_cell,aez8,pearl_millet,110,30,ALL,P5,0.029411765,1,6,boot,72,78,True
+kano_cell,aez8,pearl_millet,130,0,ALL,P5,0.023809524,1,6,boot,84,93,True
+kano_cell,aez8,pearl_millet,130,10,ALL,P5,0.0,1,6,boot,84,93,True
 kano_cell,aez8,pearl_millet,70,0,ALL,P6,0.0,1,7,50% flowering,50,56,True
 kano_cell,aez8,pearl_millet,70,10,ALL,P6,0.0,1,7,50% flowering,50,56,True
 kano_cell,aez8,pearl_millet,70,20,ALL,P6,0.0,1,7,50% flowering,50,56,True
-kano_cell,aez8,pearl_millet,70,30,ALL,P6,0.023809524,1,7,50% flowering,50,56,True
-kano_cell,aez8,pearl_millet,70,40,ALL,P6,0.029411765,1,7,50% flowering,50,56,True
+kano_cell,aez8,pearl_millet,70,30,ALL,P6,0.023255814,1,7,50% flowering,50,56,True
+kano_cell,aez8,pearl_millet,70,40,ALL,P6,0.046511628,1,7,50% flowering,50,56,True
 kano_cell,aez8,pearl_millet,90,0,ALL,P6,0.0,1,7,50% flowering,65,73,True
-kano_cell,aez8,pearl_millet,90,10,ALL,P6,0.023809524,1,7,50% flowering,65,73,True
-kano_cell,aez8,pearl_millet,90,20,ALL,P6,0.029411765,1,7,50% flowering,65,73,True
-kano_cell,aez8,pearl_millet,110,0,ALL,P6,0.029411765,1,7,50% flowering,79,89,True
+kano_cell,aez8,pearl_millet,90,10,ALL,P6,0.023255814,1,7,50% flowering,65,73,True
+kano_cell,aez8,pearl_millet,90,20,ALL,P6,0.023255814,1,7,50% flowering,65,73,True
+kano_cell,aez8,pearl_millet,90,30,ALL,P6,0.023255814,1,7,50% flowering,65,73,True
+kano_cell,aez8,pearl_millet,90,40,ALL,P6,0.11904762,1,7,50% flowering,65,73,True
+kano_cell,aez8,pearl_millet,110,0,ALL,P6,0.023255814,1,7,50% flowering,79,89,True
+kano_cell,aez8,pearl_millet,110,10,ALL,P6,0.046511628,1,7,50% flowering,79,89,True
+kano_cell,aez8,pearl_millet,110,20,ALL,P6,0.04761905,1,7,50% flowering,79,89,True
+kano_cell,aez8,pearl_millet,110,30,ALL,P6,0.11764706,1,7,50% flowering,79,89,True
+kano_cell,aez8,pearl_millet,130,0,ALL,P6,0.023809524,1,7,50% flowering,94,106,True
+kano_cell,aez8,pearl_millet,130,10,ALL,P6,0.0882353,1,7,50% flowering,94,106,True
 kano_cell,aez8,pearl_millet,70,0,ALL,P7,0.0,1,8,milk,57,63,True
 kano_cell,aez8,pearl_millet,70,10,ALL,P7,0.0,1,8,milk,57,63,True
 kano_cell,aez8,pearl_millet,70,20,ALL,P7,0.0,1,8,milk,57,63,True
-kano_cell,aez8,pearl_millet,70,30,ALL,P7,0.023809524,1,8,milk,57,63,True
-kano_cell,aez8,pearl_millet,70,40,ALL,P7,0.0,1,8,milk,57,63,True
+kano_cell,aez8,pearl_millet,70,30,ALL,P7,0.023255814,1,8,milk,57,63,True
+kano_cell,aez8,pearl_millet,70,40,ALL,P7,0.023255814,1,8,milk,57,63,True
 kano_cell,aez8,pearl_millet,90,0,ALL,P7,0.0,1,8,milk,74,82,True
-kano_cell,aez8,pearl_millet,90,10,ALL,P7,0.023809524,1,8,milk,74,82,True
-kano_cell,aez8,pearl_millet,90,20,ALL,P7,0.0,1,8,milk,74,82,True
-kano_cell,aez8,pearl_millet,110,0,ALL,P7,0.029411765,1,8,milk,90,100,True
+kano_cell,aez8,pearl_millet,90,10,ALL,P7,0.023255814,1,8,milk,74,82,True
+kano_cell,aez8,pearl_millet,90,20,ALL,P7,0.023255814,1,8,milk,74,82,True
+kano_cell,aez8,pearl_millet,90,30,ALL,P7,0.069767445,1,8,milk,74,82,True
+kano_cell,aez8,pearl_millet,90,40,ALL,P7,0.23809524,1,8,milk,74,82,True
+kano_cell,aez8,pearl_millet,110,0,ALL,P7,0.046511628,1,8,milk,90,100,True
+kano_cell,aez8,pearl_millet,110,10,ALL,P7,0.069767445,1,8,milk,90,100,True
+kano_cell,aez8,pearl_millet,110,20,ALL,P7,0.26190478,1,8,milk,90,100,True
+kano_cell,aez8,pearl_millet,110,30,ALL,P7,0.4117647,1,8,milk,90,100,True
+kano_cell,aez8,pearl_millet,130,0,ALL,P7,0.23809524,1,8,milk,107,119,True
+kano_cell,aez8,pearl_millet,130,10,ALL,P7,0.4117647,1,8,milk,107,119,True
 kano_cell,aez8,pearl_millet,70,0,ALL,P8,0.0,1,9,dough,64,69,False
 kano_cell,aez8,pearl_millet,70,10,ALL,P8,0.0,1,9,dough,64,69,False
 kano_cell,aez8,pearl_millet,70,20,ALL,P8,0.0,1,9,dough,64,69,False
 kano_cell,aez8,pearl_millet,70,30,ALL,P8,0.0,1,9,dough,64,69,False
-kano_cell,aez8,pearl_millet,70,40,ALL,P8,0.0,1,9,dough,64,69,False
+kano_cell,aez8,pearl_millet,70,40,ALL,P8,0.023255814,1,9,dough,64,69,False
 kano_cell,aez8,pearl_millet,90,0,ALL,P8,0.0,1,9,dough,83,89,False
 kano_cell,aez8,pearl_millet,90,10,ALL,P8,0.0,1,9,dough,83,89,False
-kano_cell,aez8,pearl_millet,90,20,ALL,P8,0.0,1,9,dough,83,89,False
-kano_cell,aez8,pearl_millet,110,0,ALL,P8,0.0,1,9,dough,101,109,False
+kano_cell,aez8,pearl_millet,90,20,ALL,P8,0.023255814,1,9,dough,83,89,False
+kano_cell,aez8,pearl_millet,90,30,ALL,P8,0.046511628,1,9,dough,83,89,False
+kano_cell,aez8,pearl_millet,90,40,ALL,P8,0.23809524,1,9,dough,83,89,False
+kano_cell,aez8,pearl_millet,110,0,ALL,P8,0.023255814,1,9,dough,101,109,False
+kano_cell,aez8,pearl_millet,110,10,ALL,P8,0.046511628,1,9,dough,101,109,False
+kano_cell,aez8,pearl_millet,110,20,ALL,P8,0.23809524,1,9,dough,101,109,False
+kano_cell,aez8,pearl_millet,110,30,ALL,P8,0.4117647,1,9,dough,101,109,False
+kano_cell,aez8,pearl_millet,130,0,ALL,P8,0.23809524,1,9,dough,120,129,False
+kano_cell,aez8,pearl_millet,130,10,ALL,P8,0.4117647,1,9,dough,120,129,False
 kano_cell,aez8,groundnut,70,0,unassigned,SOW,0.0,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,groundnut,70,10,unassigned,SOW,0.023255814,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,groundnut,70,20,unassigned,SOW,0.0,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,groundnut,70,30,unassigned,SOW,0.0,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,groundnut,70,40,unassigned,SOW,0.0,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,groundnut,90,0,unassigned,SOW,0.0,1,0,sowing to emergence,0,5,False
-kano_cell,aez8,groundnut,90,10,unassigned,SOW,0.023809524,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,groundnut,90,10,unassigned,SOW,0.023255814,1,0,sowing to emergence,0,5,False
 kano_cell,aez8,groundnut,90,20,unassigned,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,groundnut,90,30,unassigned,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,groundnut,90,40,unassigned,SOW,0.0,1,0,sowing to emergence,0,5,False
 kano_cell,aez8,groundnut,110,0,unassigned,SOW,0.0,1,0,sowing to emergence,0,7,False
+kano_cell,aez8,groundnut,110,10,unassigned,SOW,0.023255814,1,0,sowing to emergence,0,7,False
+kano_cell,aez8,groundnut,110,20,unassigned,SOW,0.0,1,0,sowing to emergence,0,7,False
+kano_cell,aez8,groundnut,110,30,unassigned,SOW,0.0,1,0,sowing to emergence,0,7,False
+kano_cell,aez8,groundnut,130,0,unassigned,SOW,0.0,1,0,sowing to emergence,0,8,False
+kano_cell,aez8,groundnut,130,10,unassigned,SOW,0.029411765,1,0,sowing to emergence,0,8,False
 kano_cell,aez8,groundnut,70,0,unassigned,VE,0.046511628,1,1,emergence,5,14,False
 kano_cell,aez8,groundnut,70,10,unassigned,VE,0.023255814,1,1,emergence,5,14,False
 kano_cell,aez8,groundnut,70,20,unassigned,VE,0.0,1,1,emergence,5,14,False
 kano_cell,aez8,groundnut,70,30,unassigned,VE,0.0,1,1,emergence,5,14,False
 kano_cell,aez8,groundnut,70,40,unassigned,VE,0.0,1,1,emergence,5,14,False
 kano_cell,aez8,groundnut,90,0,unassigned,VE,0.046511628,1,1,emergence,6,19,False
-kano_cell,aez8,groundnut,90,10,unassigned,VE,0.023809524,1,1,emergence,6,19,False
+kano_cell,aez8,groundnut,90,10,unassigned,VE,0.023255814,1,1,emergence,6,19,False
 kano_cell,aez8,groundnut,90,20,unassigned,VE,0.0,1,1,emergence,6,19,False
-kano_cell,aez8,groundnut,110,0,unassigned,VE,0.05882353,1,1,emergence,8,23,False
+kano_cell,aez8,groundnut,90,30,unassigned,VE,0.0,1,1,emergence,6,19,False
+kano_cell,aez8,groundnut,90,40,unassigned,VE,0.0,1,1,emergence,6,19,False
+kano_cell,aez8,groundnut,110,0,unassigned,VE,0.046511628,1,1,emergence,8,23,False
+kano_cell,aez8,groundnut,110,10,unassigned,VE,0.023255814,1,1,emergence,8,23,False
+kano_cell,aez8,groundnut,110,20,unassigned,VE,0.0,1,1,emergence,8,23,False
+kano_cell,aez8,groundnut,110,30,unassigned,VE,0.0,1,1,emergence,8,23,False
+kano_cell,aez8,groundnut,130,0,unassigned,VE,0.04761905,1,1,emergence,9,28,False
+kano_cell,aez8,groundnut,130,10,unassigned,VE,0.029411765,1,1,emergence,9,28,False
 kano_cell,aez8,groundnut,70,0,unassigned,R1,0.046511628,1,2,beginning bloom,15,20,False
 kano_cell,aez8,groundnut,70,10,unassigned,R1,0.0,1,2,beginning bloom,15,20,False
 kano_cell,aez8,groundnut,70,20,unassigned,R1,0.0,1,2,beginning bloom,15,20,False
@@ -385,7 +679,14 @@ kano_cell,aez8,groundnut,70,40,unassigned,R1,0.0,1,2,beginning bloom,15,20,False
 kano_cell,aez8,groundnut,90,0,unassigned,R1,0.023255814,1,2,beginning bloom,20,26,False
 kano_cell,aez8,groundnut,90,10,unassigned,R1,0.0,1,2,beginning bloom,20,26,False
 kano_cell,aez8,groundnut,90,20,unassigned,R1,0.0,1,2,beginning bloom,20,26,False
+kano_cell,aez8,groundnut,90,30,unassigned,R1,0.0,1,2,beginning bloom,20,26,False
+kano_cell,aez8,groundnut,90,40,unassigned,R1,0.0,1,2,beginning bloom,20,26,False
 kano_cell,aez8,groundnut,110,0,unassigned,R1,0.0,1,2,beginning bloom,24,32,False
+kano_cell,aez8,groundnut,110,10,unassigned,R1,0.0,1,2,beginning bloom,24,32,False
+kano_cell,aez8,groundnut,110,20,unassigned,R1,0.0,1,2,beginning bloom,24,32,False
+kano_cell,aez8,groundnut,110,30,unassigned,R1,0.0,1,2,beginning bloom,24,32,False
+kano_cell,aez8,groundnut,130,0,unassigned,R1,0.0,1,2,beginning bloom,29,38,False
+kano_cell,aez8,groundnut,130,10,unassigned,R1,0.0,1,2,beginning bloom,29,38,False
 kano_cell,aez8,groundnut,70,0,unassigned,R2,0.023255814,1,3,beginning peg,21,26,False
 kano_cell,aez8,groundnut,70,10,unassigned,R2,0.0,1,3,beginning peg,21,26,False
 kano_cell,aez8,groundnut,70,20,unassigned,R2,0.0,1,3,beginning peg,21,26,False
@@ -394,7 +695,14 @@ kano_cell,aez8,groundnut,70,40,unassigned,R2,0.0,1,3,beginning peg,21,26,False
 kano_cell,aez8,groundnut,90,0,unassigned,R2,0.0,1,3,beginning peg,27,33,False
 kano_cell,aez8,groundnut,90,10,unassigned,R2,0.0,1,3,beginning peg,27,33,False
 kano_cell,aez8,groundnut,90,20,unassigned,R2,0.0,1,3,beginning peg,27,33,False
+kano_cell,aez8,groundnut,90,30,unassigned,R2,0.0,1,3,beginning peg,27,33,False
+kano_cell,aez8,groundnut,90,40,unassigned,R2,0.0,1,3,beginning peg,27,33,False
 kano_cell,aez8,groundnut,110,0,unassigned,R2,0.0,1,3,beginning peg,33,41,False
+kano_cell,aez8,groundnut,110,10,unassigned,R2,0.0,1,3,beginning peg,33,41,False
+kano_cell,aez8,groundnut,110,20,unassigned,R2,0.0,1,3,beginning peg,33,41,False
+kano_cell,aez8,groundnut,110,30,unassigned,R2,0.0,1,3,beginning peg,33,41,False
+kano_cell,aez8,groundnut,130,0,unassigned,R2,0.0,1,3,beginning peg,39,48,False
+kano_cell,aez8,groundnut,130,10,unassigned,R2,0.0,1,3,beginning peg,39,48,False
 kano_cell,aez8,groundnut,70,0,unassigned,R3,0.0,1,4,beginning pod,27,31,True
 kano_cell,aez8,groundnut,70,10,unassigned,R3,0.0,1,4,beginning pod,27,31,True
 kano_cell,aez8,groundnut,70,20,unassigned,R3,0.0,1,4,beginning pod,27,31,True
@@ -403,7 +711,14 @@ kano_cell,aez8,groundnut,70,40,unassigned,R3,0.0,1,4,beginning pod,27,31,True
 kano_cell,aez8,groundnut,90,0,unassigned,R3,0.0,1,4,beginning pod,34,39,True
 kano_cell,aez8,groundnut,90,10,unassigned,R3,0.0,1,4,beginning pod,34,39,True
 kano_cell,aez8,groundnut,90,20,unassigned,R3,0.0,1,4,beginning pod,34,39,True
+kano_cell,aez8,groundnut,90,30,unassigned,R3,0.0,1,4,beginning pod,34,39,True
+kano_cell,aez8,groundnut,90,40,unassigned,R3,0.0,1,4,beginning pod,34,39,True
 kano_cell,aez8,groundnut,110,0,unassigned,R3,0.0,1,4,beginning pod,42,49,True
+kano_cell,aez8,groundnut,110,10,unassigned,R3,0.0,1,4,beginning pod,42,49,True
+kano_cell,aez8,groundnut,110,20,unassigned,R3,0.0,1,4,beginning pod,42,49,True
+kano_cell,aez8,groundnut,110,30,unassigned,R3,0.0,1,4,beginning pod,42,49,True
+kano_cell,aez8,groundnut,130,0,unassigned,R3,0.0,1,4,beginning pod,49,57,True
+kano_cell,aez8,groundnut,130,10,unassigned,R3,0.0,1,4,beginning pod,49,57,True
 kano_cell,aez8,groundnut,70,0,unassigned,R4,0.0,1,5,full pod,32,35,True
 kano_cell,aez8,groundnut,70,10,unassigned,R4,0.0,1,5,full pod,32,35,True
 kano_cell,aez8,groundnut,70,20,unassigned,R4,0.0,1,5,full pod,32,35,True
@@ -412,61 +727,110 @@ kano_cell,aez8,groundnut,70,40,unassigned,R4,0.0,1,5,full pod,32,35,True
 kano_cell,aez8,groundnut,90,0,unassigned,R4,0.0,1,5,full pod,40,46,True
 kano_cell,aez8,groundnut,90,10,unassigned,R4,0.0,1,5,full pod,40,46,True
 kano_cell,aez8,groundnut,90,20,unassigned,R4,0.0,1,5,full pod,40,46,True
+kano_cell,aez8,groundnut,90,30,unassigned,R4,0.0,1,5,full pod,40,46,True
+kano_cell,aez8,groundnut,90,40,unassigned,R4,0.023809524,1,5,full pod,40,46,True
 kano_cell,aez8,groundnut,110,0,unassigned,R4,0.0,1,5,full pod,50,56,True
+kano_cell,aez8,groundnut,110,10,unassigned,R4,0.0,1,5,full pod,50,56,True
+kano_cell,aez8,groundnut,110,20,unassigned,R4,0.0,1,5,full pod,50,56,True
+kano_cell,aez8,groundnut,110,30,unassigned,R4,0.029411765,1,5,full pod,50,56,True
+kano_cell,aez8,groundnut,130,0,unassigned,R4,0.0,1,5,full pod,58,67,True
+kano_cell,aez8,groundnut,130,10,unassigned,R4,0.0,1,5,full pod,58,67,True
 kano_cell,aez8,groundnut,70,0,unassigned,R5,0.0,1,6,beginning seed,36,42,True
 kano_cell,aez8,groundnut,70,10,unassigned,R5,0.0,1,6,beginning seed,36,42,True
 kano_cell,aez8,groundnut,70,20,unassigned,R5,0.0,1,6,beginning seed,36,42,True
 kano_cell,aez8,groundnut,70,30,unassigned,R5,0.0,1,6,beginning seed,36,42,True
-kano_cell,aez8,groundnut,70,40,unassigned,R5,0.029411765,1,6,beginning seed,36,42,True
+kano_cell,aez8,groundnut,70,40,unassigned,R5,0.023255814,1,6,beginning seed,36,42,True
 kano_cell,aez8,groundnut,90,0,unassigned,R5,0.0,1,6,beginning seed,47,55,True
 kano_cell,aez8,groundnut,90,10,unassigned,R5,0.0,1,6,beginning seed,47,55,True
 kano_cell,aez8,groundnut,90,20,unassigned,R5,0.0,1,6,beginning seed,47,55,True
+kano_cell,aez8,groundnut,90,30,unassigned,R5,0.023255814,1,6,beginning seed,47,55,True
+kano_cell,aez8,groundnut,90,40,unassigned,R5,0.023809524,1,6,beginning seed,47,55,True
 kano_cell,aez8,groundnut,110,0,unassigned,R5,0.0,1,6,beginning seed,57,67,True
+kano_cell,aez8,groundnut,110,10,unassigned,R5,0.0,1,6,beginning seed,57,67,True
+kano_cell,aez8,groundnut,110,20,unassigned,R5,0.023809524,1,6,beginning seed,57,67,True
+kano_cell,aez8,groundnut,110,30,unassigned,R5,0.029411765,1,6,beginning seed,57,67,True
+kano_cell,aez8,groundnut,130,0,unassigned,R5,0.0,1,6,beginning seed,68,80,True
+kano_cell,aez8,groundnut,130,10,unassigned,R5,0.029411765,1,6,beginning seed,68,80,True
 kano_cell,aez8,groundnut,70,0,unassigned,R6,0.0,1,7,full seed,43,54,True
 kano_cell,aez8,groundnut,70,10,unassigned,R6,0.0,1,7,full seed,43,54,True
 kano_cell,aez8,groundnut,70,20,unassigned,R6,0.0,1,7,full seed,43,54,True
-kano_cell,aez8,groundnut,70,30,unassigned,R6,0.023809524,1,7,full seed,43,54,True
-kano_cell,aez8,groundnut,70,40,unassigned,R6,0.029411765,1,7,full seed,43,54,True
+kano_cell,aez8,groundnut,70,30,unassigned,R6,0.023255814,1,7,full seed,43,54,True
+kano_cell,aez8,groundnut,70,40,unassigned,R6,0.023255814,1,7,full seed,43,54,True
 kano_cell,aez8,groundnut,90,0,unassigned,R6,0.0,1,7,full seed,56,69,True
 kano_cell,aez8,groundnut,90,10,unassigned,R6,0.0,1,7,full seed,56,69,True
-kano_cell,aez8,groundnut,90,20,unassigned,R6,0.029411765,1,7,full seed,56,69,True
-kano_cell,aez8,groundnut,110,0,unassigned,R6,0.029411765,1,7,full seed,68,85,True
+kano_cell,aez8,groundnut,90,20,unassigned,R6,0.023255814,1,7,full seed,56,69,True
+kano_cell,aez8,groundnut,90,30,unassigned,R6,0.046511628,1,7,full seed,56,69,True
+kano_cell,aez8,groundnut,90,40,unassigned,R6,0.04761905,1,7,full seed,56,69,True
+kano_cell,aez8,groundnut,110,0,unassigned,R6,0.023255814,1,7,full seed,68,85,True
+kano_cell,aez8,groundnut,110,10,unassigned,R6,0.046511628,1,7,full seed,68,85,True
+kano_cell,aez8,groundnut,110,20,unassigned,R6,0.04761905,1,7,full seed,68,85,True
+kano_cell,aez8,groundnut,110,30,unassigned,R6,0.029411765,1,7,full seed,68,85,True
+kano_cell,aez8,groundnut,130,0,unassigned,R6,0.023809524,1,7,full seed,81,100,True
+kano_cell,aez8,groundnut,130,10,unassigned,R6,0.05882353,1,7,full seed,81,100,True
 kano_cell,aez8,groundnut,70,0,unassigned,R7,0.0,1,8,beginning maturity,55,64,False
 kano_cell,aez8,groundnut,70,10,unassigned,R7,0.0,1,8,beginning maturity,55,64,False
 kano_cell,aez8,groundnut,70,20,unassigned,R7,0.0,1,8,beginning maturity,55,64,False
-kano_cell,aez8,groundnut,70,30,unassigned,R7,0.023809524,1,8,beginning maturity,55,64,False
-kano_cell,aez8,groundnut,70,40,unassigned,R7,0.0,1,8,beginning maturity,55,64,False
+kano_cell,aez8,groundnut,70,30,unassigned,R7,0.023255814,1,8,beginning maturity,55,64,False
+kano_cell,aez8,groundnut,70,40,unassigned,R7,0.023255814,1,8,beginning maturity,55,64,False
 kano_cell,aez8,groundnut,90,0,unassigned,R7,0.0,1,8,beginning maturity,70,83,False
-kano_cell,aez8,groundnut,90,10,unassigned,R7,0.023809524,1,8,beginning maturity,70,83,False
-kano_cell,aez8,groundnut,90,20,unassigned,R7,0.029411765,1,8,beginning maturity,70,83,False
-kano_cell,aez8,groundnut,110,0,unassigned,R7,0.029411765,1,8,beginning maturity,86,101,False
+kano_cell,aez8,groundnut,90,10,unassigned,R7,0.023255814,1,8,beginning maturity,70,83,False
+kano_cell,aez8,groundnut,90,20,unassigned,R7,0.046511628,1,8,beginning maturity,70,83,False
+kano_cell,aez8,groundnut,90,30,unassigned,R7,0.069767445,1,8,beginning maturity,70,83,False
+kano_cell,aez8,groundnut,90,40,unassigned,R7,0.26190478,1,8,beginning maturity,70,83,False
+kano_cell,aez8,groundnut,110,0,unassigned,R7,0.046511628,1,8,beginning maturity,86,101,False
+kano_cell,aez8,groundnut,110,10,unassigned,R7,0.069767445,1,8,beginning maturity,86,101,False
+kano_cell,aez8,groundnut,110,20,unassigned,R7,0.26190478,1,8,beginning maturity,86,101,False
+kano_cell,aez8,groundnut,110,30,unassigned,R7,0.4117647,1,8,beginning maturity,86,101,False
+kano_cell,aez8,groundnut,130,0,unassigned,R7,0.26190478,1,8,beginning maturity,101,120,False
+kano_cell,aez8,groundnut,130,10,unassigned,R7,0.44117647,1,8,beginning maturity,101,120,False
 kano_cell,aez8,groundnut,70,0,unassigned,R8,0.0,1,9,harvest maturity,65,69,False
 kano_cell,aez8,groundnut,70,10,unassigned,R8,0.0,1,9,harvest maturity,65,69,False
 kano_cell,aez8,groundnut,70,20,unassigned,R8,0.0,1,9,harvest maturity,65,69,False
 kano_cell,aez8,groundnut,70,30,unassigned,R8,0.0,1,9,harvest maturity,65,69,False
-kano_cell,aez8,groundnut,70,40,unassigned,R8,0.0,1,9,harvest maturity,65,69,False
+kano_cell,aez8,groundnut,70,40,unassigned,R8,0.023255814,1,9,harvest maturity,65,69,False
 kano_cell,aez8,groundnut,90,0,unassigned,R8,0.0,1,9,harvest maturity,84,89,False
 kano_cell,aez8,groundnut,90,10,unassigned,R8,0.0,1,9,harvest maturity,84,89,False
-kano_cell,aez8,groundnut,90,20,unassigned,R8,0.0,1,9,harvest maturity,84,89,False
-kano_cell,aez8,groundnut,110,0,unassigned,R8,0.0,1,9,harvest maturity,102,109,False
+kano_cell,aez8,groundnut,90,20,unassigned,R8,0.023255814,1,9,harvest maturity,84,89,False
+kano_cell,aez8,groundnut,90,30,unassigned,R8,0.023255814,1,9,harvest maturity,84,89,False
+kano_cell,aez8,groundnut,90,40,unassigned,R8,0.1904762,1,9,harvest maturity,84,89,False
+kano_cell,aez8,groundnut,110,0,unassigned,R8,0.023255814,1,9,harvest maturity,102,109,False
+kano_cell,aez8,groundnut,110,10,unassigned,R8,0.046511628,1,9,harvest maturity,102,109,False
+kano_cell,aez8,groundnut,110,20,unassigned,R8,0.23809524,1,9,harvest maturity,102,109,False
+kano_cell,aez8,groundnut,110,30,unassigned,R8,0.4117647,1,9,harvest maturity,102,109,False
+kano_cell,aez8,groundnut,130,0,unassigned,R8,0.23809524,1,9,harvest maturity,121,129,False
+kano_cell,aez8,groundnut,130,10,unassigned,R8,0.4117647,1,9,harvest maturity,121,129,False
 kano_cell,aez8,groundnut,70,0,ALL,SOW,0.0,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,groundnut,70,10,ALL,SOW,0.023255814,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,groundnut,70,20,ALL,SOW,0.0,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,groundnut,70,30,ALL,SOW,0.0,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,groundnut,70,40,ALL,SOW,0.0,1,0,sowing to emergence,0,4,False
 kano_cell,aez8,groundnut,90,0,ALL,SOW,0.0,1,0,sowing to emergence,0,5,False
-kano_cell,aez8,groundnut,90,10,ALL,SOW,0.023809524,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,groundnut,90,10,ALL,SOW,0.023255814,1,0,sowing to emergence,0,5,False
 kano_cell,aez8,groundnut,90,20,ALL,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,groundnut,90,30,ALL,SOW,0.0,1,0,sowing to emergence,0,5,False
+kano_cell,aez8,groundnut,90,40,ALL,SOW,0.0,1,0,sowing to emergence,0,5,False
 kano_cell,aez8,groundnut,110,0,ALL,SOW,0.0,1,0,sowing to emergence,0,7,False
+kano_cell,aez8,groundnut,110,10,ALL,SOW,0.023255814,1,0,sowing to emergence,0,7,False
+kano_cell,aez8,groundnut,110,20,ALL,SOW,0.0,1,0,sowing to emergence,0,7,False
+kano_cell,aez8,groundnut,110,30,ALL,SOW,0.0,1,0,sowing to emergence,0,7,False
+kano_cell,aez8,groundnut,130,0,ALL,SOW,0.0,1,0,sowing to emergence,0,8,False
+kano_cell,aez8,groundnut,130,10,ALL,SOW,0.029411765,1,0,sowing to emergence,0,8,False
 kano_cell,aez8,groundnut,70,0,ALL,VE,0.046511628,1,1,emergence,5,14,False
 kano_cell,aez8,groundnut,70,10,ALL,VE,0.023255814,1,1,emergence,5,14,False
 kano_cell,aez8,groundnut,70,20,ALL,VE,0.0,1,1,emergence,5,14,False
 kano_cell,aez8,groundnut,70,30,ALL,VE,0.0,1,1,emergence,5,14,False
 kano_cell,aez8,groundnut,70,40,ALL,VE,0.0,1,1,emergence,5,14,False
 kano_cell,aez8,groundnut,90,0,ALL,VE,0.046511628,1,1,emergence,6,19,False
-kano_cell,aez8,groundnut,90,10,ALL,VE,0.023809524,1,1,emergence,6,19,False
+kano_cell,aez8,groundnut,90,10,ALL,VE,0.023255814,1,1,emergence,6,19,False
 kano_cell,aez8,groundnut,90,20,ALL,VE,0.0,1,1,emergence,6,19,False
-kano_cell,aez8,groundnut,110,0,ALL,VE,0.05882353,1,1,emergence,8,23,False
+kano_cell,aez8,groundnut,90,30,ALL,VE,0.0,1,1,emergence,6,19,False
+kano_cell,aez8,groundnut,90,40,ALL,VE,0.0,1,1,emergence,6,19,False
+kano_cell,aez8,groundnut,110,0,ALL,VE,0.046511628,1,1,emergence,8,23,False
+kano_cell,aez8,groundnut,110,10,ALL,VE,0.023255814,1,1,emergence,8,23,False
+kano_cell,aez8,groundnut,110,20,ALL,VE,0.0,1,1,emergence,8,23,False
+kano_cell,aez8,groundnut,110,30,ALL,VE,0.0,1,1,emergence,8,23,False
+kano_cell,aez8,groundnut,130,0,ALL,VE,0.04761905,1,1,emergence,9,28,False
+kano_cell,aez8,groundnut,130,10,ALL,VE,0.029411765,1,1,emergence,9,28,False
 kano_cell,aez8,groundnut,70,0,ALL,R1,0.046511628,1,2,beginning bloom,15,20,False
 kano_cell,aez8,groundnut,70,10,ALL,R1,0.0,1,2,beginning bloom,15,20,False
 kano_cell,aez8,groundnut,70,20,ALL,R1,0.0,1,2,beginning bloom,15,20,False
@@ -475,7 +839,14 @@ kano_cell,aez8,groundnut,70,40,ALL,R1,0.0,1,2,beginning bloom,15,20,False
 kano_cell,aez8,groundnut,90,0,ALL,R1,0.023255814,1,2,beginning bloom,20,26,False
 kano_cell,aez8,groundnut,90,10,ALL,R1,0.0,1,2,beginning bloom,20,26,False
 kano_cell,aez8,groundnut,90,20,ALL,R1,0.0,1,2,beginning bloom,20,26,False
+kano_cell,aez8,groundnut,90,30,ALL,R1,0.0,1,2,beginning bloom,20,26,False
+kano_cell,aez8,groundnut,90,40,ALL,R1,0.0,1,2,beginning bloom,20,26,False
 kano_cell,aez8,groundnut,110,0,ALL,R1,0.0,1,2,beginning bloom,24,32,False
+kano_cell,aez8,groundnut,110,10,ALL,R1,0.0,1,2,beginning bloom,24,32,False
+kano_cell,aez8,groundnut,110,20,ALL,R1,0.0,1,2,beginning bloom,24,32,False
+kano_cell,aez8,groundnut,110,30,ALL,R1,0.0,1,2,beginning bloom,24,32,False
+kano_cell,aez8,groundnut,130,0,ALL,R1,0.0,1,2,beginning bloom,29,38,False
+kano_cell,aez8,groundnut,130,10,ALL,R1,0.0,1,2,beginning bloom,29,38,False
 kano_cell,aez8,groundnut,70,0,ALL,R2,0.023255814,1,3,beginning peg,21,26,False
 kano_cell,aez8,groundnut,70,10,ALL,R2,0.0,1,3,beginning peg,21,26,False
 kano_cell,aez8,groundnut,70,20,ALL,R2,0.0,1,3,beginning peg,21,26,False
@@ -484,7 +855,14 @@ kano_cell,aez8,groundnut,70,40,ALL,R2,0.0,1,3,beginning peg,21,26,False
 kano_cell,aez8,groundnut,90,0,ALL,R2,0.0,1,3,beginning peg,27,33,False
 kano_cell,aez8,groundnut,90,10,ALL,R2,0.0,1,3,beginning peg,27,33,False
 kano_cell,aez8,groundnut,90,20,ALL,R2,0.0,1,3,beginning peg,27,33,False
+kano_cell,aez8,groundnut,90,30,ALL,R2,0.0,1,3,beginning peg,27,33,False
+kano_cell,aez8,groundnut,90,40,ALL,R2,0.0,1,3,beginning peg,27,33,False
 kano_cell,aez8,groundnut,110,0,ALL,R2,0.0,1,3,beginning peg,33,41,False
+kano_cell,aez8,groundnut,110,10,ALL,R2,0.0,1,3,beginning peg,33,41,False
+kano_cell,aez8,groundnut,110,20,ALL,R2,0.0,1,3,beginning peg,33,41,False
+kano_cell,aez8,groundnut,110,30,ALL,R2,0.0,1,3,beginning peg,33,41,False
+kano_cell,aez8,groundnut,130,0,ALL,R2,0.0,1,3,beginning peg,39,48,False
+kano_cell,aez8,groundnut,130,10,ALL,R2,0.0,1,3,beginning peg,39,48,False
 kano_cell,aez8,groundnut,70,0,ALL,R3,0.0,1,4,beginning pod,27,31,True
 kano_cell,aez8,groundnut,70,10,ALL,R3,0.0,1,4,beginning pod,27,31,True
 kano_cell,aez8,groundnut,70,20,ALL,R3,0.0,1,4,beginning pod,27,31,True
@@ -493,7 +871,14 @@ kano_cell,aez8,groundnut,70,40,ALL,R3,0.0,1,4,beginning pod,27,31,True
 kano_cell,aez8,groundnut,90,0,ALL,R3,0.0,1,4,beginning pod,34,39,True
 kano_cell,aez8,groundnut,90,10,ALL,R3,0.0,1,4,beginning pod,34,39,True
 kano_cell,aez8,groundnut,90,20,ALL,R3,0.0,1,4,beginning pod,34,39,True
+kano_cell,aez8,groundnut,90,30,ALL,R3,0.0,1,4,beginning pod,34,39,True
+kano_cell,aez8,groundnut,90,40,ALL,R3,0.0,1,4,beginning pod,34,39,True
 kano_cell,aez8,groundnut,110,0,ALL,R3,0.0,1,4,beginning pod,42,49,True
+kano_cell,aez8,groundnut,110,10,ALL,R3,0.0,1,4,beginning pod,42,49,True
+kano_cell,aez8,groundnut,110,20,ALL,R3,0.0,1,4,beginning pod,42,49,True
+kano_cell,aez8,groundnut,110,30,ALL,R3,0.0,1,4,beginning pod,42,49,True
+kano_cell,aez8,groundnut,130,0,ALL,R3,0.0,1,4,beginning pod,49,57,True
+kano_cell,aez8,groundnut,130,10,ALL,R3,0.0,1,4,beginning pod,49,57,True
 kano_cell,aez8,groundnut,70,0,ALL,R4,0.0,1,5,full pod,32,35,True
 kano_cell,aez8,groundnut,70,10,ALL,R4,0.0,1,5,full pod,32,35,True
 kano_cell,aez8,groundnut,70,20,ALL,R4,0.0,1,5,full pod,32,35,True
@@ -502,40 +887,75 @@ kano_cell,aez8,groundnut,70,40,ALL,R4,0.0,1,5,full pod,32,35,True
 kano_cell,aez8,groundnut,90,0,ALL,R4,0.0,1,5,full pod,40,46,True
 kano_cell,aez8,groundnut,90,10,ALL,R4,0.0,1,5,full pod,40,46,True
 kano_cell,aez8,groundnut,90,20,ALL,R4,0.0,1,5,full pod,40,46,True
+kano_cell,aez8,groundnut,90,30,ALL,R4,0.0,1,5,full pod,40,46,True
+kano_cell,aez8,groundnut,90,40,ALL,R4,0.023809524,1,5,full pod,40,46,True
 kano_cell,aez8,groundnut,110,0,ALL,R4,0.0,1,5,full pod,50,56,True
+kano_cell,aez8,groundnut,110,10,ALL,R4,0.0,1,5,full pod,50,56,True
+kano_cell,aez8,groundnut,110,20,ALL,R4,0.0,1,5,full pod,50,56,True
+kano_cell,aez8,groundnut,110,30,ALL,R4,0.029411765,1,5,full pod,50,56,True
+kano_cell,aez8,groundnut,130,0,ALL,R4,0.0,1,5,full pod,58,67,True
+kano_cell,aez8,groundnut,130,10,ALL,R4,0.0,1,5,full pod,58,67,True
 kano_cell,aez8,groundnut,70,0,ALL,R5,0.0,1,6,beginning seed,36,42,True
 kano_cell,aez8,groundnut,70,10,ALL,R5,0.0,1,6,beginning seed,36,42,True
 kano_cell,aez8,groundnut,70,20,ALL,R5,0.0,1,6,beginning seed,36,42,True
 kano_cell,aez8,groundnut,70,30,ALL,R5,0.0,1,6,beginning seed,36,42,True
-kano_cell,aez8,groundnut,70,40,ALL,R5,0.029411765,1,6,beginning seed,36,42,True
+kano_cell,aez8,groundnut,70,40,ALL,R5,0.023255814,1,6,beginning seed,36,42,True
 kano_cell,aez8,groundnut,90,0,ALL,R5,0.0,1,6,beginning seed,47,55,True
 kano_cell,aez8,groundnut,90,10,ALL,R5,0.0,1,6,beginning seed,47,55,True
 kano_cell,aez8,groundnut,90,20,ALL,R5,0.0,1,6,beginning seed,47,55,True
+kano_cell,aez8,groundnut,90,30,ALL,R5,0.023255814,1,6,beginning seed,47,55,True
+kano_cell,aez8,groundnut,90,40,ALL,R5,0.023809524,1,6,beginning seed,47,55,True
 kano_cell,aez8,groundnut,110,0,ALL,R5,0.0,1,6,beginning seed,57,67,True
+kano_cell,aez8,groundnut,110,10,ALL,R5,0.0,1,6,beginning seed,57,67,True
+kano_cell,aez8,groundnut,110,20,ALL,R5,0.023809524,1,6,beginning seed,57,67,True
+kano_cell,aez8,groundnut,110,30,ALL,R5,0.029411765,1,6,beginning seed,57,67,True
+kano_cell,aez8,groundnut,130,0,ALL,R5,0.0,1,6,beginning seed,68,80,True
+kano_cell,aez8,groundnut,130,10,ALL,R5,0.029411765,1,6,beginning seed,68,80,True
 kano_cell,aez8,groundnut,70,0,ALL,R6,0.0,1,7,full seed,43,54,True
 kano_cell,aez8,groundnut,70,10,ALL,R6,0.0,1,7,full seed,43,54,True
 kano_cell,aez8,groundnut,70,20,ALL,R6,0.0,1,7,full seed,43,54,True
-kano_cell,aez8,groundnut,70,30,ALL,R6,0.023809524,1,7,full seed,43,54,True
-kano_cell,aez8,groundnut,70,40,ALL,R6,0.029411765,1,7,full seed,43,54,True
+kano_cell,aez8,groundnut,70,30,ALL,R6,0.023255814,1,7,full seed,43,54,True
+kano_cell,aez8,groundnut,70,40,ALL,R6,0.023255814,1,7,full seed,43,54,True
 kano_cell,aez8,groundnut,90,0,ALL,R6,0.0,1,7,full seed,56,69,True
 kano_cell,aez8,groundnut,90,10,ALL,R6,0.0,1,7,full seed,56,69,True
-kano_cell,aez8,groundnut,90,20,ALL,R6,0.029411765,1,7,full seed,56,69,True
-kano_cell,aez8,groundnut,110,0,ALL,R6,0.029411765,1,7,full seed,68,85,True
+kano_cell,aez8,groundnut,90,20,ALL,R6,0.023255814,1,7,full seed,56,69,True
+kano_cell,aez8,groundnut,90,30,ALL,R6,0.046511628,1,7,full seed,56,69,True
+kano_cell,aez8,groundnut,90,40,ALL,R6,0.04761905,1,7,full seed,56,69,True
+kano_cell,aez8,groundnut,110,0,ALL,R6,0.023255814,1,7,full seed,68,85,True
+kano_cell,aez8,groundnut,110,10,ALL,R6,0.046511628,1,7,full seed,68,85,True
+kano_cell,aez8,groundnut,110,20,ALL,R6,0.04761905,1,7,full seed,68,85,True
+kano_cell,aez8,groundnut,110,30,ALL,R6,0.029411765,1,7,full seed,68,85,True
+kano_cell,aez8,groundnut,130,0,ALL,R6,0.023809524,1,7,full seed,81,100,True
+kano_cell,aez8,groundnut,130,10,ALL,R6,0.05882353,1,7,full seed,81,100,True
 kano_cell,aez8,groundnut,70,0,ALL,R7,0.0,1,8,beginning maturity,55,64,False
 kano_cell,aez8,groundnut,70,10,ALL,R7,0.0,1,8,beginning maturity,55,64,False
 kano_cell,aez8,groundnut,70,20,ALL,R7,0.0,1,8,beginning maturity,55,64,False
-kano_cell,aez8,groundnut,70,30,ALL,R7,0.023809524,1,8,beginning maturity,55,64,False
-kano_cell,aez8,groundnut,70,40,ALL,R7,0.0,1,8,beginning maturity,55,64,False
+kano_cell,aez8,groundnut,70,30,ALL,R7,0.023255814,1,8,beginning maturity,55,64,False
+kano_cell,aez8,groundnut,70,40,ALL,R7,0.023255814,1,8,beginning maturity,55,64,False
 kano_cell,aez8,groundnut,90,0,ALL,R7,0.0,1,8,beginning maturity,70,83,False
-kano_cell,aez8,groundnut,90,10,ALL,R7,0.023809524,1,8,beginning maturity,70,83,False
-kano_cell,aez8,groundnut,90,20,ALL,R7,0.029411765,1,8,beginning maturity,70,83,False
-kano_cell,aez8,groundnut,110,0,ALL,R7,0.029411765,1,8,beginning maturity,86,101,False
+kano_cell,aez8,groundnut,90,10,ALL,R7,0.023255814,1,8,beginning maturity,70,83,False
+kano_cell,aez8,groundnut,90,20,ALL,R7,0.046511628,1,8,beginning maturity,70,83,False
+kano_cell,aez8,groundnut,90,30,ALL,R7,0.069767445,1,8,beginning maturity,70,83,False
+kano_cell,aez8,groundnut,90,40,ALL,R7,0.26190478,1,8,beginning maturity,70,83,False
+kano_cell,aez8,groundnut,110,0,ALL,R7,0.046511628,1,8,beginning maturity,86,101,False
+kano_cell,aez8,groundnut,110,10,ALL,R7,0.069767445,1,8,beginning maturity,86,101,False
+kano_cell,aez8,groundnut,110,20,ALL,R7,0.26190478,1,8,beginning maturity,86,101,False
+kano_cell,aez8,groundnut,110,30,ALL,R7,0.4117647,1,8,beginning maturity,86,101,False
+kano_cell,aez8,groundnut,130,0,ALL,R7,0.26190478,1,8,beginning maturity,101,120,False
+kano_cell,aez8,groundnut,130,10,ALL,R7,0.44117647,1,8,beginning maturity,101,120,False
 kano_cell,aez8,groundnut,70,0,ALL,R8,0.0,1,9,harvest maturity,65,69,False
 kano_cell,aez8,groundnut,70,10,ALL,R8,0.0,1,9,harvest maturity,65,69,False
 kano_cell,aez8,groundnut,70,20,ALL,R8,0.0,1,9,harvest maturity,65,69,False
 kano_cell,aez8,groundnut,70,30,ALL,R8,0.0,1,9,harvest maturity,65,69,False
-kano_cell,aez8,groundnut,70,40,ALL,R8,0.0,1,9,harvest maturity,65,69,False
+kano_cell,aez8,groundnut,70,40,ALL,R8,0.023255814,1,9,harvest maturity,65,69,False
 kano_cell,aez8,groundnut,90,0,ALL,R8,0.0,1,9,harvest maturity,84,89,False
 kano_cell,aez8,groundnut,90,10,ALL,R8,0.0,1,9,harvest maturity,84,89,False
-kano_cell,aez8,groundnut,90,20,ALL,R8,0.0,1,9,harvest maturity,84,89,False
-kano_cell,aez8,groundnut,110,0,ALL,R8,0.0,1,9,harvest maturity,102,109,False
+kano_cell,aez8,groundnut,90,20,ALL,R8,0.023255814,1,9,harvest maturity,84,89,False
+kano_cell,aez8,groundnut,90,30,ALL,R8,0.023255814,1,9,harvest maturity,84,89,False
+kano_cell,aez8,groundnut,90,40,ALL,R8,0.1904762,1,9,harvest maturity,84,89,False
+kano_cell,aez8,groundnut,110,0,ALL,R8,0.023255814,1,9,harvest maturity,102,109,False
+kano_cell,aez8,groundnut,110,10,ALL,R8,0.046511628,1,9,harvest maturity,102,109,False
+kano_cell,aez8,groundnut,110,20,ALL,R8,0.23809524,1,9,harvest maturity,102,109,False
+kano_cell,aez8,groundnut,110,30,ALL,R8,0.4117647,1,9,harvest maturity,102,109,False
+kano_cell,aez8,groundnut,130,0,ALL,R8,0.23809524,1,9,harvest maturity,121,129,False
+kano_cell,aez8,groundnut,130,10,ALL,R8,0.4117647,1,9,harvest maturity,121,129,False
