@@ -1,6 +1,6 @@
-03:37:11 [MainProcess] INFO - CHIRPS country files intersecting bbox (2.5, 4.5, 14.5, 14.5): 1
-03:37:11 [MainProcess] INFO -   NGA  lon    2.525..  14.475  lat   4.525.. 14.475  days 16436  chirps_NGA_1981_2025.nc
-03:37:11 [MainProcess] INFO - 
+07:14:08 [MainProcess] INFO - CHIRPS country files intersecting bbox (2.5, 4.5, 14.5, 14.5): 1
+07:14:08 [MainProcess] INFO -   NGA  lon    2.525..  14.475  lat   4.525.. 14.475  days 16436  chirps_NGA_1981_2025.nc
+07:14:08 [MainProcess] INFO - 
 --- CHIRPS country sample chirps_data_cache/chirps_NGA_1981_2025.nc
 <xarray.Dataset> Size: 3GB
 Dimensions:    (time: 16436, latitude: 200, longitude: 240)
@@ -10,12 +10,12 @@ Coordinates:
   * longitude  (longitude) float64 2kB 2.525 2.575 2.625 ... 14.38 14.43 14.47
 Data variables:
     rainfall   (time, latitude, longitude) float32 3GB ...
-03:37:11 [MainProcess] INFO -   data var: rainfall  attrs: {'units': 'mm', 'source': 'CHIRPS v2.0 daily p05 COG (data.chc.ucsb.edu)', 'country_iso3': 'NGA'}
-03:37:11 [MainProcess] INFO -   encoding _FillValue=nan missing_value=None dtype=float32
-03:37:11 [MainProcess] INFO -   lat first/last: [14.475  4.525]  lon first/last: [ 2.525 14.475]
-03:37:11 [MainProcess] INFO -   time: 1981-01-01T00:00:00.000000000 .. 2025-12-31T00:00:00.000000000  (n=16436)
-03:37:11 [MainProcess] INFO -   first 31 days: NaN=0.000  (<0)=0.043  min=-9999.0  max=16.507122039794922
-03:37:11 [MainProcess] INFO - 
+07:14:08 [MainProcess] INFO -   data var: rainfall  attrs: {'units': 'mm', 'source': 'CHIRPS v2.0 daily p05 COG (data.chc.ucsb.edu)', 'country_iso3': 'NGA'}
+07:14:08 [MainProcess] INFO -   encoding _FillValue=nan missing_value=None dtype=float32
+07:14:08 [MainProcess] INFO -   lat first/last: [14.475  4.525]  lon first/last: [ 2.525 14.475]
+07:14:08 [MainProcess] INFO -   time: 1981-01-01T00:00:00.000000000 .. 2025-12-31T00:00:00.000000000  (n=16436)
+07:14:08 [MainProcess] INFO -   first 31 days: NaN=0.000  (<0)=0.043  min=-9999.0  max=16.507122039794922
+07:14:08 [MainProcess] INFO - 
 --- RADS sample chirps_africa/africa_RainyAndDrySeason.pentad.CHIRPS.1981.nc
 <xarray.Dataset> Size: 3MB
 Dimensions:         (reference_year: 1, latitude: 200, longitude: 240)
@@ -34,30 +34,30 @@ Data variables:
     totdry          (reference_year, latitude, longitude) float64 384kB ...
 Attributes:
     note:     RADS-style seasons rebuilt from CHIRPS with the first pass of t...
-03:37:11 [MainProcess] INFO -   onset_date: dims=('reference_year', 'latitude', 'longitude') dtype=datetime64[ns]
-03:37:11 [MainProcess] INFO -   demise_date: dims=('reference_year', 'latitude', 'longitude') dtype=datetime64[ns]
-03:37:11 [MainProcess] INFO -   onset_pentad: dims=('reference_year', 'latitude', 'longitude') dtype=float64
-03:37:11 [MainProcess] INFO -   demise_pentad: dims=('reference_year', 'latitude', 'longitude') dtype=float64
-03:37:11 [MainProcess] INFO -   durwet: dims=('reference_year', 'latitude', 'longitude') dtype=float64
-03:37:11 [MainProcess] INFO -   totwet: dims=('reference_year', 'latitude', 'longitude') dtype=float64
-03:37:11 [MainProcess] INFO -   durdry: dims=('reference_year', 'latitude', 'longitude') dtype=float64
-03:37:11 [MainProcess] INFO -   totdry: dims=('reference_year', 'latitude', 'longitude') dtype=float64
-03:37:12 [MainProcess] INFO - ======================================================================
-03:37:12 [MainProcess] INFO - v7 STEP1  region=nga bbox=(2.5, 4.5, 14.5, 14.5)  workers=4
-03:37:12 [MainProcess] INFO - ======================================================================
-03:37:12 [MainProcess] INFO - CHIRPS country files intersecting the region (1): NGA
-03:37:12 [MainProcess] INFO - Grid: 240 lon x 200 lat, step 0.0500 deg, lon 2.525..14.475, lat 4.525..14.475
-03:37:12 [MainProcess] INFO - Creating cache dryspell_v7/nga/cache/rain_u16.dat shape=(16436, 200, 240) (1.6 GB)
-03:37:25 [MainProcess] INFO - Cache: 0 country files already mosaicked, 1 to read
-03:37:45 [MainProcess] INFO -   mosaicked NGA: 45,935 cells with data, 16,436 days
-03:37:45 [MainProcess] INFO - Days with data: 16,436 / 16,436  (last day with data: 2025-12-31)
-03:37:45 [MainProcess] INFO - Extracting spells: 25 row chunks
-03:37:53 [MainProcess] INFO -   20/25 chunks, 12,020,617 spells
-03:37:55 [MainProcess] INFO -   25/25 chunks, 14,868,520 spells
-03:37:56 [MainProcess] INFO - Boundaries loaded from Spatial_data_repository/ne_50m_admin_0_countries.zip (6 polygons)
-03:37:57 [MainProcess] INFO - Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
-03:37:57 [MainProcess] INFO - generated new fontManager
-03:37:58 [MainProcess] INFO - land pixels (inside country polygons) WITHOUT usable CHIRPS: 6 of 45,878  -> see diagnostics/chirps_coverage.png
-03:37:58 [MainProcess] INFO - valid cells: 45,935  no data: 2,065  too many missing: 0  bimodal: 222
-03:37:58 [MainProcess] INFO - spells >= 5 d: 14,868,520
-03:37:58 [MainProcess] INFO - STEP1 done in 0.8 min -> dryspell_v7/nga/step1
+07:14:08 [MainProcess] INFO -   onset_date: dims=('reference_year', 'latitude', 'longitude') dtype=datetime64[ns]
+07:14:08 [MainProcess] INFO -   demise_date: dims=('reference_year', 'latitude', 'longitude') dtype=datetime64[ns]
+07:14:08 [MainProcess] INFO -   onset_pentad: dims=('reference_year', 'latitude', 'longitude') dtype=float64
+07:14:08 [MainProcess] INFO -   demise_pentad: dims=('reference_year', 'latitude', 'longitude') dtype=float64
+07:14:08 [MainProcess] INFO -   durwet: dims=('reference_year', 'latitude', 'longitude') dtype=float64
+07:14:08 [MainProcess] INFO -   totwet: dims=('reference_year', 'latitude', 'longitude') dtype=float64
+07:14:08 [MainProcess] INFO -   durdry: dims=('reference_year', 'latitude', 'longitude') dtype=float64
+07:14:08 [MainProcess] INFO -   totdry: dims=('reference_year', 'latitude', 'longitude') dtype=float64
+07:14:09 [MainProcess] INFO - ======================================================================
+07:14:09 [MainProcess] INFO - v7 STEP1  region=nga bbox=(2.5, 4.5, 14.5, 14.5)  workers=4
+07:14:09 [MainProcess] INFO - ======================================================================
+07:14:09 [MainProcess] INFO - CHIRPS country files intersecting the region (1): NGA
+07:14:09 [MainProcess] INFO - Grid: 240 lon x 200 lat, step 0.0500 deg, lon 2.525..14.475, lat 4.525..14.475
+07:14:09 [MainProcess] INFO - Creating cache dryspell_v7/nga/cache/rain_u16.dat shape=(16436, 200, 240) (1.6 GB)
+07:14:17 [MainProcess] INFO - Cache: 0 country files already mosaicked, 1 to read
+07:14:37 [MainProcess] INFO -   mosaicked NGA: 45,935 cells with data, 16,436 days
+07:14:37 [MainProcess] INFO - Days with data: 16,436 / 16,436  (last day with data: 2025-12-31)
+07:14:37 [MainProcess] INFO - Extracting spells: 25 row chunks
+07:14:47 [MainProcess] INFO -   20/25 chunks, 12,020,617 spells
+07:14:49 [MainProcess] INFO -   25/25 chunks, 14,868,520 spells
+07:14:49 [MainProcess] INFO - Boundaries loaded from Spatial_data_repository/ne_50m_admin_0_countries.zip (6 polygons)
+07:14:50 [MainProcess] INFO - Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+07:14:51 [MainProcess] INFO - generated new fontManager
+07:14:53 [MainProcess] INFO - land pixels (inside country polygons) WITHOUT usable CHIRPS: 6 of 45,878  -> see diagnostics/chirps_coverage.png
+07:14:53 [MainProcess] INFO - valid cells: 45,935  no data: 2,065  too many missing: 0  bimodal: 222
+07:14:53 [MainProcess] INFO - spells >= 5 d: 14,868,520
+07:14:53 [MainProcess] INFO - STEP1 done in 0.7 min -> dryspell_v7/nga/step1
