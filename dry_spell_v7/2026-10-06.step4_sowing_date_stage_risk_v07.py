@@ -47,14 +47,17 @@ Inputs (from steps 1-2 of the same --region)
   dryspell_v7/<region>/step1/spells/part_*.parquet, grid_meta.nc, day_has_data.npy,
   step1_meta.json;  dryspell_v7/<region>/step2/seasons/part_*.parquet
 
-Outputs (dryspell_v7/<region>/step4_<ISO3>/)
-  stage_windows.csv          stages + vulnerable window in DAS per crop x cycle
-  cells_<crop>.nc            per-cell layers, dims (cycle, sow, [stage], lat, lon)
-  cell_summary.parquet       long table, one row per cell x crop x cycle x sow
-  cell_stage_hits.parquet    long table, P(longest spell hits stage) per cell
-  aez_summary.csv            per AEZ (+ "ALL") x crop x cycle x sow
-  aez_stage_hits.csv         per AEZ (+ "ALL") x crop x cycle x sow x stage
-  png/                       heatmaps (stage x sowing), maps, AEZ curves
+Outputs (dryspell_v7/<region>/step4/<ISO3>/)
+  status.json                    ok / skipped (+ why), cell counts
+  stage_windows.csv              stages + vulnerable window in DAS per crop x cycle
+  cells_<crop>.nc                per-cell layers, dims (cycle, sow, [stage], lat, lon)
+  cell_summary.parquet           one row per cell x crop x cycle x sow
+  cell_stage_hits_<crop>.parquet P(longest spell hits stage) per cell (one column per stage)
+  aez_summary.csv                per AEZ (+ "ALL") x crop x cycle x sow, with cell counts
+  aez_stage_hits.csv             per AEZ (+ "ALL") x crop x cycle x sow x stage, with cell counts
+  png/                           heatmaps (stage x sowing), maps, AEZ curves
+Exit code 3 = nothing to analyse in this country (status.json says why).
+All countries of a region: run_all.py; SSA aggregate: 2026-10-07.step5_ssa_aggregate_v07.py.
 
 Usage
 -----
@@ -514,6 +517,19 @@ def load_aez(path, field, lon, lat, mean_rain, cmask, legend=None):
     return np.where(cmask, r, -1).astype(np.int16), labels, f"vector {p} field {field}"
 
 
+def aez_to_geotiff(src, dst):
+    """Convert an AEZ class raster (incl. a damaged ESRI ASCII grid inside a zip) to a GeoTIFF once,
+    so that each country then only reads its own window."""
+    import rasterio
+    band, tr, crs, nod, uri = _read_class_raster(Path(src), (-180.0, -90.0, 180.0, 90.0))
+    band = np.where((band == nod) | (band <= 0), -1, band).astype(np.int16)
+    Path(dst).parent.mkdir(parents=True, exist_ok=True)
+    with rasterio.open(dst, "w", driver="GTiff", height=band.shape[0], width=band.shape[1], count=1,
+                       dtype="int16", crs=crs, transform=tr, nodata=-1, compress="deflate", tiled=True) as d:
+        d.write(band, 1)
+    return dst
+
+
 # =============================================================================
 # PLOTS
 # =============================================================================
@@ -667,6 +683,7 @@ def main():
                     "(HarvestChoice codes are labelled automatically)")
     ap.add_argument("--aez_field", default="AEZ", help="attribute with the AEZ name (vector --aez)")
     ap.add_argument("--workers", type=int, default=max(1, min(32, mp.cpu_count() - 4)))
+    ap.add_argument("--out_dir", default=None, help="default: dryspell_v7/<region>/step4/<ISO3>")
     a = ap.parse_args()
 
     min_spell = dict(MIN_SPELL_CROP)
@@ -681,7 +698,7 @@ def main():
 
     rdir = C.region_dir(a.region)
     s1, s2 = rdir / "step1", rdir / "step2"
-    out = rdir / f"step4_{a.iso3}"
+    out = Path(a.out_dir) if a.out_dir else rdir / "step4" / a.iso3
     C.setup_logging(out / "step4.log")
     t0 = time.time()
     meta = C.read_json(s1 / "step1_meta.json")
@@ -705,7 +722,7 @@ def main():
         sys.exit("country boundaries are required (see BOUNDARY_SOURCES in dryspell_v7_common.py)")
     bnd = bnd_all[bnd_all["iso_a3"] == a.iso3]
     if not len(bnd):
-        sys.exit(f"{a.iso3} not found in boundaries")
+        skip(out, a.iso3, "not found in the boundaries inside the region bbox")
     from rasterio.features import geometry_mask
     cmask = geometry_mask(bnd.geometry, out_shape=(len(lat), len(lon)),
                           transform=C.grid_transform(lon, lat), invert=True)[::-1]
@@ -713,7 +730,7 @@ def main():
     rows = np.where(cmask.any(1))[0]
     cols = np.where(cmask.any(0))[0]
     if not len(rows):
-        sys.exit(f"{a.iso3} does not overlap the {a.region} grid")
+        skip(out, a.iso3, f"no grid cell of the {a.region} grid inside the country")
     i0, i1, j0, j1 = rows.min(), rows.max() + 1, cols.min(), cols.max() + 1
     logger.info(f"  {a.iso3}: {cmask.sum():,} grid cells, {(cmask & cell_ok).sum():,} with usable CHIRPS")
 
@@ -733,40 +750,46 @@ def main():
               gaps=np.r_[0, np.cumsum(~has)], spell_dir=str(s1 / "spells"), season_dir=str(s2 / "seasons"))
 
     chunks = [tuple(c) for c in meta["chunks"] if c[1] > i0 and c[0] < i1]
-    nlat, nlon = len(lat), len(lon)
     nC, nS = len(cycles), len(sows)
+    bh, bw = i1 - i0, j1 - j0                      # arrays cover the country box only
     full = {}
     for c in a.crops:
         nst = len(stages[c][cycles[0]][0])
-        full[c] = {k: np.full((nC, nS, nlat, nlon), np.nan, np.float32)
+        full[c] = {k: np.full((nC, nS, bh, bw), np.nan, np.float32)
                    for k in ("p_feasible", "p_spell", "p_hit_window", "window_overlap_mean",
                              "longest_len_median", "longest_start_das_median", "longest_end_das_median")}
-        full[c]["impossible"] = np.zeros((nC, nS, nlat, nlon), np.int8)
-        full[c]["p_hit_stage"] = np.full((nC, nS, nst, nlat, nlon), np.nan, np.float32)
-    n_seasons = np.zeros((nlat, nlon), np.int32)
+        full[c]["impossible"] = np.zeros((nC, nS, bh, bw), np.int8)
+        full[c]["p_hit_stage"] = np.full((nC, nS, nst, bh, bw), np.nan, np.float32)
+    n_seas = np.zeros((bh, bw), np.int32)
     logger.info(f"Processing {len(chunks)} row chunks")
     n_pairs = 0
-    with ProcessPoolExecutor(max_workers=min(a.workers, len(chunks)), mp_context=mp.get_context("fork")) as pool:
+    with ProcessPoolExecutor(max_workers=max(1, min(a.workers, len(chunks))),
+                             mp_context=mp.get_context("fork")) as pool:
         futs = [pool.submit(process_rows, r0, r1) for r0, r1 in chunks]
         for i, f in enumerate(as_completed(futs), 1):
             r0, r1, res, ns, npair = f.result()
-            n_seasons[r0:r1] = ns
+            ra, rb = max(r0, i0), min(r1, i1)
+            n_seas[ra - i0:rb - i0] = ns[ra - r0:rb - r0, j0:j1]
             n_pairs += npair
             for c in a.crops:
                 for k, v in res[c].items():
-                    full[c][k][..., r0:r1, :] = v
+                    full[c][k][..., ra - i0:rb - i0, :] = v[..., ra - r0:rb - r0, j0:j1]
+            del res
             if i % 10 == 0 or i == len(chunks):
                 logger.info(f"  {i}/{len(chunks)} chunks")
     logger.info(f"  spell x season pairs examined: {n_pairs:,}")
 
-    # ---- crop to the country box
+    # ---- country box
     sl = (slice(i0, i1), slice(j0, j1))
     lon_c, lat_c = lon[j0:j1], lat[i0:i1]
     cm_c = cmask[sl]
-    analysed = cm_c & cell_ok[sl] & (n_seasons[sl] >= a.min_feasible_seasons)
-    n_rads = int((cm_c & cell_ok[sl] & (n_seasons[sl] == 0)).sum())
-    logger.info(f"  cells analysed: {analysed.sum():,}; no valid RADS season "
+    analysed = cm_c & cell_ok[sl] & (n_seas >= a.min_feasible_seasons)
+    n_rads = int((cm_c & cell_ok[sl] & (n_seas < a.min_feasible_seasons)).sum())
+    logger.info(f"  cells analysed: {analysed.sum():,}; no/too few valid RADS seasons "
                 f"(incl. RADS bimodal mask): {n_rads:,}; no usable CHIRPS: {(cm_c & ~cell_ok[sl]).sum():,}")
+    if not analysed.any():
+        skip(out, a.iso3, "no cell with enough valid RADS seasons (bimodal mask, no RADS or no CHIRPS)",
+             n_cells=int(cm_c.sum()), n_no_rads=n_rads)
 
     mean_rain = gm["mean_annual_mm"].values[sl]
     aez, aez_lab, aez_src = load_aez(a.aez, a.aez_field, lon_c, lat_c, mean_rain, cm_c, a.aez_legend)
@@ -784,15 +807,14 @@ def main():
         st0 = stages[c][cycles[0]][0]
         dv = {}
         for k, v in full[c].items():
-            v = v[..., i0:i1, j0:j1]
             if k == "p_hit_stage":
                 dv[k] = (("cycle", "sow", "stage", "lat", "lon"), v)
             else:
                 dv[k] = (("cycle", "sow", "lat", "lon"), v)
         dv["aez"] = (("lat", "lon"), aez)
         dv["reason"] = (("lat", "lon"), reason)
-        dv["n_valid_seasons"] = (("lat", "lon"), n_seasons[sl])
-        ds = xr.Dataset(dv, coords={"cycle": cycles, "sow": [a.day0 + s for s in sows],
+        dv["n_valid_seasons"] = (("lat", "lon"), n_seas)
+        ds = xr.Dataset(dv, coords={"cycle": cycles, "sow": [a.day0 + sw for sw in sows],
                                     "stage": [s[0] for s in st0], "lat": lat_c, "lon": lon_c},
                         attrs={"crop": c, "country": a.iso3, "min_spell_days": min_spell[c],
                                "dry_mm": C.DRY_MM, "demise_grace": a.grace,
@@ -804,55 +826,77 @@ def main():
                                        "with a qualifying spell"})
         ds.to_netcdf(out / f"cells_{c}.nc", encoding={v: {"zlib": True, "complevel": 4} for v in ds.data_vars})
         sets[c] = ds
+    del full
     logger.info(f"Written cells_<crop>.nc")
 
-    # ---- long tables
+    # ---- per-cell tables (strings as categoricals: large countries have millions of rows)
     ii, jj = np.nonzero(analysed)
-    aez_name = np.array([aez_lab.get(int(x), "unassigned") for x in aez[ii, jj]])
-    cell_rows, stage_rows = [], []
+    aez_name = pd.Categorical([aez_lab.get(int(x), "unassigned") for x in aez[ii, jj]])
+    cell_rows, sh_parts = [], []
+    keys = ["crop", "cycle", "sow"]
     for c in a.crops:
         ds = sets[c]
-        stage_codes = list(ds.stage.values)
+        stage_codes = [str(x) for x in ds.stage.values]
+        wide_rows = []
         for ic, L in enumerate(cycles):
             for isw, sw in enumerate(sows):
-                d = {"crop": c, "cycle": L, "sow": a.day0 + sw, "row": ii + i0, "col": jj + j0,
-                     "lat": lat_c[ii], "lon": lon_c[jj], "aez": aez_name}
+                d = {"crop": c, "cycle": L, "sow": a.day0 + sw, "row": (ii + i0).astype(np.int16),
+                     "col": (jj + j0).astype(np.int16), "lat": lat_c[ii].astype(np.float32),
+                     "lon": lon_c[jj].astype(np.float32), "aez": aez_name}
                 for k in ("p_feasible", "impossible", "p_spell", "p_hit_window", "window_overlap_mean",
                           "longest_len_median", "longest_start_das_median", "longest_end_das_median"):
                     d[k] = ds[k].values[ic, isw][ii, jj]
                 ph = ds["p_hit_stage"].values[ic, isw][:, ii, jj]          # (stage, n)
                 with np.errstate(invalid="ignore"):
                     best = np.where(np.all(np.isnan(ph), 0), -1, np.nanargmax(np.where(np.isnan(ph), -1, ph), 0))
-                d["most_hit_stage"] = np.where(best >= 0, np.array(stage_codes + [""])[best], "")
+                d["most_hit_stage"] = pd.Categorical(np.where(best >= 0, np.array(stage_codes + [""])[best], ""))
                 cell_rows.append(pd.DataFrame(d))
+                w = pd.DataFrame({"crop": c, "cycle": L, "sow": a.day0 + sw, "row": d["row"], "col": d["col"],
+                                  "aez": aez_name, "impossible": d["impossible"]})
                 for j, code in enumerate(stage_codes):
-                    stage_rows.append(pd.DataFrame({"crop": c, "cycle": L, "sow": a.day0 + sw, "stage_idx": j,
-                                                    "stage": code, "row": ii + i0, "col": jj + j0,
-                                                    "aez": aez_name, "impossible": d["impossible"],
-                                                    "p_hit": ph[j]}))
+                    w[f"p_hit_{code}"] = ph[j]
+                wide_rows.append(w)
+        wide = pd.concat(wide_rows, ignore_index=True)
+        wide.to_parquet(out / f"cell_stage_hits_{c}.parquet", index=False)
+        # mean P(hit stage) over possible cells + the number of cells behind each mean
+        pc = [f"p_hit_{code}" for code in stage_codes]
+        wp = wide[wide.impossible == 0]
+        for grp, extra in ((keys + ["aez"], {}), (keys, {"aez": "ALL"})):
+            g = wp.groupby(grp, observed=True)[pc]
+            m = g.mean().reset_index().melt(id_vars=grp, var_name="stage", value_name="p")
+            n = g.count().reset_index().melt(id_vars=grp, var_name="stage", value_name="n_cells")
+            mm = m.merge(n, on=grp + ["stage"]).assign(**extra)
+            mm["stage"] = mm["stage"].str.replace("p_hit_", "", regex=False)
+            mm["stage_idx"] = mm["stage"].map({code: j for j, code in enumerate(stage_codes)})
+            sh_parts.append(mm)
+        del wide, wide_rows, wp
     cells = pd.concat(cell_rows, ignore_index=True)
-    shits = pd.concat(stage_rows, ignore_index=True)
+    for col in ("crop", "aez", "most_hit_stage"):
+        cells[col] = cells[col].astype("category")
     cells.to_parquet(out / "cell_summary.parquet", index=False)
-    shits.to_parquet(out / "cell_stage_hits.parquet", index=False)
+    del cell_rows
 
     # ---- AEZ summaries (+ national "ALL"); probabilities averaged over POSSIBLE cells
-    # (per-cell probabilities are already NaN where the cell is impossible)
-    keys = ["crop", "cycle", "sow"]
+    # (per-cell probabilities are already NaN where the cell is impossible). n_* columns
+    # carry the number of cells behind each mean so step 5 can pool countries.
     agg = dict(n_cells=("impossible", "size"), n_cells_possible=("possible", "sum"),
                pct_cells_impossible=("impossible", "mean"), p_feasible_mean=("p_feasible", "mean"),
                p_spell_mean=("p_spell", "mean"), p_hit_window_mean=("p_hit_window", "mean"),
+               n_cells_with_p=("p_hit_window", "count"),
                window_overlap_days_mean=("window_overlap_mean", "mean"),
                longest_len_median=("longest_len_median", "median"),
+               n_cells_with_spell=("longest_len_median", "count"),
                longest_start_das_median=("longest_start_das_median", "median"),
                longest_end_das_median=("longest_end_das_median", "median"))
     cz = cells.assign(possible=(cells.impossible == 0).astype(int))
-    summ = pd.concat([cz.groupby(keys + ["aez"]).agg(**agg).reset_index(),
-                      cz.groupby(keys).agg(**agg).reset_index().assign(aez="ALL")], ignore_index=True)
+    summ = pd.concat([cz.groupby(keys + ["aez"], observed=True).agg(**agg).reset_index(),
+                      cz.groupby(keys, observed=True).agg(**agg).reset_index().assign(aez="ALL")],
+                     ignore_index=True)
+    summ["aez"] = summ["aez"].astype(str)
     summ["pct_cells_impossible"] *= 100
-    sp = shits[shits.impossible == 0]
-    sh = pd.concat([sp.groupby(keys + ["aez", "stage_idx", "stage"])["p_hit"].mean().reset_index(),
-                    sp.groupby(keys + ["stage_idx", "stage"])["p_hit"].mean().reset_index().assign(aez="ALL")],
-                   ignore_index=True).rename(columns={"p_hit": "p"})
+    del cz
+    sh = pd.concat(sh_parts, ignore_index=True)
+    sh["aez"] = sh["aez"].astype(str)
     sh = sh.merge(st_df[["crop", "cycle", "stage_idx", "stage_name", "das_start", "das_end", "overlaps_window"]],
                   on=["crop", "cycle", "stage_idx"], how="left")
     top = sh.sort_values("p", ascending=False).groupby(keys + ["aez"]).head(1)
@@ -862,9 +906,11 @@ def main():
     summ = summ.merge(top, on=keys + ["aez"], how="left").merge(
         st_df.groupby(["crop", "cycle"]).first()[["window_das_start", "window_das_end", "window_stages"]].reset_index(),
         on=["crop", "cycle"], how="left")
+    summ.insert(0, "iso3", a.iso3)
+    sh.insert(0, "iso3", a.iso3)
     summ.to_csv(out / "aez_summary.csv", index=False)
     sh.to_csv(out / "aez_stage_hits.csv", index=False)
-    logger.info("Written aez_summary.csv, aez_stage_hits.csv, cell_summary.parquet, cell_stage_hits.parquet")
+    logger.info("Written aez_summary.csv, aez_stage_hits.csv, cell_summary.parquet, cell_stage_hits_<crop>.parquet")
 
     # ---- figures
     png = out / "png"
@@ -898,7 +944,20 @@ def main():
                         f"P(hit window) {r.p_hit_window_mean:.2f}  most hit: {r.most_hit_stage} "
                         f"({r.most_hit_stage_name}, DAS {r.most_hit_das_start:.0f}-{r.most_hit_das_end:.0f}) "
                         f"p={r.most_hit_p:.2f}")
+    C.write_json(out / "status.json", {"iso3": a.iso3, "status": "ok", "n_cells": int(cm_c.sum()),
+                                       "n_analysed": int(analysed.sum()), "n_no_rads": n_rads,
+                                       "aez_source": aez_src, "minutes": round((time.time() - t0) / 60, 2)})
     logger.info(f"STEP4 done in {(time.time() - t0) / 60:.1f} min -> {out}")
+
+
+SKIP_EXIT = 3      # exit code for "nothing to analyse in this country" (run_all treats it as skipped)
+
+
+def skip(out, iso3, why, **extra):
+    """Record why a country has no results and exit with SKIP_EXIT."""
+    logger.warning(f"{iso3}: skipped - {why}")
+    C.write_json(Path(out) / "status.json", {"iso3": iso3, "status": "skipped", "reason": why, **extra})
+    sys.exit(SKIP_EXIT)
 
 
 def _slug(s):

@@ -17,11 +17,45 @@ python 2026-09-26.step1_dry_spell_extract_v07.py --region study --workers 40 # C
 python 2026-09-26.step2_dry_spell_seasons_v07.py --region study --workers 40 # RADS seasons x dry spells
 python 2026-09-26.step3_bbox_zoning_v07.py       --region study              # optional: k-means zones
 python 2026-10-06.step4_sowing_date_stage_risk_v07.py --region study --iso3 NGA \
-       --aez path/to/003_afr-aez_09.zip                                       # sowing date x crop x cycle
+       --aez path/to/003_afr-aez_09.zip                                       # one country
+python 2026-10-07.step5_ssa_aggregate_v07.py --region study                # aggregate the countries
 ```
 
 - Use the same `--region` for every step. Outputs go to `dryspell_v7/<region>/step*/`.
 - Step 1 writes a rainfall cache of about 16 GB for `study`. If a worker runs out of memory, lower `--workers`.
+
+## Whole of SSA in one command: `run_all.py`
+
+```bash
+# from the folder that holds chirps_data_cache/ (all .py files of this folder next to each other)
+nohup python run_all.py --region ssa --workers 40 --country_jobs 4 \
+      --aez Spatial_data_repository/003_afr-aez_09.zip > run_all.out 2>&1 &
+python run_all.py --region ssa --resume          # continue after a crash or time-out
+python run_all.py --region ssa --dry_run         # show what would run
+python run_all.py --region ssa --steps 4 5 --countries NGA GHA BFA --resume
+```
+
+- **Steps:** runs step 1 and step 2 once for the region, then step 4 for every Sub-Saharan country (50 ISO3 codes, including Somaliland as Natural Earth draws it), then step 5.
+- **Step 3** (k-means zoning) only runs with `--steps ... 3`.
+- **Per-country isolation:** a country that fails is logged and the run continues. A country with nothing to analyse is marked `skipped` with the reason, e.g. all cells masked as bimodal by RADS, or outside the region.
+- **`--resume`** skips what is already done (step 1, step 2, each finished country).
+- **AEZ map:** a zipped or ASCII AEZ map is converted to a GeoTIFF once, under `dryspell_v7/<region>/aez/`.
+- **Logs:** `dryspell_v7/<region>/run_all.log`, `run_all_status.csv` and `run_all_logs/`.
+
+Output layout:
+
+```
+dryspell_v7/<region>/step4/<ISO3>/   one folder per country (status.json, tables, cells_<crop>.nc, png/)
+dryspell_v7/<region>/step4/SSA/      all countries together (step 5):
+    countries.csv           status of every country
+    country_summary.csv     national values of every country (crop x cycle x sowing)
+    ssa_summary.csv         SSA pooled, per AEZ and ALL
+    ssa_stage_hits.csv      SSA pooled P(longest dry spell hits each stage)
+    ssa_cells_<crop>.nc     mosaic of all countries on the 0.05 deg grid
+    png/                    SSA stage heatmaps (+ per AEZ), maps, AEZ curves, country comparison
+```
+
+SSA values are cell-weighted, so they equal the mean over all SSA cells. `tests/check_step5.py` verifies this against the pooled cell tables.
 
 ## Step 4 in short
 
