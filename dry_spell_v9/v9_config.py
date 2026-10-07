@@ -153,6 +153,8 @@ NDVI_MIN_MEAN = 0.10           # profiles with mean NDVI below this are treated 
 NDVI_SOS_THRESHOLD = 0.5       # SOS = upward crossing of trough_before + 0.5 x (peak - trough_before)
 NDVI_EOS_THRESHOLD = 0.5       # EOS = downward crossing of trough_after + 0.5 x (peak - trough_after)
 NDVI_REGRID = "nearest"        # NDVI 1/12 deg -> CHIRPS 0.05 deg: each cell takes the NDVI pixel it lies in
+NDVI_FILL_RADIUS = 2           # NDVI pixels (~9 km each) a pixel without vegetation signal (town, water)
+                               # may borrow its seasons from; 0 = off
 
 # Demise adjustment with NDVI: vegetation stays green after the last rains (stored soil water).
 #   "none"          rainfall demise only

@@ -22,7 +22,10 @@ Per NDVI pixel:
      min_before + NDVI_SOS_THRESHOLD x (peak - min_before); EOS = downward crossing of
      min_after + NDVI_EOS_THRESHOLD x (peak - min_after); crossings interpolated between the
      half-month mid-dates.
-  4. Every CHIRPS 0.05 deg cell takes the NDVI pixel it lies in (NDVI_REGRID = "nearest").
+  4. Every CHIRPS 0.05 deg cell takes the NDVI pixel it lies in (NDVI_REGRID = "nearest"). A pixel
+     without a vegetation signal (towns: Kano, Lagos, Ibadan... are such pixels; water, bare soil)
+     is replaced by the nearest pixel with a signal up to NDVI_FILL_RADIUS pixels away
+     (layer ndvi_filled = 1).
 
 Output: dryspell_v9/<region>/step02/ndvi_phenology.nc
   ndvi_n_seasons (lat, lon)                    0 / 1 / 2
@@ -289,6 +292,18 @@ def main():
     ii, jj = nearest_map(lat_n, lat_c), nearest_map(lon_n, lon_c)
     I, J = np.meshgrid(np.clip(ii, 0, ny - 1), np.clip(jj, 0, nx - 1), indexing="ij")
     outside = (ii[:, None] < 0) | (jj[None, :] < 0)
+    # pixels without a vegetation signal (towns, water, bare soil) borrow the nearest pixel with one,
+    # up to NDVI_FILL_RADIUS pixels away
+    filled = np.zeros(I.shape, bool)
+    if C.NDVI_FILL_RADIUS > 0 and (nseas > 0).any():
+        from scipy.ndimage import distance_transform_edt
+        dist, (di, dj) = distance_transform_edt(nseas <= 0, return_indices=True)
+        use = (nseas <= 0) & (dist <= C.NDVI_FILL_RADIUS)
+        DI, DJ = np.where(use, di, np.arange(ny)[:, None]), np.where(use, dj, np.arange(nx)[None, :])
+        filled = use[I, J] & ~outside
+        I, J = DI[I, J], DJ[I, J]
+        logger.info(f"  {use.sum():,} NDVI pixels without signal take the nearest pixel with one "
+                    f"(<= {C.NDVI_FILL_RADIUS} px); {(nseas <= 0).sum() - use.sum():,} stay without signal")
 
     def take(a2, fill):
         v = a2[..., I, J]
@@ -302,6 +317,7 @@ def main():
         "ndvi_amplitude": (("slot", "lat", "lon"), take(amp, np.nan).astype(np.float32)),
         "sos": (("year", "slot", "lat", "lon"), take(sos, -1).astype(np.int32)),
         "eos": (("year", "slot", "lat", "lon"), take(eos, -1).astype(np.int32)),
+        "ndvi_filled": (("lat", "lon"), filled.astype(np.int8)),
     }, coords={"year": years, "slot": [0, 1], "lat": lat_c, "lon": lon_c},
         attrs={"source": f"PKU GIMMS NDVI v1.2 {nm['product']} (Zenodo 8253971)", "years": f"{y0}-{y0 + Y - 1}",
                "method": "Vrieling et al. 2013 approach: seasons from the mean profile, variable-threshold SOS/EOS",

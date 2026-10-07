@@ -150,10 +150,16 @@ def main():
     if not a.dry_run:
         C.write_json(rdir / "run_all_settings.json", C.settings_json())
 
+    import pandas as pd
+    sf = rdir / "run_all_status.csv"
+    started = time.strftime("%Y-%m-%d %H:%M:%S")
+    previous = pd.read_csv(sf) if (sf.exists() and not a.dry_run) else None   # earlier runs are kept
+
     def record(step, unit, rc, minutes, state, note=""):
-        import pandas as pd
-        status.append({"step": step, "unit": unit, "exit_code": rc, "status": state, "minutes": minutes, "note": note})
-        pd.DataFrame(status).to_csv(rdir / "run_all_status.csv", index=False)
+        status.append({"run_started": started, "step": step, "unit": unit, "exit_code": rc, "status": state,
+                       "minutes": minutes, "note": note})
+        if not a.dry_run:
+            pd.concat([previous, pd.DataFrame(status)], ignore_index=True).to_csv(sf, index=False)
 
     def stop_on_failure(step, rc, mins, log):
         if rc != 0:
