@@ -1,0 +1,9 @@
+{
+  "iso3": "TCD",
+  "status": "ok",
+  "n_cells": 603,
+  "n_analysed": 601,
+  "n_no_rads": 2,
+  "aez_source": "raster dryspell_v7/nga/aez/003_afr-aez_09.tif (majority per cell)",
+  "minutes": 0.82
+}

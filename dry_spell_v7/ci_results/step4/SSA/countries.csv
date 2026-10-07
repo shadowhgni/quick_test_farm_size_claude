@@ -1,0 +1,7 @@
+iso3,status,n_cells,n_analysed,n_no_rads,aez_source,minutes
+NGA,ok,29810.0,28972.0,833.0,raster dryspell_v7/nga/aez/003_afr-aez_09.tif (majority per cell),1.24
+BEN,ok,1519.0,1486.0,33.0,raster dryspell_v7/nga/aez/003_afr-aez_09.tif (majority per cell),1.0
+NER,ok,5823.0,5737.0,86.0,raster dryspell_v7/nga/aez/003_afr-aez_09.tif (majority per cell),0.64
+CMR,ok,8119.0,7559.0,559.0,raster dryspell_v7/nga/aez/003_afr-aez_09.tif (majority per cell),1.03
+TCD,ok,603.0,601.0,2.0,raster dryspell_v7/nga/aez/003_afr-aez_09.tif (majority per cell),0.82
+KEN,missing,,,,,

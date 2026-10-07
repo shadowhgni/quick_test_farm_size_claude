@@ -1,0 +1,9 @@
+step,iso3,exit_code,status,minutes,note
+1,,0.0,resumed,0,
+2,,0.0,resumed,0,
+4,KEN,,not_in_region,0,
+4,NGA,0.0,resumed (ok),0,
+4,BEN,0.0,resumed (ok),0,
+4,NER,0.0,resumed (ok),0,
+4,CMR,0.0,resumed (ok),0,
+4,TCD,0.0,resumed (ok),0,

@@ -1,0 +1,33 @@
+10:31:14 INFO - ======================================================================
+10:31:14 INFO - run_all  region=nga bbox=(2.5, 4.5, 14.5, 14.5) steps=[4, 5] workers=4 country_jobs=2 resume=False
+10:31:14 INFO - ======================================================================
+10:31:14 INFO - Boundaries loaded from Spatial_data_repository/ne_50m_admin_0_countries.zip (6 polygons)
+10:31:14 INFO - step 4 KEN: no polygon inside the region bbox - not run
+10:31:14 INFO - AEZ: converting aez/003_afr-aez_09.zip -> dryspell_v7/nga/aez/003_afr-aez_09.tif (once)
+10:31:18 WARNING - ASCII grid is corrupted from row 4166 (lat ~3.82); rows from there on are treated as no-data
+10:31:19 INFO - step 4: 5 countries, 2 at a time, 2 workers each
+10:32:20 INFO - step 4 [1/5] BEN: ok in 1.02 min
+10:32:34 INFO - step 4 [2/5] NGA: ok in 1.26 min
+10:32:59 INFO - step 4 [3/5] NER: ok in 0.66 min
+10:33:37 INFO - step 4 [4/5] CMR: ok in 1.05 min
+10:33:49 INFO - step 4 [5/5] TCD: ok in 0.83 min
+10:33:49 INFO - step 4: ok 5, skipped 0, failed 0, not in region 1
+10:33:49 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v7/2026-10-07.step5_ssa_aggregate_v07.py --region nga --name SSA --countries NGA BEN NER CMR TCD KEN
+10:34:32 INFO - step 5: done in 0.71 min -> dryspell_v7/nga/step4/SSA
+10:34:32 INFO - run_all finished in 3.3 min - status: dryspell_v7/nga/run_all_status.csv
+10:34:32 INFO - ======================================================================
+10:34:32 INFO - run_all  region=nga bbox=(2.5, 4.5, 14.5, 14.5) steps=[1, 2, 4, 5] workers=32 country_jobs=1 resume=True
+10:34:32 INFO - ======================================================================
+10:34:32 INFO - step 1: already done (dryspell_v7/nga/step1/step1_meta.json) - skipped (--resume)
+10:34:32 INFO - step 2: already done (dryspell_v7/nga/step2/metrics.nc) - skipped (--resume)
+10:34:32 INFO - Boundaries loaded from Spatial_data_repository/ne_50m_admin_0_countries.zip (6 polygons)
+10:34:32 INFO - step 4 KEN: no polygon inside the region bbox - not run
+10:34:32 INFO - step 4: 5 countries, 1 at a time, 32 workers each
+10:34:32 INFO - step 4 [1/5] NGA: resumed (ok)
+10:34:32 INFO - step 4 [2/5] BEN: resumed (ok)
+10:34:32 INFO - step 4 [3/5] NER: resumed (ok)
+10:34:32 INFO - step 4 [4/5] CMR: resumed (ok)
+10:34:32 INFO - step 4 [5/5] TCD: resumed (ok)
+10:34:32 INFO - step 4: ok 5, skipped 0, failed 0, not in region 1
+10:34:32 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v7/2026-10-07.step5_ssa_aggregate_v07.py --region nga --name SSA --countries NGA BEN NER CMR TCD KEN
+10:34:32 INFO - run_all finished in 0.0 min - status: dryspell_v7/nga/run_all_status.csv
