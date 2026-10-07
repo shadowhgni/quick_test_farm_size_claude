@@ -246,7 +246,8 @@ def main():
     ssh = pool_stage_hits(sh)
     ssh = ssh.merge(st_df[["crop", "cycle", "stage_idx", "stage_name", "das_start", "das_end", "overlaps_window"]],
                     on=["crop", "cycle", "stage_idx"], how="left")
-    top = ssh.sort_values("p", ascending=False).groupby(KEYS + ["aez"]).head(1)
+    # most hit stage: highest p (rounded to 1e-9, so that platform rounding never decides), ties -> earliest stage
+    top = ssh.assign(_p=ssh.p.round(9)).sort_values(["_p", "stage_idx"], ascending=[False, True], kind="mergesort").drop(columns="_p").groupby(KEYS + ["aez"]).head(1)
     top = top[KEYS + ["aez", "stage", "stage_name", "das_start", "das_end", "p"]].rename(
         columns={"stage": "most_hit_stage", "stage_name": "most_hit_stage_name",
                  "das_start": "most_hit_das_start", "das_end": "most_hit_das_end", "p": "most_hit_p"})
