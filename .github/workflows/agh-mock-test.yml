@@ -44,8 +44,10 @@ jobs:
           sleep 2
           Rscript tests/run_mock_test.R
 
+      # Outputs are a convenience: a full artifact quota must not fail the test
       - name: Keep test outputs
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: agh-mock-test-outputs
@@ -54,3 +56,4 @@ jobs:
             ${{ env.AGH_TEST_ROOT }}/agh_config/
             ${{ env.AGH_TEST_ROOT }}/agh_curated/*.csv
           if-no-files-found: warn
+          retention-days: 7
