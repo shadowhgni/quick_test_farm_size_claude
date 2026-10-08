@@ -74,6 +74,19 @@ Figures:
 
 Step 6 runs on the whole region by default (`run_all` does this after step 5). Like step 4, it can also run on `--iso3`, `--bbox`, `--polygon` or `--point`. `tests/check_spell_stats.py` recomputes the spells from the raw CHIRPS cache for sampled cells and checks them against step 6.
 
+## Figure style
+
+All figures follow the CIMMYT/CGIAR branding (see `CLAUDE.md`); the definitions are in the BRAND STYLE section of `v9_common.py`:
+* **Categorical series:** at most 4 colours, in the colour-blind-checked order teal `#326670`, orange `#f29657`, brown `#704b0f`, green `#77bd42`. Smaller zones are grouped as "other zones" in sage `#acb7ac`.
+* **Zone maps:** up to 9 brand colours, with any further classes grouped as "other zones".
+* **Colour scales:**
+  * `brand_risk` (yellow → orange → brown): dryness, dry spells and hit probabilities;
+  * `brand_teal`: probabilities, timing and rainfall;
+  * `brand_green`: season length and counts;
+  * `brand_div` (orange ↔ teal): ratios and offsets.
+* **Text:** dark grey `#54565b`.
+* **Font:** Avenir when installed, otherwise Nunito Sans, otherwise DejaVu Sans.
+
 ## Running
 
 ```bash

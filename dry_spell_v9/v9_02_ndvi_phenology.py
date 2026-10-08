@@ -331,14 +331,14 @@ def main():
     ns = ds.ndvi_n_seasons.values.astype(float)
     C.plot_map(dg / "ndvi_n_seasons.png", np.where(ns > 0, ns, np.nan), lon_c, lat_c,
                f"NDVI growing seasons per year ({nm['product']} {y0}-{y0 + Y - 1})", boundaries=bnd,
-               categorical=[(1, "#c9b37e", "one season"), (2, "#2f6f4f", "two seasons")])
+               categorical=[(1, C.BRAND["olive"], "one season"), (2, C.BRAND["green"], "two seasons")])
     e0 = ds.eos.isel(slot=0).values
     eos_doy = np.full(e0.shape[1:], np.nan)
     with np.errstate(invalid="ignore"):
         d = np.where(e0 >= 0, ((C.ORIGIN + e0.astype("timedelta64[D]")) - (C.ORIGIN + e0.astype("timedelta64[D]")).astype("datetime64[Y]")).astype(int), np.nan)
         eos_doy = np.nanmedian(d, 0)
     C.plot_map(dg / "ndvi_eos_slot0_doy.png", eos_doy, lon_c, lat_c, "Median NDVI end of season (first season)",
-               "day of year", cmap="viridis", boundaries=bnd)
+               "day of year", cmap="brand_teal", boundaries=bnd)
     logger.info(f"  NDVI pixels: no signal {(nseas == 0).sum():,}, one season {(nseas == 1).sum():,}, "
                 f"two seasons {(nseas == 2).sum():,}")
     logger.info(f"STEP2 NDVI done in {(time.time() - t0) / 60:.1f} min -> {out / 'ndvi_phenology.nc'}")

@@ -562,22 +562,22 @@ def main():
     ok = reason == C.REASON_OK
     cat = np.where(regime > 0, regime, np.nan).astype(float)
     C.plot_map(dg / "regime.png", cat, lon, lat, "Rainfall regime (smoothed mean annual cycle 1981-2024)",
-               boundaries=bnd, categorical=[(1, "#e3d5b8", "unimodal"), (2, "#7fb3d5", "transition (major season used)"),
-                                            (3, "#1f5f8b", "bimodal (major season used)")])
+               boundaries=bnd, categorical=[(1, C.BRAND["olive"], "unimodal"), (2, C.BRAND["light_blue"], "transition (major season used)"),
+                                            (3, C.BRAND["teal"], "bimodal (major season used)")])
     C.save_geotiff(dg / "regime.tif", regime.astype(np.uint8), lon, lat, nodata=0, dtype="uint8")
     for var, title, cmap, lab, vmin, vmax in [
-            ("mean_annual_mm", "Mean annual rainfall (CHIRPS 1981-2024)", "Blues", "mm/yr", 0, None),
-            ("trough_ratio", "Mid-season trough / smaller peak (<= 0.80 bimodal, <= 0.95 transition)", "RdBu", "ratio", 0.3, 1.0),
-            ("onset_doy_median", "Median onset of the (major) season", "viridis", "day of year (0 = 1 Jan)", None, None),
-            ("demise_doy_median", "Median demise of the (major) season", "viridis", "day of year (0 = 1 Jan)", None, None),
-            ("season_len_median", "Median length of the (major) season", "Greens", "days", None, None),
-            ("onset_iqr_days", "Year-to-year spread of onset (IQR)", "Oranges", "days", 0, None),
-            ("n_valid_seasons", "Number of valid seasons 1981-2024", "Greens", "seasons", 0, None),
-            ("demise_shift_median", "Demise moved later by the NDVI end of season (median)", "Purples", "days", 0, None),
-            ("ndvi_eos_offset_median", "NDVI end of season - rainfall demise (median, before clipping)", "PuOr",
+            ("mean_annual_mm", "Mean annual rainfall (CHIRPS 1981-2024)", "brand_teal", "mm/yr", 0, None),
+            ("trough_ratio", "Mid-season trough / smaller peak (<= 0.80 bimodal, <= 0.95 transition)", "brand_div", "ratio", 0.3, 1.0),
+            ("onset_doy_median", "Median onset of the (major) season", "brand_teal", "day of year (0 = 1 Jan)", None, None),
+            ("demise_doy_median", "Median demise of the (major) season", "brand_teal", "day of year (0 = 1 Jan)", None, None),
+            ("season_len_median", "Median length of the (major) season", "brand_green", "days", None, None),
+            ("onset_iqr_days", "Year-to-year spread of onset (IQR)", "brand_risk", "days", 0, None),
+            ("n_valid_seasons", "Number of valid seasons 1981-2024", "brand_green", "seasons", 0, None),
+            ("demise_shift_median", "Demise moved later by the NDVI end of season (median)", "brand_teal", "days", 0, None),
+            ("ndvi_eos_offset_median", "NDVI end of season - rainfall demise (median, before clipping)", "brand_div",
              "days", C.DEMISE_MATCH_WINDOW[0], C.DEMISE_MATCH_WINDOW[1]),
-            ("false_start_share", "Share of seasons with a false start", "Reds", "share", 0, None),
-            ("false_demise_share", "Share of seasons with a false demise", "Reds", "share", 0, None)]:
+            ("false_start_share", "Share of seasons with a false start", "brand_risk", "share", 0, None),
+            ("false_demise_share", "Share of seasons with a false demise", "brand_risk", "share", 0, None)]:
         arr = np.where(ok | (var in ("mean_annual_mm", "trough_ratio")), ds[var].values, np.nan)
         C.save_geotiff(dg / f"{var}.tif", arr.astype(np.float32), lon, lat)
         C.plot_map(dg / f"{var}.png", arr, lon, lat, title, lab, cmap=cmap, vmin=vmin, vmax=vmax,

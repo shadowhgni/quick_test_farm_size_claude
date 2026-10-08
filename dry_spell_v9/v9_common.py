@@ -238,14 +238,60 @@ def load_boundaries(bbox=None):
     return g[["iso_a3", "geometry"]]
 
 
-def plot_map(path, grid, lons, lats, title, clabel="", cmap="Oranges", vmin=None, vmax=None,
+# =============================================================================
+# BRAND STYLE (CIMMYT / CGIAR branding guidelines - see CLAUDE.md at the repository root)
+# =============================================================================
+
+BRAND = {"green": "#77bd42", "yellow": "#ffbf50", "brown": "#704b0f", "light_blue": "#8ec1cb",
+         "teal": "#326670", "grey": "#54565b", "olive": "#dddaa4", "orange": "#f29657", "sage": "#acb7ac",
+         "taupe": "#b6a9a3"}
+# categorical series, fixed order (colour-blind checked: green is never next to orange)
+SERIES = [BRAND["teal"], BRAND["orange"], BRAND["brown"], BRAND["green"]]
+OTHER = BRAND["sage"]                                # everything beyond the 4 series
+# categorical AREAS (maps of up to 10 classes, each with a legend entry)
+AREA = SERIES + [BRAND["light_blue"], BRAND["yellow"], BRAND["grey"], BRAND["olive"], BRAND["taupe"], OTHER]
+INK, INK_SOFT, GRID = BRAND["grey"], "#7d7f84", "#e4e5e3"
+NODATA_GREYS = ("#ececeb", "#d7d8d6", "#c2c3c1")
+TEAL_ORDINAL = ["#8ec1cb", "#6fa7b2", "#548f9b", "#3f7984", "#326670", "#28545c", "#1d4249"]
+# sequential (one hue family, light -> dark) and diverging colour scales
+BRAND_CMAPS = {
+    "brand_teal": ["#f1f7f8", BRAND["light_blue"], BRAND["teal"], "#1b3a40"],          # probability, timing, rain
+    "brand_risk": ["#fff6e4", BRAND["yellow"], BRAND["orange"], BRAND["brown"]],        # dryness, spells, risk
+    "brand_green": ["#f2f8ec", BRAND["green"], "#3f6e1f"],                               # season length, counts
+    "brand_grey": ["#f3f3f2", BRAND["sage"], BRAND["grey"]],
+    "brand_div": [BRAND["orange"], "#f3f3f1", BRAND["teal"]],                           # low <- neutral -> high
+}
+_STYLED = {}
+
+
+def brand_style():
+    """Register the brand colour scales and set text / axes colours and fonts (call before plotting)."""
+    import matplotlib
+    matplotlib.use("Agg")
+    from matplotlib.colors import LinearSegmentedColormap
+    if not _STYLED:
+        for name, cols in BRAND_CMAPS.items():
+            if name not in matplotlib.colormaps:
+                matplotlib.colormaps.register(LinearSegmentedColormap.from_list(name, cols, N=256))
+        from matplotlib import font_manager
+        have = {f.name for f in font_manager.fontManager.ttflist}
+        # Avenir is the brand font (commercial, rarely installed): use it when present, else a similar sans
+        fam = [f for f in ("Avenir", "Avenir Next", "Nunito Sans", "Nunito") if f in have] + ["DejaVu Sans"]
+        _STYLED["font"] = fam[0]
+        matplotlib.rcParams.update({
+            "font.family": "sans-serif", "font.sans-serif": fam, "text.color": INK, "axes.labelcolor": INK,
+            "axes.titlecolor": INK, "axes.edgecolor": GRID, "xtick.color": INK_SOFT, "ytick.color": INK_SOFT,
+            "grid.color": GRID, "legend.labelcolor": INK, "axes.prop_cycle": matplotlib.cycler(color=SERIES)})
+    return matplotlib
+
+
+def plot_map(path, grid, lons, lats, title, clabel="", cmap="brand_risk", vmin=None, vmax=None,
              boundaries=None, reason=None, categorical=None):
     """
     Quick-look PNG. NaN pixels are shown in greys by reason code when given.
     categorical: list of (value, colour, label) -> discrete legend instead of colour bar.
     """
-    import matplotlib
-    matplotlib.use("Agg")
+    brand_style()
     import matplotlib.pyplot as plt
     from matplotlib.colors import ListedColormap, BoundaryNorm
     from matplotlib.patches import Patch
@@ -259,9 +305,9 @@ def plot_map(path, grid, lons, lats, title, clabel="", cmap="Oranges", vmin=None
 
     handles = []
     if reason is not None:
-        greys = {REASON_ARID: ("#e6e6e6", REASON_LABELS[REASON_ARID]),
-                 REASON_FEW_SEASONS: ("#c8c8c8", REASON_LABELS[REASON_FEW_SEASONS]),
-                 REASON_MISSING: ("#b0b0b0", REASON_LABELS[REASON_MISSING])}
+        greys = {REASON_ARID: (NODATA_GREYS[0], REASON_LABELS[REASON_ARID]),
+                 REASON_FEW_SEASONS: (NODATA_GREYS[1], REASON_LABELS[REASON_FEW_SEASONS]),
+                 REASON_MISSING: (NODATA_GREYS[2], REASON_LABELS[REASON_MISSING])}
         shown = set()
         for code, (col, lab) in greys.items():
             m = (reason == code) & np.isnan(grid)
@@ -287,17 +333,17 @@ def plot_map(path, grid, lons, lats, title, clabel="", cmap="Oranges", vmin=None
         cb.outline.set_visible(False)
 
     if boundaries is not None and len(boundaries):
-        boundaries.boundary.plot(ax=ax, color="#333333", linewidth=0.4)
+        boundaries.boundary.plot(ax=ax, color=INK, linewidth=0.4)
     ax.set_xlim(extent[0], extent[1])
     ax.set_ylim(extent[2], extent[3])
     ax.set_title(title, fontsize=11, loc="left")
     ax.set_xlabel("longitude")
     ax.set_ylabel("latitude")
     for s in ax.spines.values():
-        s.set_color("#999999")
+        s.set_color(GRID)
     valid = np.isfinite(grid).sum()
     ax.text(0.01, 0.01, f"valid pixels: {valid:,}", transform=ax.transAxes, fontsize=8,
-            color="#555555", va="bottom")
+            color=INK_SOFT, va="bottom")
     if handles:
         ax.legend(handles=handles, loc="upper left", bbox_to_anchor=(1.0 if categorical is None else 1.01, 1.0),
                   frameon=False, fontsize=8)

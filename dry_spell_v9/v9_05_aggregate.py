@@ -296,11 +296,11 @@ def main():
                            day0, zone_order)
         plot_country_comparison(png / f"countries_window_hit_{c}.png", c, country, cycles, sows_abs,
                                 "p_hit_window_mean", "P(longest dry spell hits the vulnerable window), national mean",
-                                "Purples")
+                                "brand_risk")
         plot_country_comparison(png / f"countries_impossible_{c}.png", c,
                                 country.assign(share_impossible=country.pct_cells_impossible / 100), cycles,
                                 sows_abs, "share_impossible", "share of cells where the cycle cannot be completed",
-                                "Greys")
+                                "brand_grey")
 
     # ---- mosaic + maps
     if not a.no_mosaic:

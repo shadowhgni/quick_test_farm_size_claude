@@ -79,11 +79,10 @@ METRICS = {
     "longest_len": ("Duration of the longest dry spell", "days", 1, 400, "ge1"),
     "dry_frac": ("Share of the season in dry spells", "fraction", 0.01, 1.0, "all"),
 }
-CAT = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"]   # fixed order
-OTHER = "#8c8c8c"
-BLUE_ORDINAL = ["#86b6ef", "#6da7ec", "#5598e7", "#3987e5", "#2a78d6", "#256abf", "#1c5cab", "#184f95",
-                "#104281", "#0d366b"]
-INK, INK2, GRID = "#1f1f1f", "#5c5c5c", "#e6e6e6"
+CAT = C.SERIES                        # brand colours, fixed order (v9_common.py / CLAUDE.md)
+OTHER = C.OTHER
+BLUE_ORDINAL = C.TEAL_ORDINAL          # latitude bands, south (light) -> north (dark)
+INK, INK2, GRID = C.INK, C.INK_SOFT, C.GRID
 
 _G = {}
 
@@ -255,8 +254,7 @@ def hist_table(hist, gname, labels, unit_col):
 # =============================================================================
 
 def _plt():
-    import matplotlib
-    matplotlib.use("Agg")
+    C.brand_style()
     import matplotlib.pyplot as plt
     plt.rcParams.update({"font.size": 8, "axes.edgecolor": GRID, "axes.labelcolor": INK2, "xtick.color": INK2,
                          "ytick.color": INK2, "axes.titlecolor": INK})
@@ -329,10 +327,10 @@ def plot_latitude_profile(path, lat_summary, title_extra):
     fig, axes = plt.subplots(2, 4, figsize=(12, 6.2), sharex=True)
     for ax, m in zip(axes.ravel(), ms):
         x = d[d.metric == m].sort_values("lat")
-        ax.fill_between(x.lat, x.p25, x.p75, color="#b7d3f6", linewidth=0, label="interquartile range")
-        ax.plot(x.lat, x["median"], color="#2a78d6", linewidth=2, marker="o", markersize=3.5, label="median")
+        ax.fill_between(x.lat, x.p25, x.p75, color=C.BRAND["light_blue"], alpha=0.45, linewidth=0, label="interquartile range")
+        ax.plot(x.lat, x["median"], color=C.BRAND["teal"], linewidth=2, marker="o", markersize=3.5, label="median")
         if METRICS[m][4] == "all":                      # mostly zeros: the mean carries the signal
-            ax.plot(x.lat, x["mean"], color="#eb6834", linewidth=2, marker="o", markersize=3.5, label="mean")
+            ax.plot(x.lat, x["mean"], color=C.BRAND["orange"], linewidth=2, marker="o", markersize=3.5, label="mean")
             ax.legend(frameon=False, fontsize=6.5)
         ax.set_title(METRICS[m][0], loc="left", fontsize=8)
         ax.set_ylabel(METRICS[m][1], fontsize=7)
@@ -352,19 +350,19 @@ def plot_latitude_profile(path, lat_summary, title_extra):
 
 MAPS = [
     # var, title, colour bar label, cmap, vmin, vmax
-    ("n_spells_median", "Median number of dry spells per season", "spells / season", "Oranges", 0, None),
-    ("n_spells_mean", "Mean number of dry spells per season", "spells / season", "Oranges", 0, None),
-    ("p_ge1", "P(at least one dry spell in the season)", "probability", "Purples", 0, 1),
-    ("p_ge2", "P(two or more dry spells in the season)", "probability", "Purples", 0, 1),
+    ("n_spells_median", "Median number of dry spells per season", "spells / season", "brand_risk", 0, None),
+    ("n_spells_mean", "Mean number of dry spells per season", "spells / season", "brand_risk", 0, None),
+    ("p_ge1", "P(at least one dry spell in the season)", "probability", "brand_teal", 0, 1),
+    ("p_ge2", "P(two or more dry spells in the season)", "probability", "brand_teal", 0, 1),
     ("spell_len_median", "Median duration of the dry spells of a season (median over seasons)", "days",
-     "Oranges", None, None),
-    ("first_start_median", "Median start of the 1st dry spell", "days after onset", "Blues", 0, None),
-    ("first_len_median", "Median duration of the 1st dry spell", "days", "Oranges", None, None),
-    ("last_start_median", "Median start of the last dry spell (seasons with >= 2)", "days after onset", "Blues", 0, None),
-    ("last_len_median", "Median duration of the last dry spell (seasons with >= 2)", "days", "Oranges", None, None),
-    ("longest_start_median", "Median start of the longest dry spell", "days after onset", "Blues", 0, None),
-    ("longest_len_median", "Median duration of the longest dry spell", "days", "Oranges", None, None),
-    ("dry_frac_median", "Median share of the season in dry spells", "fraction", "Oranges", 0, None),
+     "brand_risk", None, None),
+    ("first_start_median", "Median start of the 1st dry spell", "days after onset", "brand_teal", 0, None),
+    ("first_len_median", "Median duration of the 1st dry spell", "days", "brand_risk", None, None),
+    ("last_start_median", "Median start of the last dry spell (seasons with >= 2)", "days after onset", "brand_teal", 0, None),
+    ("last_len_median", "Median duration of the last dry spell (seasons with >= 2)", "days", "brand_risk", None, None),
+    ("longest_start_median", "Median start of the longest dry spell", "days after onset", "brand_teal", 0, None),
+    ("longest_len_median", "Median duration of the longest dry spell", "days", "brand_risk", None, None),
+    ("dry_frac_median", "Median share of the season in dry spells", "fraction", "brand_risk", 0, None),
 ]
 
 
@@ -493,12 +491,13 @@ def main():
     hist_table(hist, "zone", zlabels, "zone").to_csv(out / "hist_by_zone.csv", index=False)
     hist_table(hist, "lat", llabels, "latitude_band").to_csv(out / "hist_by_latitude.csv", index=False)
 
-    # ---- PDFs: zones = the 8 largest (fixed colour order by size) + "other"; latitude: PDF_LAT_BAND_DEG bands
+    # ---- PDFs: zones = the 4 largest (brand colours, fixed order by size) + "other"; latitude: PDF_LAT_BAND_DEG bands
     sizes = hist[("zone", "_seasons")]
     order = [k for k in np.argsort(-sizes, kind="stable") if sizes[k] > 0]
-    zser = [(zlabels[k], [k], CAT[i], 1.6) for i, k in enumerate(order[:8])]
-    if len(order) > 8:
-        zser.append(("other zones", order[8:], OTHER, 1.6))
+    nc = len(CAT)                                     # brand rule: 4 coloured series, the rest grouped
+    zser = [(zlabels[k], [k], CAT[i], 1.6) for i, k in enumerate(order[:nc])]
+    if len(order) > nc:
+        zser.append(("other zones", order[nc:], OTHER, 1.6))
     zser.append(("ALL", list(range(len(zlabels))), INK, 2.2))
     pb = C.PDF_LAT_BAND_DEG
     coarse = np.floor(bands / pb) * pb

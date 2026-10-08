@@ -87,10 +87,9 @@ logger = logging.getLogger("dryspell_v9")
 
 # all settings live in v9_config.py (section I and J)
 CROPS = C.CROPS
-SERIES = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948",
-          "#6b8e23", "#8c564b", "#17becf", "#bcbd22", "#7f7f7f", "#d62728", "#9467bd", "#ff9896"]
-GREY_IMPOSSIBLE = "#b5b5b5"
-GREY_NODATA = "#e3e3e3"
+SERIES = C.SERIES                      # brand colours (v9_common.py / CLAUDE.md)
+GREY_IMPOSSIBLE = C.BRAND["sage"]
+GREY_NODATA = C.NODATA_GREYS[0]
 SKIP_EXIT = 3      # exit code for "nothing to analyse" (run_all treats it as skipped)
 
 _G = {}
@@ -573,8 +572,7 @@ def season_detail(cells, a, cycles, sows, stages, min_spell, has, s3, lat, lon):
 # =============================================================================
 
 def _plt():
-    import matplotlib
-    matplotlib.use("Agg")
+    C.brand_style()
     import matplotlib.pyplot as plt
     return plt
 
@@ -591,18 +589,18 @@ def plot_stage_heatmaps(path, crop, st_df, hits, cycles, sows, day0, title_extra
         sdf = st_df[(st_df.crop == crop) & (st_df.cycle == L)].sort_values("stage_idx")
         h = hits[hits.cycle == L].pivot(index="sow", columns="stage_idx", values="p") \
             .reindex(index=sows, columns=sdf.stage_idx.tolist())
-        im = ax.imshow(h.values, cmap="Oranges", vmin=0, vmax=1, aspect="auto", interpolation="nearest")
+        im = ax.imshow(h.values, cmap="brand_risk", vmin=0, vmax=1, aspect="auto", interpolation="nearest")
         for i in range(h.shape[0]):
             for j in range(h.shape[1]):
                 v = h.values[i, j]
                 if np.isfinite(v):
                     ax.text(j, i, f"{v:.2f}", ha="center", va="center", fontsize=6,
-                            color="white" if v > 0.6 else "#333333")
+                            color="white" if v > 0.6 else C.INK)
         win = sdf.overlaps_window.to_numpy()
         if win.any():
             j0, j1 = np.where(win)[0][[0, -1]]
             ax.add_patch(Rectangle((j0 - 0.5, -0.5), j1 - j0 + 1, len(sows), fill=False,
-                                   edgecolor="#222222", linewidth=1.4))
+                                   edgecolor=C.INK, linewidth=1.4))
         ax.set_xticks(range(len(sdf)))
         ax.set_xticklabels([f"{c}  {a}-{b}" for c, a, b in zip(sdf.stage, sdf.das_start, sdf.das_end)],
                            fontsize=6, rotation=90)
@@ -639,10 +637,10 @@ def plot_window_maps(path, crop, ds, cycles, sows, day0, lon, lat, bnd, analysed
             imp = ds["impossible"].values[ic, isw].astype(bool) & analysed
             ax.imshow(np.where(imp, 1.0, np.nan)[::-1], extent=extent,
                       cmap=ListedColormap([GREY_IMPOSSIBLE]), interpolation="nearest")
-            im = ax.imshow(ds["p_hit_window"].values[ic, isw][::-1], extent=extent, cmap="Purples",
+            im = ax.imshow(ds["p_hit_window"].values[ic, isw][::-1], extent=extent, cmap="brand_risk",
                            vmin=0, vmax=1, interpolation="nearest")
             if bnd is not None and len(bnd):
-                bnd.boundary.plot(ax=ax, color="#333333", linewidth=0.3)
+                bnd.boundary.plot(ax=ax, color=C.INK, linewidth=0.3)
             ax.set_xlim(extent[:2])
             ax.set_ylim(extent[2:])
             ax.set_xticks([])
@@ -674,18 +672,28 @@ def plot_zone_curves(path, crop, summ, cycles, sows, day0, zone_order):
     fig, axes = plt.subplots(1, n, figsize=(3.0 * n + 2.6, 3.2), sharey=True)
     axes = np.atleast_1d(axes)
     x = [day0 + s for s in sows]
+    # brand rule: at most 4 coloured series (the largest zones); the others in one neutral colour
+    size = summ[(summ.crop == crop) & (summ.zone != "ALL")].groupby("zone").n_cells.max()
+    top = [z for z in size.sort_values(ascending=False, kind="stable").index if z in zone_order][:len(SERIES)]
+    colour = {z: SERIES[i] for i, z in enumerate(sorted(top, key=zone_order.index))}
     for ax, L in zip(axes, cycles):
-        for k, a in enumerate(zone_order):
+        other_labelled = False
+        for a in zone_order:
             d = summ[(summ.crop == crop) & (summ.cycle == L) & (summ.zone == a)].set_index("sow").reindex(sows)
-            col = "#222222" if a == "ALL" else SERIES[k % len(SERIES)]
-            ax.plot(x, d["p_hit_window_mean"], color=col, linewidth=2.4 if a == "ALL" else 2,
-                    linestyle="--" if a == "ALL" else "-", marker="o", markersize=4,
-                    label=a if ax is axes[0] else None)
+            if a == "ALL":
+                col, lw, ls, lab = C.INK, 2.4, "--", "ALL"
+            elif a in colour:
+                col, lw, ls, lab = colour[a], 2, "-", a
+            else:
+                col, lw, ls, lab = C.OTHER, 1.2, "-", None if other_labelled else "other zones"
+                other_labelled = True
+            ax.plot(x, d["p_hit_window_mean"], color=col, linewidth=lw, linestyle=ls, marker="o",
+                    markersize=4 if col != C.OTHER else 2.5, label=lab if ax is axes[0] else None)
         ax.set_title(f"{L}-day cycle", loc="left", fontsize=9)
         ax.set_xticks(x)
         ax.set_xlabel("sowing, days after onset", fontsize=8)
         ax.set_ylim(0, 1)
-        ax.grid(True, color="#e5e5e5", linewidth=0.6)
+        ax.grid(True, color=C.GRID, linewidth=0.6)
         for s in ("top", "right"):
             ax.spines[s].set_visible(False)
     axes[0].set_ylabel("P(longest spell hits window)\nmean over possible cells", fontsize=8)
@@ -702,12 +710,20 @@ def plot_zone_curves(path, crop, summ, cycles, sows, day0, zone_order):
 # MAIN
 # =============================================================================
 
-def _palette(n):
-    if n <= len(SERIES):
-        return SERIES[:n]
-    import matplotlib
-    cm = matplotlib.colormaps["tab20"]
-    return [matplotlib.colors.to_hex(cm(i % 20)) for i in range(n)]
+def zone_map_classes(zone, zone_lab, analysed):
+    """Brand area colours for the largest classes (up to 9); smaller classes merge into 'other zones'.
+    -> (plot grid with codes 1..m, [(code, colour, label)])"""
+    codes = sorted(zone_lab, key=lambda k: -int((analysed & (zone == k)).sum()))
+    keep, rest = codes[:len(C.AREA) - 1], codes[len(C.AREA) - 1:]
+    grid = np.full(zone.shape, np.nan)
+    cats = []
+    for i, k in enumerate(sorted(keep), 1):
+        grid[analysed & (zone == k)] = i
+        cats.append((i, C.AREA[i - 1], zone_lab[k]))
+    if rest:
+        grid[analysed & np.isin(zone, rest)] = len(cats) + 1
+        cats.append((len(cats) + 1, C.OTHER, f"other zones ({len(rest)} classes)"))
+    return grid, cats
 
 
 def default_name(a):
@@ -1016,10 +1032,9 @@ def main():
                          a.day0, zone_order)
     codes = sorted(zone_lab)
     if codes and analysed.sum() >= 4:
-        cols_ = _palette(len(codes))
-        C.plot_map(png / "zones.png", np.where(analysed & (zone >= 0), zone, np.nan).astype(float), lon_c, lat_c,
-                   f"zones used for the summary - {zone_src}", boundaries=bnd,
-                   categorical=[(k, cols_[i], zone_lab[k]) for i, k in enumerate(codes)])
+        zgrid, cats = zone_map_classes(zone, zone_lab, analysed)
+        C.plot_map(png / "zones.png", zgrid, lon_c, lat_c, f"zones used for the summary - {zone_src}",
+                   boundaries=bnd, categorical=cats)
 
     # ---- console digest: most hit stage, all cells
     nat = summ[summ.zone == "ALL"]
