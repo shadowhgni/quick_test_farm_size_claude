@@ -223,7 +223,9 @@ CROPS = {
         "label": "Groundnut",
         # Boote (1982) R stages with the typical timings of the peanut growth-stage key (DAP: R1 25-40,
         # R2 35-45, R3 45-55, R4 55-70, R5 70-80, R6 80-90, R7 90-105, R8 harvest maturity 105-140);
-        # emergence ~8 DAP is my assumption (not in the key)
+        # emergence ~8 DAP is my assumption (not in the key). Check: Belayneh & Chondie (2022, Heliyon 8,
+        # e09011; 6 varieties, S Ethiopia ~1500 m) report 50% flowering at 35-39 DAS for 134-150 d maturity,
+        # i.e. flowering barely moves with cycle length - consistent with the small pre_anchor_exponent
         "reference_cycle": 120, "emergence_das": 8, "anchor": "R1", "pre_anchor_exponent": 0.3,
         "stages": [["VE", "emergence", 8], ["R1", "beginning bloom", 32], ["R2", "beginning peg", 40],
                    ["R3", "beginning pod", 50], ["R4", "full pod", 62], ["R5", "beginning seed", 75],
