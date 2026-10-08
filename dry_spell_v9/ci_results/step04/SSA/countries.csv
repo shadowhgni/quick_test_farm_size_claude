@@ -1,6 +1,6 @@
 unit,iso3,target,status,n_cells,n_analysed,n_few_seasons,zones,zone_source,minutes
-NGA,NGA,"{'kind': 'country', 'iso3': 'NGA'}",ok,29810,29805,0,aez8,"HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",1.21
-BEN,BEN,"{'kind': 'country', 'iso3': 'BEN'}",ok,1519,1519,0,aez8,"HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",0.98
-NER,NER,"{'kind': 'country', 'iso3': 'NER'}",ok,5823,5809,14,aez8,"HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",0.66
-CMR,CMR,"{'kind': 'country', 'iso3': 'CMR'}",ok,8119,8118,0,aez8,"HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",1.03
-TCD,TCD,"{'kind': 'country', 'iso3': 'TCD'}",ok,603,603,0,aez8,"HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",0.83
+NGA,NGA,"{'kind': 'country', 'iso3': 'NGA'}",ok,29810,29805,0,aez8,"HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",0.94
+BEN,BEN,"{'kind': 'country', 'iso3': 'BEN'}",ok,1519,1519,0,aez8,"HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",0.76
+NER,NER,"{'kind': 'country', 'iso3': 'NER'}",ok,5823,5809,14,aez8,"HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",0.49
+CMR,CMR,"{'kind': 'country', 'iso3': 'CMR'}",ok,8119,8118,0,aez8,"HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",0.76
+TCD,TCD,"{'kind': 'country', 'iso3': 'TCD'}",ok,603,603,0,aez8,"HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",0.62
