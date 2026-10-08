@@ -19,7 +19,11 @@ This version builds on v8: it starts from scratch with the same RADS-style onset
 * **Köppen–Geiger**: Beck et al. (2023) 1991–2020, 1 km (figshare, CC BY 4.0). The 30 classes carry labels from its `legend.txt`.
 * NDVI pixels without a vegetation cycle (towns such as Kano, Lagos and Ibadan, open water, bare soil) take the seasons of the nearest vegetated pixel within `NDVI_FILL_RADIUS` pixels (2 by default, about 18 km); the `ndvi_filled` layer marks them. Without this, the first CI run with real NDVI had all six city sites in the tests on "no signal" pixels.
 * Zone maps are put on the 0.05° CHIRPS grid by **majority (mode)** of the source pixels in each cell.
-* The crop stage fractions and vulnerable windows are provisional (sources are in `v9_config.py` section I). Groundnut in particular is my own approximation.
+* **Crop stages** (`v9_config.py` section I) give each stage's onset in days after sowing for a reference cultivar. Sorghum (110 days) uses the Vanderlip & Reeves stages with the K-State timings. Pearl millet (92 days) uses the Maiti & Bidinger stages with typical timings. Groundnut (120 days) uses the Boote R stages with typical timings.
+  * Stages are rescaled to each cycle length; emergence stays fixed.
+  * In sorghum and pearl millet, the time from flowering to maturity changes only as (cycle/reference)^0.6 and the vegetative phase absorbs the rest, because longer cultivars differ mostly in time to flowering.
+  * In groundnut, time to first flower (R1) changes as (cycle/reference)^0.3 and pod/seed filling absorbs the rest.
+  * The exponents, groundnut emergence at 8 days and the pearl millet stages without day counts (3-leaf to flag leaf) are my assumptions; calibrate them with local trial data. `stage_windows.csv` lists the resulting days for every crop and cycle.
 
 ## Steps
 
@@ -50,6 +54,7 @@ Settings are in `v9_config.py` section K. The defaults follow v7:
 | Metric | Defined for | Map (per-cell median) |
 |---|---|---|
 | number of dry spells per season (plus mean, P(≥1), P(≥2)) | every season | `map_n_spells_median/mean`, `map_p_ge1`, `map_p_ge2` |
+| median duration of the season's dry spells | seasons with ≥ 1 spell | `map_spell_len_median` |
 | start and duration of the 1st spell | seasons with ≥ 1 spell | `map_first_start_median`, `map_first_len_median` |
 | start and duration of the last spell | seasons with ≥ 2 spells | `map_last_start_median`, `map_last_len_median` |
 | start and duration of the longest spell (ties go to the earliest) | seasons with ≥ 1 spell | `map_longest_start_median`, `map_longest_len_median` |
@@ -65,7 +70,7 @@ Pooled over all seasons of the cells in a group:
 
 Figures:
 * `png/pdf_<metric>.png`: PDFs by zone (the 8 largest zones, the rest grouped as "other zones") and by `PDF_LAT_BAND_DEG` (2°) latitude bands;
-* `png/latitude_profile.png`: median and interquartile range of every metric against latitude, with the mean added for the two metrics that are mostly 0.
+* `png/latitude_profile.png`: median and interquartile range against latitude. Top row: number of dry spells per season (with the mean), then the start of the longest, first and last spell. Bottom row: median duration of a season's dry spells, then the duration of the longest, first and last spell.
 
 Step 6 runs on the whole region by default (`run_all` does this after step 5). Like step 4, it can also run on `--iso3`, `--bbox`, `--polygon` or `--point`. `tests/check_spell_stats.py` recomputes the spells from the raw CHIRPS cache for sampled cells and checks them against step 6.
 

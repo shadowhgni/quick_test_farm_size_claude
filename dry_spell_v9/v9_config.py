@@ -180,34 +180,55 @@ FEASIBLE_MIN_FRAC = 0.5             # a cell is IMPOSSIBLE if fewer seasons than
 MIN_FEASIBLE_SEASONS = 5            # probabilities need at least this many feasible seasons
 MIN_SPELL_CROP = {"sorghum": 10, "pearl_millet": 10, "groundnut": 10}   # days, per crop
 
-# Stages: (code, name, start as a fraction of the cycle), scaled linearly to every cycle length;
-# "window" = most drought-vulnerable period (fractions). Provisional - see README for sources.
+# STAGES - onset of each stage in days after sowing (DAS) for a REFERENCE cultivar, from published
+# stage keys with typical timings, then rescaled to every cycle length in CYCLES:
+#   * emergence stays at emergence_das whatever the cycle;
+#   * cultivars of different duration differ mostly BEFORE the anchor stage (flowering) in sorghum and
+#     pearl millet: the anchor-to-maturity (grain filling) duration changes only as
+#     (cycle / reference_cycle) ** post_anchor_exponent, the vegetative phase takes the rest;
+#   * groundnut (indeterminate) is the other way round: time to first flower (anchor R1) changes little,
+#     (cycle / reference_cycle) ** pre_anchor_exponent, and pod / seed filling takes the rest;
+#   * stages inside each phase keep their relative positions. stage_windows.csv lists the result.
+# The exponents are my assumption (not from a single published table) - calibrate with local trials.
+# "window" = most drought-vulnerable period: [stage, offset days] start and end (inclusive), both
+# relative to stage ONSETS.
 CROPS = {
     "sorghum": {
         "label": "Sorghum",
-        # Vanderlip & Reeves (1972) stages 0-9; boot 50-60 d after emergence (KSU MF3234)
-        "stages": [["S0", "emergence", 0.04], ["S1", "3-leaf", 0.14], ["S2", "5-leaf", 0.24],
-                   ["S3", "growing point differentiation", 0.34], ["S4", "flag leaf visible", 0.44],
-                   ["S5", "boot", 0.55], ["S6", "half-bloom", 0.65], ["S7", "soft dough", 0.75],
-                   ["S8", "hard dough", 0.90]],
-        "window": [0.47, 0.79],     # ~1 week before boot to ~2 weeks after flowering
+        # Vanderlip & Reeves (1972) stages 0-9 as in the K-State sorghum growth-stage guide (timings in
+        # days after EMERGENCE: 3-leaf ~10, 5-leaf 20-25, GPD 30-40, boot 50-60, half-bloom 60-70,
+        # soft dough 75-85, hard dough 85-95, physiological maturity 95-115) + 5 d sowing-to-emergence
+        "reference_cycle": 110, "emergence_das": 5, "anchor": "S6", "post_anchor_exponent": 0.6,
+        "stages": [["S0", "emergence", 5], ["S1", "3-leaf", 15], ["S2", "5-leaf", 27],
+                   ["S3", "growing point differentiation", 40], ["S4", "flag leaf visible", 50],
+                   ["S5", "boot", 60], ["S6", "half-bloom", 70], ["S7", "soft dough", 85],
+                   ["S8", "hard dough", 95]],                       # S9 physiological maturity = end of cycle
+        "window": [["S5", -7], ["S6", 14]],   # ~1 week before boot to ~2 weeks after half-bloom (K-State)
     },
     "pearl_millet": {
         "label": "Pearl millet",
-        # Maiti & Bidinger (1981) ICRISAT Res. Bull. 6, Table 1 (Mil Zongo)
-        "stages": [["P0", "emergence", 0.05], ["P1", "3rd leaf", 0.13], ["P2", "5th leaf", 0.24],
-                   ["P3", "panicle initiation", 0.41], ["P4", "flag leaf visible", 0.59],
-                   ["P5", "boot", 0.65], ["P6", "50% flowering", 0.72], ["P7", "milk", 0.82],
-                   ["P8", "dough", 0.92]],
-        "window": [0.65, 0.92],     # flowering + grain filling (Mahalakshmi & Bidinger 1985)
+        # Maiti & Bidinger (1981, ICRISAT Res. Bull. 6) stages 0-9; DAS from the typical timings of the
+        # stage key (emergence 3-5, heading 45-55, flowering 50-65, milk 65-75, dough 75-85, maturity
+        # 85-100 DAS); 3-leaf, tillering, panicle initiation and flag leaf placed by Maiti & Bidinger's
+        # proportions (not given in days in the key)
+        "reference_cycle": 92, "emergence_das": 4, "anchor": "P6", "post_anchor_exponent": 0.6,
+        "stages": [["P0", "emergence", 4], ["P1", "3-leaf", 10], ["P2", "tillering", 17],
+                   ["P3", "panicle initiation", 35], ["P4", "flag leaf / boot", 42],
+                   ["P5", "panicle emergence (heading)", 50], ["P6", "flowering (anthesis)", 57],
+                   ["P7", "milk", 70], ["P8", "dough", 80]],         # P9 physiological maturity = end of cycle
+        "window": [["P6", 0], ["P8", -1]],    # flowering + milk: the most sensitive phase (tillers can
+                                              # compensate earlier stress; Mahalakshmi & Bidinger 1985)
     },
     "groundnut": {
         "label": "Groundnut",
-        # Boote (1982) R stages; fractions approximated - verify with local data
-        "stages": [["VE", "emergence", 0.07], ["R1", "beginning bloom", 0.22], ["R2", "beginning peg", 0.30],
-                   ["R3", "beginning pod", 0.38], ["R4", "full pod", 0.45], ["R5", "beginning seed", 0.52],
-                   ["R6", "full seed", 0.62], ["R7", "beginning maturity", 0.78], ["R8", "harvest maturity", 0.93]],
-        "window": [0.38, 0.78],     # pegging/pod formation to seed filling (Nageswara Rao et al. 1985)
+        # Boote (1982) R stages with the typical timings of the peanut growth-stage key (DAP: R1 25-40,
+        # R2 35-45, R3 45-55, R4 55-70, R5 70-80, R6 80-90, R7 90-105, R8 harvest maturity 105-140);
+        # emergence ~8 DAP is my assumption (not in the key)
+        "reference_cycle": 120, "emergence_das": 8, "anchor": "R1", "pre_anchor_exponent": 0.3,
+        "stages": [["VE", "emergence", 8], ["R1", "beginning bloom", 32], ["R2", "beginning peg", 40],
+                   ["R3", "beginning pod", 50], ["R4", "full pod", 62], ["R5", "beginning seed", 75],
+                   ["R6", "full seed", 85], ["R7", "beginning maturity", 97]],   # R8 = end of cycle
+        "window": [["R3", 0], ["R7", -1]],    # pod set to seed filling (Nageswara Rao et al. 1985)
     },
 }
 

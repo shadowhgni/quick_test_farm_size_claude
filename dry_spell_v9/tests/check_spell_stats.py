@@ -56,7 +56,7 @@ def main():
         se = se[se.valid]
         x = np.asarray(mm[:, r, c]).astype(np.int64)
         dry_day = (x != 65535) & has & (x < round(C.DRY_MM * 100))
-        rec = {k: [] for k in ("n", "fs", "fl", "ls", "ll", "gs", "gl")}
+        rec = {k: [] for k in ("n", "fs", "fl", "ls", "ll", "gs", "gl", "md")}
         dem_col = "demise_rain_date" if C.SPELL_STATS_DEMISE == "rain" else "demise_date"
         for s in se.itertuples():
             on = int(C.day_index(np.array([s.onset_date], dtype="datetime64[D]"))[0])
@@ -70,6 +70,7 @@ def main():
                 k = int(np.argmax(L))                       # first maximum = earliest longest
                 rec["fs"].append(sp[0][0]), rec["fl"].append(L[0])
                 rec["gs"].append(sp[k][0]), rec["gl"].append(L[k])
+                rec["md"].append(float(np.median(L)))
                 if len(sp) >= 2:
                     rec["ls"].append(sp[-1][0]), rec["ll"].append(L[-1])
         n_seas += len(se)
@@ -83,6 +84,7 @@ def main():
                 "last_len_median": med(rec["ll"], C.SPELL_STATS_MIN_COND),
                 "longest_start_median": med(rec["gs"], C.SPELL_STATS_MIN_COND),
                 "longest_len_median": med(rec["gl"], C.SPELL_STATS_MIN_COND),
+                "spell_len_median": med(rec["md"], C.SPELL_STATS_MIN_COND),
                 "p_ge1": float(np.mean(np.array(rec["n"]) >= 1)), "p_ge2": float(np.mean(np.array(rec["n"]) >= 2))}
         for k, v in mine.items():
             got = float(ds[k].values[i, j])

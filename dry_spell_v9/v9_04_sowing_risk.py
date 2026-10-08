@@ -99,20 +99,40 @@ _G = {}
 # STAGES
 # =============================================================================
 
+def stage_onsets(crop, cycle):
+    """Onset (DAS) of every stage of CROPS[crop] for a cultivar of `cycle` days (see v9_config.py)."""
+    spec = CROPS[crop]
+    Lr, E = spec["reference_cycle"], spec["emergence_das"]
+    codes = [s[0] for s in spec["stages"]]
+    ref = np.array([s[2] for s in spec["stages"]], float)
+    Ar = ref[codes.index(spec["anchor"])]
+    if "post_anchor_exponent" in spec:
+        A = cycle - (Lr - Ar) * (cycle / Lr) ** spec["post_anchor_exponent"]
+    else:
+        A = E + (Ar - E) * (cycle / Lr) ** spec["pre_anchor_exponent"]
+    d = np.where(ref <= Ar, E + (ref - E) * (A - E) / (Ar - E), A + (ref - Ar) * (cycle - A) / (Lr - Ar))
+    d = np.round(d).astype(int)
+    for k in range(1, len(d)):                          # strictly increasing, inside the cycle
+        d[k] = max(d[k], d[k - 1] + 1)
+    if d[-1] > cycle - 1:
+        raise ValueError(f"{crop}: stages do not fit a {cycle}-day cycle")
+    return dict(zip(codes, d.tolist()))
+
+
 def stage_das(crop, cycle):
     """[(code, name, das_start, das_end)] and (win_start, win_end) in DAS (inclusive)."""
     spec = CROPS[crop]
-    st = spec["stages"]
-    starts = [0] + [int(round(f * cycle)) for _, _, f in st]
-    codes = ["SOW"] + [c for c, _, _ in st]
-    names = ["sowing to emergence"] + [n for _, n, _ in st]
+    on = stage_onsets(crop, cycle)
+    starts = [0] + [on[c] for c, _, _ in spec["stages"]]
+    codes = ["SOW"] + [c for c, _, _ in spec["stages"]]
+    names = ["sowing to emergence"] + [n for _, n, _ in spec["stages"]]
     out = []
     for i in range(len(starts)):
         a = starts[i]
         b = (starts[i + 1] - 1) if i + 1 < len(starts) else cycle - 1
         out.append((codes[i], names[i], a, max(a, b)))
-    w0, w1 = spec["window"]
-    win = (int(round(w0 * cycle)), min(cycle - 1, int(round(w1 * cycle)) - 1))
+    (c0, o0), (c1, o1) = spec["window"]
+    win = (max(0, on[c0] + o0), min(cycle - 1, on[c1] + o1))
     return out, win
 
 

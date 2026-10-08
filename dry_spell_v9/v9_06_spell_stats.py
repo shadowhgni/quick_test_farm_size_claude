@@ -70,6 +70,7 @@ logger = logging.getLogger("dryspell_v9")
 # metric: (label, unit, histogram bin width, histogram max, condition)
 METRICS = {
     "n_spells": ("Number of dry spells per season", "spells", 1, 40, "all"),
+    "spell_len": ("Median duration of the dry spells of the season", "days", 0.5, 400, "ge1"),
     "first_start": ("Start of the 1st dry spell", "days after onset", 1, 400, "ge1"),
     "first_len": ("Duration of the 1st dry spell", "days", 1, 400, "ge1"),
     "last_start": ("Start of the last dry spell (seasons with >= 2)", "days after onset", 1, 400, "ge2"),
@@ -122,6 +123,8 @@ def season_metrics(sid, s, e, n_seasons, win_len):
         first = np.r_[True, sid[o][1:] != sid[o][:-1]]
         k = o[first]
         out["longest_start"][sid[k]], out["longest_len"][sid[k]] = s[k], L[k]
+        med = pd.Series(L).groupby(sid).median()          # sid sorted -> groups in u order
+        out["spell_len"][med.index.to_numpy()] = med.to_numpy()
     return out
 
 
@@ -269,7 +272,7 @@ def density(m, h):
     d = h / (n * w)
     if m not in ("n_spells",) and C.PDF_SMOOTH_DAYS > 0:
         from scipy.ndimage import gaussian_filter1d
-        sigma = C.PDF_SMOOTH_DAYS if w >= 1 else 2.0          # bins: days, or 0.02 for the fraction
+        sigma = C.PDF_SMOOTH_DAYS / w if "day" in METRICS[m][1] else 2.0   # in bins: days, or 0.02 (fraction)
         d = gaussian_filter1d(d.astype(float), sigma, mode="constant")
     return d
 
@@ -321,7 +324,8 @@ def plot_latitude_profile(path, lat_summary, title_extra):
     plt = _plt()
     d = lat_summary[lat_summary.latitude_band != "ALL"].copy()
     d["lat"] = d.latitude_band.str.split(" to ").str[0].astype(float) + C.LAT_BAND_DEG / 2
-    ms = list(METRICS)
+    ms = ["n_spells", "longest_start", "first_start", "last_start",      # top: how many, and when
+          "spell_len", "longest_len", "first_len", "last_len"]           # bottom: how long
     fig, axes = plt.subplots(2, 4, figsize=(12, 6.2), sharex=True)
     for ax, m in zip(axes.ravel(), ms):
         x = d[d.metric == m].sort_values("lat")
@@ -352,6 +356,8 @@ MAPS = [
     ("n_spells_mean", "Mean number of dry spells per season", "spells / season", "Oranges", 0, None),
     ("p_ge1", "P(at least one dry spell in the season)", "probability", "Purples", 0, 1),
     ("p_ge2", "P(two or more dry spells in the season)", "probability", "Purples", 0, 1),
+    ("spell_len_median", "Median duration of the dry spells of a season (median over seasons)", "days",
+     "Oranges", None, None),
     ("first_start_median", "Median start of the 1st dry spell", "days after onset", "Blues", 0, None),
     ("first_len_median", "Median duration of the 1st dry spell", "days", "Oranges", None, None),
     ("last_start_median", "Median start of the last dry spell (seasons with >= 2)", "days after onset", "Blues", 0, None),
