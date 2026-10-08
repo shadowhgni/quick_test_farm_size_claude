@@ -1,7 +1,7 @@
-07:35:03 [MainProcess] INFO - Created 242 records
-07:35:03 [MainProcess] INFO - boundaries: 242 countries -> dryspell_v9_data/boundaries/ne_50m_admin_0_countries.gpkg
-07:35:07 [MainProcess] WARNING - AEZ grid corrupted from row 4166 (lat ~3.82); the rest is no data
-07:35:08 [MainProcess] INFO - AEZ: dryspell_v9_data/aez/afr_aez09.tif (9720x9159, classes [np.int16(211), np.int16(212), np.int16(213), np.int16(221), np.int16(222), np.int16(223), np.int16(311), np.int16(312), np.int16(313), np.int16(314), np.int16(321), np.int16(322), np.int16(323), np.int16(324)])
-07:35:14 [MainProcess] INFO - Koppen-Geiger: dryspell_v9_data/koppen/koppen_1991_2020.tif (30 classes in legend.txt)
-07:35:14 [MainProcess] INFO - NDVI ci_nga: 816/816 half-months available
-07:35:14 [MainProcess] INFO - CHIRPS ci_nga: 16,436 days cached, 0 to download, 0 known failures
+09:57:23 [MainProcess] INFO - Created 242 records
+09:57:23 [MainProcess] INFO - boundaries: 242 countries -> dryspell_v9_data/boundaries/ne_50m_admin_0_countries.gpkg
+09:57:27 [MainProcess] WARNING - AEZ grid corrupted from row 4166 (lat ~3.82); the rest is no data
+09:57:28 [MainProcess] INFO - AEZ: dryspell_v9_data/aez/afr_aez09.tif (9720x9159, classes [np.int16(211), np.int16(212), np.int16(213), np.int16(221), np.int16(222), np.int16(223), np.int16(311), np.int16(312), np.int16(313), np.int16(314), np.int16(321), np.int16(322), np.int16(323), np.int16(324)])
+09:57:34 [MainProcess] INFO - Koppen-Geiger: dryspell_v9_data/koppen/koppen_1991_2020.tif (30 classes in legend.txt)
+09:57:34 [MainProcess] INFO - NDVI ci_nga: 816/816 half-months available
+09:57:34 [MainProcess] INFO - CHIRPS ci_nga: 16,436 days cached, 0 to download, 0 known failures

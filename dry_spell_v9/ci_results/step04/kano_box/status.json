@@ -16,5 +16,5 @@
   "n_few_seasons": 0,
   "zones": "koppen",
   "zone_source": "Koppen-Geiger 1991_2020 (Beck et al. 2023), majority per cell",
-  "minutes": 0.31
+  "minutes": 0.3
 }
