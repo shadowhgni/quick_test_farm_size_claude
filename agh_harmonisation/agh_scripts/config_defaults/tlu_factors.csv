@@ -1,0 +1,19 @@
+# Tropical Livestock Unit factors per animal (std names from value_map / terminag "animal" vocabulary). Rows with "animal:class" (e.g. cattle:calf) override the species factor for that class. [verified] Jahnke (1982) factors as reported in Rothman-Ostrow et al. (2020) Front. Vet. Sci. 7:556788. Blank tlu = not converted (reported in tlu_missing.csv).
+animal,tlu,source
+camel,1.0,Jahnke 1982
+cattle,0.7,Jahnke 1982
+horse,0.8,Jahnke 1982
+mule,0.7,Jahnke 1982
+donkey,0.5,Jahnke 1982
+pig,0.2,Jahnke 1982
+sheep,0.1,Jahnke 1982
+goat,0.1,Jahnke 1982
+chicken,0.01,Jahnke 1982
+buffalo,,set your own
+rabbit,,set your own
+duck,,set your own
+goose,,set your own
+turkey,,set your own
+guinea fowl,,set your own
+pigeon,,set your own
+poultry,,set your own (e.g. 0.01 as for chicken)
