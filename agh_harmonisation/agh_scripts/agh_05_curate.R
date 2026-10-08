@@ -119,7 +119,7 @@ suggest <- function(concept, raw_n, kind) {
   case_when(
     kind == "lgl"               ~ as.character(as_lgl(raw_n)),
     concept == "animal"         ~ first_rule(raw_n, animal_rules),
-    concept %in% c("crop", "previous_crop") ~ match_vocab(raw_n, voc("crop")$name, voc("crop")$altname),
+    concept %in% c("crop", "previous_crop") ~ match_vocab(raw_n, voc("crop")$name, voc("crop")[["altname"]]),
     concept == "OM_type"        ~ coalesce(match_vocab(raw_n, voc("OM")$name), first_rule(raw_n, om_rules)),
     concept == "fertilizer_type"~ coalesce(match_vocab(raw_n, voc("fertilizer_type")$name), first_rule(raw_n, fert_rules)),
     concept == "land_use"       ~ first_rule(raw_n, land_use_rules),
