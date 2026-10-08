@@ -1,17 +1,20 @@
-03:37:59 [MainProcess] INFO - ======================================================================
-03:37:59 [MainProcess] INFO - v7 STEP2  region=nga  grid 240x200  workers=4
-03:37:59 [MainProcess] INFO -   spells >= 10 d after clipping to [onset+10, demise-10], edge policy = clip
-03:37:59 [MainProcess] INFO -   seasons 1981-2024; rainfall data until 2025-12-31
-03:37:59 [MainProcess] INFO - ======================================================================
-03:37:59 [MainProcess] INFO - RADS: 44 years 1981-2024 from chirps_africa
-03:38:00 [MainProcess] INFO -   RADS onset_dims: ["('latitude', 'longitude')"]
-03:38:04 [MainProcess] INFO -   20/25 chunks, 255,997 in-season spells
-03:38:04 [MainProcess] INFO -   25/25 chunks, 289,000 in-season spells
-03:38:05 [MainProcess] INFO - Written dryspell_v7/nga/step2/metrics.nc
-03:38:05 [MainProcess] INFO - Boundaries loaded from Spatial_data_repository/ne_50m_admin_0_countries.zip (6 polygons)
-03:38:10 [MainProcess] INFO -   pixels ok                               44,419
-03:38:10 [MainProcess] INFO -   pixels no CHIRPS data                    2,065
-03:38:10 [MainProcess] INFO -   pixels no valid RADS season              1,516
-03:38:10 [MainProcess] INFO -   seasons ok                           1,676,616
-03:38:10 [MainProcess] INFO -   seasons RADS missing                   435,384
-03:38:10 [MainProcess] INFO - STEP2 done in 0.2 min -> dryspell_v7/nga/step2
+10:29:58 [MainProcess] INFO - ======================================================================
+10:29:58 [MainProcess] INFO - v7 STEP2  region=nga  grid 240x200  workers=4
+10:29:58 [MainProcess] INFO -   spells >= 10 d after clipping to [onset+10, demise-10], edge policy = clip
+10:29:58 [MainProcess] INFO -   seasons 1981-2024; rainfall data until 2025-12-31
+10:29:58 [MainProcess] INFO - ======================================================================
+10:29:58 [MainProcess] INFO - RADS: 44 files 1981-2024 from chirps_africa
+10:29:59 [MainProcess] INFO -   RADS onset_dims: ["('latitude', 'longitude')"]
+10:29:59 [MainProcess] INFO -   RADS seasons paired (demise taken from the file before / same / after the onset file): 0 / 1,676,613 / 0; onsets without a plausible demise: 0
+10:29:59 [MainProcess] INFO -   RADS onset day-of-year, most frequent: 121 (10%), 116 (6%), 151 (5%), 146 (5%), 126 (5%)
+10:29:59 [MainProcess] INFO -   RADS cells whose onset day-of-year never changes (sd < 1 d, >= 5 seasons): 0 of 44,419
+10:30:04 [MainProcess] INFO -   20/25 chunks, 255,997 in-season spells
+10:30:05 [MainProcess] INFO -   25/25 chunks, 288,998 in-season spells
+10:30:05 [MainProcess] INFO - Written dryspell_v7/nga/step2/metrics.nc
+10:30:05 [MainProcess] INFO - Boundaries loaded from Spatial_data_repository/ne_50m_admin_0_countries.zip (6 polygons)
+10:30:12 [MainProcess] INFO -   pixels ok                               44,419
+10:30:12 [MainProcess] INFO -   pixels no CHIRPS data                    2,065
+10:30:12 [MainProcess] INFO -   pixels no valid RADS season              1,516
+10:30:12 [MainProcess] INFO -   seasons ok                           1,676,613
+10:30:12 [MainProcess] INFO -   seasons RADS missing                   435,387
+10:30:12 [MainProcess] INFO - STEP2 done in 0.2 min -> dryspell_v7/nga/step2

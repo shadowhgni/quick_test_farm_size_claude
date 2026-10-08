@@ -84,11 +84,15 @@ jobs:
       - name: Step 3 - zoning
         run: cd "$W" && python "$CODE/2026-09-26.step3_bbox_zoning_v07.py" --region nga --bbox $BBOX --name nga
 
-      - name: Step 4 - sowing date x crop x cycle (NGA)
+      - name: Steps 4-5 via run_all.py (NGA + neighbours partly in the box, KEN outside, SSA aggregate)
         run: |
           cd "$W"
           AEZ=""; [ -f aez/003_afr-aez_09.zip ] && AEZ="--aez aez/003_afr-aez_09.zip"
-          python "$CODE/2026-10-06.step4_sowing_date_stage_risk_v07.py" --region nga --iso3 NGA --workers 4 $AEZ
+          python "$CODE/run_all.py" --region nga --bbox $BBOX --steps 4 5 --countries NGA BEN NER CMR TCD KEN \
+            --workers 4 --country_jobs 2 $AEZ
+          cat dryspell_v7/nga/run_all_status.csv
+          python "$CODE/run_all.py" --region nga --bbox $BBOX --steps 1 2 4 5 --countries NGA BEN NER CMR TCD KEN \
+            --resume --dry_run      # resume must find everything done
 
       - name: Independent check of step 4
         run: |
@@ -96,6 +100,18 @@ jobs:
           for c in sorghum pearl_millet groundnut; do
             python "$CODE/tests/check_step4.py" --region nga --iso3 NGA --crop $c --cells 6
           done
+          python "$CODE/tests/check_step5.py" --region nga
+
+      - name: HPC RADS layout (onset of Y+1 in file Y, 1970-01-01 placeholders) gives the same seasons
+        run: |
+          cd "$W"
+          python "$CODE/tests/rads_to_hpc_layout.py" chirps_africa hpc/chirps_africa
+          mkdir -p hpc/work/dryspell_v7/nga
+          ln -sfn "$W/dryspell_v7/nga/step1" hpc/work/dryspell_v7/nga/step1
+          ln -sfn "$W/Spatial_data_repository" hpc/work/Spatial_data_repository
+          cd hpc/work      # step 2 looks for RADS in ../chirps_africa first
+          python "$CODE/2026-09-26.step2_dry_spell_seasons_v07.py" --bbox $BBOX --region nga --workers 4
+          python "$CODE/tests/compare_layouts.py" "$W/dryspell_v7/nga/step2/seasons" dryspell_v7/nga/step2/seasons
 
       - name: Summary
         if: always()
@@ -103,7 +119,8 @@ jobs:
           cd "$W"
           python - <<'EOF' >> "$GITHUB_STEP_SUMMARY" || true
           import pandas as pd
-          s = pd.read_csv("dryspell_v7/nga/step4_NGA/aez_summary.csv")
+          print("## Countries\n\n```\n" + pd.read_csv("dryspell_v7/nga/step4/SSA/countries.csv").to_string(index=False) + "\n```\n")
+          s = pd.read_csv("dryspell_v7/nga/step4/NGA/aez_summary.csv")
           n = s[s.aez == "ALL"]
           print("## Nigeria, national (possible cells)\n")
           cols = ["crop", "cycle", "sow", "pct_cells_impossible", "p_hit_window_mean", "most_hit_stage",
@@ -117,10 +134,15 @@ jobs:
         run: |
           R=dry_spell_v7/ci_results; rm -rf "$R"; mkdir -p "$R/png"
           cd "$W/dryspell_v7/nga" || exit 0
-          cp step1/step1.log step2/step2.log step3_nga/step3.log step4_NGA/step4.log "$GITHUB_WORKSPACE/$R/" 2>/dev/null || true
-          cp step2/*.csv step3_nga/zone_summary_*.csv step4_NGA/*.csv "$GITHUB_WORKSPACE/$R/" 2>/dev/null || true
-          cp step4_NGA/png/*.png step2/png/onset_doy_median.png step2/png/season_len_median.png \
-             step2/png/nb_spells_median.png step1/diagnostics/bimodal_ratio.png "$GITHUB_WORKSPACE/$R/png/" 2>/dev/null || true
+          cp step1/step1.log step2/step2.log step3_nga/step3.log run_all.log run_all_status.csv "$GITHUB_WORKSPACE/$R/" 2>/dev/null || true
+          cp step2/*.csv step3_nga/zone_summary_*.csv "$GITHUB_WORKSPACE/$R/" 2>/dev/null || true
+          cp step2/png/onset_doy_median.png step2/png/season_len_median.png step2/png/nb_spells_median.png \
+             step1/diagnostics/bimodal_ratio.png "$GITHUB_WORKSPACE/$R/png/" 2>/dev/null || true
+          for d in step4/*/; do        # one folder per country + SSA (tables, logs, figures; no NetCDF/Parquet)
+            n=$(basename "$d"); mkdir -p "$GITHUB_WORKSPACE/$R/step4/$n"
+            cp "$d"/*.csv "$d"/*.json "$d"/*.log "$GITHUB_WORKSPACE/$R/step4/$n/" 2>/dev/null || true
+            [ -d "$d/png" ] && cp -r "$d/png" "$GITHUB_WORKSPACE/$R/step4/$n/"
+          done
           du -sh "$GITHUB_WORKSPACE/$R"
 
       - name: Commit small results

@@ -1,0 +1,18 @@
+key,value
+regime_no season (arid / no data),2080
+regime_unimodal,34358
+regime_transition,5745
+regime_bimodal,5817
+reason_ok,45920
+reason_no CHIRPS data,2065
+reason_missing rainfall days,0
+reason_arid (no season),15
+reason_too few valid seasons,0
+mean_onset_doy_median,135.68797302246094
+mean_demise_doy_median,273.38201904296875
+mean_season_len_median,138.315673828125
+mean_mean_annual_mm,1175.755859375
+mean_n_valid_seasons,43.13414764404297
+n_spells,14868520
+n_valid_seasons,1980720
+last_day_with_data,2025-12-31

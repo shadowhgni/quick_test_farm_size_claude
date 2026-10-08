@@ -1,0 +1,110 @@
+name: Dry-spell v8 - from scratch (CHIRPS download -> seasons -> sowing risk -> aggregate)
+
+# The same run_all.py as on the HPC, on the ci_nga box (Nigeria, 2.5-14.5E, 4.5-14.5N):
+# downloads CHIRPS v2.0 daily 1981-2025, Natural Earth and the HarvestChoice AEZ, computes the
+# rainfall regime and major-season onset/demise, runs 6 countries (KEN is outside the box) and
+# the aggregate, checks everything independently, and commits a fingerprint so that an HPC run
+# of the same box can be compared number by number (tests/compare_reference.py).
+on:
+  push:
+    branches: ['claude/**']
+    paths:
+      - 'dry_spell_v8/**'
+      - '.github/workflows/dry_spell_v8.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: dry-spell-v8-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci_nga:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    permissions:
+      contents: write
+    env:
+      W: ${{ github.workspace }}/work
+      CODE: ${{ github.workspace }}/dry_spell_v8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'dry_spell_v8/requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          pip install -r dry_spell_v8/requirements.txt
+          python --version; nproc; free -g; df -h .
+
+      - name: Cache CHIRPS download
+        uses: actions/cache@v4
+        with:
+          path: work/dryspell_v8_data/chirps/ci_nga
+          key: v8-chirps-v2-ci_nga-1981-2025-r1
+
+      - name: run_all.py (steps 1-4)
+        run: |
+          mkdir -p "$W" && cd "$W"
+          python "$CODE/run_all.py" --region ci_nga --countries NGA BEN NER CMR TCD KEN \
+            --workers 4 --country_jobs 2 --threads 32
+          cat dryspell_v8/ci_nga/run_all_status.csv
+          python "$CODE/run_all.py" --region ci_nga --countries NGA BEN NER CMR TCD KEN --resume --dry_run
+
+      - name: Independent checks (seasons, sowing risk, aggregation)
+        run: |
+          cd "$W"
+          python "$CODE/tests/check_seasons.py" --region ci_nga --cells 8
+          for c in sorghum pearl_millet groundnut; do
+            python "$CODE/tests/check_sowing.py" --region ci_nga --iso3 NGA --crop $c --cells 6
+          done
+          python "$CODE/tests/check_aggregate.py" --region ci_nga
+
+      - name: Compare with the previous reference (information only)
+        if: always()
+        run: |
+          cd "$W"
+          python "$CODE/tests/compare_reference.py" --region ci_nga || echo "::notice::results differ from the committed reference (expected after a method change)"
+
+      - name: Summary
+        if: always()
+        run: |
+          cd "$W"
+          python - <<'EOF' >> "$GITHUB_STEP_SUMMARY" || true
+          import pandas as pd
+          print("## Countries\n\n```\n" + pd.read_csv("dryspell_v8/ci_nga/step03/SSA/countries.csv").to_string(index=False) + "\n```\n")
+          s = pd.read_csv("dryspell_v8/ci_nga/step03/SSA/ssa_summary.csv")
+          n = s[s.aez == "ALL"]
+          cols = ["crop", "cycle", "sow", "pct_cells_impossible", "p_hit_window_mean", "most_hit_stage", "most_hit_p"]
+          print("## All countries pooled\n\n```\n" + n[cols].round(3).to_string(index=False) + "\n```\n")
+          EOF
+          grep -E "regime|cells " dryspell_v8/ci_nga/step02/step02.log | tail -12 >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Collect reference fingerprint and small results
+        if: always()
+        run: |
+          cd "$W"
+          python "$CODE/tests/compare_reference.py" --region ci_nga --write "$CODE/reference/ci_nga" || true
+          R="$CODE/ci_results"; rm -rf "$R"; mkdir -p "$R"
+          cd dryspell_v8/ci_nga || exit 0
+          cp run_all.log run_all_status.csv step02/step02.log "$R/" 2>/dev/null || true
+          mkdir -p "$R/step02" && cp step02/diagnostics/*.png "$R/step02/" 2>/dev/null || true
+          for d in step03/*/; do
+            n=$(basename "$d"); mkdir -p "$R/step03/$n"
+            cp "$d"/*.csv "$d"/*.json "$d"/*.log "$R/step03/$n/" 2>/dev/null || true
+            [ -d "$d/png" ] && cp -r "$d/png" "$R/step03/$n/"
+          done
+          du -sh "$R"
+
+      - name: Commit reference and results
+        if: always() && github.event_name == 'push'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dry_spell_v8/reference dry_spell_v8/ci_results || true
+          git diff --cached --quiet && exit 0
+          git commit -m "ci: dry_spell_v8 ci_nga reference and results [skip ci]"
+          for i in 1 2 3; do git pull --rebase origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && break; sleep 5; done

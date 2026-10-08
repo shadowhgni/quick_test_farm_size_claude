@@ -1,0 +1,1771 @@
+iso3,crop,cycle,sow,aez,stage,p,n_cells,stage_idx,stage_name,das_start,das_end,overlaps_window
+BEN,sorghum,70,0,Tropic - warm / semiarid,SOW,0.0,671,0,sowing to emergence,0,2,False
+BEN,sorghum,70,0,Tropic - warm / subhumid,SOW,0.0,815,0,sowing to emergence,0,2,False
+BEN,sorghum,70,10,Tropic - warm / semiarid,SOW,0.000592382,671,0,sowing to emergence,0,2,False
+BEN,sorghum,70,10,Tropic - warm / subhumid,SOW,0.0004899717,815,0,sowing to emergence,0,2,False
+BEN,sorghum,70,20,Tropic - warm / semiarid,SOW,0.003936296,671,0,sowing to emergence,0,2,False
+BEN,sorghum,70,20,Tropic - warm / subhumid,SOW,0.0018702265,815,0,sowing to emergence,0,2,False
+BEN,sorghum,70,30,Tropic - warm / semiarid,SOW,0.0025999239,671,0,sowing to emergence,0,2,False
+BEN,sorghum,70,30,Tropic - warm / subhumid,SOW,0.0012474954,815,0,sowing to emergence,0,2,False
+BEN,sorghum,70,40,Tropic - warm / semiarid,SOW,0.0020181974,671,0,sowing to emergence,0,2,False
+BEN,sorghum,70,40,Tropic - warm / subhumid,SOW,0.0059090345,815,0,sowing to emergence,0,2,False
+BEN,sorghum,90,0,Tropic - warm / semiarid,SOW,0.0,671,0,sowing to emergence,0,3,False
+BEN,sorghum,90,0,Tropic - warm / subhumid,SOW,0.0,815,0,sowing to emergence,0,3,False
+BEN,sorghum,90,10,Tropic - warm / semiarid,SOW,0.0017711342,671,0,sowing to emergence,0,3,False
+BEN,sorghum,90,10,Tropic - warm / subhumid,SOW,0.00060071057,815,0,sowing to emergence,0,3,False
+BEN,sorghum,90,20,Tropic - warm / semiarid,SOW,0.0052032988,671,0,sowing to emergence,0,3,False
+BEN,sorghum,90,20,Tropic - warm / subhumid,SOW,0.0023560699,815,0,sowing to emergence,0,3,False
+BEN,sorghum,90,30,Tropic - warm / semiarid,SOW,0.0026818172,671,0,sowing to emergence,0,3,False
+BEN,sorghum,90,30,Tropic - warm / subhumid,SOW,0.0011507636,813,0,sowing to emergence,0,3,False
+BEN,sorghum,90,40,Tropic - warm / semiarid,SOW,0.0027338788,671,0,sowing to emergence,0,3,False
+BEN,sorghum,90,40,Tropic - warm / subhumid,SOW,0.006168653,813,0,sowing to emergence,0,3,False
+BEN,sorghum,110,0,Tropic - warm / semiarid,SOW,0.0,671,0,sowing to emergence,0,3,False
+BEN,sorghum,110,0,Tropic - warm / subhumid,SOW,0.0,815,0,sowing to emergence,0,3,False
+BEN,sorghum,110,10,Tropic - warm / semiarid,SOW,0.0019137096,671,0,sowing to emergence,0,3,False
+BEN,sorghum,110,10,Tropic - warm / subhumid,SOW,0.00052397646,813,0,sowing to emergence,0,3,False
+BEN,sorghum,110,20,Tropic - warm / semiarid,SOW,0.00575425,671,0,sowing to emergence,0,3,False
+BEN,sorghum,110,20,Tropic - warm / subhumid,SOW,0.0023242629,813,0,sowing to emergence,0,3,False
+BEN,sorghum,110,30,Tropic - warm / semiarid,SOW,0.0011940227,583,0,sowing to emergence,0,3,False
+BEN,sorghum,110,30,Tropic - warm / subhumid,SOW,0.0005759368,812,0,sowing to emergence,0,3,False
+BEN,sorghum,110,40,Tropic - warm / semiarid,SOW,0.0022361232,320,0,sowing to emergence,0,3,False
+BEN,sorghum,110,40,Tropic - warm / subhumid,SOW,0.004199969,810,0,sowing to emergence,0,3,False
+BEN,sorghum,130,0,Tropic - warm / semiarid,SOW,0.0002900394,671,0,sowing to emergence,0,4,False
+BEN,sorghum,130,0,Tropic - warm / subhumid,SOW,3.9677816e-05,813,0,sowing to emergence,0,4,False
+BEN,sorghum,130,10,Tropic - warm / semiarid,SOW,0.0029975716,583,0,sowing to emergence,0,4,False
+BEN,sorghum,130,10,Tropic - warm / subhumid,SOW,0.0011393144,812,0,sowing to emergence,0,4,False
+BEN,sorghum,130,20,Tropic - warm / semiarid,SOW,0.01777337,320,0,sowing to emergence,0,4,False
+BEN,sorghum,130,20,Tropic - warm / subhumid,SOW,0.005554505,810,0,sowing to emergence,0,4,False
+BEN,sorghum,130,30,Tropic - warm / semiarid,SOW,0.0,130,0,sowing to emergence,0,4,False
+BEN,sorghum,130,30,Tropic - warm / subhumid,SOW,0.00063654385,727,0,sowing to emergence,0,4,False
+BEN,sorghum,130,40,Tropic - warm / subhumid,SOW,0.0009821581,419,0,sowing to emergence,0,4,False
+BEN,sorghum,70,0,Tropic - warm / semiarid,S0,0.0034659393,671,1,emergence,3,9,False
+BEN,sorghum,70,0,Tropic - warm / subhumid,S0,0.0010272666,815,1,emergence,3,9,False
+BEN,sorghum,70,10,Tropic - warm / semiarid,S0,0.0039774,671,1,emergence,3,9,False
+BEN,sorghum,70,10,Tropic - warm / subhumid,S0,0.0019327708,815,1,emergence,3,9,False
+BEN,sorghum,70,20,Tropic - warm / semiarid,S0,0.012894012,671,1,emergence,3,9,False
+BEN,sorghum,70,20,Tropic - warm / subhumid,S0,0.008030484,815,1,emergence,3,9,False
+BEN,sorghum,70,30,Tropic - warm / semiarid,S0,0.0031758843,671,1,emergence,3,9,False
+BEN,sorghum,70,30,Tropic - warm / subhumid,S0,0.0042569423,815,1,emergence,3,9,False
+BEN,sorghum,70,40,Tropic - warm / semiarid,S0,0.0052871276,671,1,emergence,3,9,False
+BEN,sorghum,70,40,Tropic - warm / subhumid,S0,0.013663296,815,1,emergence,3,9,False
+BEN,sorghum,90,0,Tropic - warm / semiarid,S0,0.00397421,671,1,emergence,4,12,False
+BEN,sorghum,90,0,Tropic - warm / subhumid,S0,0.001121889,815,1,emergence,4,12,False
+BEN,sorghum,90,10,Tropic - warm / semiarid,S0,0.007452908,671,1,emergence,4,12,False
+BEN,sorghum,90,10,Tropic - warm / subhumid,S0,0.0037476262,815,1,emergence,4,12,False
+BEN,sorghum,90,20,Tropic - warm / semiarid,S0,0.014134367,671,1,emergence,4,12,False
+BEN,sorghum,90,20,Tropic - warm / subhumid,S0,0.0090202,815,1,emergence,4,12,False
+BEN,sorghum,90,30,Tropic - warm / semiarid,S0,0.0051338454,671,1,emergence,4,12,False
+BEN,sorghum,90,30,Tropic - warm / subhumid,S0,0.00852274,813,1,emergence,4,12,False
+BEN,sorghum,90,40,Tropic - warm / semiarid,S0,0.006326534,671,1,emergence,4,12,False
+BEN,sorghum,90,40,Tropic - warm / subhumid,S0,0.022797113,813,1,emergence,4,12,False
+BEN,sorghum,110,0,Tropic - warm / semiarid,S0,0.005997848,671,1,emergence,4,14,False
+BEN,sorghum,110,0,Tropic - warm / subhumid,S0,0.0017823884,815,1,emergence,4,14,False
+BEN,sorghum,110,10,Tropic - warm / semiarid,S0,0.01259926,671,1,emergence,4,14,False
+BEN,sorghum,110,10,Tropic - warm / subhumid,S0,0.0067434944,813,1,emergence,4,14,False
+BEN,sorghum,110,20,Tropic - warm / semiarid,S0,0.013467354,671,1,emergence,4,14,False
+BEN,sorghum,110,20,Tropic - warm / subhumid,S0,0.008396356,813,1,emergence,4,14,False
+BEN,sorghum,110,30,Tropic - warm / semiarid,S0,0.00340674,583,1,emergence,4,14,False
+BEN,sorghum,110,30,Tropic - warm / subhumid,S0,0.008708096,812,1,emergence,4,14,False
+BEN,sorghum,110,40,Tropic - warm / semiarid,S0,0.0046126945,320,1,emergence,4,14,False
+BEN,sorghum,110,40,Tropic - warm / subhumid,S0,0.023101637,810,1,emergence,4,14,False
+BEN,sorghum,130,0,Tropic - warm / semiarid,S0,0.0074786693,671,1,emergence,5,17,False
+BEN,sorghum,130,0,Tropic - warm / subhumid,S0,0.0017144928,813,1,emergence,5,17,False
+BEN,sorghum,130,10,Tropic - warm / semiarid,S0,0.017999344,583,1,emergence,5,17,False
+BEN,sorghum,130,10,Tropic - warm / subhumid,S0,0.00824958,812,1,emergence,5,17,False
+BEN,sorghum,130,20,Tropic - warm / semiarid,S0,0.018884258,320,1,emergence,5,17,False
+BEN,sorghum,130,20,Tropic - warm / subhumid,S0,0.007493643,810,1,emergence,5,17,False
+BEN,sorghum,130,30,Tropic - warm / semiarid,S0,0.0016986282,130,1,emergence,5,17,False
+BEN,sorghum,130,30,Tropic - warm / subhumid,S0,0.004184981,727,1,emergence,5,17,False
+BEN,sorghum,130,40,Tropic - warm / subhumid,S0,0.024121562,419,1,emergence,5,17,False
+BEN,sorghum,70,0,Tropic - warm / semiarid,S1,0.0068917517,671,2,3-leaf,10,16,False
+BEN,sorghum,70,0,Tropic - warm / subhumid,S1,0.002404585,815,2,3-leaf,10,16,False
+BEN,sorghum,70,10,Tropic - warm / semiarid,S1,0.013458603,671,2,3-leaf,10,16,False
+BEN,sorghum,70,10,Tropic - warm / subhumid,S1,0.008329015,815,2,3-leaf,10,16,False
+BEN,sorghum,70,20,Tropic - warm / semiarid,S1,0.0135798445,671,2,3-leaf,10,16,False
+BEN,sorghum,70,20,Tropic - warm / subhumid,S1,0.009983629,815,2,3-leaf,10,16,False
+BEN,sorghum,70,30,Tropic - warm / semiarid,S1,0.004696223,671,2,3-leaf,10,16,False
+BEN,sorghum,70,30,Tropic - warm / subhumid,S1,0.012374452,815,2,3-leaf,10,16,False
+BEN,sorghum,70,40,Tropic - warm / semiarid,S1,0.005674462,671,2,3-leaf,10,16,False
+BEN,sorghum,70,40,Tropic - warm / subhumid,S1,0.03133952,815,2,3-leaf,10,16,False
+BEN,sorghum,90,0,Tropic - warm / semiarid,S1,0.008104803,671,2,3-leaf,13,21,False
+BEN,sorghum,90,0,Tropic - warm / subhumid,S1,0.0039797495,815,2,3-leaf,13,21,False
+BEN,sorghum,90,10,Tropic - warm / semiarid,S1,0.016414082,671,2,3-leaf,13,21,False
+BEN,sorghum,90,10,Tropic - warm / subhumid,S1,0.009405951,815,2,3-leaf,13,21,False
+BEN,sorghum,90,20,Tropic - warm / semiarid,S1,0.0137388185,671,2,3-leaf,13,21,False
+BEN,sorghum,90,20,Tropic - warm / subhumid,S1,0.015765801,815,2,3-leaf,13,21,False
+BEN,sorghum,90,30,Tropic - warm / semiarid,S1,0.0058916733,671,2,3-leaf,13,21,False
+BEN,sorghum,90,30,Tropic - warm / subhumid,S1,0.022537436,813,2,3-leaf,13,21,False
+BEN,sorghum,90,40,Tropic - warm / semiarid,S1,0.004741086,671,2,3-leaf,13,21,False
+BEN,sorghum,90,40,Tropic - warm / subhumid,S1,0.03686314,813,2,3-leaf,13,21,False
+BEN,sorghum,110,0,Tropic - warm / semiarid,S1,0.016859105,671,2,3-leaf,15,25,False
+BEN,sorghum,110,0,Tropic - warm / subhumid,S1,0.008111851,815,2,3-leaf,15,25,False
+BEN,sorghum,110,10,Tropic - warm / semiarid,S1,0.015597235,671,2,3-leaf,15,25,False
+BEN,sorghum,110,10,Tropic - warm / subhumid,S1,0.009722044,813,2,3-leaf,15,25,False
+BEN,sorghum,110,20,Tropic - warm / semiarid,S1,0.008320111,671,2,3-leaf,15,25,False
+BEN,sorghum,110,20,Tropic - warm / subhumid,S1,0.011904422,813,2,3-leaf,15,25,False
+BEN,sorghum,110,30,Tropic - warm / semiarid,S1,0.0056384513,583,2,3-leaf,15,25,False
+BEN,sorghum,110,30,Tropic - warm / subhumid,S1,0.027835082,812,2,3-leaf,15,25,False
+BEN,sorghum,110,40,Tropic - warm / semiarid,S1,0.0084829,320,2,3-leaf,15,25,False
+BEN,sorghum,110,40,Tropic - warm / subhumid,S1,0.04073112,810,2,3-leaf,15,25,False
+BEN,sorghum,130,0,Tropic - warm / semiarid,S1,0.016947335,671,2,3-leaf,18,30,False
+BEN,sorghum,130,0,Tropic - warm / subhumid,S1,0.008971586,813,2,3-leaf,18,30,False
+BEN,sorghum,130,10,Tropic - warm / semiarid,S1,0.016046919,583,2,3-leaf,18,30,False
+BEN,sorghum,130,10,Tropic - warm / subhumid,S1,0.01229612,812,2,3-leaf,18,30,False
+BEN,sorghum,130,20,Tropic - warm / semiarid,S1,0.0057235844,320,2,3-leaf,18,30,False
+BEN,sorghum,130,20,Tropic - warm / subhumid,S1,0.014088318,810,2,3-leaf,18,30,False
+BEN,sorghum,130,30,Tropic - warm / semiarid,S1,0.004203299,130,2,3-leaf,18,30,False
+BEN,sorghum,130,30,Tropic - warm / subhumid,S1,0.03364999,727,2,3-leaf,18,30,False
+BEN,sorghum,130,40,Tropic - warm / subhumid,S1,0.04796651,419,2,3-leaf,18,30,False
+BEN,sorghum,70,0,Tropic - warm / semiarid,S2,0.011224289,671,3,5-leaf,17,23,False
+BEN,sorghum,70,0,Tropic - warm / subhumid,S2,0.0048751542,815,3,5-leaf,17,23,False
+BEN,sorghum,70,10,Tropic - warm / semiarid,S2,0.01399025,671,3,5-leaf,17,23,False
+BEN,sorghum,70,10,Tropic - warm / subhumid,S2,0.009588804,815,3,5-leaf,17,23,False
+BEN,sorghum,70,20,Tropic - warm / semiarid,S2,0.0068480438,671,3,5-leaf,17,23,False
+BEN,sorghum,70,20,Tropic - warm / subhumid,S2,0.011724434,815,3,5-leaf,17,23,False
+BEN,sorghum,70,30,Tropic - warm / semiarid,S2,0.0054230755,671,3,5-leaf,17,23,False
+BEN,sorghum,70,30,Tropic - warm / subhumid,S2,0.026478378,815,3,5-leaf,17,23,False
+BEN,sorghum,70,40,Tropic - warm / semiarid,S2,0.0031762954,671,3,5-leaf,17,23,False
+BEN,sorghum,70,40,Tropic - warm / subhumid,S2,0.037829008,815,3,5-leaf,17,23,False
+BEN,sorghum,90,0,Tropic - warm / semiarid,S2,0.016831141,671,3,5-leaf,22,30,False
+BEN,sorghum,90,0,Tropic - warm / subhumid,S2,0.009613998,815,3,5-leaf,22,30,False
+BEN,sorghum,90,10,Tropic - warm / semiarid,S2,0.013602777,671,3,5-leaf,22,30,False
+BEN,sorghum,90,10,Tropic - warm / subhumid,S2,0.013673528,815,3,5-leaf,22,30,False
+BEN,sorghum,90,20,Tropic - warm / semiarid,S2,0.006243803,671,3,5-leaf,22,30,False
+BEN,sorghum,90,20,Tropic - warm / subhumid,S2,0.01667487,815,3,5-leaf,22,30,False
+BEN,sorghum,90,30,Tropic - warm / semiarid,S2,0.0061928113,671,3,5-leaf,22,30,False
+BEN,sorghum,90,30,Tropic - warm / subhumid,S2,0.039416853,813,3,5-leaf,22,30,False
+BEN,sorghum,90,40,Tropic - warm / semiarid,S2,0.0042342385,671,3,5-leaf,22,30,False
+BEN,sorghum,90,40,Tropic - warm / subhumid,S2,0.042342722,813,3,5-leaf,22,30,False
+BEN,sorghum,110,0,Tropic - warm / semiarid,S2,0.014427933,671,3,5-leaf,26,36,False
+BEN,sorghum,110,0,Tropic - warm / subhumid,S2,0.010930062,815,3,5-leaf,26,36,False
+BEN,sorghum,110,10,Tropic - warm / semiarid,S2,0.008811279,671,3,5-leaf,26,36,False
+BEN,sorghum,110,10,Tropic - warm / subhumid,S2,0.013025077,813,3,5-leaf,26,36,False
+BEN,sorghum,110,20,Tropic - warm / semiarid,S2,0.006873682,671,3,5-leaf,26,36,False
+BEN,sorghum,110,20,Tropic - warm / subhumid,S2,0.032971498,813,3,5-leaf,26,36,False
+BEN,sorghum,110,30,Tropic - warm / semiarid,S2,0.006612846,583,3,5-leaf,26,36,False
+BEN,sorghum,110,30,Tropic - warm / subhumid,S2,0.04523482,812,3,5-leaf,26,36,False
+BEN,sorghum,110,40,Tropic - warm / semiarid,S2,0.009066628,320,3,5-leaf,26,36,False
+BEN,sorghum,110,40,Tropic - warm / subhumid,S2,0.039818108,810,3,5-leaf,26,36,False
+BEN,sorghum,130,0,Tropic - warm / semiarid,S2,0.015271329,671,3,5-leaf,31,43,False
+BEN,sorghum,130,0,Tropic - warm / subhumid,S2,0.0154391145,813,3,5-leaf,31,43,False
+BEN,sorghum,130,10,Tropic - warm / semiarid,S2,0.006466112,583,3,5-leaf,31,43,False
+BEN,sorghum,130,10,Tropic - warm / subhumid,S2,0.0263431,812,3,5-leaf,31,43,False
+BEN,sorghum,130,20,Tropic - warm / semiarid,S2,0.006761757,320,3,5-leaf,31,43,False
+BEN,sorghum,130,20,Tropic - warm / subhumid,S2,0.03799737,810,3,5-leaf,31,43,False
+BEN,sorghum,130,30,Tropic - warm / semiarid,S2,0.01605889,130,3,5-leaf,31,43,False
+BEN,sorghum,130,30,Tropic - warm / subhumid,S2,0.047258846,727,3,5-leaf,31,43,False
+BEN,sorghum,130,40,Tropic - warm / subhumid,S2,0.056245636,419,3,5-leaf,31,43,False
+BEN,sorghum,70,0,Tropic - warm / semiarid,S3,0.014663179,671,4,growing point differentiation,24,30,False
+BEN,sorghum,70,0,Tropic - warm / subhumid,S3,0.008930452,815,4,growing point differentiation,24,30,False
+BEN,sorghum,70,10,Tropic - warm / semiarid,S3,0.010940028,671,4,growing point differentiation,24,30,False
+BEN,sorghum,70,10,Tropic - warm / subhumid,S3,0.012605121,815,4,growing point differentiation,24,30,False
+BEN,sorghum,70,20,Tropic - warm / semiarid,S3,0.005631666,671,4,growing point differentiation,24,30,False
+BEN,sorghum,70,20,Tropic - warm / subhumid,S3,0.016708529,815,4,growing point differentiation,24,30,False
+BEN,sorghum,70,30,Tropic - warm / semiarid,S3,0.0046781646,671,4,growing point differentiation,24,30,False
+BEN,sorghum,70,30,Tropic - warm / subhumid,S3,0.036921374,815,4,growing point differentiation,24,30,False
+BEN,sorghum,70,40,Tropic - warm / semiarid,S3,0.004053984,671,4,growing point differentiation,24,30,False
+BEN,sorghum,70,40,Tropic - warm / subhumid,S3,0.042089853,815,4,growing point differentiation,24,30,False
+BEN,sorghum,90,0,Tropic - warm / semiarid,S3,0.013760159,671,4,growing point differentiation,31,39,False
+BEN,sorghum,90,0,Tropic - warm / subhumid,S3,0.011492611,815,4,growing point differentiation,31,39,False
+BEN,sorghum,90,10,Tropic - warm / semiarid,S3,0.0062241293,671,4,growing point differentiation,31,39,False
+BEN,sorghum,90,10,Tropic - warm / subhumid,S3,0.017452892,815,4,growing point differentiation,31,39,False
+BEN,sorghum,90,20,Tropic - warm / semiarid,S3,0.0061083487,671,4,growing point differentiation,31,39,False
+BEN,sorghum,90,20,Tropic - warm / subhumid,S3,0.038753837,815,4,growing point differentiation,31,39,False
+BEN,sorghum,90,30,Tropic - warm / semiarid,S3,0.0040141973,671,4,growing point differentiation,31,39,False
+BEN,sorghum,90,30,Tropic - warm / subhumid,S3,0.04941165,813,4,growing point differentiation,31,39,False
+BEN,sorghum,90,40,Tropic - warm / semiarid,S3,0.0035379445,671,4,growing point differentiation,31,39,False
+BEN,sorghum,90,40,Tropic - warm / subhumid,S3,0.043896098,813,4,growing point differentiation,31,39,False
+BEN,sorghum,110,0,Tropic - warm / semiarid,S3,0.008542149,671,4,growing point differentiation,37,47,False
+BEN,sorghum,110,0,Tropic - warm / subhumid,S3,0.01413243,815,4,growing point differentiation,37,47,False
+BEN,sorghum,110,10,Tropic - warm / semiarid,S3,0.006383281,671,4,growing point differentiation,37,47,False
+BEN,sorghum,110,10,Tropic - warm / subhumid,S3,0.033372458,813,4,growing point differentiation,37,47,False
+BEN,sorghum,110,20,Tropic - warm / semiarid,S3,0.0058935205,671,4,growing point differentiation,37,47,False
+BEN,sorghum,110,20,Tropic - warm / subhumid,S3,0.04570623,813,4,growing point differentiation,37,47,False
+BEN,sorghum,110,30,Tropic - warm / semiarid,S3,0.005066925,583,4,growing point differentiation,37,47,False
+BEN,sorghum,110,30,Tropic - warm / subhumid,S3,0.042131893,812,4,growing point differentiation,37,47,False
+BEN,sorghum,110,40,Tropic - warm / semiarid,S3,0.0013943918,320,4,growing point differentiation,37,47,False
+BEN,sorghum,110,40,Tropic - warm / subhumid,S3,0.054928415,810,4,growing point differentiation,37,47,False
+BEN,sorghum,130,0,Tropic - warm / semiarid,S3,0.007123891,671,4,growing point differentiation,44,56,False
+BEN,sorghum,130,0,Tropic - warm / subhumid,S3,0.033363782,813,4,growing point differentiation,44,56,False
+BEN,sorghum,130,10,Tropic - warm / semiarid,S3,0.008053594,583,4,growing point differentiation,44,56,False
+BEN,sorghum,130,10,Tropic - warm / subhumid,S3,0.045776367,812,4,growing point differentiation,44,56,False
+BEN,sorghum,130,20,Tropic - warm / semiarid,S3,0.009066628,320,4,growing point differentiation,44,56,False
+BEN,sorghum,130,20,Tropic - warm / subhumid,S3,0.04211944,810,4,growing point differentiation,44,56,False
+BEN,sorghum,130,30,Tropic - warm / semiarid,S3,0.01355422,130,4,growing point differentiation,44,56,False
+BEN,sorghum,130,30,Tropic - warm / subhumid,S3,0.056029834,727,4,growing point differentiation,44,56,False
+BEN,sorghum,130,40,Tropic - warm / subhumid,S3,0.124016546,419,4,growing point differentiation,44,56,False
+BEN,sorghum,70,0,Tropic - warm / semiarid,S4,0.013541805,671,5,flag leaf visible,31,37,True
+BEN,sorghum,70,0,Tropic - warm / subhumid,S4,0.01068468,815,5,flag leaf visible,31,37,True
+BEN,sorghum,70,10,Tropic - warm / semiarid,S4,0.004689182,671,5,flag leaf visible,31,37,True
+BEN,sorghum,70,10,Tropic - warm / subhumid,S4,0.012978411,815,5,flag leaf visible,31,37,True
+BEN,sorghum,70,20,Tropic - warm / semiarid,S4,0.006235046,671,5,flag leaf visible,31,37,True
+BEN,sorghum,70,20,Tropic - warm / subhumid,S4,0.033704914,815,5,flag leaf visible,31,37,True
+BEN,sorghum,70,30,Tropic - warm / semiarid,S4,0.0043408014,671,5,flag leaf visible,31,37,True
+BEN,sorghum,70,30,Tropic - warm / subhumid,S4,0.044980634,815,5,flag leaf visible,31,37,True
+BEN,sorghum,70,40,Tropic - warm / semiarid,S4,0.0033346515,671,5,flag leaf visible,31,37,True
+BEN,sorghum,70,40,Tropic - warm / subhumid,S4,0.037614025,815,5,flag leaf visible,31,37,True
+BEN,sorghum,90,0,Tropic - warm / semiarid,S4,0.006217088,671,5,flag leaf visible,40,49,True
+BEN,sorghum,90,0,Tropic - warm / subhumid,S4,0.017609028,815,5,flag leaf visible,40,49,True
+BEN,sorghum,90,10,Tropic - warm / semiarid,S4,0.0064471597,671,5,flag leaf visible,40,49,True
+BEN,sorghum,90,10,Tropic - warm / subhumid,S4,0.040611725,815,5,flag leaf visible,40,49,True
+BEN,sorghum,90,20,Tropic - warm / semiarid,S4,0.0041641346,671,5,flag leaf visible,40,49,True
+BEN,sorghum,90,20,Tropic - warm / subhumid,S4,0.05200832,815,5,flag leaf visible,40,49,True
+BEN,sorghum,90,30,Tropic - warm / semiarid,S4,0.0034340615,671,5,flag leaf visible,40,49,True
+BEN,sorghum,90,30,Tropic - warm / subhumid,S4,0.047101967,813,5,flag leaf visible,40,49,True
+BEN,sorghum,90,40,Tropic - warm / semiarid,S4,0.0009735548,671,5,flag leaf visible,40,49,True
+BEN,sorghum,90,40,Tropic - warm / subhumid,S4,0.05448229,813,5,flag leaf visible,40,49,True
+BEN,sorghum,110,0,Tropic - warm / semiarid,S4,0.00644586,671,5,flag leaf visible,48,60,True
+BEN,sorghum,110,0,Tropic - warm / subhumid,S4,0.0420348,815,5,flag leaf visible,48,60,True
+BEN,sorghum,110,10,Tropic - warm / semiarid,S4,0.0055420524,671,5,flag leaf visible,48,60,True
+BEN,sorghum,110,10,Tropic - warm / subhumid,S4,0.052863725,813,5,flag leaf visible,48,60,True
+BEN,sorghum,110,20,Tropic - warm / semiarid,S4,0.004142991,671,5,flag leaf visible,48,60,True
+BEN,sorghum,110,20,Tropic - warm / subhumid,S4,0.048364013,813,5,flag leaf visible,48,60,True
+BEN,sorghum,110,30,Tropic - warm / semiarid,S4,0.005004782,583,5,flag leaf visible,48,60,True
+BEN,sorghum,110,30,Tropic - warm / subhumid,S4,0.0639307,812,5,flag leaf visible,48,60,True
+BEN,sorghum,110,40,Tropic - warm / semiarid,S4,0.0008809763,320,5,flag leaf visible,48,60,True
+BEN,sorghum,110,40,Tropic - warm / subhumid,S4,0.07776174,810,5,flag leaf visible,48,60,True
+BEN,sorghum,130,0,Tropic - warm / semiarid,S4,0.006263552,671,5,flag leaf visible,57,71,True
+BEN,sorghum,130,0,Tropic - warm / subhumid,S4,0.054617893,813,5,flag leaf visible,57,71,True
+BEN,sorghum,130,10,Tropic - warm / semiarid,S4,0.005066925,583,5,flag leaf visible,57,71,True
+BEN,sorghum,130,10,Tropic - warm / subhumid,S4,0.05449229,812,5,flag leaf visible,57,71,True
+BEN,sorghum,130,20,Tropic - warm / semiarid,S4,0.001795119,320,5,flag leaf visible,57,71,True
+BEN,sorghum,130,20,Tropic - warm / subhumid,S4,0.07215765,810,5,flag leaf visible,57,71,True
+BEN,sorghum,130,30,Tropic - warm / semiarid,S4,0.001948302,130,5,flag leaf visible,57,71,True
+BEN,sorghum,130,30,Tropic - warm / subhumid,S4,0.09361889,727,5,flag leaf visible,57,71,True
+BEN,sorghum,130,40,Tropic - warm / subhumid,S4,0.19173172,419,5,flag leaf visible,57,71,True
+BEN,sorghum,70,0,Tropic - warm / semiarid,S5,0.0068882704,671,6,boot,38,45,True
+BEN,sorghum,70,0,Tropic - warm / subhumid,S5,0.013079115,815,6,boot,38,45,True
+BEN,sorghum,70,10,Tropic - warm / semiarid,S5,0.0058428408,671,6,boot,38,45,True
+BEN,sorghum,70,10,Tropic - warm / subhumid,S5,0.029927362,815,6,boot,38,45,True
+BEN,sorghum,70,20,Tropic - warm / semiarid,S5,0.005729318,671,6,boot,38,45,True
+BEN,sorghum,70,20,Tropic - warm / subhumid,S5,0.046113856,815,6,boot,38,45,True
+BEN,sorghum,70,30,Tropic - warm / semiarid,S5,0.0037895127,671,6,boot,38,45,True
+BEN,sorghum,70,30,Tropic - warm / subhumid,S5,0.03868421,815,6,boot,38,45,True
+BEN,sorghum,70,40,Tropic - warm / semiarid,S5,0.0004949627,671,6,boot,38,45,True
+BEN,sorghum,70,40,Tropic - warm / subhumid,S5,0.048424546,815,6,boot,38,45,True
+BEN,sorghum,90,0,Tropic - warm / semiarid,S5,0.006272304,671,6,boot,50,57,True
+BEN,sorghum,90,0,Tropic - warm / subhumid,S5,0.034369014,815,6,boot,50,57,True
+BEN,sorghum,90,10,Tropic - warm / semiarid,S5,0.0044117686,671,6,boot,50,57,True
+BEN,sorghum,90,10,Tropic - warm / subhumid,S5,0.045489036,815,6,boot,50,57,True
+BEN,sorghum,90,20,Tropic - warm / semiarid,S5,0.003376049,671,6,boot,50,57,True
+BEN,sorghum,90,20,Tropic - warm / subhumid,S5,0.037654717,815,6,boot,50,57,True
+BEN,sorghum,90,30,Tropic - warm / semiarid,S5,0.0012992728,671,6,boot,50,57,True
+BEN,sorghum,90,30,Tropic - warm / subhumid,S5,0.05125849,813,6,boot,50,57,True
+BEN,sorghum,90,40,Tropic - warm / semiarid,S5,0.009483594,671,6,boot,50,57,True
+BEN,sorghum,90,40,Tropic - warm / subhumid,S5,0.07090538,813,6,boot,50,57,True
+BEN,sorghum,110,0,Tropic - warm / semiarid,S5,0.00430807,671,6,boot,61,71,True
+BEN,sorghum,110,0,Tropic - warm / subhumid,S5,0.053039975,815,6,boot,61,71,True
+BEN,sorghum,110,10,Tropic - warm / semiarid,S5,0.0033914812,671,6,boot,61,71,True
+BEN,sorghum,110,10,Tropic - warm / subhumid,S5,0.049862087,813,6,boot,61,71,True
+BEN,sorghum,110,20,Tropic - warm / semiarid,S5,0.0041528507,671,6,boot,61,71,True
+BEN,sorghum,110,20,Tropic - warm / subhumid,S5,0.063286,813,6,boot,61,71,True
+BEN,sorghum,110,30,Tropic - warm / semiarid,S5,0.010974633,583,6,boot,61,71,True
+BEN,sorghum,110,30,Tropic - warm / subhumid,S5,0.07423465,812,6,boot,61,71,True
+BEN,sorghum,110,40,Tropic - warm / semiarid,S5,0.0007475951,320,6,boot,61,71,True
+BEN,sorghum,110,40,Tropic - warm / subhumid,S5,0.091836445,810,6,boot,61,71,True
+BEN,sorghum,130,0,Tropic - warm / semiarid,S5,0.0035379445,671,6,boot,72,83,True
+BEN,sorghum,130,0,Tropic - warm / subhumid,S5,0.049578547,813,6,boot,72,83,True
+BEN,sorghum,130,10,Tropic - warm / semiarid,S5,0.010413742,583,6,boot,72,83,True
+BEN,sorghum,130,10,Tropic - warm / subhumid,S5,0.066272765,812,6,boot,72,83,True
+BEN,sorghum,130,20,Tropic - warm / semiarid,S5,0.0016285714,320,6,boot,72,83,True
+BEN,sorghum,130,20,Tropic - warm / subhumid,S5,0.07884961,810,6,boot,72,83,True
+BEN,sorghum,130,30,Tropic - warm / semiarid,S5,0.0004048583,130,6,boot,72,83,True
+BEN,sorghum,130,30,Tropic - warm / subhumid,S5,0.10504036,727,6,boot,72,83,True
+BEN,sorghum,130,40,Tropic - warm / subhumid,S5,0.1943553,419,6,boot,72,83,True
+BEN,sorghum,70,0,Tropic - warm / semiarid,S6,0.00541686,671,7,half-bloom,46,51,True
+BEN,sorghum,70,0,Tropic - warm / subhumid,S6,0.029114278,815,7,half-bloom,46,51,True
+BEN,sorghum,70,10,Tropic - warm / semiarid,S6,0.0030607139,671,7,half-bloom,46,51,True
+BEN,sorghum,70,10,Tropic - warm / subhumid,S6,0.0394955,815,7,half-bloom,46,51,True
+BEN,sorghum,70,20,Tropic - warm / semiarid,S6,0.0041013733,671,7,half-bloom,46,51,True
+BEN,sorghum,70,20,Tropic - warm / subhumid,S6,0.044273708,815,7,half-bloom,46,51,True
+BEN,sorghum,70,30,Tropic - warm / semiarid,S6,0.00072170724,671,7,half-bloom,46,51,True
+BEN,sorghum,70,30,Tropic - warm / subhumid,S6,0.04580816,815,7,half-bloom,46,51,True
+BEN,sorghum,70,40,Tropic - warm / semiarid,S6,0.0039829123,671,7,half-bloom,46,51,True
+BEN,sorghum,70,40,Tropic - warm / subhumid,S6,0.06543249,815,7,half-bloom,46,51,True
+BEN,sorghum,90,0,Tropic - warm / semiarid,S6,0.0058132964,671,7,half-bloom,58,67,True
+BEN,sorghum,90,0,Tropic - warm / subhumid,S6,0.04987756,815,7,half-bloom,58,67,True
+BEN,sorghum,90,10,Tropic - warm / semiarid,S6,0.0039023382,671,7,half-bloom,58,67,True
+BEN,sorghum,90,10,Tropic - warm / subhumid,S6,0.045043357,815,7,half-bloom,58,67,True
+BEN,sorghum,90,20,Tropic - warm / semiarid,S6,0.0014628455,671,7,half-bloom,58,67,True
+BEN,sorghum,90,20,Tropic - warm / subhumid,S6,0.059882253,815,7,half-bloom,58,67,True
+BEN,sorghum,90,30,Tropic - warm / semiarid,S6,0.009484743,671,7,half-bloom,58,67,True
+BEN,sorghum,90,30,Tropic - warm / subhumid,S6,0.079808936,813,7,half-bloom,58,67,True
+BEN,sorghum,90,40,Tropic - warm / semiarid,S6,0.014996337,671,7,half-bloom,58,67,True
+BEN,sorghum,90,40,Tropic - warm / subhumid,S6,0.09562274,813,7,half-bloom,58,67,True
+BEN,sorghum,110,0,Tropic - warm / semiarid,S6,0.0033346515,671,7,half-bloom,72,81,True
+BEN,sorghum,110,0,Tropic - warm / subhumid,S6,0.050911374,815,7,half-bloom,72,81,True
+BEN,sorghum,110,10,Tropic - warm / semiarid,S6,0.004073644,671,7,half-bloom,72,81,True
+BEN,sorghum,110,10,Tropic - warm / subhumid,S6,0.06798016,813,7,half-bloom,72,81,True
+BEN,sorghum,110,20,Tropic - warm / semiarid,S6,0.009300045,671,7,half-bloom,72,81,True
+BEN,sorghum,110,20,Tropic - warm / subhumid,S6,0.07438144,813,7,half-bloom,72,81,True
+BEN,sorghum,110,30,Tropic - warm / semiarid,S6,0.010515086,583,7,half-bloom,72,81,True
+BEN,sorghum,110,30,Tropic - warm / subhumid,S6,0.09160996,812,7,half-bloom,72,81,True
+BEN,sorghum,110,40,Tropic - warm / semiarid,S6,0.0007475951,320,7,half-bloom,72,81,True
+BEN,sorghum,110,40,Tropic - warm / subhumid,S6,0.10060183,810,7,half-bloom,72,81,True
+BEN,sorghum,130,0,Tropic - warm / semiarid,S6,0.009338381,671,7,half-bloom,84,97,True
+BEN,sorghum,130,0,Tropic - warm / subhumid,S6,0.079646796,813,7,half-bloom,84,97,True
+BEN,sorghum,130,10,Tropic - warm / semiarid,S6,0.014677949,583,7,half-bloom,84,97,True
+BEN,sorghum,130,10,Tropic - warm / subhumid,S6,0.09517239,812,7,half-bloom,84,97,True
+BEN,sorghum,130,20,Tropic - warm / semiarid,S6,0.0007475951,320,7,half-bloom,84,97,True
+BEN,sorghum,130,20,Tropic - warm / subhumid,S6,0.10007048,810,7,half-bloom,84,97,True
+BEN,sorghum,130,30,Tropic - warm / semiarid,S6,0.0,130,7,half-bloom,84,97,True
+BEN,sorghum,130,30,Tropic - warm / subhumid,S6,0.12527366,727,7,half-bloom,84,97,True
+BEN,sorghum,130,40,Tropic - warm / subhumid,S6,0.17892356,419,7,half-bloom,84,97,True
+BEN,sorghum,70,0,Tropic - warm / semiarid,S7,0.0064712693,671,8,soft dough,52,62,True
+BEN,sorghum,70,0,Tropic - warm / subhumid,S7,0.04697057,815,8,soft dough,52,62,True
+BEN,sorghum,70,10,Tropic - warm / semiarid,S7,0.004457212,671,8,soft dough,52,62,True
+BEN,sorghum,70,10,Tropic - warm / subhumid,S7,0.05157997,815,8,soft dough,52,62,True
+BEN,sorghum,70,20,Tropic - warm / semiarid,S7,0.0033251096,671,8,soft dough,52,62,True
+BEN,sorghum,70,20,Tropic - warm / subhumid,S7,0.055170488,815,8,soft dough,52,62,True
+BEN,sorghum,70,30,Tropic - warm / semiarid,S7,0.0038986793,671,8,soft dough,52,62,True
+BEN,sorghum,70,30,Tropic - warm / subhumid,S7,0.06714894,815,8,soft dough,52,62,True
+BEN,sorghum,70,40,Tropic - warm / semiarid,S7,0.00942787,671,8,soft dough,52,62,True
+BEN,sorghum,70,40,Tropic - warm / subhumid,S7,0.077264585,815,8,soft dough,52,62,True
+BEN,sorghum,90,0,Tropic - warm / semiarid,S7,0.003898048,671,8,soft dough,68,80,True
+BEN,sorghum,90,0,Tropic - warm / subhumid,S7,0.0601668,815,8,soft dough,68,80,True
+BEN,sorghum,90,10,Tropic - warm / semiarid,S7,0.0041413195,671,8,soft dough,68,80,True
+BEN,sorghum,90,10,Tropic - warm / subhumid,S7,0.07537473,815,8,soft dough,68,80,True
+BEN,sorghum,90,20,Tropic - warm / semiarid,S7,0.009285029,671,8,soft dough,68,80,True
+BEN,sorghum,90,20,Tropic - warm / subhumid,S7,0.09047409,815,8,soft dough,68,80,True
+BEN,sorghum,90,30,Tropic - warm / semiarid,S7,0.0136324745,671,8,soft dough,68,80,True
+BEN,sorghum,90,30,Tropic - warm / subhumid,S7,0.11140616,813,8,soft dough,68,80,True
+BEN,sorghum,90,40,Tropic - warm / semiarid,S7,0.005917301,671,8,soft dough,68,80,True
+BEN,sorghum,90,40,Tropic - warm / subhumid,S7,0.12045964,813,8,soft dough,68,80,True
+BEN,sorghum,110,0,Tropic - warm / semiarid,S7,0.009316179,671,8,soft dough,82,98,True
+BEN,sorghum,110,0,Tropic - warm / subhumid,S7,0.094741024,815,8,soft dough,82,98,True
+BEN,sorghum,110,10,Tropic - warm / semiarid,S7,0.014347965,671,8,soft dough,82,98,True
+BEN,sorghum,110,10,Tropic - warm / subhumid,S7,0.11639585,813,8,soft dough,82,98,True
+BEN,sorghum,110,20,Tropic - warm / semiarid,S7,0.011184508,671,8,soft dough,82,98,True
+BEN,sorghum,110,20,Tropic - warm / subhumid,S7,0.12709203,813,8,soft dough,82,98,True
+BEN,sorghum,110,30,Tropic - warm / semiarid,S7,0.0064143087,583,8,soft dough,82,98,True
+BEN,sorghum,110,30,Tropic - warm / subhumid,S7,0.12386649,812,8,soft dough,82,98,True
+BEN,sorghum,110,40,Tropic - warm / semiarid,S7,0.0031907738,320,8,soft dough,82,98,True
+BEN,sorghum,110,40,Tropic - warm / subhumid,S7,0.10004423,810,8,soft dough,82,98,True
+BEN,sorghum,130,0,Tropic - warm / semiarid,S7,0.014818777,671,8,soft dough,98,116,True
+BEN,sorghum,130,0,Tropic - warm / subhumid,S7,0.13553582,813,8,soft dough,98,116,True
+BEN,sorghum,130,10,Tropic - warm / semiarid,S7,0.006635991,583,8,soft dough,98,116,True
+BEN,sorghum,130,10,Tropic - warm / subhumid,S7,0.13200505,812,8,soft dough,98,116,True
+BEN,sorghum,130,20,Tropic - warm / semiarid,S7,0.0031907738,320,8,soft dough,98,116,True
+BEN,sorghum,130,20,Tropic - warm / subhumid,S7,0.11302995,810,8,soft dough,98,116,True
+BEN,sorghum,130,30,Tropic - warm / semiarid,S7,0.002453891,130,8,soft dough,98,116,True
+BEN,sorghum,130,30,Tropic - warm / subhumid,S7,0.10264978,727,8,soft dough,98,116,True
+BEN,sorghum,130,40,Tropic - warm / subhumid,S7,0.12268592,419,8,soft dough,98,116,True
+BEN,sorghum,70,0,Tropic - warm / semiarid,S8,0.0013801641,671,9,hard dough,63,69,False
+BEN,sorghum,70,0,Tropic - warm / subhumid,S8,0.022122279,815,9,hard dough,63,69,False
+BEN,sorghum,70,10,Tropic - warm / semiarid,S8,0.0029655085,671,9,hard dough,63,69,False
+BEN,sorghum,70,10,Tropic - warm / subhumid,S8,0.026787663,815,9,hard dough,63,69,False
+BEN,sorghum,70,20,Tropic - warm / semiarid,S8,0.000112825684,671,9,hard dough,63,69,False
+BEN,sorghum,70,20,Tropic - warm / subhumid,S8,0.026283665,815,9,hard dough,63,69,False
+BEN,sorghum,70,30,Tropic - warm / semiarid,S8,0.0037858535,671,9,hard dough,63,69,False
+BEN,sorghum,70,30,Tropic - warm / subhumid,S8,0.03968634,815,9,hard dough,63,69,False
+BEN,sorghum,70,40,Tropic - warm / semiarid,S8,0.0005314739,671,9,hard dough,63,69,False
+BEN,sorghum,70,40,Tropic - warm / subhumid,S8,0.042641982,815,9,hard dough,63,69,False
+BEN,sorghum,90,0,Tropic - warm / semiarid,S8,0.000112825684,671,9,hard dough,81,89,False
+BEN,sorghum,90,0,Tropic - warm / subhumid,S8,0.030464709,815,9,hard dough,81,89,False
+BEN,sorghum,90,10,Tropic - warm / semiarid,S8,0.0036471824,671,9,hard dough,81,89,False
+BEN,sorghum,90,10,Tropic - warm / subhumid,S8,0.045909625,815,9,hard dough,81,89,False
+BEN,sorghum,90,20,Tropic - warm / semiarid,S8,0.0055577834,671,9,hard dough,81,89,False
+BEN,sorghum,90,20,Tropic - warm / subhumid,S8,0.051622365,815,9,hard dough,81,89,False
+BEN,sorghum,90,30,Tropic - warm / semiarid,S8,0.0048569115,671,9,hard dough,81,89,False
+BEN,sorghum,90,30,Tropic - warm / subhumid,S8,0.06415092,813,9,hard dough,81,89,False
+BEN,sorghum,90,40,Tropic - warm / semiarid,S8,4.3832733e-05,671,9,hard dough,81,89,False
+BEN,sorghum,90,40,Tropic - warm / subhumid,S8,0.065010674,813,9,hard dough,81,89,False
+BEN,sorghum,110,0,Tropic - warm / semiarid,S8,0.008001229,671,9,hard dough,99,109,False
+BEN,sorghum,110,0,Tropic - warm / subhumid,S8,0.060128536,815,9,hard dough,99,109,False
+BEN,sorghum,110,10,Tropic - warm / semiarid,S8,0.0050968924,671,9,hard dough,99,109,False
+BEN,sorghum,110,10,Tropic - warm / subhumid,S8,0.07580715,813,9,hard dough,99,109,False
+BEN,sorghum,110,20,Tropic - warm / semiarid,S8,8.766547e-05,671,9,hard dough,99,109,False
+BEN,sorghum,110,20,Tropic - warm / subhumid,S8,0.07395748,813,9,hard dough,99,109,False
+BEN,sorghum,110,30,Tropic - warm / semiarid,S8,0.002516626,583,9,hard dough,99,109,False
+BEN,sorghum,110,30,Tropic - warm / subhumid,S8,0.063375495,812,9,hard dough,99,109,False
+BEN,sorghum,110,40,Tropic - warm / semiarid,S8,0.0028001484,320,9,hard dough,99,109,False
+BEN,sorghum,110,40,Tropic - warm / subhumid,S8,0.040027507,810,9,hard dough,99,109,False
+BEN,sorghum,130,0,Tropic - warm / semiarid,S8,8.766547e-05,671,9,hard dough,117,129,False
+BEN,sorghum,130,0,Tropic - warm / subhumid,S8,0.08477069,813,9,hard dough,117,129,False
+BEN,sorghum,130,10,Tropic - warm / semiarid,S8,0.002516626,583,9,hard dough,117,129,False
+BEN,sorghum,130,10,Tropic - warm / subhumid,S8,0.06978986,812,9,hard dough,117,129,False
+BEN,sorghum,130,20,Tropic - warm / semiarid,S8,0.0028001484,320,9,hard dough,117,129,False
+BEN,sorghum,130,20,Tropic - warm / subhumid,S8,0.04605579,810,9,hard dough,117,129,False
+BEN,sorghum,130,30,Tropic - warm / semiarid,S8,0.0012168242,130,9,hard dough,117,129,False
+BEN,sorghum,130,30,Tropic - warm / subhumid,S8,0.03658555,727,9,hard dough,117,129,False
+BEN,sorghum,130,40,Tropic - warm / subhumid,S8,0.031169428,419,9,hard dough,117,129,False
+BEN,sorghum,70,0,ALL,SOW,0.0,1486,0,sowing to emergence,0,2,False
+BEN,sorghum,70,10,ALL,SOW,0.00053621485,1486,0,sowing to emergence,0,2,False
+BEN,sorghum,70,20,ALL,SOW,0.0028031552,1486,0,sowing to emergence,0,2,False
+BEN,sorghum,70,30,ALL,SOW,0.0018581814,1486,0,sowing to emergence,0,2,False
+BEN,sorghum,70,40,ALL,SOW,0.0041521355,1486,0,sowing to emergence,0,2,False
+BEN,sorghum,90,0,ALL,SOW,0.0,1486,0,sowing to emergence,0,3,False
+BEN,sorghum,90,10,ALL,SOW,0.0011292127,1486,0,sowing to emergence,0,3,False
+BEN,sorghum,90,20,ALL,SOW,0.00364173,1486,0,sowing to emergence,0,3,False
+BEN,sorghum,90,30,ALL,SOW,0.0018430391,1484,0,sowing to emergence,0,3,False
+BEN,sorghum,90,40,ALL,SOW,0.004615598,1484,0,sowing to emergence,0,3,False
+BEN,sorghum,110,0,ALL,SOW,0.0,1486,0,sowing to emergence,0,3,False
+BEN,sorghum,110,10,ALL,SOW,0.001152353,1484,0,sowing to emergence,0,3,False
+BEN,sorghum,110,20,ALL,SOW,0.0038751534,1484,0,sowing to emergence,0,3,False
+BEN,sorghum,110,30,ALL,SOW,0.00083424797,1395,0,sowing to emergence,0,3,False
+BEN,sorghum,110,40,ALL,SOW,0.0036438354,1130,0,sowing to emergence,0,3,False
+BEN,sorghum,130,0,ALL,SOW,0.00015288038,1484,0,sowing to emergence,0,4,False
+BEN,sorghum,130,10,ALL,SOW,0.0019159194,1395,0,sowing to emergence,0,4,False
+BEN,sorghum,130,20,ALL,SOW,0.0090147145,1130,0,sowing to emergence,0,4,False
+BEN,sorghum,130,30,ALL,SOW,0.0005399853,857,0,sowing to emergence,0,4,False
+BEN,sorghum,130,40,ALL,SOW,0.0009821581,419,0,sowing to emergence,0,4,False
+BEN,sorghum,70,0,ALL,S0,0.002128444,1486,1,emergence,3,9,False
+BEN,sorghum,70,10,ALL,S0,0.0028560185,1486,1,emergence,3,9,False
+BEN,sorghum,70,20,ALL,S0,0.0102266,1486,1,emergence,3,9,False
+BEN,sorghum,70,30,ALL,S0,0.0037687928,1486,1,emergence,3,9,False
+BEN,sorghum,70,40,ALL,S0,0.009881056,1486,1,emergence,3,9,False
+BEN,sorghum,90,0,ALL,S0,0.0024098482,1486,1,emergence,4,12,False
+BEN,sorghum,90,10,ALL,S0,0.005420738,1486,1,emergence,4,12,False
+BEN,sorghum,90,20,ALL,S0,0.011329491,1486,1,emergence,4,12,False
+BEN,sorghum,90,30,ALL,S0,0.0069904295,1484,1,emergence,4,12,False
+BEN,sorghum,90,40,ALL,S0,0.015349838,1484,1,emergence,4,12,False
+BEN,sorghum,110,0,ALL,S0,0.0036858697,1486,1,emergence,4,14,False
+BEN,sorghum,110,10,ALL,S0,0.009391216,1484,1,emergence,4,14,False
+BEN,sorghum,110,20,ALL,S0,0.01068924,1484,1,emergence,4,14,False
+BEN,sorghum,110,30,ALL,S0,0.006492547,1395,1,emergence,4,14,False
+BEN,sorghum,110,40,ALL,S0,0.017865831,1130,1,emergence,4,14,False
+BEN,sorghum,130,0,ALL,S0,0.0043208017,1484,1,emergence,5,17,False
+BEN,sorghum,130,10,ALL,S0,0.012324212,1395,1,emergence,5,17,False
+BEN,sorghum,130,20,ALL,S0,0.010719304,1130,1,emergence,5,17,False
+BEN,sorghum,130,30,ALL,S0,0.0038078213,857,1,emergence,5,17,False
+BEN,sorghum,130,40,ALL,S0,0.024121562,419,1,emergence,5,17,False
+BEN,sorghum,70,0,ALL,S1,0.004430755,1486,2,3-leaf,10,16,False
+BEN,sorghum,70,10,ALL,S1,0.010645269,1486,2,3-leaf,10,16,False
+BEN,sorghum,70,20,ALL,S1,0.011607492,1486,2,3-leaf,10,16,False
+BEN,sorghum,70,30,ALL,S1,0.008907365,1486,2,3-leaf,10,16,False
+BEN,sorghum,70,40,ALL,S1,0.01975052,1486,2,3-leaf,10,16,False
+BEN,sorghum,90,0,ALL,S1,0.0058424077,1486,2,3-leaf,13,21,False
+BEN,sorghum,90,10,ALL,S1,0.012570457,1486,2,3-leaf,13,21,False
+BEN,sorghum,90,20,ALL,S1,0.014850521,1486,2,3-leaf,13,21,False
+BEN,sorghum,90,30,ALL,S1,0.015010949,1484,2,3-leaf,13,21,False
+BEN,sorghum,90,40,ALL,S1,0.02233895,1484,2,3-leaf,13,21,False
+BEN,sorghum,110,0,ALL,S1,0.012061655,1486,2,3-leaf,15,25,False
+BEN,sorghum,110,10,ALL,S1,0.012378548,1484,2,3-leaf,15,25,False
+BEN,sorghum,110,20,ALL,S1,0.010283753,1484,2,3-leaf,15,25,False
+BEN,sorghum,110,30,ALL,S1,0.01855864,1395,2,3-leaf,15,25,False
+BEN,sorghum,110,40,ALL,S1,0.031598885,1130,2,3-leaf,15,25,False
+BEN,sorghum,130,0,ALL,S1,0.012577872,1484,2,3-leaf,18,30,False
+BEN,sorghum,130,10,ALL,S1,0.0138636585,1395,2,3-leaf,18,30,False
+BEN,sorghum,130,20,ALL,S1,0.0117195435,1130,2,3-leaf,18,30,False
+BEN,sorghum,130,30,ALL,S1,0.029183164,857,2,3-leaf,18,30,False
+BEN,sorghum,130,40,ALL,S1,0.04796651,419,2,3-leaf,18,30,False
+BEN,sorghum,70,0,ALL,S2,0.0077420915,1486,3,5-leaf,17,23,False
+BEN,sorghum,70,10,ALL,S2,0.011576268,1486,3,5-leaf,17,23,False
+BEN,sorghum,70,20,ALL,S2,0.00952251,1486,3,5-leaf,17,23,False
+BEN,sorghum,70,30,ALL,S2,0.016970903,1486,3,5-leaf,17,23,False
+BEN,sorghum,70,40,ALL,S2,0.022181652,1486,3,5-leaf,17,23,False
+BEN,sorghum,90,0,ALL,S2,0.012872883,1486,3,5-leaf,22,30,False
+BEN,sorghum,90,10,ALL,S2,0.013641581,1486,3,5-leaf,22,30,False
+BEN,sorghum,90,20,ALL,S2,0.011964745,1486,3,5-leaf,22,30,False
+BEN,sorghum,90,30,ALL,S2,0.024394393,1484,3,5-leaf,22,30,False
+BEN,sorghum,90,40,ALL,S2,0.025111731,1484,3,5-leaf,22,30,False
+BEN,sorghum,110,0,ALL,S2,0.012509518,1486,3,5-leaf,26,36,False
+BEN,sorghum,110,10,ALL,S2,0.011119782,1484,3,5-leaf,26,36,False
+BEN,sorghum,110,20,ALL,S2,0.021171205,1484,3,5-leaf,26,36,False
+BEN,sorghum,110,30,ALL,S2,0.029093882,1395,3,5-leaf,26,36,False
+BEN,sorghum,110,40,ALL,S2,0.031109724,1130,3,5-leaf,26,36,False
+BEN,sorghum,130,0,ALL,S2,0.015363249,1484,3,5-leaf,31,43,False
+BEN,sorghum,130,10,ALL,S2,0.018036086,1395,3,5-leaf,31,43,False
+BEN,sorghum,130,20,ALL,S2,0.029151887,1130,3,5-leaf,31,43,False
+BEN,sorghum,130,30,ALL,S2,0.042526063,857,3,5-leaf,31,43,False
+BEN,sorghum,130,40,ALL,S2,0.056245636,419,3,5-leaf,31,43,False
+BEN,sorghum,70,0,ALL,S3,0.011519052,1486,4,growing point differentiation,24,30,False
+BEN,sorghum,70,10,ALL,S3,0.011853253,1486,4,growing point differentiation,24,30,False
+BEN,sorghum,70,20,ALL,S3,0.0117067965,1486,4,growing point differentiation,24,30,False
+BEN,sorghum,70,30,ALL,S3,0.022362025,1486,4,growing point differentiation,24,30,False
+BEN,sorghum,70,40,ALL,S3,0.02491484,1486,4,growing point differentiation,24,30,False
+BEN,sorghum,90,0,ALL,S3,0.012516517,1486,4,growing point differentiation,31,39,False
+BEN,sorghum,90,10,ALL,S3,0.012382569,1486,4,growing point differentiation,31,39,False
+BEN,sorghum,90,20,ALL,S3,0.02401284,1486,4,growing point differentiation,31,39,False
+BEN,sorghum,90,30,ALL,S3,0.028884903,1484,4,growing point differentiation,31,39,False
+BEN,sorghum,90,40,ALL,S3,0.025647903,1484,4,growing point differentiation,31,39,False
+BEN,sorghum,110,0,ALL,S3,0.011608151,1486,4,growing point differentiation,37,47,False
+BEN,sorghum,110,10,ALL,S3,0.02116913,1484,4,growing point differentiation,37,47,False
+BEN,sorghum,110,20,ALL,S3,0.02770466,1484,4,growing point differentiation,37,47,False
+BEN,sorghum,110,30,ALL,S3,0.02664166,1395,4,growing point differentiation,37,47,False
+BEN,sorghum,110,40,ALL,S3,0.03976834,1130,4,growing point differentiation,37,47,False
+BEN,sorghum,130,0,ALL,S3,0.021499248,1484,4,growing point differentiation,44,56,False
+BEN,sorghum,130,10,ALL,S3,0.030011224,1395,4,growing point differentiation,44,56,False
+BEN,sorghum,130,20,ALL,S3,0.03275935,1130,4,growing point differentiation,44,56,False
+BEN,sorghum,130,30,ALL,S3,0.049586624,857,4,growing point differentiation,44,56,False
+BEN,sorghum,130,40,ALL,S3,0.124016546,419,4,growing point differentiation,44,56,False
+BEN,sorghum,70,0,ALL,S4,0.011974809,1486,5,flag leaf visible,31,37,True
+BEN,sorghum,70,10,ALL,S4,0.009235429,1486,5,flag leaf visible,31,37,True
+BEN,sorghum,70,20,ALL,S4,0.021300957,1486,5,flag leaf visible,31,37,True
+BEN,sorghum,70,30,ALL,S4,0.02662981,1486,5,flag leaf visible,31,37,True
+BEN,sorghum,70,40,ALL,S4,0.02213525,1486,5,flag leaf visible,31,37,True
+BEN,sorghum,90,0,ALL,S4,0.012465023,1486,5,flag leaf visible,40,49,True
+BEN,sorghum,90,10,ALL,S4,0.02518479,1486,5,flag leaf visible,40,49,True
+BEN,sorghum,90,20,ALL,S4,0.030404385,1486,5,flag leaf visible,40,49,True
+BEN,sorghum,90,30,ALL,S4,0.027357245,1484,5,flag leaf visible,40,49,True
+BEN,sorghum,90,40,ALL,S4,0.030287977,1484,5,flag leaf visible,40,49,True
+BEN,sorghum,110,0,ALL,S4,0.025964694,1486,5,flag leaf visible,48,60,True
+BEN,sorghum,110,10,ALL,S4,0.031466927,1484,5,flag leaf visible,48,60,True
+BEN,sorghum,110,20,ALL,S4,0.028369196,1484,5,flag leaf visible,48,60,True
+BEN,sorghum,110,30,ALL,S4,0.039304312,1395,5,flag leaf visible,48,60,True
+BEN,sorghum,110,40,ALL,S4,0.055990193,1130,5,flag leaf visible,48,60,True
+BEN,sorghum,130,0,ALL,S4,0.03275417,1484,5,flag leaf visible,57,71,True
+BEN,sorghum,130,10,ALL,S4,0.033836387,1395,5,flag leaf visible,57,71,True
+BEN,sorghum,130,20,ALL,S4,0.052231975,1130,5,flag leaf visible,57,71,True
+BEN,sorghum,130,30,ALL,S4,0.0797132,857,5,flag leaf visible,57,71,True
+BEN,sorghum,130,40,ALL,S4,0.19173172,419,5,flag leaf visible,57,71,True
+BEN,sorghum,70,0,ALL,S5,0.010283654,1486,6,boot,38,45,True
+BEN,sorghum,70,10,ALL,S5,0.01905205,1486,6,boot,38,45,True
+BEN,sorghum,70,20,ALL,S5,0.02787831,1486,6,boot,38,45,True
+BEN,sorghum,70,30,ALL,S5,0.022927588,1486,6,boot,38,45,True
+BEN,sorghum,70,40,ALL,S5,0.026782047,1486,6,boot,38,45,True
+BEN,sorghum,90,0,ALL,S5,0.021682007,1486,6,boot,50,57,True
+BEN,sorghum,90,10,ALL,S5,0.026940687,1486,6,boot,50,57,True
+BEN,sorghum,90,20,ALL,S5,0.02217626,1486,6,boot,50,57,True
+BEN,sorghum,90,30,ALL,S5,0.028669115,1484,6,boot,50,57,True
+BEN,sorghum,90,40,ALL,S5,0.043133132,1484,6,boot,50,57,True
+BEN,sorghum,110,0,ALL,S5,0.031035194,1486,6,boot,61,71,True
+BEN,sorghum,110,10,ALL,S5,0.028850108,1484,6,boot,61,71,True
+BEN,sorghum,110,20,ALL,S5,0.03654857,1484,6,boot,61,71,True
+BEN,sorghum,110,30,ALL,S5,0.047796953,1395,6,boot,61,71,True
+BEN,sorghum,110,40,ALL,S5,0.06604137,1130,6,boot,61,71,True
+BEN,sorghum,130,0,ALL,S5,0.028760998,1484,6,boot,72,83,True
+BEN,sorghum,130,10,ALL,S5,0.0429281,1395,6,boot,72,83,True
+BEN,sorghum,130,20,ALL,S5,0.056981705,1130,6,boot,72,83,True
+BEN,sorghum,130,30,ALL,S5,0.08916799,857,6,boot,72,83,True
+BEN,sorghum,130,40,ALL,S5,0.1943553,419,6,boot,72,83,True
+BEN,sorghum,70,0,ALL,S6,0.01841376,1486,7,half-bloom,46,51,True
+BEN,sorghum,70,10,ALL,S6,0.023043454,1486,7,half-bloom,46,51,True
+BEN,sorghum,70,20,ALL,S6,0.02613398,1486,7,half-bloom,46,51,True
+BEN,sorghum,70,30,ALL,S6,0.025449473,1486,7,half-bloom,46,51,True
+BEN,sorghum,70,40,ALL,S6,0.037685066,1486,7,half-bloom,46,51,True
+BEN,sorghum,90,0,ALL,S6,0.02998044,1486,7,half-bloom,58,67,True
+BEN,sorghum,90,10,ALL,S6,0.026466219,1486,7,half-bloom,58,67,True
+BEN,sorghum,90,20,ALL,S6,0.033503097,1486,7,half-bloom,58,67,True
+BEN,sorghum,90,30,ALL,S6,0.04801141,1484,7,half-bloom,58,67,True
+BEN,sorghum,90,40,ALL,S6,0.059167005,1484,7,half-bloom,58,67,True
+BEN,sorghum,110,0,ALL,S6,0.02942821,1486,7,half-bloom,72,81,True
+BEN,sorghum,110,10,ALL,S6,0.039084423,1484,7,half-bloom,72,81,True
+BEN,sorghum,110,20,ALL,S6,0.044954475,1484,7,half-bloom,72,81,True
+BEN,sorghum,110,30,ALL,S6,0.057718698,1395,7,half-bloom,72,81,True
+BEN,sorghum,110,40,ALL,S6,0.07232452,1130,7,half-bloom,72,81,True
+BEN,sorghum,130,0,ALL,S6,0.0478564,1484,7,half-bloom,84,97,True
+BEN,sorghum,130,10,ALL,S6,0.06153206,1395,7,half-bloom,84,97,True
+BEN,sorghum,130,20,ALL,S6,0.07194364,1130,7,half-bloom,84,97,True
+BEN,sorghum,130,30,ALL,S6,0.106270656,857,7,half-bloom,84,97,True
+BEN,sorghum,130,40,ALL,S6,0.17892356,419,7,half-bloom,84,97,True
+BEN,sorghum,70,0,ALL,S7,0.028683202,1486,8,soft dough,52,62,True
+BEN,sorghum,70,10,ALL,S7,0.030301794,1486,8,soft dough,52,62,True
+BEN,sorghum,70,20,ALL,S7,0.03175982,1486,8,soft dough,52,62,True
+BEN,sorghum,70,30,ALL,S7,0.038588423,1486,8,soft dough,52,62,True
+BEN,sorghum,70,40,ALL,S7,0.04663306,1486,8,soft dough,52,62,True
+BEN,sorghum,90,0,ALL,S7,0.034758773,1486,8,soft dough,68,80,True
+BEN,sorghum,90,10,ALL,S7,0.04320944,1486,8,soft dough,68,80,True
+BEN,sorghum,90,20,ALL,S7,0.05381335,1486,8,soft dough,68,80,True
+BEN,sorghum,90,30,ALL,S7,0.06719717,1484,8,soft dough,68,80,True
+BEN,sorghum,90,40,ALL,S7,0.06866859,1484,8,soft dough,68,80,True
+BEN,sorghum,110,0,ALL,S7,0.05616763,1486,8,soft dough,82,98,True
+BEN,sorghum,110,10,ALL,S7,0.07025426,1484,8,soft dough,82,98,True
+BEN,sorghum,110,20,ALL,S7,0.07468371,1484,8,soft dough,82,98,True
+BEN,sorghum,110,30,ALL,S7,0.07478074,1395,8,soft dough,82,98,True
+BEN,sorghum,110,40,ALL,S7,0.072616704,1130,8,soft dough,82,98,True
+BEN,sorghum,130,0,ALL,S7,0.080952846,1484,8,soft dough,98,116,True
+BEN,sorghum,130,10,ALL,S7,0.07961067,1395,8,soft dough,98,116,True
+BEN,sorghum,130,20,ALL,S7,0.08192505,1130,8,soft dough,98,116,True
+BEN,sorghum,130,30,ALL,S7,0.08745087,857,8,soft dough,98,116,True
+BEN,sorghum,130,40,ALL,S7,0.12268592,419,8,soft dough,98,116,True
+BEN,sorghum,70,0,ALL,S8,0.012756223,1486,9,hard dough,63,69,False
+BEN,sorghum,70,10,ALL,S8,0.016030822,1486,9,hard dough,63,69,False
+BEN,sorghum,70,20,ALL,S8,0.014466279,1486,9,hard dough,63,69,False
+BEN,sorghum,70,30,ALL,S8,0.023475554,1486,9,hard dough,63,69,False
+BEN,sorghum,70,40,ALL,S8,0.023627076,1486,9,hard dough,63,69,False
+BEN,sorghum,90,0,ALL,S8,0.016759383,1486,9,hard dough,81,89,False
+BEN,sorghum,90,10,ALL,S8,0.026826112,1486,9,hard dough,81,89,False
+BEN,sorghum,90,20,ALL,S8,0.030822005,1486,9,hard dough,81,89,False
+BEN,sorghum,90,30,ALL,S8,0.037340757,1484,9,hard dough,81,89,False
+BEN,sorghum,90,40,ALL,S8,0.035635505,1484,9,hard dough,81,89,False
+BEN,sorghum,110,0,ALL,S8,0.03659057,1486,9,hard dough,99,109,False
+BEN,sorghum,110,10,ALL,S8,0.043835055,1484,9,hard dough,99,109,False
+BEN,sorghum,110,20,ALL,S8,0.040556774,1484,9,hard dough,99,109,False
+BEN,sorghum,110,30,ALL,S8,0.03794129,1395,9,hard dough,99,109,False
+BEN,sorghum,110,40,ALL,S8,0.029485246,1130,9,hard dough,99,109,False
+BEN,sorghum,130,0,ALL,S8,0.046480723,1484,9,hard dough,117,129,False
+BEN,sorghum,130,10,ALL,S8,0.04167495,1395,9,hard dough,117,129,False
+BEN,sorghum,130,20,ALL,S8,0.033806406,1130,9,hard dough,117,129,False
+BEN,sorghum,130,30,ALL,S8,0.0312204,857,9,hard dough,117,129,False
+BEN,sorghum,130,40,ALL,S8,0.031169428,419,9,hard dough,117,129,False
+BEN,pearl_millet,70,0,Tropic - warm / semiarid,SOW,0.0,671,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,0,Tropic - warm / subhumid,SOW,0.0,815,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,10,Tropic - warm / semiarid,SOW,0.0017685724,671,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,10,Tropic - warm / subhumid,SOW,0.0006920508,815,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,20,Tropic - warm / semiarid,SOW,0.0051545138,671,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,20,Tropic - warm / subhumid,SOW,0.0024141714,815,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,30,Tropic - warm / semiarid,SOW,0.0025999239,671,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,30,Tropic - warm / subhumid,SOW,0.001472613,815,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,40,Tropic - warm / semiarid,SOW,0.002168281,671,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,40,Tropic - warm / subhumid,SOW,0.006092085,815,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,0,Tropic - warm / semiarid,SOW,0.0,671,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,0,Tropic - warm / subhumid,SOW,0.0,815,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,10,Tropic - warm / semiarid,SOW,0.0017711342,671,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,10,Tropic - warm / subhumid,SOW,0.00060071057,815,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,20,Tropic - warm / semiarid,SOW,0.0052032988,671,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,20,Tropic - warm / subhumid,SOW,0.0023560699,815,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,30,Tropic - warm / semiarid,SOW,0.0026818172,671,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,30,Tropic - warm / subhumid,SOW,0.0011507636,813,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,40,Tropic - warm / semiarid,SOW,0.0027338788,671,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,40,Tropic - warm / subhumid,SOW,0.006168653,813,0,sowing to emergence,0,3,False
+BEN,pearl_millet,110,0,Tropic - warm / semiarid,SOW,0.0008986044,671,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,0,Tropic - warm / subhumid,SOW,0.00033548186,815,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,10,Tropic - warm / semiarid,SOW,0.003061325,671,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,10,Tropic - warm / subhumid,SOW,0.001212475,813,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,20,Tropic - warm / semiarid,SOW,0.010230608,671,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,20,Tropic - warm / subhumid,SOW,0.0057020565,813,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,30,Tropic - warm / semiarid,SOW,0.0011940227,583,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,30,Tropic - warm / subhumid,SOW,0.0011625435,812,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,40,Tropic - warm / semiarid,SOW,0.0046126945,320,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,40,Tropic - warm / subhumid,SOW,0.005077262,810,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,0,Tropic - warm / semiarid,SOW,0.0009123816,671,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,0,Tropic - warm / subhumid,SOW,0.00034683474,813,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,10,Tropic - warm / semiarid,SOW,0.0032581156,583,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,10,Tropic - warm / subhumid,SOW,0.0011393144,812,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,20,Tropic - warm / semiarid,SOW,0.01777337,320,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,20,Tropic - warm / subhumid,SOW,0.0057014776,810,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,30,Tropic - warm / semiarid,SOW,0.0,130,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,30,Tropic - warm / subhumid,SOW,0.0010342186,727,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,40,Tropic - warm / subhumid,SOW,0.0010544804,419,0,sowing to emergence,0,5,False
+BEN,pearl_millet,70,0,Tropic - warm / semiarid,P0,0.003277027,671,1,emergence,4,8,False
+BEN,pearl_millet,70,0,Tropic - warm / subhumid,P0,0.0008927045,815,1,emergence,4,8,False
+BEN,pearl_millet,70,10,Tropic - warm / semiarid,P0,0.00373598,671,1,emergence,4,8,False
+BEN,pearl_millet,70,10,Tropic - warm / subhumid,P0,0.0017608096,815,1,emergence,4,8,False
+BEN,pearl_millet,70,20,Tropic - warm / semiarid,P0,0.011640427,671,1,emergence,4,8,False
+BEN,pearl_millet,70,20,Tropic - warm / subhumid,P0,0.0079981955,815,1,emergence,4,8,False
+BEN,pearl_millet,70,30,Tropic - warm / semiarid,P0,0.0029566644,671,1,emergence,4,8,False
+BEN,pearl_millet,70,30,Tropic - warm / subhumid,P0,0.0040760916,815,1,emergence,4,8,False
+BEN,pearl_millet,70,40,Tropic - warm / semiarid,P0,0.0052871276,671,1,emergence,4,8,False
+BEN,pearl_millet,70,40,Tropic - warm / subhumid,P0,0.011137387,815,1,emergence,4,8,False
+BEN,pearl_millet,90,0,Tropic - warm / semiarid,P0,0.003539636,671,1,emergence,4,11,False
+BEN,pearl_millet,90,0,Tropic - warm / subhumid,P0,0.001121889,815,1,emergence,4,11,False
+BEN,pearl_millet,90,10,Tropic - warm / semiarid,P0,0.0047296626,671,1,emergence,4,11,False
+BEN,pearl_millet,90,10,Tropic - warm / subhumid,P0,0.0033037332,815,1,emergence,4,11,False
+BEN,pearl_millet,90,20,Tropic - warm / semiarid,P0,0.013656975,671,1,emergence,4,11,False
+BEN,pearl_millet,90,20,Tropic - warm / subhumid,P0,0.008037983,815,1,emergence,4,11,False
+BEN,pearl_millet,90,30,Tropic - warm / semiarid,P0,0.0033512048,671,1,emergence,4,11,False
+BEN,pearl_millet,90,30,Tropic - warm / subhumid,P0,0.008432538,813,1,emergence,4,11,False
+BEN,pearl_millet,90,40,Tropic - warm / semiarid,P0,0.006326534,671,1,emergence,4,11,False
+BEN,pearl_millet,90,40,Tropic - warm / subhumid,P0,0.020842506,813,1,emergence,4,11,False
+BEN,pearl_millet,110,0,Tropic - warm / semiarid,P0,0.0052245036,671,1,emergence,6,13,False
+BEN,pearl_millet,110,0,Tropic - warm / subhumid,P0,0.0011081262,815,1,emergence,6,13,False
+BEN,pearl_millet,110,10,Tropic - warm / semiarid,P0,0.009159051,671,1,emergence,6,13,False
+BEN,pearl_millet,110,10,Tropic - warm / subhumid,P0,0.0038636683,813,1,emergence,6,13,False
+BEN,pearl_millet,110,20,Tropic - warm / semiarid,P0,0.013119392,671,1,emergence,6,13,False
+BEN,pearl_millet,110,20,Tropic - warm / subhumid,P0,0.008339797,813,1,emergence,6,13,False
+BEN,pearl_millet,110,30,Tropic - warm / semiarid,P0,0.00340674,583,1,emergence,6,13,False
+BEN,pearl_millet,110,30,Tropic - warm / subhumid,P0,0.008204385,812,1,emergence,6,13,False
+BEN,pearl_millet,110,40,Tropic - warm / semiarid,P0,0.0046126945,320,1,emergence,6,13,False
+BEN,pearl_millet,110,40,Tropic - warm / subhumid,P0,0.022870414,810,1,emergence,6,13,False
+BEN,pearl_millet,130,0,Tropic - warm / semiarid,P0,0.0074786693,671,1,emergence,6,16,False
+BEN,pearl_millet,130,0,Tropic - warm / subhumid,P0,0.0017144928,813,1,emergence,6,16,False
+BEN,pearl_millet,130,10,Tropic - warm / semiarid,P0,0.015709605,583,1,emergence,6,16,False
+BEN,pearl_millet,130,10,Tropic - warm / subhumid,P0,0.007740786,812,1,emergence,6,16,False
+BEN,pearl_millet,130,20,Tropic - warm / semiarid,P0,0.018612519,320,1,emergence,6,16,False
+BEN,pearl_millet,130,20,Tropic - warm / subhumid,P0,0.007271149,810,1,emergence,6,16,False
+BEN,pearl_millet,130,30,Tropic - warm / semiarid,P0,0.0016986282,130,1,emergence,6,16,False
+BEN,pearl_millet,130,30,Tropic - warm / subhumid,P0,0.0040849103,727,1,emergence,6,16,False
+BEN,pearl_millet,130,40,Tropic - warm / subhumid,P0,0.02394453,419,1,emergence,6,16,False
+BEN,pearl_millet,70,0,Tropic - warm / semiarid,P1,0.0068917517,671,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,0,Tropic - warm / subhumid,P1,0.002404585,815,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,10,Tropic - warm / semiarid,P1,0.013458603,671,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,10,Tropic - warm / subhumid,P1,0.008329015,815,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,20,Tropic - warm / semiarid,P1,0.014276024,671,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,20,Tropic - warm / subhumid,P1,0.010474291,815,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,30,Tropic - warm / semiarid,P1,0.006670445,671,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,30,Tropic - warm / subhumid,P1,0.012478006,815,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,40,Tropic - warm / semiarid,P1,0.005902882,671,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,40,Tropic - warm / subhumid,P1,0.032434113,815,2,3rd leaf,9,16,False
+BEN,pearl_millet,90,0,Tropic - warm / semiarid,P1,0.008104803,671,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,0,Tropic - warm / subhumid,P1,0.0039797495,815,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,10,Tropic - warm / semiarid,P1,0.016849978,671,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,10,Tropic - warm / subhumid,P1,0.00955394,815,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,20,Tropic - warm / semiarid,P1,0.0137388185,671,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,20,Tropic - warm / subhumid,P1,0.01627964,815,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,30,Tropic - warm / semiarid,P1,0.006379214,671,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,30,Tropic - warm / subhumid,P1,0.022659594,813,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,40,Tropic - warm / semiarid,P1,0.0070290556,671,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,40,Tropic - warm / subhumid,P1,0.04068438,813,2,3rd leaf,12,21,False
+BEN,pearl_millet,110,0,Tropic - warm / semiarid,P1,0.016859105,671,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,0,Tropic - warm / subhumid,P1,0.008111851,815,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,10,Tropic - warm / semiarid,P1,0.016050622,671,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,10,Tropic - warm / subhumid,P1,0.00997969,813,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,20,Tropic - warm / semiarid,P1,0.014210196,671,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,20,Tropic - warm / subhumid,P1,0.01523544,813,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,30,Tropic - warm / semiarid,P1,0.0056384513,583,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,30,Tropic - warm / subhumid,P1,0.027835082,812,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,40,Tropic - warm / semiarid,P1,0.010859473,320,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,40,Tropic - warm / subhumid,P1,0.040770948,810,2,3rd leaf,14,25,False
+BEN,pearl_millet,130,0,Tropic - warm / semiarid,P1,0.019198054,671,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,0,Tropic - warm / subhumid,P1,0.008971586,813,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,10,Tropic - warm / semiarid,P1,0.016046919,583,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,10,Tropic - warm / subhumid,P1,0.01229612,812,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,20,Tropic - warm / semiarid,P1,0.0057235844,320,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,20,Tropic - warm / subhumid,P1,0.014233822,810,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,30,Tropic - warm / semiarid,P1,0.004203299,130,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,30,Tropic - warm / subhumid,P1,0.034728274,727,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,40,Tropic - warm / subhumid,P1,0.048277806,419,2,3rd leaf,17,30,False
+BEN,pearl_millet,70,0,Tropic - warm / semiarid,P2,0.017710201,671,3,5th leaf,17,28,False
+BEN,pearl_millet,70,0,Tropic - warm / subhumid,P2,0.010462479,815,3,5th leaf,17,28,False
+BEN,pearl_millet,70,10,Tropic - warm / semiarid,P2,0.014346166,671,3,5th leaf,17,28,False
+BEN,pearl_millet,70,10,Tropic - warm / subhumid,P2,0.012324447,815,3,5th leaf,17,28,False
+BEN,pearl_millet,70,20,Tropic - warm / semiarid,P2,0.009957891,671,3,5th leaf,17,28,False
+BEN,pearl_millet,70,20,Tropic - warm / subhumid,P2,0.016767375,815,3,5th leaf,17,28,False
+BEN,pearl_millet,70,30,Tropic - warm / semiarid,P2,0.006613448,671,3,5th leaf,17,28,False
+BEN,pearl_millet,70,30,Tropic - warm / subhumid,P2,0.03941809,815,3,5th leaf,17,28,False
+BEN,pearl_millet,70,40,Tropic - warm / semiarid,P2,0.0056517036,671,3,5th leaf,17,28,False
+BEN,pearl_millet,70,40,Tropic - warm / subhumid,P2,0.049226172,815,3,5th leaf,17,28,False
+BEN,pearl_millet,90,0,Tropic - warm / semiarid,P2,0.017594306,671,3,5th leaf,22,36,False
+BEN,pearl_millet,90,0,Tropic - warm / subhumid,P2,0.0120578045,815,3,5th leaf,22,36,False
+BEN,pearl_millet,90,10,Tropic - warm / semiarid,P2,0.017020863,671,3,5th leaf,22,36,False
+BEN,pearl_millet,90,10,Tropic - warm / subhumid,P2,0.019310297,815,3,5th leaf,22,36,False
+BEN,pearl_millet,90,20,Tropic - warm / semiarid,P2,0.0067456723,671,3,5th leaf,22,36,False
+BEN,pearl_millet,90,20,Tropic - warm / subhumid,P2,0.03517125,815,3,5th leaf,22,36,False
+BEN,pearl_millet,90,30,Tropic - warm / semiarid,P2,0.009112168,671,3,5th leaf,22,36,False
+BEN,pearl_millet,90,30,Tropic - warm / subhumid,P2,0.051053517,813,3,5th leaf,22,36,False
+BEN,pearl_millet,90,40,Tropic - warm / semiarid,P2,0.004481132,671,3,5th leaf,22,36,False
+BEN,pearl_millet,90,40,Tropic - warm / subhumid,P2,0.047937244,813,3,5th leaf,22,36,False
+BEN,pearl_millet,110,0,Tropic - warm / semiarid,P2,0.016741654,671,3,5th leaf,26,44,False
+BEN,pearl_millet,110,0,Tropic - warm / subhumid,P2,0.01842582,815,3,5th leaf,26,44,False
+BEN,pearl_millet,110,10,Tropic - warm / semiarid,P2,0.010463149,671,3,5th leaf,26,44,False
+BEN,pearl_millet,110,10,Tropic - warm / subhumid,P2,0.029076092,813,3,5th leaf,26,44,False
+BEN,pearl_millet,110,20,Tropic - warm / semiarid,P2,0.008207737,671,3,5th leaf,26,44,False
+BEN,pearl_millet,110,20,Tropic - warm / subhumid,P2,0.04932593,813,3,5th leaf,26,44,False
+BEN,pearl_millet,110,30,Tropic - warm / semiarid,P2,0.0069519505,583,3,5th leaf,26,44,False
+BEN,pearl_millet,110,30,Tropic - warm / subhumid,P2,0.057562023,812,3,5th leaf,26,44,False
+BEN,pearl_millet,110,40,Tropic - warm / semiarid,P2,0.009397043,320,3,5th leaf,26,44,False
+BEN,pearl_millet,110,40,Tropic - warm / subhumid,P2,0.062551804,810,3,5th leaf,26,44,False
+BEN,pearl_millet,130,0,Tropic - warm / semiarid,P2,0.018863983,671,3,5th leaf,31,52,False
+BEN,pearl_millet,130,0,Tropic - warm / subhumid,P2,0.03206758,813,3,5th leaf,31,52,False
+BEN,pearl_millet,130,10,Tropic - warm / semiarid,P2,0.007927851,583,3,5th leaf,31,52,False
+BEN,pearl_millet,130,10,Tropic - warm / subhumid,P2,0.04464283,812,3,5th leaf,31,52,False
+BEN,pearl_millet,130,20,Tropic - warm / semiarid,P2,0.013679323,320,3,5th leaf,31,52,False
+BEN,pearl_millet,130,20,Tropic - warm / subhumid,P2,0.05801271,810,3,5th leaf,31,52,False
+BEN,pearl_millet,130,30,Tropic - warm / semiarid,P2,0.01605889,130,3,5th leaf,31,52,False
+BEN,pearl_millet,130,30,Tropic - warm / subhumid,P2,0.07163961,727,3,5th leaf,31,52,False
+BEN,pearl_millet,130,40,Tropic - warm / subhumid,P2,0.115916595,419,3,5th leaf,31,52,False
+BEN,pearl_millet,70,0,Tropic - warm / semiarid,P3,0.014640997,671,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,0,Tropic - warm / subhumid,P3,0.014716508,815,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,10,Tropic - warm / semiarid,P3,0.008302557,671,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,10,Tropic - warm / subhumid,P3,0.018294238,815,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,20,Tropic - warm / semiarid,P3,0.006726882,671,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,20,Tropic - warm / subhumid,P3,0.044321943,815,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,30,Tropic - warm / semiarid,P3,0.0057461043,671,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,30,Tropic - warm / subhumid,P3,0.057413172,815,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,40,Tropic - warm / semiarid,P3,0.0036147884,671,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,40,Tropic - warm / subhumid,P3,0.051298447,815,4,panicle initiation,29,40,False
+BEN,pearl_millet,90,0,Tropic - warm / semiarid,P3,0.0100691365,671,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,0,Tropic - warm / subhumid,P3,0.029561227,815,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,10,Tropic - warm / semiarid,P3,0.0071422006,671,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,10,Tropic - warm / subhumid,P3,0.046404775,815,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,20,Tropic - warm / semiarid,P3,0.0059498623,671,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,20,Tropic - warm / subhumid,P3,0.059224293,815,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,30,Tropic - warm / semiarid,P3,0.004250624,671,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,30,Tropic - warm / subhumid,P3,0.06066755,813,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,40,Tropic - warm / semiarid,P3,0.0047904095,671,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,40,Tropic - warm / subhumid,P3,0.07585135,813,4,panicle initiation,37,52,False
+BEN,pearl_millet,110,0,Tropic - warm / semiarid,P3,0.007238945,671,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,0,Tropic - warm / subhumid,P3,0.050981224,815,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,10,Tropic - warm / semiarid,P3,0.005900428,671,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,10,Tropic - warm / subhumid,P3,0.05909807,813,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,20,Tropic - warm / semiarid,P3,0.004507909,671,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,20,Tropic - warm / subhumid,P3,0.06689968,813,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,30,Tropic - warm / semiarid,P3,0.011927619,583,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,30,Tropic - warm / subhumid,P3,0.08381967,812,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,40,Tropic - warm / semiarid,P3,0.0019589863,320,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,40,Tropic - warm / subhumid,P3,0.09902347,810,4,panicle initiation,45,64,False
+BEN,pearl_millet,130,0,Tropic - warm / semiarid,P3,0.008159018,671,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,0,Tropic - warm / subhumid,P3,0.06112331,813,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,10,Tropic - warm / semiarid,P3,0.005480199,583,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,10,Tropic - warm / subhumid,P3,0.07671048,812,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,20,Tropic - warm / semiarid,P3,0.009031235,320,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,20,Tropic - warm / subhumid,P3,0.09344632,810,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,30,Tropic - warm / semiarid,P3,0.0023531604,130,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,30,Tropic - warm / subhumid,P3,0.12048828,727,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,40,Tropic - warm / subhumid,P3,0.23563059,419,4,panicle initiation,53,76,False
+BEN,pearl_millet,70,0,Tropic - warm / semiarid,P4,0.004689182,671,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,0,Tropic - warm / subhumid,P4,0.012635068,815,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,10,Tropic - warm / semiarid,P4,0.0055872286,671,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,10,Tropic - warm / subhumid,P4,0.028119039,815,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,20,Tropic - warm / semiarid,P4,0.004253399,671,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,20,Tropic - warm / subhumid,P4,0.043137934,815,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,30,Tropic - warm / semiarid,P4,0.003213149,671,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,30,Tropic - warm / subhumid,P4,0.034757446,815,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,40,Tropic - warm / semiarid,P4,0.000112825684,671,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,40,Tropic - warm / subhumid,P4,0.041230142,815,5,flag leaf visible,41,45,False
+BEN,pearl_millet,90,0,Tropic - warm / semiarid,P4,0.0044368664,671,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,0,Tropic - warm / subhumid,P4,0.029959474,815,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,10,Tropic - warm / semiarid,P4,0.0043408014,671,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,10,Tropic - warm / subhumid,P4,0.03586485,815,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,20,Tropic - warm / semiarid,P4,0.0032645096,671,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,20,Tropic - warm / subhumid,P4,0.032915715,815,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,30,Tropic - warm / semiarid,P4,0.0011041302,671,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,30,Tropic - warm / subhumid,P4,0.04677217,813,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,40,Tropic - warm / semiarid,P4,0.009483594,671,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,40,Tropic - warm / subhumid,P4,0.06267281,813,5,flag leaf visible,53,57,False
+BEN,pearl_millet,110,0,Tropic - warm / semiarid,P4,0.0041587013,671,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,0,Tropic - warm / subhumid,P4,0.041976035,815,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,10,Tropic - warm / semiarid,P4,0.0008295697,671,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,10,Tropic - warm / subhumid,P4,0.04174071,813,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,20,Tropic - warm / semiarid,P4,0.0041528507,671,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,20,Tropic - warm / subhumid,P4,0.058716275,813,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,30,Tropic - warm / semiarid,P4,0.010974633,583,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,30,Tropic - warm / subhumid,P4,0.06746412,812,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,40,Tropic - warm / semiarid,P4,0.0007475951,320,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,40,Tropic - warm / subhumid,P4,0.07825066,810,5,flag leaf visible,65,71,False
+BEN,pearl_millet,130,0,Tropic - warm / semiarid,P4,0.0005740216,671,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,0,Tropic - warm / subhumid,P4,0.039937783,813,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,10,Tropic - warm / semiarid,P4,0.010413742,583,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,10,Tropic - warm / subhumid,P4,0.060874548,812,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,20,Tropic - warm / semiarid,P4,0.0013377165,320,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,20,Tropic - warm / subhumid,P4,0.07223435,810,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,30,Tropic - warm / semiarid,P4,0.0004048583,130,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,30,Tropic - warm / subhumid,P4,0.09264002,727,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,40,Tropic - warm / subhumid,P4,0.1616206,419,5,flag leaf visible,77,83,False
+BEN,pearl_millet,70,0,Tropic - warm / semiarid,P5,0.005305614,671,6,boot,46,49,True
+BEN,pearl_millet,70,0,Tropic - warm / subhumid,P5,0.020301512,815,6,boot,46,49,True
+BEN,pearl_millet,70,10,Tropic - warm / semiarid,P5,0.0029499996,671,6,boot,46,49,True
+BEN,pearl_millet,70,10,Tropic - warm / subhumid,P5,0.036220938,815,6,boot,46,49,True
+BEN,pearl_millet,70,20,Tropic - warm / semiarid,P5,0.0038855216,671,6,boot,46,49,True
+BEN,pearl_millet,70,20,Tropic - warm / subhumid,P5,0.041412506,815,6,boot,46,49,True
+BEN,pearl_millet,70,30,Tropic - warm / semiarid,P5,0.00072170724,671,6,boot,46,49,True
+BEN,pearl_millet,70,30,Tropic - warm / subhumid,P5,0.041863065,815,6,boot,46,49,True
+BEN,pearl_millet,70,40,Tropic - warm / semiarid,P5,0.0013149501,671,6,boot,46,49,True
+BEN,pearl_millet,70,40,Tropic - warm / subhumid,P5,0.055457592,815,6,boot,46,49,True
+BEN,pearl_millet,90,0,Tropic - warm / semiarid,P5,0.0035764272,671,6,boot,58,64,True
+BEN,pearl_millet,90,0,Tropic - warm / subhumid,P5,0.04296557,815,6,boot,58,64,True
+BEN,pearl_millet,90,10,Tropic - warm / semiarid,P5,0.0037895127,671,6,boot,58,64,True
+BEN,pearl_millet,90,10,Tropic - warm / subhumid,P5,0.037657384,815,6,boot,58,64,True
+BEN,pearl_millet,90,20,Tropic - warm / semiarid,P5,0.0004949627,671,6,boot,58,64,True
+BEN,pearl_millet,90,20,Tropic - warm / subhumid,P5,0.044421796,815,6,boot,58,64,True
+BEN,pearl_millet,90,30,Tropic - warm / semiarid,P5,0.009484743,671,6,boot,58,64,True
+BEN,pearl_millet,90,30,Tropic - warm / subhumid,P5,0.06960357,813,6,boot,58,64,True
+BEN,pearl_millet,90,40,Tropic - warm / semiarid,P5,0.009744541,671,6,boot,58,64,True
+BEN,pearl_millet,90,40,Tropic - warm / subhumid,P5,0.08213111,813,6,boot,58,64,True
+BEN,pearl_millet,110,0,Tropic - warm / semiarid,P5,0.0033346515,671,6,boot,72,78,True
+BEN,pearl_millet,110,0,Tropic - warm / subhumid,P5,0.04100227,815,6,boot,72,78,True
+BEN,pearl_millet,110,10,Tropic - warm / semiarid,P5,0.0011041302,671,6,boot,72,78,True
+BEN,pearl_millet,110,10,Tropic - warm / subhumid,P5,0.05361928,813,6,boot,72,78,True
+BEN,pearl_millet,110,20,Tropic - warm / semiarid,P5,0.009300045,671,6,boot,72,78,True
+BEN,pearl_millet,110,20,Tropic - warm / subhumid,P5,0.06517876,813,6,boot,72,78,True
+BEN,pearl_millet,110,30,Tropic - warm / semiarid,P5,0.010515086,583,6,boot,72,78,True
+BEN,pearl_millet,110,30,Tropic - warm / subhumid,P5,0.0746288,812,6,boot,72,78,True
+BEN,pearl_millet,110,40,Tropic - warm / semiarid,P5,0.0007475951,320,6,boot,72,78,True
+BEN,pearl_millet,110,40,Tropic - warm / subhumid,P5,0.088648334,810,6,boot,72,78,True
+BEN,pearl_millet,130,0,Tropic - warm / semiarid,P5,0.009072091,671,6,boot,84,93,True
+BEN,pearl_millet,130,0,Tropic - warm / subhumid,P5,0.06488599,813,6,boot,84,93,True
+BEN,pearl_millet,130,10,Tropic - warm / semiarid,P5,0.011150606,583,6,boot,84,93,True
+BEN,pearl_millet,130,10,Tropic - warm / subhumid,P5,0.07972447,812,6,boot,84,93,True
+BEN,pearl_millet,130,20,Tropic - warm / semiarid,P5,0.0007475951,320,6,boot,84,93,True
+BEN,pearl_millet,130,20,Tropic - warm / subhumid,P5,0.08728292,810,6,boot,84,93,True
+BEN,pearl_millet,130,30,Tropic - warm / semiarid,P5,0.0,130,6,boot,84,93,True
+BEN,pearl_millet,130,30,Tropic - warm / subhumid,P5,0.1131597,727,6,boot,84,93,True
+BEN,pearl_millet,130,40,Tropic - warm / subhumid,P5,0.16969928,419,6,boot,84,93,True
+BEN,pearl_millet,70,0,Tropic - warm / semiarid,P6,0.005976986,671,7,50% flowering,50,56,True
+BEN,pearl_millet,70,0,Tropic - warm / subhumid,P6,0.038749874,815,7,50% flowering,50,56,True
+BEN,pearl_millet,70,10,Tropic - warm / semiarid,P6,0.0043243663,671,7,50% flowering,50,56,True
+BEN,pearl_millet,70,10,Tropic - warm / subhumid,P6,0.049622335,815,7,50% flowering,50,56,True
+BEN,pearl_millet,70,20,Tropic - warm / semiarid,P6,0.0032536814,671,7,50% flowering,50,56,True
+BEN,pearl_millet,70,20,Tropic - warm / subhumid,P6,0.040058196,815,7,50% flowering,50,56,True
+BEN,pearl_millet,70,30,Tropic - warm / semiarid,P6,0.00051879516,671,7,50% flowering,50,56,True
+BEN,pearl_millet,70,30,Tropic - warm / subhumid,P6,0.052626852,815,7,50% flowering,50,56,True
+BEN,pearl_millet,70,40,Tropic - warm / semiarid,P6,0.00920291,671,7,50% flowering,50,56,True
+BEN,pearl_millet,70,40,Tropic - warm / subhumid,P6,0.07485563,815,7,50% flowering,50,56,True
+BEN,pearl_millet,90,0,Tropic - warm / semiarid,P6,0.0041377223,671,7,50% flowering,65,73,True
+BEN,pearl_millet,90,0,Tropic - warm / subhumid,P6,0.049152356,815,7,50% flowering,65,73,True
+BEN,pearl_millet,90,10,Tropic - warm / semiarid,P6,0.0007991392,671,7,50% flowering,65,73,True
+BEN,pearl_millet,90,10,Tropic - warm / subhumid,P6,0.05250487,815,7,50% flowering,65,73,True
+BEN,pearl_millet,90,20,Tropic - warm / semiarid,P6,0.008939988,671,7,50% flowering,65,73,True
+BEN,pearl_millet,90,20,Tropic - warm / subhumid,P6,0.07241384,815,7,50% flowering,65,73,True
+BEN,pearl_millet,90,30,Tropic - warm / semiarid,P6,0.010266243,671,7,50% flowering,65,73,True
+BEN,pearl_millet,90,30,Tropic - warm / subhumid,P6,0.0920408,813,7,50% flowering,65,73,True
+BEN,pearl_millet,90,40,Tropic - warm / semiarid,P6,0.0061490163,671,7,50% flowering,65,73,True
+BEN,pearl_millet,90,40,Tropic - warm / subhumid,P6,0.098766595,813,7,50% flowering,65,73,True
+BEN,pearl_millet,110,0,Tropic - warm / semiarid,P6,0.0016970871,671,7,50% flowering,79,89,True
+BEN,pearl_millet,110,0,Tropic - warm / subhumid,P6,0.06721782,815,7,50% flowering,79,89,True
+BEN,pearl_millet,110,10,Tropic - warm / semiarid,P6,0.009491053,671,7,50% flowering,79,89,True
+BEN,pearl_millet,110,10,Tropic - warm / subhumid,P6,0.082784005,813,7,50% flowering,79,89,True
+BEN,pearl_millet,110,20,Tropic - warm / semiarid,P6,0.014566865,671,7,50% flowering,79,89,True
+BEN,pearl_millet,110,20,Tropic - warm / subhumid,P6,0.09705115,813,7,50% flowering,79,89,True
+BEN,pearl_millet,110,30,Tropic - warm / semiarid,P6,0.004119365,583,7,50% flowering,79,89,True
+BEN,pearl_millet,110,30,Tropic - warm / subhumid,P6,0.11345508,812,7,50% flowering,79,89,True
+BEN,pearl_millet,110,40,Tropic - warm / semiarid,P6,0.000390625,320,7,50% flowering,79,89,True
+BEN,pearl_millet,110,40,Tropic - warm / subhumid,P6,0.094214156,810,7,50% flowering,79,89,True
+BEN,pearl_millet,130,0,Tropic - warm / semiarid,P6,0.014968507,671,7,50% flowering,94,106,True
+BEN,pearl_millet,130,0,Tropic - warm / subhumid,P6,0.09748746,813,7,50% flowering,94,106,True
+BEN,pearl_millet,130,10,Tropic - warm / semiarid,P6,0.0044698804,583,7,50% flowering,94,106,True
+BEN,pearl_millet,130,10,Tropic - warm / subhumid,P6,0.10450964,812,7,50% flowering,94,106,True
+BEN,pearl_millet,130,20,Tropic - warm / semiarid,P6,0.000390625,320,7,50% flowering,94,106,True
+BEN,pearl_millet,130,20,Tropic - warm / subhumid,P6,0.108688325,810,7,50% flowering,94,106,True
+BEN,pearl_millet,130,30,Tropic - warm / semiarid,P6,0.001237067,130,7,50% flowering,94,106,True
+BEN,pearl_millet,130,30,Tropic - warm / subhumid,P6,0.106593356,727,7,50% flowering,94,106,True
+BEN,pearl_millet,130,40,Tropic - warm / subhumid,P6,0.123091824,419,7,50% flowering,94,106,True
+BEN,pearl_millet,70,0,Tropic - warm / semiarid,P7,0.0030193166,671,8,milk,57,63,True
+BEN,pearl_millet,70,0,Tropic - warm / subhumid,P7,0.03994204,815,8,milk,57,63,True
+BEN,pearl_millet,70,10,Tropic - warm / semiarid,P7,0.00392474,671,8,milk,57,63,True
+BEN,pearl_millet,70,10,Tropic - warm / subhumid,P7,0.04036465,815,8,milk,57,63,True
+BEN,pearl_millet,70,20,Tropic - warm / semiarid,P7,0.00049327203,671,8,milk,57,63,True
+BEN,pearl_millet,70,20,Tropic - warm / subhumid,P7,0.04305718,815,8,milk,57,63,True
+BEN,pearl_millet,70,30,Tropic - warm / semiarid,P7,0.0038986793,671,8,milk,57,63,True
+BEN,pearl_millet,70,30,Tropic - warm / subhumid,P7,0.059674464,815,8,milk,57,63,True
+BEN,pearl_millet,70,40,Tropic - warm / semiarid,P7,0.008541786,671,8,milk,57,63,True
+BEN,pearl_millet,70,40,Tropic - warm / subhumid,P7,0.0683297,815,8,milk,57,63,True
+BEN,pearl_millet,90,0,Tropic - warm / semiarid,P7,0.0032549673,671,8,milk,74,82,True
+BEN,pearl_millet,90,0,Tropic - warm / subhumid,P7,0.050448745,815,8,milk,74,82,True
+BEN,pearl_millet,90,10,Tropic - warm / semiarid,P7,0.0037600081,671,8,milk,74,82,True
+BEN,pearl_millet,90,10,Tropic - warm / subhumid,P7,0.06292866,815,8,milk,74,82,True
+BEN,pearl_millet,90,20,Tropic - warm / semiarid,P7,0.009285029,671,8,milk,74,82,True
+BEN,pearl_millet,90,20,Tropic - warm / subhumid,P7,0.073537275,815,8,milk,74,82,True
+BEN,pearl_millet,90,30,Tropic - warm / semiarid,P7,0.005337089,671,8,milk,74,82,True
+BEN,pearl_millet,90,30,Tropic - warm / subhumid,P7,0.08590351,813,8,milk,74,82,True
+BEN,pearl_millet,90,40,Tropic - warm / semiarid,P7,0.0053394614,671,8,milk,74,82,True
+BEN,pearl_millet,90,40,Tropic - warm / subhumid,P7,0.10091694,813,8,milk,74,82,True
+BEN,pearl_millet,110,0,Tropic - warm / semiarid,P7,0.009203353,671,8,milk,90,100,True
+BEN,pearl_millet,110,0,Tropic - warm / subhumid,P7,0.0853321,815,8,milk,90,100,True
+BEN,pearl_millet,110,10,Tropic - warm / semiarid,P7,0.010390071,671,8,milk,90,100,True
+BEN,pearl_millet,110,10,Tropic - warm / subhumid,P7,0.102661856,813,8,milk,90,100,True
+BEN,pearl_millet,110,20,Tropic - warm / semiarid,P7,0.005917301,671,8,milk,90,100,True
+BEN,pearl_millet,110,20,Tropic - warm / subhumid,P7,0.1153169,813,8,milk,90,100,True
+BEN,pearl_millet,110,30,Tropic - warm / semiarid,P7,0.0025738017,583,8,milk,90,100,True
+BEN,pearl_millet,110,30,Tropic - warm / subhumid,P7,0.09281926,812,8,milk,90,100,True
+BEN,pearl_millet,110,40,Tropic - warm / semiarid,P7,0.0031907738,320,8,milk,90,100,True
+BEN,pearl_millet,110,40,Tropic - warm / subhumid,P7,0.07544806,810,8,milk,90,100,True
+BEN,pearl_millet,130,0,Tropic - warm / semiarid,P7,0.0061928486,671,8,milk,107,119,True
+BEN,pearl_millet,130,0,Tropic - warm / subhumid,P7,0.11977667,813,8,milk,107,119,True
+BEN,pearl_millet,130,10,Tropic - warm / semiarid,P7,0.0025738017,583,8,milk,107,119,True
+BEN,pearl_millet,130,10,Tropic - warm / subhumid,P7,0.10591896,812,8,milk,107,119,True
+BEN,pearl_millet,130,20,Tropic - warm / semiarid,P7,0.0031907738,320,8,milk,107,119,True
+BEN,pearl_millet,130,20,Tropic - warm / subhumid,P7,0.08432192,810,8,milk,107,119,True
+BEN,pearl_millet,130,30,Tropic - warm / semiarid,P7,0.002453891,130,8,milk,107,119,True
+BEN,pearl_millet,130,30,Tropic - warm / subhumid,P7,0.06768562,727,8,milk,107,119,True
+BEN,pearl_millet,130,40,Tropic - warm / subhumid,P7,0.07365729,419,8,milk,107,119,True
+BEN,pearl_millet,70,0,Tropic - warm / semiarid,P8,0.0013070746,671,9,dough,64,69,False
+BEN,pearl_millet,70,0,Tropic - warm / subhumid,P8,0.020120056,815,9,dough,64,69,False
+BEN,pearl_millet,70,10,Tropic - warm / semiarid,P8,0.0029655085,671,9,dough,64,69,False
+BEN,pearl_millet,70,10,Tropic - warm / subhumid,P8,0.025620285,815,9,dough,64,69,False
+BEN,pearl_millet,70,20,Tropic - warm / semiarid,P8,0.000112825684,671,9,dough,64,69,False
+BEN,pearl_millet,70,20,Tropic - warm / subhumid,P8,0.025333572,815,9,dough,64,69,False
+BEN,pearl_millet,70,30,Tropic - warm / semiarid,P8,0.0037858535,671,9,dough,64,69,False
+BEN,pearl_millet,70,30,Tropic - warm / subhumid,P8,0.037004903,815,9,dough,64,69,False
+BEN,pearl_millet,70,40,Tropic - warm / semiarid,P8,0.00046133177,671,9,dough,64,69,False
+BEN,pearl_millet,70,40,Tropic - warm / subhumid,P8,0.03723406,815,9,dough,64,69,False
+BEN,pearl_millet,90,0,Tropic - warm / semiarid,P8,0.000112825684,671,9,dough,83,89,False
+BEN,pearl_millet,90,0,Tropic - warm / subhumid,P8,0.026283665,815,9,dough,83,89,False
+BEN,pearl_millet,90,10,Tropic - warm / semiarid,P8,0.0036471824,671,9,dough,83,89,False
+BEN,pearl_millet,90,10,Tropic - warm / subhumid,P8,0.039657123,815,9,dough,83,89,False
+BEN,pearl_millet,90,20,Tropic - warm / semiarid,P8,0.0005314739,671,9,dough,83,89,False
+BEN,pearl_millet,90,20,Tropic - warm / subhumid,P8,0.042641982,815,9,dough,83,89,False
+BEN,pearl_millet,90,30,Tropic - warm / semiarid,P8,0.0043153926,671,9,dough,83,89,False
+BEN,pearl_millet,90,30,Tropic - warm / subhumid,P8,0.05752789,813,9,dough,83,89,False
+BEN,pearl_millet,90,40,Tropic - warm / semiarid,P8,4.3832733e-05,671,9,dough,83,89,False
+BEN,pearl_millet,90,40,Tropic - warm / subhumid,P8,0.059324525,813,9,dough,83,89,False
+BEN,pearl_millet,110,0,Tropic - warm / semiarid,P8,0.005476107,671,9,dough,101,109,False
+BEN,pearl_millet,110,0,Tropic - warm / subhumid,P8,0.051321812,815,9,dough,101,109,False
+BEN,pearl_millet,110,10,Tropic - warm / semiarid,P8,0.0048569115,671,9,dough,101,109,False
+BEN,pearl_millet,110,10,Tropic - warm / subhumid,P8,0.064108506,813,9,dough,101,109,False
+BEN,pearl_millet,110,20,Tropic - warm / semiarid,P8,4.3832733e-05,671,9,dough,101,109,False
+BEN,pearl_millet,110,20,Tropic - warm / subhumid,P8,0.06494414,813,9,dough,101,109,False
+BEN,pearl_millet,110,30,Tropic - warm / semiarid,P8,0.002516626,583,9,dough,101,109,False
+BEN,pearl_millet,110,30,Tropic - warm / subhumid,P8,0.05380105,812,9,dough,101,109,False
+BEN,pearl_millet,110,40,Tropic - warm / semiarid,P8,0.0028001484,320,9,dough,101,109,False
+BEN,pearl_millet,110,40,Tropic - warm / subhumid,P8,0.031428963,810,9,dough,101,109,False
+BEN,pearl_millet,130,0,Tropic - warm / semiarid,P8,4.3832733e-05,671,9,dough,120,129,False
+BEN,pearl_millet,130,0,Tropic - warm / subhumid,P8,0.06830908,813,9,dough,120,129,False
+BEN,pearl_millet,130,10,Tropic - warm / semiarid,P8,0.002516626,583,9,dough,120,129,False
+BEN,pearl_millet,130,10,Tropic - warm / subhumid,P8,0.056064162,812,9,dough,120,129,False
+BEN,pearl_millet,130,20,Tropic - warm / semiarid,P8,0.0028001484,320,9,dough,120,129,False
+BEN,pearl_millet,130,20,Tropic - warm / subhumid,P8,0.03427045,810,9,dough,120,129,False
+BEN,pearl_millet,130,30,Tropic - warm / semiarid,P8,0.0012168242,130,9,dough,120,129,False
+BEN,pearl_millet,130,30,Tropic - warm / subhumid,P8,0.02827921,727,9,dough,120,129,False
+BEN,pearl_millet,130,40,Tropic - warm / subhumid,P8,0.023523794,419,9,dough,120,129,False
+BEN,pearl_millet,70,0,ALL,SOW,0.0,1486,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,10,ALL,SOW,0.0011781517,1486,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,20,ALL,SOW,0.0036515666,1486,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,30,ALL,SOW,0.0019816477,1486,0,sowing to emergence,0,3,False
+BEN,pearl_millet,70,40,ALL,SOW,0.0043203,1486,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,0,ALL,SOW,0.0,1486,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,10,ALL,SOW,0.0011292127,1486,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,20,ALL,SOW,0.00364173,1486,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,30,ALL,SOW,0.0018430391,1484,0,sowing to emergence,0,3,False
+BEN,pearl_millet,90,40,ALL,SOW,0.004615598,1484,0,sowing to emergence,0,3,False
+BEN,pearl_millet,110,0,ALL,SOW,0.0005897586,1486,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,10,ALL,SOW,0.0020484442,1484,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,20,ALL,SOW,0.0077496693,1484,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,30,ALL,SOW,0.0011756994,1395,0,sowing to emergence,0,5,False
+BEN,pearl_millet,110,40,ALL,SOW,0.0049457033,1130,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,0,ALL,SOW,0.0006025503,1484,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,10,ALL,SOW,0.0020248063,1395,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,20,ALL,SOW,0.009120066,1130,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,30,ALL,SOW,0.0008773359,857,0,sowing to emergence,0,5,False
+BEN,pearl_millet,130,40,ALL,SOW,0.0010544804,419,0,sowing to emergence,0,5,False
+BEN,pearl_millet,70,0,ALL,P0,0.0019693403,1486,1,emergence,4,8,False
+BEN,pearl_millet,70,10,ALL,P0,0.0026526933,1486,1,emergence,4,8,False
+BEN,pearl_millet,70,20,ALL,P0,0.009642837,1486,1,emergence,4,8,False
+BEN,pearl_millet,70,30,ALL,P0,0.003570617,1486,1,emergence,4,8,False
+BEN,pearl_millet,70,40,ALL,P0,0.008495715,1486,1,emergence,4,8,False
+BEN,pearl_millet,90,0,ALL,P0,0.0022136173,1486,1,emergence,4,11,False
+BEN,pearl_millet,90,10,ALL,P0,0.003947608,1486,1,emergence,4,11,False
+BEN,pearl_millet,90,20,ALL,P0,0.010575227,1486,1,emergence,4,11,False
+BEN,pearl_millet,90,30,ALL,P0,0.0061349813,1484,1,emergence,4,11,False
+BEN,pearl_millet,90,40,ALL,P0,0.014279017,1484,1,emergence,4,11,False
+BEN,pearl_millet,110,0,ALL,P0,0.0029668673,1486,1,emergence,6,13,False
+BEN,pearl_millet,110,10,ALL,P0,0.006258009,1484,1,emergence,6,13,False
+BEN,pearl_millet,110,20,ALL,P0,0.010500921,1484,1,emergence,6,13,False
+BEN,pearl_millet,110,30,ALL,P0,0.006199348,1395,1,emergence,6,13,False
+BEN,pearl_millet,110,40,ALL,P0,0.017700087,1130,1,emergence,6,13,False
+BEN,pearl_millet,130,0,ALL,P0,0.0043208017,1484,1,emergence,6,16,False
+BEN,pearl_millet,130,10,ALL,P0,0.011071124,1395,1,emergence,6,16,False
+BEN,pearl_millet,130,20,ALL,P0,0.010482864,1130,1,emergence,6,16,False
+BEN,pearl_millet,130,30,ALL,P0,0.0037229306,857,1,emergence,6,16,False
+BEN,pearl_millet,130,40,ALL,P0,0.02394453,419,1,emergence,6,16,False
+BEN,pearl_millet,70,0,ALL,P1,0.004430755,1486,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,10,ALL,P1,0.010645269,1486,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,20,ALL,P1,0.012190955,1486,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,30,ALL,P1,0.009855615,1486,2,3rd leaf,9,16,False
+BEN,pearl_millet,70,40,ALL,P1,0.020453995,1486,2,3rd leaf,9,16,False
+BEN,pearl_millet,90,0,ALL,P1,0.0058424077,1486,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,10,ALL,P1,0.01284845,1486,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,20,ALL,P1,0.015132337,1486,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,30,ALL,P1,0.015298318,1484,2,3rd leaf,12,21,False
+BEN,pearl_millet,90,40,ALL,P1,0.025466911,1484,2,3rd leaf,12,21,False
+BEN,pearl_millet,110,0,ALL,P1,0.012061655,1486,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,10,ALL,P1,0.0127247,1484,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,20,ALL,P1,0.01477187,1484,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,30,ALL,P1,0.01855864,1395,2,3rd leaf,14,25,False
+BEN,pearl_millet,110,40,ALL,P1,0.03230044,1130,2,3rd leaf,14,25,False
+BEN,pearl_millet,130,0,ALL,P1,0.013595548,1484,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,10,ALL,P1,0.0138636585,1395,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,20,ALL,P1,0.011823843,1130,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,30,ALL,P1,0.03009788,857,2,3rd leaf,17,30,False
+BEN,pearl_millet,130,40,ALL,P1,0.048277806,419,2,3rd leaf,17,30,False
+BEN,pearl_millet,70,0,ALL,P2,0.013735171,1486,3,5th leaf,17,28,False
+BEN,pearl_millet,70,10,ALL,P2,0.01323735,1486,3,5th leaf,17,28,False
+BEN,pearl_millet,70,20,ALL,P2,0.013692568,1486,3,5th leaf,17,28,False
+BEN,pearl_millet,70,30,ALL,P2,0.024605226,1486,3,5th leaf,17,28,False
+BEN,pearl_millet,70,40,ALL,P2,0.029550219,1486,3,5th leaf,17,28,False
+BEN,pearl_millet,90,0,ALL,P2,0.014557798,1486,3,5th leaf,22,36,False
+BEN,pearl_millet,90,10,ALL,P2,0.018276509,1486,3,5th leaf,22,36,False
+BEN,pearl_millet,90,20,ALL,P2,0.022335745,1486,3,5th leaf,22,36,False
+BEN,pearl_millet,90,30,ALL,P2,0.032089468,1484,3,5th leaf,22,36,False
+BEN,pearl_millet,90,40,ALL,P2,0.028288288,1484,3,5th leaf,22,36,False
+BEN,pearl_millet,110,0,ALL,P2,0.017665338,1486,3,5th leaf,26,44,False
+BEN,pearl_millet,110,10,ALL,P2,0.020660132,1484,3,5th leaf,26,44,False
+BEN,pearl_millet,110,20,ALL,P2,0.030734077,1484,3,5th leaf,26,44,False
+BEN,pearl_millet,110,30,ALL,P2,0.036411002,1395,3,5th leaf,26,44,False
+BEN,pearl_millet,110,40,ALL,P2,0.047499128,1130,3,5th leaf,26,44,False
+BEN,pearl_millet,130,0,ALL,P2,0.026097488,1484,3,5th leaf,31,52,False
+BEN,pearl_millet,130,10,ALL,P2,0.029298862,1395,3,5th leaf,31,52,False
+BEN,pearl_millet,130,20,ALL,P2,0.045458123,1130,3,5th leaf,31,52,False
+BEN,pearl_millet,130,30,ALL,P2,0.06320846,857,3,5th leaf,31,52,False
+BEN,pearl_millet,130,40,ALL,P2,0.115916595,419,3,5th leaf,31,52,False
+BEN,pearl_millet,70,0,ALL,P3,0.01468241,1486,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,10,ALL,P3,0.013782517,1486,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,20,ALL,P3,0.027345976,1486,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,30,ALL,P3,0.034083024,1486,4,panicle initiation,29,40,False
+BEN,pearl_millet,70,40,ALL,P3,0.029767,1486,4,panicle initiation,29,40,False
+BEN,pearl_millet,90,0,ALL,P3,0.020759616,1486,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,10,ALL,P3,0.028675847,1486,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,20,ALL,P3,0.035168342,1486,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,30,ALL,P3,0.035158277,1484,4,panicle initiation,37,52,False
+BEN,pearl_millet,90,40,ALL,P3,0.043720696,1484,4,panicle initiation,37,52,False
+BEN,pearl_millet,110,0,ALL,P3,0.031229494,1486,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,10,ALL,P3,0.035044417,1484,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,20,ALL,P3,0.038688846,1484,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,30,ALL,P3,0.05377446,1395,4,panicle initiation,45,64,False
+BEN,pearl_millet,110,40,ALL,P3,0.07153618,1130,4,panicle initiation,45,64,False
+BEN,pearl_millet,130,0,ALL,P3,0.03717517,1484,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,10,ALL,P3,0.04694184,1395,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,20,ALL,P3,0.069541164,1130,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,30,ALL,P3,0.10256813,857,4,panicle initiation,53,76,False
+BEN,pearl_millet,130,40,ALL,P3,0.23563059,419,4,panicle initiation,53,76,False
+BEN,pearl_millet,70,0,ALL,P4,0.009047121,1486,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,10,ALL,P4,0.01794485,1486,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,20,ALL,P4,0.02557971,1486,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,30,ALL,P4,0.02051369,1486,5,flag leaf visible,41,45,False
+BEN,pearl_millet,70,40,ALL,P4,0.022663709,1486,5,flag leaf visible,41,45,False
+BEN,pearl_millet,90,0,ALL,P4,0.018434796,1486,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,10,ALL,P4,0.021630235,1486,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,20,ALL,P4,0.01952678,1486,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,30,ALL,P4,0.026123079,1484,5,flag leaf visible,53,57,False
+BEN,pearl_millet,90,40,ALL,P4,0.038622968,1484,5,flag leaf visible,53,57,False
+BEN,pearl_millet,110,0,ALL,P4,0.024899703,1486,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,10,ALL,P4,0.02324248,1484,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,20,ALL,P4,0.034045078,1484,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,30,ALL,P4,0.04385597,1395,5,flag leaf visible,65,71,False
+BEN,pearl_millet,110,40,ALL,P4,0.05630289,1130,5,flag leaf visible,65,71,False
+BEN,pearl_millet,130,0,ALL,P4,0.02213921,1484,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,10,ALL,P4,0.03978591,1395,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,20,ALL,P4,0.052157428,1130,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,30,ALL,P4,0.078648694,857,5,flag leaf visible,77,83,False
+BEN,pearl_millet,130,40,ALL,P4,0.1616206,419,5,flag leaf visible,77,83,False
+BEN,pearl_millet,70,0,ALL,P5,0.013530147,1486,6,boot,46,49,True
+BEN,pearl_millet,70,10,ALL,P5,0.021197518,1486,6,boot,46,49,True
+BEN,pearl_millet,70,20,ALL,P5,0.02446728,1486,6,boot,46,49,True
+BEN,pearl_millet,70,30,ALL,P5,0.023285776,1486,6,boot,46,49,True
+BEN,pearl_millet,70,40,ALL,P5,0.031009601,1486,6,boot,46,49,True
+BEN,pearl_millet,90,0,ALL,P5,0.025179489,1486,6,boot,58,64,True
+BEN,pearl_millet,90,10,ALL,P5,0.02236442,1486,6,boot,58,64,True
+BEN,pearl_millet,90,20,ALL,P5,0.02458673,1486,6,boot,58,64,True
+BEN,pearl_millet,90,30,ALL,P5,0.04242046,1484,6,boot,58,64,True
+BEN,pearl_millet,90,40,ALL,P5,0.049401063,1484,6,boot,58,64,True
+BEN,pearl_millet,110,0,ALL,P5,0.023993542,1486,6,boot,72,78,True
+BEN,pearl_millet,110,10,ALL,P5,0.029874222,1484,6,boot,72,78,True
+BEN,pearl_millet,110,20,ALL,P5,0.039912842,1484,6,boot,72,78,True
+BEN,pearl_millet,110,30,ALL,P5,0.047834326,1395,6,boot,72,78,True
+BEN,pearl_millet,110,40,ALL,P5,0.063756086,1130,6,boot,72,78,True
+BEN,pearl_millet,130,0,ALL,P5,0.039649382,1484,6,boot,84,93,True
+BEN,pearl_millet,130,10,ALL,P5,0.051066,1395,6,boot,84,93,True
+BEN,pearl_millet,130,20,ALL,P5,0.06277735,1130,6,boot,84,93,True
+BEN,pearl_millet,130,30,ALL,P5,0.095994286,857,6,boot,84,93,True
+BEN,pearl_millet,130,40,ALL,P5,0.16969928,419,6,boot,84,93,True
+BEN,pearl_millet,70,0,ALL,P6,0.023951346,1486,7,50% flowering,50,56,True
+BEN,pearl_millet,70,10,ALL,P6,0.029168138,1486,7,50% flowering,50,56,True
+BEN,pearl_millet,70,20,ALL,P6,0.023439199,1486,7,50% flowering,50,56,True
+BEN,pearl_millet,70,30,ALL,P6,0.029097576,1486,7,50% flowering,50,56,True
+BEN,pearl_millet,70,40,ALL,P6,0.045210294,1486,7,50% flowering,50,56,True
+BEN,pearl_millet,90,0,ALL,P6,0.028826099,1486,7,50% flowering,65,73,True
+BEN,pearl_millet,90,10,ALL,P6,0.029157264,1486,7,50% flowering,65,73,True
+BEN,pearl_millet,90,20,ALL,P6,0.043752365,1486,7,50% flowering,65,73,True
+BEN,pearl_millet,90,30,ALL,P6,0.055065915,1484,7,50% flowering,65,73,True
+BEN,pearl_millet,90,40,ALL,P6,0.05688897,1484,7,50% flowering,65,73,True
+BEN,pearl_millet,110,0,ALL,P6,0.037632074,1486,7,50% flowering,79,89,True
+BEN,pearl_millet,110,10,ALL,P6,0.049644135,1484,7,50% flowering,79,89,True
+BEN,pearl_millet,110,20,ALL,P6,0.059755363,1484,7,50% flowering,79,89,True
+BEN,pearl_millet,110,30,ALL,P6,0.06776137,1395,7,50% flowering,79,89,True
+BEN,pearl_millet,110,40,ALL,P6,0.06764466,1130,7,50% flowering,79,89,True
+BEN,pearl_millet,130,0,ALL,P6,0.060175993,1484,7,50% flowering,94,106,True
+BEN,pearl_millet,130,10,ALL,P6,0.062700905,1395,7,50% flowering,94,106,True
+BEN,pearl_millet,130,20,ALL,P6,0.078019954,1130,7,50% flowering,94,106,True
+BEN,pearl_millet,130,30,ALL,P6,0.09061166,857,7,50% flowering,94,106,True
+BEN,pearl_millet,130,40,ALL,P6,0.123091824,419,7,50% flowering,94,106,True
+BEN,pearl_millet,70,0,ALL,P7,0.023269668,1486,8,milk,57,63,True
+BEN,pearl_millet,70,10,ALL,P7,0.023910291,1486,8,milk,57,63,True
+BEN,pearl_millet,70,20,ALL,P7,0.023837542,1486,8,milk,57,63,True
+BEN,pearl_millet,70,30,ALL,P7,0.034489032,1486,8,milk,57,63,True
+BEN,pearl_millet,70,40,ALL,P7,0.041332603,1486,8,milk,57,63,True
+BEN,pearl_millet,90,0,ALL,P7,0.029138498,1486,8,milk,74,82,True
+BEN,pearl_millet,90,10,ALL,P7,0.03621119,1486,8,milk,74,82,True
+BEN,pearl_millet,90,20,ALL,P7,0.044524316,1486,8,milk,74,82,True
+BEN,pearl_millet,90,30,ALL,P7,0.049474895,1484,8,milk,74,82,True
+BEN,pearl_millet,90,40,ALL,P7,0.057700977,1484,8,milk,74,82,True
+BEN,pearl_millet,110,0,ALL,P7,0.050956335,1486,8,milk,90,100,True
+BEN,pearl_millet,110,10,ALL,P7,0.060940582,1484,8,milk,90,100,True
+BEN,pearl_millet,110,20,ALL,P7,0.065851174,1484,8,milk,90,100,True
+BEN,pearl_millet,110,30,ALL,P7,0.055103775,1395,8,milk,90,100,True
+BEN,pearl_millet,110,40,ALL,P7,0.054985818,1130,8,milk,90,100,True
+BEN,pearl_millet,130,0,ALL,P7,0.068419024,1484,8,milk,107,119,True
+BEN,pearl_millet,130,10,ALL,P7,0.06272883,1395,8,milk,107,119,True
+BEN,pearl_millet,130,20,ALL,P7,0.061346725,1130,8,milk,107,119,True
+BEN,pearl_millet,130,30,ALL,P7,0.057790495,857,8,milk,107,119,True
+BEN,pearl_millet,130,40,ALL,P7,0.07365729,419,8,milk,107,119,True
+BEN,pearl_millet,70,0,ALL,P8,0.011625097,1486,9,dough,64,69,False
+BEN,pearl_millet,70,10,ALL,P8,0.015390572,1486,9,dough,64,69,False
+BEN,pearl_millet,70,20,ALL,P8,0.0139452005,1486,9,dough,64,69,False
+BEN,pearl_millet,70,30,ALL,P8,0.022004914,1486,9,dough,64,69,False
+BEN,pearl_millet,70,40,ALL,P8,0.020629417,1486,9,dough,64,69,False
+BEN,pearl_millet,90,0,ALL,P8,0.014466279,1486,9,dough,83,89,False
+BEN,pearl_millet,90,10,ALL,P8,0.023396917,1486,9,dough,83,89,False
+BEN,pearl_millet,90,20,ALL,P8,0.023627076,1486,9,dough,83,89,False
+BEN,pearl_millet,90,30,ALL,P8,0.03346752,1484,9,dough,83,89,False
+BEN,pearl_millet,90,40,ALL,P8,0.032520387,1484,9,dough,83,89,False
+BEN,pearl_millet,110,0,ALL,P8,0.030620288,1486,9,dough,101,109,False
+BEN,pearl_millet,110,10,ALL,P8,0.037317522,1484,9,dough,101,109,False
+BEN,pearl_millet,110,20,ALL,P8,0.035599057,1484,9,dough,101,109,False
+BEN,pearl_millet,110,30,ALL,P8,0.032368205,1395,9,dough,101,109,False
+BEN,pearl_millet,110,40,ALL,P8,0.023321688,1130,9,dough,101,109,False
+BEN,pearl_millet,130,0,ALL,P8,0.037442517,1484,9,dough,120,129,False
+BEN,pearl_millet,130,10,ALL,P8,0.033685517,1395,9,dough,120,129,False
+BEN,pearl_millet,130,20,ALL,P8,0.025358507,1130,9,dough,120,129,False
+BEN,pearl_millet,130,30,ALL,P8,0.02417406,857,9,dough,120,129,False
+BEN,pearl_millet,130,40,ALL,P8,0.023523794,419,9,dough,120,129,False
+BEN,groundnut,70,0,Tropic - warm / semiarid,SOW,0.0002900394,671,0,sowing to emergence,0,4,False
+BEN,groundnut,70,0,Tropic - warm / subhumid,SOW,3.2289314e-05,815,0,sowing to emergence,0,4,False
+BEN,groundnut,70,10,Tropic - warm / semiarid,SOW,0.002513113,671,0,sowing to emergence,0,4,False
+BEN,groundnut,70,10,Tropic - warm / subhumid,SOW,0.0013605709,815,0,sowing to emergence,0,4,False
+BEN,groundnut,70,20,Tropic - warm / semiarid,SOW,0.008517326,671,0,sowing to emergence,0,4,False
+BEN,groundnut,70,20,Tropic - warm / subhumid,SOW,0.0052824044,815,0,sowing to emergence,0,4,False
+BEN,groundnut,70,30,Tropic - warm / semiarid,SOW,0.0028483092,671,0,sowing to emergence,0,4,False
+BEN,groundnut,70,30,Tropic - warm / subhumid,SOW,0.0017135482,815,0,sowing to emergence,0,4,False
+BEN,groundnut,70,40,Tropic - warm / semiarid,SOW,0.0022418879,671,0,sowing to emergence,0,4,False
+BEN,groundnut,70,40,Tropic - warm / subhumid,SOW,0.006572735,815,0,sowing to emergence,0,4,False
+BEN,groundnut,90,0,Tropic - warm / semiarid,SOW,0.00089667895,671,0,sowing to emergence,0,5,False
+BEN,groundnut,90,0,Tropic - warm / subhumid,SOW,0.00033450802,815,0,sowing to emergence,0,5,False
+BEN,groundnut,90,10,Tropic - warm / semiarid,SOW,0.0028158955,671,0,sowing to emergence,0,5,False
+BEN,groundnut,90,10,Tropic - warm / subhumid,SOW,0.0012749728,815,0,sowing to emergence,0,5,False
+BEN,groundnut,90,20,Tropic - warm / semiarid,SOW,0.00982601,671,0,sowing to emergence,0,5,False
+BEN,groundnut,90,20,Tropic - warm / subhumid,SOW,0.005791719,815,0,sowing to emergence,0,5,False
+BEN,groundnut,90,30,Tropic - warm / semiarid,SOW,0.0029524306,671,0,sowing to emergence,0,5,False
+BEN,groundnut,90,30,Tropic - warm / subhumid,SOW,0.0017247334,813,0,sowing to emergence,0,5,False
+BEN,groundnut,90,40,Tropic - warm / semiarid,SOW,0.0045441147,671,0,sowing to emergence,0,5,False
+BEN,groundnut,90,40,Tropic - warm / subhumid,SOW,0.007350393,813,0,sowing to emergence,0,5,False
+BEN,groundnut,110,0,Tropic - warm / semiarid,SOW,0.0009713459,671,0,sowing to emergence,0,7,False
+BEN,groundnut,110,0,Tropic - warm / subhumid,SOW,0.0005924403,815,0,sowing to emergence,0,7,False
+BEN,groundnut,110,10,Tropic - warm / semiarid,SOW,0.0038611158,671,0,sowing to emergence,0,7,False
+BEN,groundnut,110,10,Tropic - warm / subhumid,SOW,0.0013471803,813,0,sowing to emergence,0,7,False
+BEN,groundnut,110,20,Tropic - warm / semiarid,SOW,0.012321755,671,0,sowing to emergence,0,7,False
+BEN,groundnut,110,20,Tropic - warm / subhumid,SOW,0.0068547265,813,0,sowing to emergence,0,7,False
+BEN,groundnut,110,30,Tropic - warm / semiarid,SOW,0.0013144293,583,0,sowing to emergence,0,7,False
+BEN,groundnut,110,30,Tropic - warm / subhumid,SOW,0.001701197,812,0,sowing to emergence,0,7,False
+BEN,groundnut,110,40,Tropic - warm / semiarid,SOW,0.0046126945,320,0,sowing to emergence,0,7,False
+BEN,groundnut,110,40,Tropic - warm / subhumid,SOW,0.006704607,810,0,sowing to emergence,0,7,False
+BEN,groundnut,130,0,Tropic - warm / semiarid,SOW,0.0036054673,671,0,sowing to emergence,0,8,False
+BEN,groundnut,130,0,Tropic - warm / subhumid,SOW,0.0004585591,813,0,sowing to emergence,0,8,False
+BEN,groundnut,130,10,Tropic - warm / semiarid,SOW,0.003600893,583,0,sowing to emergence,0,8,False
+BEN,groundnut,130,10,Tropic - warm / subhumid,SOW,0.0012741857,812,0,sowing to emergence,0,8,False
+BEN,groundnut,130,20,Tropic - warm / semiarid,SOW,0.01789837,320,0,sowing to emergence,0,8,False
+BEN,groundnut,130,20,Tropic - warm / subhumid,SOW,0.006441863,810,0,sowing to emergence,0,8,False
+BEN,groundnut,130,30,Tropic - warm / semiarid,SOW,0.0,130,0,sowing to emergence,0,8,False
+BEN,groundnut,130,30,Tropic - warm / subhumid,SOW,0.0020690234,727,0,sowing to emergence,0,8,False
+BEN,groundnut,130,40,Tropic - warm / subhumid,SOW,0.0013390022,419,0,sowing to emergence,0,8,False
+BEN,groundnut,70,0,Tropic - warm / semiarid,VE,0.005894941,671,1,emergence,5,14,False
+BEN,groundnut,70,0,Tropic - warm / subhumid,VE,0.0022423242,815,1,emergence,5,14,False
+BEN,groundnut,70,10,Tropic - warm / semiarid,VE,0.012027251,671,1,emergence,5,14,False
+BEN,groundnut,70,10,Tropic - warm / subhumid,VE,0.0072092866,815,1,emergence,5,14,False
+BEN,groundnut,70,20,Tropic - warm / semiarid,VE,0.01423781,671,1,emergence,5,14,False
+BEN,groundnut,70,20,Tropic - warm / subhumid,VE,0.009402562,815,1,emergence,5,14,False
+BEN,groundnut,70,30,Tropic - warm / semiarid,VE,0.005157822,671,1,emergence,5,14,False
+BEN,groundnut,70,30,Tropic - warm / subhumid,VE,0.010585204,815,1,emergence,5,14,False
+BEN,groundnut,70,40,Tropic - warm / semiarid,VE,0.0054767756,671,1,emergence,5,14,False
+BEN,groundnut,70,40,Tropic - warm / subhumid,VE,0.02507501,815,1,emergence,5,14,False
+BEN,groundnut,90,0,Tropic - warm / semiarid,VE,0.0073592276,671,1,emergence,6,19,False
+BEN,groundnut,90,0,Tropic - warm / subhumid,VE,0.0025884733,815,1,emergence,6,19,False
+BEN,groundnut,90,10,Tropic - warm / semiarid,VE,0.016422775,671,1,emergence,6,19,False
+BEN,groundnut,90,10,Tropic - warm / subhumid,VE,0.009901261,815,1,emergence,6,19,False
+BEN,groundnut,90,20,Tropic - warm / semiarid,VE,0.014728185,671,1,emergence,6,19,False
+BEN,groundnut,90,20,Tropic - warm / subhumid,VE,0.011892911,815,1,emergence,6,19,False
+BEN,groundnut,90,30,Tropic - warm / semiarid,VE,0.008450353,671,1,emergence,6,19,False
+BEN,groundnut,90,30,Tropic - warm / subhumid,VE,0.01630545,813,1,emergence,6,19,False
+BEN,groundnut,90,40,Tropic - warm / semiarid,VE,0.0073897345,671,1,emergence,6,19,False
+BEN,groundnut,90,40,Tropic - warm / subhumid,VE,0.03968212,813,1,emergence,6,19,False
+BEN,groundnut,110,0,Tropic - warm / semiarid,VE,0.012236393,671,1,emergence,8,23,False
+BEN,groundnut,110,0,Tropic - warm / subhumid,VE,0.004711259,815,1,emergence,8,23,False
+BEN,groundnut,110,10,Tropic - warm / semiarid,VE,0.018345367,671,1,emergence,8,23,False
+BEN,groundnut,110,10,Tropic - warm / subhumid,VE,0.010327305,813,1,emergence,8,23,False
+BEN,groundnut,110,20,Tropic - warm / semiarid,VE,0.016290225,671,1,emergence,8,23,False
+BEN,groundnut,110,20,Tropic - warm / subhumid,VE,0.016005447,813,1,emergence,8,23,False
+BEN,groundnut,110,30,Tropic - warm / semiarid,VE,0.006832474,583,1,emergence,8,23,False
+BEN,groundnut,110,30,Tropic - warm / subhumid,VE,0.02656559,812,1,emergence,8,23,False
+BEN,groundnut,110,40,Tropic - warm / semiarid,VE,0.006761757,320,1,emergence,8,23,False
+BEN,groundnut,110,40,Tropic - warm / subhumid,VE,0.03922189,810,1,emergence,8,23,False
+BEN,groundnut,130,0,Tropic - warm / semiarid,VE,0.019838637,671,1,emergence,9,28,False
+BEN,groundnut,130,0,Tropic - warm / subhumid,VE,0.009286052,813,1,emergence,9,28,False
+BEN,groundnut,130,10,Tropic - warm / semiarid,VE,0.019249704,583,1,emergence,9,28,False
+BEN,groundnut,130,10,Tropic - warm / subhumid,VE,0.010819279,812,1,emergence,9,28,False
+BEN,groundnut,130,20,Tropic - warm / semiarid,VE,0.023496952,320,1,emergence,9,28,False
+BEN,groundnut,130,20,Tropic - warm / subhumid,VE,0.017163793,810,1,emergence,9,28,False
+BEN,groundnut,130,30,Tropic - warm / semiarid,VE,0.0035978858,130,1,emergence,9,28,False
+BEN,groundnut,130,30,Tropic - warm / subhumid,VE,0.034938622,727,1,emergence,9,28,False
+BEN,groundnut,130,40,Tropic - warm / subhumid,VE,0.04273737,419,1,emergence,9,28,False
+BEN,groundnut,70,0,Tropic - warm / semiarid,R1,0.007885081,671,2,beginning bloom,15,20,False
+BEN,groundnut,70,0,Tropic - warm / subhumid,R1,0.0040542604,815,2,beginning bloom,15,20,False
+BEN,groundnut,70,10,Tropic - warm / semiarid,R1,0.014249058,671,2,beginning bloom,15,20,False
+BEN,groundnut,70,10,Tropic - warm / subhumid,R1,0.008614363,815,2,beginning bloom,15,20,False
+BEN,groundnut,70,20,Tropic - warm / semiarid,R1,0.005274931,671,2,beginning bloom,15,20,False
+BEN,groundnut,70,20,Tropic - warm / subhumid,R1,0.009225728,815,2,beginning bloom,15,20,False
+BEN,groundnut,70,30,Tropic - warm / semiarid,R1,0.0054230755,671,2,beginning bloom,15,20,False
+BEN,groundnut,70,30,Tropic - warm / subhumid,R1,0.016171372,815,2,beginning bloom,15,20,False
+BEN,groundnut,70,40,Tropic - warm / semiarid,R1,0.0026866389,671,2,beginning bloom,15,20,False
+BEN,groundnut,70,40,Tropic - warm / subhumid,R1,0.03574684,815,2,beginning bloom,15,20,False
+BEN,groundnut,90,0,Tropic - warm / semiarid,R1,0.013458603,671,2,beginning bloom,20,26,False
+BEN,groundnut,90,0,Tropic - warm / subhumid,R1,0.008348563,815,2,beginning bloom,20,26,False
+BEN,groundnut,90,10,Tropic - warm / semiarid,R1,0.01359282,671,2,beginning bloom,20,26,False
+BEN,groundnut,90,10,Tropic - warm / subhumid,R1,0.010082924,815,2,beginning bloom,20,26,False
+BEN,groundnut,90,20,Tropic - warm / semiarid,R1,0.0047521843,671,2,beginning bloom,20,26,False
+BEN,groundnut,90,20,Tropic - warm / subhumid,R1,0.011986929,815,2,beginning bloom,20,26,False
+BEN,groundnut,90,30,Tropic - warm / semiarid,R1,0.0057306127,671,2,beginning bloom,20,26,False
+BEN,groundnut,90,30,Tropic - warm / subhumid,R1,0.030652897,813,2,beginning bloom,20,26,False
+BEN,groundnut,90,40,Tropic - warm / semiarid,R1,0.004146539,671,2,beginning bloom,20,26,False
+BEN,groundnut,90,40,Tropic - warm / subhumid,R1,0.042023525,813,2,beginning bloom,20,26,False
+BEN,groundnut,110,0,Tropic - warm / semiarid,R1,0.015326762,671,2,beginning bloom,24,32,False
+BEN,groundnut,110,0,Tropic - warm / subhumid,R1,0.009863626,815,2,beginning bloom,24,32,False
+BEN,groundnut,110,10,Tropic - warm / semiarid,R1,0.013100199,671,2,beginning bloom,24,32,False
+BEN,groundnut,110,10,Tropic - warm / subhumid,R1,0.014208129,813,2,beginning bloom,24,32,False
+BEN,groundnut,110,20,Tropic - warm / semiarid,R1,0.0066657374,671,2,beginning bloom,24,32,False
+BEN,groundnut,110,20,Tropic - warm / subhumid,R1,0.024428573,813,2,beginning bloom,24,32,False
+BEN,groundnut,110,30,Tropic - warm / semiarid,R1,0.004887472,583,2,beginning bloom,24,32,False
+BEN,groundnut,110,30,Tropic - warm / subhumid,R1,0.036377765,812,2,beginning bloom,24,32,False
+BEN,groundnut,110,40,Tropic - warm / semiarid,R1,0.009066628,320,2,beginning bloom,24,32,False
+BEN,groundnut,110,40,Tropic - warm / subhumid,R1,0.03927782,810,2,beginning bloom,24,32,False
+BEN,groundnut,130,0,Tropic - warm / semiarid,R1,0.013556347,671,2,beginning bloom,29,38,False
+BEN,groundnut,130,0,Tropic - warm / subhumid,R1,0.010171292,813,2,beginning bloom,29,38,False
+BEN,groundnut,130,10,Tropic - warm / semiarid,R1,0.0067861155,583,2,beginning bloom,29,38,False
+BEN,groundnut,130,10,Tropic - warm / subhumid,R1,0.013403059,812,2,beginning bloom,29,38,False
+BEN,groundnut,130,20,Tropic - warm / semiarid,R1,0.0055597555,320,2,beginning bloom,29,38,False
+BEN,groundnut,130,20,Tropic - warm / subhumid,R1,0.03483939,810,2,beginning bloom,29,38,False
+BEN,groundnut,130,30,Tropic - warm / semiarid,R1,0.01605889,130,2,beginning bloom,29,38,False
+BEN,groundnut,130,30,Tropic - warm / subhumid,R1,0.040022798,727,2,beginning bloom,29,38,False
+BEN,groundnut,130,40,Tropic - warm / subhumid,R1,0.04127082,419,2,beginning bloom,29,38,False
+BEN,groundnut,70,0,Tropic - warm / semiarid,R2,0.013420391,671,3,beginning peg,21,26,False
+BEN,groundnut,70,0,Tropic - warm / subhumid,R2,0.008143709,815,3,beginning peg,21,26,False
+BEN,groundnut,70,10,Tropic - warm / semiarid,R2,0.013471663,671,3,beginning peg,21,26,False
+BEN,groundnut,70,10,Tropic - warm / subhumid,R2,0.009859114,815,3,beginning peg,21,26,False
+BEN,groundnut,70,20,Tropic - warm / semiarid,R2,0.004689182,671,3,beginning peg,21,26,False
+BEN,groundnut,70,20,Tropic - warm / subhumid,R2,0.0122987395,815,3,beginning peg,21,26,False
+BEN,groundnut,70,30,Tropic - warm / semiarid,R2,0.0059450786,671,3,beginning peg,21,26,False
+BEN,groundnut,70,30,Tropic - warm / subhumid,R2,0.031691704,815,3,beginning peg,21,26,False
+BEN,groundnut,70,40,Tropic - warm / semiarid,R2,0.003925933,671,3,beginning peg,21,26,False
+BEN,groundnut,70,40,Tropic - warm / subhumid,R2,0.04243318,815,3,beginning peg,21,26,False
+BEN,groundnut,90,0,Tropic - warm / semiarid,R2,0.01399025,671,3,beginning peg,27,33,False
+BEN,groundnut,90,0,Tropic - warm / subhumid,R2,0.009614439,815,3,beginning peg,27,33,False
+BEN,groundnut,90,10,Tropic - warm / semiarid,R2,0.0068542995,671,3,beginning peg,27,33,False
+BEN,groundnut,90,10,Tropic - warm / subhumid,R2,0.01174205,815,3,beginning peg,27,33,False
+BEN,groundnut,90,20,Tropic - warm / semiarid,R2,0.005472846,671,3,beginning peg,27,33,False
+BEN,groundnut,90,20,Tropic - warm / subhumid,R2,0.025603142,815,3,beginning peg,27,33,False
+BEN,groundnut,90,30,Tropic - warm / semiarid,R2,0.003082311,671,3,beginning peg,27,33,False
+BEN,groundnut,90,30,Tropic - warm / subhumid,R2,0.036852285,813,3,beginning peg,27,33,False
+BEN,groundnut,90,40,Tropic - warm / semiarid,R2,0.004349684,671,3,beginning peg,27,33,False
+BEN,groundnut,90,40,Tropic - warm / subhumid,R2,0.03686753,813,3,beginning peg,27,33,False
+BEN,groundnut,110,0,Tropic - warm / semiarid,R2,0.0137388185,671,3,beginning peg,33,41,False
+BEN,groundnut,110,0,Tropic - warm / subhumid,R2,0.015765801,815,3,beginning peg,33,41,False
+BEN,groundnut,110,10,Tropic - warm / semiarid,R2,0.0058916733,671,3,beginning peg,33,41,False
+BEN,groundnut,110,10,Tropic - warm / subhumid,R2,0.022537436,813,3,beginning peg,33,41,False
+BEN,groundnut,110,20,Tropic - warm / semiarid,R2,0.004741086,671,3,beginning peg,33,41,False
+BEN,groundnut,110,20,Tropic - warm / subhumid,R2,0.036542185,813,3,beginning peg,33,41,False
+BEN,groundnut,110,30,Tropic - warm / semiarid,R2,0.0049669645,583,3,beginning peg,33,41,False
+BEN,groundnut,110,30,Tropic - warm / subhumid,R2,0.04140795,812,3,beginning peg,33,41,False
+BEN,groundnut,110,40,Tropic - warm / semiarid,R2,0.008150259,320,3,beginning peg,33,41,False
+BEN,groundnut,110,40,Tropic - warm / subhumid,R2,0.04255949,810,3,beginning peg,33,41,False
+BEN,groundnut,130,0,Tropic - warm / semiarid,R2,0.00743279,671,3,beginning peg,39,48,False
+BEN,groundnut,130,0,Tropic - warm / subhumid,R2,0.013937216,813,3,beginning peg,39,48,False
+BEN,groundnut,130,10,Tropic - warm / semiarid,R2,0.0064894683,583,3,beginning peg,39,48,False
+BEN,groundnut,130,10,Tropic - warm / subhumid,R2,0.03637297,812,3,beginning peg,39,48,False
+BEN,groundnut,130,20,Tropic - warm / semiarid,R2,0.008694826,320,3,beginning peg,39,48,False
+BEN,groundnut,130,20,Tropic - warm / subhumid,R2,0.042216543,810,3,beginning peg,39,48,False
+BEN,groundnut,130,30,Tropic - warm / semiarid,R2,0.014494081,130,3,beginning peg,39,48,False
+BEN,groundnut,130,30,Tropic - warm / subhumid,R2,0.030134277,727,3,beginning peg,39,48,False
+BEN,groundnut,130,40,Tropic - warm / subhumid,R2,0.08261982,419,3,beginning peg,39,48,False
+BEN,groundnut,70,0,Tropic - warm / semiarid,R3,0.013512859,671,4,beginning pod,27,31,True
+BEN,groundnut,70,0,Tropic - warm / subhumid,R3,0.008573761,815,4,beginning pod,27,31,True
+BEN,groundnut,70,10,Tropic - warm / semiarid,R3,0.00501725,671,4,beginning pod,27,31,True
+BEN,groundnut,70,10,Tropic - warm / subhumid,R3,0.011386095,815,4,beginning pod,27,31,True
+BEN,groundnut,70,20,Tropic - warm / semiarid,R3,0.00541686,671,4,beginning pod,27,31,True
+BEN,groundnut,70,20,Tropic - warm / subhumid,R3,0.023135489,815,4,beginning pod,27,31,True
+BEN,groundnut,70,30,Tropic - warm / semiarid,R3,0.0030641386,671,4,beginning pod,27,31,True
+BEN,groundnut,70,30,Tropic - warm / subhumid,R3,0.037091225,815,4,beginning pod,27,31,True
+BEN,groundnut,70,40,Tropic - warm / semiarid,R3,0.004122352,671,4,beginning pod,27,31,True
+BEN,groundnut,70,40,Tropic - warm / subhumid,R3,0.036286816,815,4,beginning pod,27,31,True
+BEN,groundnut,90,0,Tropic - warm / semiarid,R3,0.010863552,671,4,beginning pod,34,39,True
+BEN,groundnut,90,0,Tropic - warm / subhumid,R3,0.010047738,815,4,beginning pod,34,39,True
+BEN,groundnut,90,10,Tropic - warm / semiarid,R3,0.005527461,671,4,beginning pod,34,39,True
+BEN,groundnut,90,10,Tropic - warm / subhumid,R3,0.016332515,815,4,beginning pod,34,39,True
+BEN,groundnut,90,20,Tropic - warm / semiarid,R3,0.004279353,671,4,beginning pod,34,39,True
+BEN,groundnut,90,20,Tropic - warm / subhumid,R3,0.03417626,815,4,beginning pod,34,39,True
+BEN,groundnut,90,30,Tropic - warm / semiarid,R3,0.0040141973,671,4,beginning pod,34,39,True
+BEN,groundnut,90,30,Tropic - warm / subhumid,R3,0.03966211,813,4,beginning pod,34,39,True
+BEN,groundnut,90,40,Tropic - warm / semiarid,R3,0.003436877,671,4,beginning pod,34,39,True
+BEN,groundnut,90,40,Tropic - warm / subhumid,R3,0.038444325,813,4,beginning pod,34,39,True
+BEN,groundnut,110,0,Tropic - warm / semiarid,R3,0.006129917,671,4,beginning pod,42,49,True
+BEN,groundnut,110,0,Tropic - warm / subhumid,R3,0.016400434,815,4,beginning pod,42,49,True
+BEN,groundnut,110,10,Tropic - warm / semiarid,R3,0.0061928113,671,4,beginning pod,42,49,True
+BEN,groundnut,110,10,Tropic - warm / subhumid,R3,0.037879977,813,4,beginning pod,42,49,True
+BEN,groundnut,110,20,Tropic - warm / semiarid,R3,0.00419396,671,4,beginning pod,42,49,True
+BEN,groundnut,110,20,Tropic - warm / subhumid,R3,0.041622564,813,4,beginning pod,42,49,True
+BEN,groundnut,110,30,Tropic - warm / semiarid,R3,0.0039905882,583,4,beginning pod,42,49,True
+BEN,groundnut,110,30,Tropic - warm / subhumid,R3,0.04232471,812,4,beginning pod,42,49,True
+BEN,groundnut,110,40,Tropic - warm / semiarid,R3,0.0012113912,320,4,beginning pod,42,49,True
+BEN,groundnut,110,40,Tropic - warm / subhumid,R3,0.051366076,810,4,beginning pod,42,49,True
+BEN,groundnut,130,0,Tropic - warm / semiarid,R3,0.007219274,671,4,beginning pod,49,57,True
+BEN,groundnut,130,0,Tropic - warm / subhumid,R3,0.032499917,813,4,beginning pod,49,57,True
+BEN,groundnut,130,10,Tropic - warm / semiarid,R3,0.006230817,583,4,beginning pod,49,57,True
+BEN,groundnut,130,10,Tropic - warm / subhumid,R3,0.04358556,812,4,beginning pod,49,57,True
+BEN,groundnut,130,20,Tropic - warm / semiarid,R3,0.008547639,320,4,beginning pod,49,57,True
+BEN,groundnut,130,20,Tropic - warm / subhumid,R3,0.03264732,810,4,beginning pod,49,57,True
+BEN,groundnut,130,30,Tropic - warm / semiarid,R3,0.0013675117,130,4,beginning pod,49,57,True
+BEN,groundnut,130,30,Tropic - warm / subhumid,R3,0.05433167,727,4,beginning pod,49,57,True
+BEN,groundnut,130,40,Tropic - warm / subhumid,R3,0.121739574,419,4,beginning pod,49,57,True
+BEN,groundnut,70,0,Tropic - warm / semiarid,R4,0.013223964,671,5,full pod,32,35,True
+BEN,groundnut,70,0,Tropic - warm / subhumid,R4,0.009371928,815,5,full pod,32,35,True
+BEN,groundnut,70,10,Tropic - warm / semiarid,R4,0.0045408728,671,5,full pod,32,35,True
+BEN,groundnut,70,10,Tropic - warm / subhumid,R4,0.010433046,815,5,full pod,32,35,True
+BEN,groundnut,70,20,Tropic - warm / semiarid,R4,0.0055872286,671,5,full pod,32,35,True
+BEN,groundnut,70,20,Tropic - warm / subhumid,R4,0.027440492,815,5,full pod,32,35,True
+BEN,groundnut,70,30,Tropic - warm / semiarid,R4,0.0042568236,671,5,full pod,32,35,True
+BEN,groundnut,70,30,Tropic - warm / subhumid,R4,0.033969563,815,5,full pod,32,35,True
+BEN,groundnut,70,40,Tropic - warm / semiarid,R4,0.003221826,671,5,full pod,32,35,True
+BEN,groundnut,70,40,Tropic - warm / subhumid,R4,0.030913731,815,5,full pod,32,35,True
+BEN,groundnut,90,0,Tropic - warm / semiarid,R4,0.004689182,671,5,full pod,40,46,True
+BEN,groundnut,90,0,Tropic - warm / subhumid,R4,0.012415698,815,5,full pod,40,46,True
+BEN,groundnut,90,10,Tropic - warm / semiarid,R4,0.0059823366,671,5,full pod,40,46,True
+BEN,groundnut,90,10,Tropic - warm / subhumid,R4,0.032401484,815,5,full pod,40,46,True
+BEN,groundnut,90,20,Tropic - warm / semiarid,R4,0.00399954,671,5,full pod,40,46,True
+BEN,groundnut,90,20,Tropic - warm / subhumid,R4,0.04279911,815,5,full pod,40,46,True
+BEN,groundnut,90,30,Tropic - warm / semiarid,R4,0.0033183119,671,5,full pod,40,46,True
+BEN,groundnut,90,30,Tropic - warm / subhumid,R4,0.032961387,813,5,full pod,40,46,True
+BEN,groundnut,90,40,Tropic - warm / semiarid,R4,0.00064121856,671,5,full pod,40,46,True
+BEN,groundnut,90,40,Tropic - warm / subhumid,R4,0.042515337,813,5,full pod,40,46,True
+BEN,groundnut,110,0,Tropic - warm / semiarid,R4,0.005674462,671,5,full pod,50,56,True
+BEN,groundnut,110,0,Tropic - warm / subhumid,R4,0.03133952,815,5,full pod,50,56,True
+BEN,groundnut,110,10,Tropic - warm / semiarid,R4,0.003932462,671,5,full pod,50,56,True
+BEN,groundnut,110,10,Tropic - warm / subhumid,R4,0.04180921,813,5,full pod,50,56,True
+BEN,groundnut,110,20,Tropic - warm / semiarid,R4,0.0034179322,671,5,full pod,50,56,True
+BEN,groundnut,110,20,Tropic - warm / subhumid,R4,0.031143134,813,5,full pod,50,56,True
+BEN,groundnut,110,30,Tropic - warm / semiarid,R4,0.0005912011,583,5,full pod,50,56,True
+BEN,groundnut,110,30,Tropic - warm / subhumid,R4,0.04186555,812,5,full pod,50,56,True
+BEN,groundnut,110,40,Tropic - warm / semiarid,R4,0.0008809763,320,5,full pod,50,56,True
+BEN,groundnut,110,40,Tropic - warm / subhumid,R4,0.06454629,810,5,full pod,50,56,True
+BEN,groundnut,130,0,Tropic - warm / semiarid,R4,0.005720064,671,5,full pod,58,67,True
+BEN,groundnut,130,0,Tropic - warm / subhumid,R4,0.044400603,813,5,full pod,58,67,True
+BEN,groundnut,130,10,Tropic - warm / semiarid,R4,0.0046772733,583,5,full pod,58,67,True
+BEN,groundnut,130,10,Tropic - warm / subhumid,R4,0.037489418,812,5,full pod,58,67,True
+BEN,groundnut,130,20,Tropic - warm / semiarid,R4,0.0013943918,320,5,full pod,58,67,True
+BEN,groundnut,130,20,Tropic - warm / subhumid,R4,0.051790185,810,5,full pod,58,67,True
+BEN,groundnut,130,30,Tropic - warm / semiarid,R4,0.001948302,130,5,full pod,58,67,True
+BEN,groundnut,130,30,Tropic - warm / subhumid,R4,0.08191716,727,5,full pod,58,67,True
+BEN,groundnut,130,40,Tropic - warm / subhumid,R4,0.15547147,419,5,full pod,58,67,True
+BEN,groundnut,70,0,Tropic - warm / semiarid,R5,0.0067061093,671,6,beginning seed,36,42,True
+BEN,groundnut,70,0,Tropic - warm / subhumid,R5,0.013176527,815,6,beginning seed,36,42,True
+BEN,groundnut,70,10,Tropic - warm / semiarid,R5,0.00541686,671,6,beginning seed,36,42,True
+BEN,groundnut,70,10,Tropic - warm / subhumid,R5,0.026696993,815,6,beginning seed,36,42,True
+BEN,groundnut,70,20,Tropic - warm / semiarid,R5,0.0033548528,671,6,beginning seed,36,42,True
+BEN,groundnut,70,20,Tropic - warm / subhumid,R5,0.03933842,815,6,beginning seed,36,42,True
+BEN,groundnut,70,30,Tropic - warm / semiarid,R5,0.0041056634,671,6,beginning seed,36,42,True
+BEN,groundnut,70,30,Tropic - warm / subhumid,R5,0.04434249,815,6,beginning seed,36,42,True
+BEN,groundnut,70,40,Tropic - warm / semiarid,R5,0.0007244468,671,6,beginning seed,36,42,True
+BEN,groundnut,70,40,Tropic - warm / subhumid,R5,0.04458952,815,6,beginning seed,36,42,True
+BEN,groundnut,90,0,Tropic - warm / semiarid,R5,0.005912983,671,6,beginning seed,47,55,True
+BEN,groundnut,90,0,Tropic - warm / subhumid,R5,0.03026673,815,6,beginning seed,47,55,True
+BEN,groundnut,90,10,Tropic - warm / semiarid,R5,0.005895976,671,6,beginning seed,47,55,True
+BEN,groundnut,90,10,Tropic - warm / subhumid,R5,0.045397993,815,6,beginning seed,47,55,True
+BEN,groundnut,90,20,Tropic - warm / semiarid,R5,0.004122352,671,6,beginning seed,47,55,True
+BEN,groundnut,90,20,Tropic - warm / subhumid,R5,0.039900854,815,6,beginning seed,47,55,True
+BEN,groundnut,90,30,Tropic - warm / semiarid,R5,0.0005147053,671,6,beginning seed,47,55,True
+BEN,groundnut,90,30,Tropic - warm / subhumid,R5,0.049945537,813,6,beginning seed,47,55,True
+BEN,groundnut,90,40,Tropic - warm / semiarid,R5,0.009603607,671,6,beginning seed,47,55,True
+BEN,groundnut,90,40,Tropic - warm / subhumid,R5,0.07150313,813,6,beginning seed,47,55,True
+BEN,groundnut,110,0,Tropic - warm / semiarid,R5,0.0056517036,671,6,beginning seed,57,67,True
+BEN,groundnut,110,0,Tropic - warm / subhumid,R5,0.04685452,815,6,beginning seed,57,67,True
+BEN,groundnut,110,10,Tropic - warm / semiarid,R5,0.004250624,671,6,beginning seed,57,67,True
+BEN,groundnut,110,10,Tropic - warm / subhumid,R5,0.04401595,813,6,beginning seed,57,67,True
+BEN,groundnut,110,20,Tropic - warm / semiarid,R5,0.0009301335,671,6,beginning seed,57,67,True
+BEN,groundnut,110,20,Tropic - warm / subhumid,R5,0.055610333,813,6,beginning seed,57,67,True
+BEN,groundnut,110,30,Tropic - warm / semiarid,R5,0.011118574,583,6,beginning seed,57,67,True
+BEN,groundnut,110,30,Tropic - warm / subhumid,R5,0.075158894,812,6,beginning seed,57,67,True
+BEN,groundnut,110,40,Tropic - warm / semiarid,R5,0.0013377165,320,6,beginning seed,57,67,True
+BEN,groundnut,110,40,Tropic - warm / subhumid,R5,0.08693881,810,6,beginning seed,57,67,True
+BEN,groundnut,130,0,Tropic - warm / semiarid,R5,0.004142991,671,6,beginning seed,68,80,True
+BEN,groundnut,130,0,Tropic - warm / subhumid,R5,0.048364013,813,6,beginning seed,68,80,True
+BEN,groundnut,130,10,Tropic - warm / semiarid,R5,0.004739914,583,6,beginning seed,68,80,True
+BEN,groundnut,130,10,Tropic - warm / subhumid,R5,0.0639307,812,6,beginning seed,68,80,True
+BEN,groundnut,130,20,Tropic - warm / semiarid,R5,0.0008809763,320,6,beginning seed,68,80,True
+BEN,groundnut,130,20,Tropic - warm / subhumid,R5,0.07776174,810,6,beginning seed,68,80,True
+BEN,groundnut,130,30,Tropic - warm / semiarid,R5,0.0020326476,130,6,beginning seed,68,80,True
+BEN,groundnut,130,30,Tropic - warm / subhumid,R5,0.108223915,727,6,beginning seed,68,80,True
+BEN,groundnut,130,40,Tropic - warm / subhumid,R5,0.2015666,419,6,beginning seed,68,80,True
+BEN,groundnut,70,0,Tropic - warm / semiarid,R6,0.0057757227,671,7,full seed,43,54,True
+BEN,groundnut,70,0,Tropic - warm / subhumid,R6,0.03500333,815,7,full seed,43,54,True
+BEN,groundnut,70,10,Tropic - warm / semiarid,R6,0.005393434,671,7,full seed,43,54,True
+BEN,groundnut,70,10,Tropic - warm / subhumid,R6,0.047579255,815,7,full seed,43,54,True
+BEN,groundnut,70,20,Tropic - warm / semiarid,R6,0.0046338453,671,7,full seed,43,54,True
+BEN,groundnut,70,20,Tropic - warm / subhumid,R6,0.05339111,815,7,full seed,43,54,True
+BEN,groundnut,70,30,Tropic - warm / semiarid,R6,0.0032558327,671,7,full seed,43,54,True
+BEN,groundnut,70,30,Tropic - warm / subhumid,R6,0.059942532,815,7,full seed,43,54,True
+BEN,groundnut,70,40,Tropic - warm / semiarid,R6,0.009315735,671,7,full seed,43,54,True
+BEN,groundnut,70,40,Tropic - warm / subhumid,R6,0.07972725,815,7,full seed,43,54,True
+BEN,groundnut,90,0,Tropic - warm / semiarid,R6,0.006057146,671,7,full seed,56,69,True
+BEN,groundnut,90,0,Tropic - warm / subhumid,R6,0.060775258,815,7,full seed,56,69,True
+BEN,groundnut,90,10,Tropic - warm / semiarid,R6,0.004218489,671,7,full seed,56,69,True
+BEN,groundnut,90,10,Tropic - warm / subhumid,R6,0.06495149,815,7,full seed,56,69,True
+BEN,groundnut,90,20,Tropic - warm / semiarid,R6,0.0019265711,671,7,full seed,56,69,True
+BEN,groundnut,90,20,Tropic - warm / subhumid,R6,0.073288076,815,7,full seed,56,69,True
+BEN,groundnut,90,30,Tropic - warm / semiarid,R6,0.0098404735,671,7,full seed,56,69,True
+BEN,groundnut,90,30,Tropic - warm / subhumid,R6,0.08994938,813,7,full seed,56,69,True
+BEN,groundnut,90,40,Tropic - warm / semiarid,R6,0.0150827505,671,7,full seed,56,69,True
+BEN,groundnut,90,40,Tropic - warm / subhumid,R6,0.10516629,813,7,full seed,56,69,True
+BEN,groundnut,110,0,Tropic - warm / semiarid,R6,0.003919027,671,7,full seed,68,85,True
+BEN,groundnut,110,0,Tropic - warm / subhumid,R6,0.06698981,815,7,full seed,68,85,True
+BEN,groundnut,110,10,Tropic - warm / semiarid,R6,0.009765778,671,7,full seed,68,85,True
+BEN,groundnut,110,10,Tropic - warm / subhumid,R6,0.090744175,813,7,full seed,68,85,True
+BEN,groundnut,110,20,Tropic - warm / semiarid,R6,0.009877885,671,7,full seed,68,85,True
+BEN,groundnut,110,20,Tropic - warm / subhumid,R6,0.10801758,813,7,full seed,68,85,True
+BEN,groundnut,110,30,Tropic - warm / semiarid,R6,0.014675696,583,7,full seed,68,85,True
+BEN,groundnut,110,30,Tropic - warm / subhumid,R6,0.122038364,812,7,full seed,68,85,True
+BEN,groundnut,110,40,Tropic - warm / semiarid,R6,0.0011382201,320,7,full seed,68,85,True
+BEN,groundnut,110,40,Tropic - warm / subhumid,R6,0.12350129,810,7,full seed,68,85,True
+BEN,groundnut,130,0,Tropic - warm / semiarid,R6,0.009338381,671,7,full seed,81,100,True
+BEN,groundnut,130,0,Tropic - warm / subhumid,R6,0.09106579,813,7,full seed,81,100,True
+BEN,groundnut,130,10,Tropic - warm / semiarid,R6,0.014677949,583,7,full seed,81,100,True
+BEN,groundnut,130,10,Tropic - warm / subhumid,R6,0.11232329,812,7,full seed,81,100,True
+BEN,groundnut,130,20,Tropic - warm / semiarid,R6,0.0007475951,320,7,full seed,81,100,True
+BEN,groundnut,130,20,Tropic - warm / subhumid,R6,0.12785527,810,7,full seed,81,100,True
+BEN,groundnut,130,30,Tropic - warm / semiarid,R6,0.0004048583,130,7,full seed,81,100,True
+BEN,groundnut,130,30,Tropic - warm / subhumid,R6,0.14038512,727,7,full seed,81,100,True
+BEN,groundnut,130,40,Tropic - warm / subhumid,R6,0.19679497,419,7,full seed,81,100,True
+BEN,groundnut,70,0,Tropic - warm / semiarid,R7,0.0030193166,671,8,beginning maturity,55,64,False
+BEN,groundnut,70,0,Tropic - warm / subhumid,R7,0.040798716,815,8,beginning maturity,55,64,False
+BEN,groundnut,70,10,Tropic - warm / semiarid,R7,0.003961089,671,8,beginning maturity,55,64,False
+BEN,groundnut,70,10,Tropic - warm / subhumid,R7,0.046642646,815,8,beginning maturity,55,64,False
+BEN,groundnut,70,20,Tropic - warm / semiarid,R7,0.0007982737,671,8,beginning maturity,55,64,False
+BEN,groundnut,70,20,Tropic - warm / subhumid,R7,0.0469117,815,8,beginning maturity,55,64,False
+BEN,groundnut,70,30,Tropic - warm / semiarid,R7,0.0038986793,671,8,beginning maturity,55,64,False
+BEN,groundnut,70,30,Tropic - warm / subhumid,R7,0.062203377,815,8,beginning maturity,55,64,False
+BEN,groundnut,70,40,Tropic - warm / semiarid,R7,0.00942787,671,8,beginning maturity,55,64,False
+BEN,groundnut,70,40,Tropic - warm / subhumid,R7,0.07268864,815,8,beginning maturity,55,64,False
+BEN,groundnut,90,0,Tropic - warm / semiarid,R7,0.003366507,671,8,beginning maturity,70,83,False
+BEN,groundnut,90,0,Tropic - warm / subhumid,R7,0.056646824,815,8,beginning maturity,70,83,False
+BEN,groundnut,90,10,Tropic - warm / semiarid,R7,0.0039375066,671,8,beginning maturity,70,83,False
+BEN,groundnut,90,10,Tropic - warm / subhumid,R7,0.06904547,815,8,beginning maturity,70,83,False
+BEN,groundnut,90,20,Tropic - warm / semiarid,R7,0.009285029,671,8,beginning maturity,70,83,False
+BEN,groundnut,90,20,Tropic - warm / subhumid,R7,0.08563265,815,8,beginning maturity,70,83,False
+BEN,groundnut,90,30,Tropic - warm / semiarid,R7,0.010471747,671,8,beginning maturity,70,83,False
+BEN,groundnut,90,30,Tropic - warm / subhumid,R7,0.102704264,813,8,beginning maturity,70,83,False
+BEN,groundnut,90,40,Tropic - warm / semiarid,R7,0.005917301,671,8,beginning maturity,70,83,False
+BEN,groundnut,90,40,Tropic - warm / subhumid,R7,0.11551231,813,8,beginning maturity,70,83,False
+BEN,groundnut,110,0,Tropic - warm / semiarid,R7,0.009316179,671,8,beginning maturity,86,101,False
+BEN,groundnut,110,0,Tropic - warm / subhumid,R7,0.094877005,815,8,beginning maturity,86,101,False
+BEN,groundnut,110,10,Tropic - warm / semiarid,R7,0.014105114,671,8,beginning maturity,86,101,False
+BEN,groundnut,110,10,Tropic - warm / subhumid,R7,0.11617504,813,8,beginning maturity,86,101,False
+BEN,groundnut,110,20,Tropic - warm / semiarid,R7,0.0061928486,671,8,beginning maturity,86,101,False
+BEN,groundnut,110,20,Tropic - warm / subhumid,R7,0.123494625,813,8,beginning maturity,86,101,False
+BEN,groundnut,110,30,Tropic - warm / semiarid,R7,0.0026718967,583,8,beginning maturity,86,101,False
+BEN,groundnut,110,30,Tropic - warm / subhumid,R7,0.11060341,812,8,beginning maturity,86,101,False
+BEN,groundnut,110,40,Tropic - warm / semiarid,R7,0.0031907738,320,8,beginning maturity,86,101,False
+BEN,groundnut,110,40,Tropic - warm / subhumid,R7,0.08999009,810,8,beginning maturity,86,101,False
+BEN,groundnut,130,0,Tropic - warm / semiarid,R7,0.011102831,671,8,beginning maturity,101,120,False
+BEN,groundnut,130,0,Tropic - warm / subhumid,R7,0.14072333,813,8,beginning maturity,101,120,False
+BEN,groundnut,130,10,Tropic - warm / semiarid,R7,0.006635991,583,8,beginning maturity,101,120,False
+BEN,groundnut,130,10,Tropic - warm / subhumid,R7,0.12893973,812,8,beginning maturity,101,120,False
+BEN,groundnut,130,20,Tropic - warm / semiarid,R7,0.0031907738,320,8,beginning maturity,101,120,False
+BEN,groundnut,130,20,Tropic - warm / subhumid,R7,0.10271643,810,8,beginning maturity,101,120,False
+BEN,groundnut,130,30,Tropic - warm / semiarid,R7,0.002453891,130,8,beginning maturity,101,120,False
+BEN,groundnut,130,30,Tropic - warm / subhumid,R7,0.09758777,727,8,beginning maturity,101,120,False
+BEN,groundnut,130,40,Tropic - warm / subhumid,R7,0.10152168,419,8,beginning maturity,101,120,False
+BEN,groundnut,70,0,Tropic - warm / semiarid,R8,0.0008840412,671,9,harvest maturity,65,69,False
+BEN,groundnut,70,0,Tropic - warm / subhumid,R8,0.019028088,815,9,harvest maturity,65,69,False
+BEN,groundnut,70,10,Tropic - warm / semiarid,R8,0.00050881476,671,9,harvest maturity,65,69,False
+BEN,groundnut,70,10,Tropic - warm / subhumid,R8,0.021028329,815,9,harvest maturity,65,69,False
+BEN,groundnut,70,20,Tropic - warm / semiarid,R8,0.000112825684,671,9,harvest maturity,65,69,False
+BEN,groundnut,70,20,Tropic - warm / subhumid,R8,0.024579074,815,9,harvest maturity,65,69,False
+BEN,groundnut,70,30,Tropic - warm / semiarid,R8,0.0037858535,671,9,harvest maturity,65,69,False
+BEN,groundnut,70,30,Tropic - warm / subhumid,R8,0.03615627,815,9,harvest maturity,65,69,False
+BEN,groundnut,70,40,Tropic - warm / semiarid,R8,0.00046133177,671,9,harvest maturity,65,69,False
+BEN,groundnut,70,40,Tropic - warm / subhumid,R8,0.035453368,815,9,harvest maturity,65,69,False
+BEN,groundnut,90,0,Tropic - warm / semiarid,R8,0.000112825684,671,9,harvest maturity,84,89,False
+BEN,groundnut,90,0,Tropic - warm / subhumid,R8,0.025333572,815,9,harvest maturity,84,89,False
+BEN,groundnut,90,10,Tropic - warm / semiarid,R8,0.0036471824,671,9,harvest maturity,84,89,False
+BEN,groundnut,90,10,Tropic - warm / subhumid,R8,0.03697569,815,9,harvest maturity,84,89,False
+BEN,groundnut,90,20,Tropic - warm / semiarid,R8,0.00046133177,671,9,harvest maturity,84,89,False
+BEN,groundnut,90,20,Tropic - warm / subhumid,R8,0.03723406,815,9,harvest maturity,84,89,False
+BEN,groundnut,90,30,Tropic - warm / semiarid,R8,0.0043153926,671,9,harvest maturity,84,89,False
+BEN,groundnut,90,30,Tropic - warm / subhumid,R8,0.05442099,813,9,harvest maturity,84,89,False
+BEN,groundnut,90,40,Tropic - warm / semiarid,R8,0.0,671,9,harvest maturity,84,89,False
+BEN,groundnut,90,40,Tropic - warm / subhumid,R8,0.057753164,813,9,harvest maturity,84,89,False
+BEN,groundnut,110,0,Tropic - warm / semiarid,R8,0.0052149645,671,9,harvest maturity,102,109,False
+BEN,groundnut,110,0,Tropic - warm / subhumid,R8,0.044855166,815,9,harvest maturity,102,109,False
+BEN,groundnut,110,10,Tropic - warm / semiarid,R8,0.004545238,671,9,harvest maturity,102,109,False
+BEN,groundnut,110,10,Tropic - warm / subhumid,R8,0.059913304,813,9,harvest maturity,102,109,False
+BEN,groundnut,110,20,Tropic - warm / semiarid,R8,4.3832733e-05,671,9,harvest maturity,102,109,False
+BEN,groundnut,110,20,Tropic - warm / subhumid,R8,0.062484365,813,9,harvest maturity,102,109,False
+BEN,groundnut,110,30,Tropic - warm / semiarid,R8,0.002516626,583,9,harvest maturity,102,109,False
+BEN,groundnut,110,30,Tropic - warm / subhumid,R8,0.044656508,812,9,harvest maturity,102,109,False
+BEN,groundnut,110,40,Tropic - warm / semiarid,R8,0.0,320,9,harvest maturity,102,109,False
+BEN,groundnut,110,40,Tropic - warm / subhumid,R8,0.03069909,810,9,harvest maturity,102,109,False
+BEN,groundnut,130,0,Tropic - warm / semiarid,R8,4.3832733e-05,671,9,harvest maturity,121,129,False
+BEN,groundnut,130,0,Tropic - warm / subhumid,R8,0.06494414,813,9,harvest maturity,121,129,False
+BEN,groundnut,130,10,Tropic - warm / semiarid,R8,0.002516626,583,9,harvest maturity,121,129,False
+BEN,groundnut,130,10,Tropic - warm / subhumid,R8,0.05380105,812,9,harvest maturity,121,129,False
+BEN,groundnut,130,20,Tropic - warm / semiarid,R8,0.0028001484,320,9,harvest maturity,121,129,False
+BEN,groundnut,130,20,Tropic - warm / subhumid,R8,0.030965101,810,9,harvest maturity,121,129,False
+BEN,groundnut,130,30,Tropic - warm / semiarid,R8,0.0012168242,130,9,harvest maturity,121,129,False
+BEN,groundnut,130,30,Tropic - warm / subhumid,R8,0.026505455,727,9,harvest maturity,121,129,False
+BEN,groundnut,130,40,Tropic - warm / subhumid,R8,0.023278818,419,9,harvest maturity,121,129,False
+BEN,groundnut,70,0,ALL,SOW,0.0001486758,1486,0,sowing to emergence,0,4,False
+BEN,groundnut,70,10,ALL,SOW,0.0018809986,1486,0,sowing to emergence,0,4,False
+BEN,groundnut,70,20,ALL,SOW,0.006743126,1486,0,sowing to emergence,0,4,False
+BEN,groundnut,70,30,ALL,SOW,0.002225947,1486,0,sowing to emergence,0,4,False
+BEN,groundnut,70,40,ALL,SOW,0.004617151,1486,0,sowing to emergence,0,4,False
+BEN,groundnut,90,0,ALL,SOW,0.00058835506,1486,0,sowing to emergence,0,5,False
+BEN,groundnut,90,10,ALL,SOW,0.001970773,1486,0,sowing to emergence,0,5,False
+BEN,groundnut,90,20,ALL,SOW,0.007613394,1486,0,sowing to emergence,0,5,False
+BEN,groundnut,90,30,ALL,SOW,0.0022798444,1484,0,sowing to emergence,0,5,False
+BEN,groundnut,90,40,ALL,SOW,0.006081517,1484,0,sowing to emergence,0,5,False
+BEN,groundnut,110,0,ALL,SOW,0.0007635343,1486,0,sowing to emergence,0,7,False
+BEN,groundnut,110,10,ALL,SOW,0.002483872,1484,0,sowing to emergence,0,7,False
+BEN,groundnut,110,20,ALL,SOW,0.009326679,1484,0,sowing to emergence,0,7,False
+BEN,groundnut,110,30,ALL,SOW,0.0015395586,1395,0,sowing to emergence,0,7,False
+BEN,groundnut,110,40,ALL,SOW,0.0061122077,1130,0,sowing to emergence,0,7,False
+BEN,groundnut,130,0,ALL,SOW,0.0018814537,1484,0,sowing to emergence,0,8,False
+BEN,groundnut,130,10,ALL,SOW,0.002246566,1395,0,sowing to emergence,0,8,False
+BEN,groundnut,130,20,ALL,SOW,0.009686183,1130,0,sowing to emergence,0,8,False
+BEN,groundnut,130,30,ALL,SOW,0.0017551692,857,0,sowing to emergence,0,8,False
+BEN,groundnut,130,40,ALL,SOW,0.0013390022,419,0,sowing to emergence,0,8,False
+BEN,groundnut,70,0,ALL,VE,0.0038916548,1486,1,emergence,5,14,False
+BEN,groundnut,70,10,ALL,VE,0.009384827,1486,1,emergence,5,14,False
+BEN,groundnut,70,20,ALL,VE,0.011585908,1486,1,emergence,5,14,False
+BEN,groundnut,70,30,ALL,VE,0.0081344815,1486,1,emergence,5,14,False
+BEN,groundnut,70,40,ALL,VE,0.01622547,1486,1,emergence,5,14,False
+BEN,groundnut,90,0,ALL,VE,0.004742697,1486,1,emergence,6,19,False
+BEN,groundnut,90,10,ALL,VE,0.012846035,1486,1,emergence,6,19,False
+BEN,groundnut,90,20,ALL,VE,0.013173172,1486,1,emergence,6,19,False
+BEN,groundnut,90,30,ALL,VE,0.012753718,1484,1,emergence,6,19,False
+BEN,groundnut,90,40,ALL,VE,0.025080912,1484,1,emergence,6,19,False
+BEN,groundnut,110,0,ALL,VE,0.0081092175,1486,1,emergence,8,23,False
+BEN,groundnut,110,10,ALL,VE,0.013952722,1484,1,emergence,8,23,False
+BEN,groundnut,110,20,ALL,VE,0.016134212,1484,1,emergence,8,23,False
+BEN,groundnut,110,30,ALL,VE,0.018318703,1395,1,emergence,8,23,False
+BEN,groundnut,110,40,ALL,VE,0.030029641,1130,1,emergence,8,23,False
+BEN,groundnut,130,0,ALL,VE,0.0140574705,1484,1,emergence,9,28,False
+BEN,groundnut,130,10,ALL,VE,0.014342532,1395,1,emergence,9,28,False
+BEN,groundnut,130,20,ALL,VE,0.018957254,1130,1,emergence,9,28,False
+BEN,groundnut,130,30,ALL,VE,0.030184485,857,1,emergence,9,28,False
+BEN,groundnut,130,40,ALL,VE,0.04273737,419,1,emergence,9,28,False
+BEN,groundnut,70,0,ALL,R1,0.0057840585,1486,2,beginning bloom,15,20,False
+BEN,groundnut,70,10,ALL,R1,0.011158696,1486,2,beginning bloom,15,20,False
+BEN,groundnut,70,20,ALL,R1,0.0074417545,1486,2,beginning bloom,15,20,False
+BEN,groundnut,70,30,ALL,R1,0.011318001,1486,2,beginning bloom,15,20,False
+BEN,groundnut,70,40,ALL,R1,0.020818578,1486,2,beginning bloom,15,20,False
+BEN,groundnut,90,0,ALL,R1,0.010655991,1486,2,beginning bloom,20,26,False
+BEN,groundnut,90,10,ALL,R1,0.0116678085,1486,2,beginning bloom,20,26,False
+BEN,groundnut,90,20,ALL,R1,0.008720096,1486,2,beginning bloom,20,26,False
+BEN,groundnut,90,30,ALL,R1,0.019384129,1484,2,beginning bloom,20,26,False
+BEN,groundnut,90,40,ALL,R1,0.024897205,1484,2,beginning bloom,20,26,False
+BEN,groundnut,110,0,ALL,R1,0.012330493,1486,2,beginning bloom,24,32,False
+BEN,groundnut,110,10,ALL,R1,0.013707171,1484,2,beginning bloom,24,32,False
+BEN,groundnut,110,20,ALL,R1,0.016396994,1484,2,beginning bloom,24,32,False
+BEN,groundnut,110,30,ALL,R1,0.023217306,1395,2,beginning bloom,24,32,False
+BEN,groundnut,110,40,ALL,R1,0.030722441,1130,2,beginning bloom,24,32,False
+BEN,groundnut,130,0,ALL,R1,0.011701867,1484,2,beginning bloom,29,38,False
+BEN,groundnut,130,10,ALL,R1,0.010637699,1395,2,beginning bloom,29,38,False
+BEN,groundnut,130,20,ALL,R1,0.026547812,1130,2,beginning bloom,29,38,False
+BEN,groundnut,130,30,ALL,R1,0.036387663,857,2,beginning bloom,29,38,False
+BEN,groundnut,130,40,ALL,R1,0.04127082,419,2,beginning bloom,29,38,False
+BEN,groundnut,70,0,ALL,R2,0.010526382,1486,3,beginning peg,21,26,False
+BEN,groundnut,70,10,ALL,R2,0.011490353,1486,3,beginning peg,21,26,False
+BEN,groundnut,70,20,ALL,R2,0.008862661,1486,3,beginning peg,21,26,False
+BEN,groundnut,70,30,ALL,R2,0.020065872,1486,3,beginning peg,21,26,False
+BEN,groundnut,70,40,ALL,R2,0.025045319,1486,3,beginning peg,21,26,False
+BEN,groundnut,90,0,ALL,R2,0.011590326,1486,3,beginning peg,27,33,False
+BEN,groundnut,90,10,ALL,R2,0.009534998,1486,3,beginning peg,27,33,False
+BEN,groundnut,90,20,ALL,R2,0.016513351,1486,3,beginning peg,27,33,False
+BEN,groundnut,90,30,ALL,R2,0.021582976,1484,3,beginning peg,27,33,False
+BEN,groundnut,90,40,ALL,R2,0.022164378,1484,3,beginning peg,27,33,False
+BEN,groundnut,110,0,ALL,R2,0.014850521,1486,3,beginning peg,33,41,False
+BEN,groundnut,110,10,ALL,R2,0.015010949,1484,3,beginning peg,33,41,False
+BEN,groundnut,110,20,ALL,R2,0.02216312,1484,3,beginning peg,33,41,False
+BEN,groundnut,110,30,ALL,R2,0.026178492,1395,3,beginning peg,33,41,False
+BEN,groundnut,110,40,ALL,R2,0.03281528,1130,3,beginning peg,33,41,False
+BEN,groundnut,130,0,ALL,R2,0.010996199,1484,3,beginning peg,39,48,False
+BEN,groundnut,130,10,ALL,R2,0.023884023,1395,3,beginning peg,39,48,False
+BEN,groundnut,130,20,ALL,R2,0.03272367,1130,3,beginning peg,39,48,False
+BEN,groundnut,130,30,ALL,R2,0.027761783,857,3,beginning peg,39,48,False
+BEN,groundnut,130,40,ALL,R2,0.08261982,419,3,beginning peg,39,48,False
+BEN,groundnut,70,0,ALL,R3,0.010803999,1486,4,beginning pod,27,31,True
+BEN,groundnut,70,10,ALL,R3,0.008510257,1486,4,beginning pod,27,31,True
+BEN,groundnut,70,20,ALL,R3,0.015134682,1486,4,beginning pod,27,31,True
+BEN,groundnut,70,30,ALL,R3,0.02172637,1486,4,beginning pod,27,31,True
+BEN,groundnut,70,40,ALL,R3,0.021763025,1486,4,beginning pod,27,31,True
+BEN,groundnut,90,0,ALL,R3,0.0104161175,1486,4,beginning pod,34,39,True
+BEN,groundnut,90,10,ALL,R3,0.011453517,1486,4,beginning pod,34,39,True
+BEN,groundnut,90,20,ALL,R3,0.020676378,1486,4,beginning pod,34,39,True
+BEN,groundnut,90,30,ALL,R3,0.023543682,1484,4,beginning pod,34,39,True
+BEN,groundnut,90,40,ALL,R3,0.022615487,1484,4,beginning pod,34,39,True
+BEN,groundnut,110,0,ALL,R3,0.011762803,1486,4,beginning pod,42,49,True
+BEN,groundnut,110,10,ALL,R3,0.023552423,1484,4,beginning pod,42,49,True
+BEN,groundnut,110,20,ALL,R3,0.024698986,1484,4,beginning pod,42,49,True
+BEN,groundnut,110,30,ALL,R3,0.026304068,1395,4,beginning pod,42,49,True
+BEN,groundnut,110,40,ALL,R3,0.03716298,1130,4,beginning pod,42,49,True
+BEN,groundnut,130,0,ALL,R3,0.021069115,1484,4,beginning pod,49,57,True
+BEN,groundnut,130,10,ALL,R3,0.027974226,1395,4,beginning pod,49,57,True
+BEN,groundnut,130,20,ALL,R3,0.02582263,1130,4,beginning pod,49,57,True
+BEN,groundnut,130,30,ALL,R3,0.046297435,857,4,beginning pod,49,57,True
+BEN,groundnut,130,40,ALL,R3,0.121739574,419,4,beginning pod,49,57,True
+BEN,groundnut,70,0,ALL,R4,0.011111306,1486,5,full pod,32,35,True
+BEN,groundnut,70,10,ALL,R4,0.0077724485,1486,5,full pod,32,35,True
+BEN,groundnut,70,20,ALL,R4,0.017572697,1486,5,full pod,32,35,True
+BEN,groundnut,70,30,ALL,R4,0.02055284,1486,5,full pod,32,35,True
+BEN,groundnut,70,40,ALL,R4,0.018409513,1486,5,full pod,32,35,True
+BEN,groundnut,90,0,ALL,R4,0.008926807,1486,5,full pod,40,46,True
+BEN,groundnut,90,10,ALL,R4,0.020471977,1486,5,full pod,40,46,True
+BEN,groundnut,90,20,ALL,R4,0.02527925,1486,5,full pod,40,46,True
+BEN,groundnut,90,30,ALL,R4,0.019558083,1484,5,full pod,40,46,True
+BEN,groundnut,90,40,ALL,R4,0.023581687,1484,5,full pod,40,46,True
+BEN,groundnut,110,0,ALL,R4,0.01975052,1486,5,full pod,50,56,True
+BEN,groundnut,110,10,ALL,R4,0.024682999,1484,5,full pod,50,56,True
+BEN,groundnut,110,20,ALL,R4,0.01860701,1484,5,full pod,50,56,True
+BEN,groundnut,110,30,ALL,R4,0.024616126,1395,5,full pod,50,56,True
+BEN,groundnut,110,40,ALL,R4,0.04651717,1130,5,full pod,50,56,True
+BEN,groundnut,130,0,ALL,R4,0.026910951,1484,5,full pod,58,67,True
+BEN,groundnut,130,10,ALL,R4,0.02377653,1395,5,full pod,58,67,True
+BEN,groundnut,130,20,ALL,R4,0.03751881,1130,5,full pod,58,67,True
+BEN,groundnut,130,30,ALL,R4,0.069786526,857,5,full pod,58,67,True
+BEN,groundnut,130,40,ALL,R4,0.15547147,419,5,full pod,58,67,True
+BEN,groundnut,70,0,ALL,R5,0.0102548245,1486,6,beginning seed,36,42,True
+BEN,groundnut,70,10,ALL,R5,0.017087996,1486,6,beginning seed,36,42,True
+BEN,groundnut,70,20,ALL,R5,0.02309012,1486,6,beginning seed,36,42,True
+BEN,groundnut,70,30,ALL,R5,0.026173642,1486,6,beginning seed,36,42,True
+BEN,groundnut,70,40,ALL,R5,0.024782343,1486,6,beginning seed,36,42,True
+BEN,groundnut,90,0,ALL,R5,0.01926985,1486,6,beginning seed,47,55,True
+BEN,groundnut,90,10,ALL,R5,0.027560944,1486,6,beginning seed,47,55,True
+BEN,groundnut,90,20,ALL,R5,0.023745151,1486,6,beginning seed,47,55,True
+BEN,groundnut,90,30,ALL,R5,0.027595073,1484,6,beginning seed,47,55,True
+BEN,groundnut,90,40,ALL,R5,0.04351487,1484,6,beginning seed,47,55,True
+BEN,groundnut,110,0,ALL,R5,0.028249476,1486,6,beginning seed,57,67,True
+BEN,groundnut,110,10,ALL,R5,0.026035808,1484,6,beginning seed,57,67,True
+BEN,groundnut,110,20,ALL,R5,0.030886337,1484,6,beginning seed,57,67,True
+BEN,groundnut,110,30,ALL,R5,0.048395086,1395,6,beginning seed,57,67,True
+BEN,groundnut,110,40,ALL,R5,0.0626978,1130,6,beginning seed,57,67,True
+BEN,groundnut,130,0,ALL,R5,0.028369196,1484,6,beginning seed,68,80,True
+BEN,groundnut,130,10,ALL,R5,0.03919362,1395,6,beginning seed,68,80,True
+BEN,groundnut,130,20,ALL,R5,0.055990193,1130,6,beginning seed,68,80,True
+BEN,groundnut,130,30,ALL,R5,0.092115566,857,6,beginning seed,68,80,True
+BEN,groundnut,130,40,ALL,R5,0.2015666,419,6,beginning seed,68,80,True
+BEN,groundnut,70,0,ALL,R6,0.02180567,1486,7,full seed,43,54,True
+BEN,groundnut,70,10,ALL,R6,0.028530343,1486,7,full seed,43,54,True
+BEN,groundnut,70,20,ALL,R6,0.031374875,1486,7,full seed,43,54,True
+BEN,groundnut,70,30,ALL,R6,0.03434578,1486,7,full seed,43,54,True
+BEN,groundnut,70,40,ALL,R6,0.047933087,1486,7,full seed,43,54,True
+BEN,groundnut,90,0,ALL,R6,0.036067415,1486,7,full seed,56,69,True
+BEN,groundnut,90,10,ALL,R6,0.037527636,1486,7,full seed,56,69,True
+BEN,groundnut,90,20,ALL,R6,0.041064948,1486,7,full seed,56,69,True
+BEN,groundnut,90,30,ALL,R6,0.05372763,1484,7,full seed,56,69,True
+BEN,groundnut,90,40,ALL,R6,0.06443445,1484,7,full seed,56,69,True
+BEN,groundnut,110,0,ALL,R6,0.038510337,1486,7,full seed,68,85,True
+BEN,groundnut,110,10,ALL,R6,0.05412928,1484,7,full seed,68,85,True
+BEN,groundnut,110,20,ALL,R6,0.06364309,1484,7,full seed,68,85,True
+BEN,groundnut,110,30,ALL,R6,0.07716924,1395,7,full seed,68,85,True
+BEN,groundnut,110,40,ALL,R6,0.088849805,1130,7,full seed,68,85,True
+BEN,groundnut,130,0,ALL,R6,0.054112222,1484,7,full seed,81,100,True
+BEN,groundnut,130,10,ALL,R6,0.07151524,1395,7,full seed,81,100,True
+BEN,groundnut,130,20,ALL,R6,0.091860175,1130,7,full seed,81,100,True
+BEN,groundnut,130,30,ALL,R6,0.119151235,857,7,full seed,81,100,True
+BEN,groundnut,130,40,ALL,R6,0.19679497,419,7,full seed,81,100,True
+BEN,groundnut,70,0,ALL,R7,0.023739511,1486,8,beginning maturity,55,64,False
+BEN,groundnut,70,10,ALL,R7,0.027369883,1486,8,beginning maturity,55,64,False
+BEN,groundnut,70,20,ALL,R7,0.026089286,1486,8,beginning maturity,55,64,False
+BEN,groundnut,70,30,ALL,R7,0.03587602,1486,8,beginning maturity,55,64,False
+BEN,groundnut,70,40,ALL,R7,0.04412338,1486,8,beginning maturity,55,64,False
+BEN,groundnut,90,0,ALL,R7,0.032588214,1486,8,beginning maturity,70,83,False
+BEN,groundnut,90,10,ALL,R7,0.03964611,1486,8,beginning maturity,70,83,False
+BEN,groundnut,90,20,ALL,R7,0.051158052,1486,8,beginning maturity,70,83,False
+BEN,groundnut,90,30,ALL,R7,0.061000746,1484,8,beginning maturity,70,83,False
+BEN,groundnut,90,40,ALL,R7,0.06595823,1484,8,beginning maturity,70,83,False
+BEN,groundnut,110,0,ALL,R7,0.05624221,1486,8,beginning maturity,86,101,False
+BEN,groundnut,110,10,ALL,R7,0.07002348,1484,8,beginning maturity,86,101,False
+BEN,groundnut,110,20,ALL,R7,0.07045589,1484,8,beginning maturity,86,101,False
+BEN,groundnut,110,30,ALL,R7,0.06549655,1395,8,beginning maturity,86,101,False
+BEN,groundnut,110,40,ALL,R7,0.06540975,1130,8,beginning maturity,86,101,False
+BEN,groundnut,130,0,ALL,R7,0.0821146,1484,8,beginning maturity,101,120,False
+BEN,groundnut,130,10,ALL,R7,0.07782641,1395,8,beginning maturity,101,120,False
+BEN,groundnut,130,20,ALL,R7,0.07453217,1130,8,beginning maturity,101,120,False
+BEN,groundnut,130,30,ALL,R7,0.08315673,857,8,beginning maturity,101,120,False
+BEN,groundnut,130,40,ALL,R7,0.10152168,419,8,beginning maturity,101,120,False
+BEN,groundnut,70,0,ALL,R8,0.010835184,1486,9,harvest maturity,65,69,False
+BEN,groundnut,70,10,ALL,R8,0.0117627885,1486,9,harvest maturity,65,69,False
+BEN,groundnut,70,20,ALL,R8,0.013531395,1486,9,harvest maturity,65,69,False
+BEN,groundnut,70,30,ALL,R8,0.02153948,1486,9,harvest maturity,65,69,False
+BEN,groundnut,70,40,ALL,R8,0.019652791,1486,9,harvest maturity,65,69,False
+BEN,groundnut,90,0,ALL,R8,0.0139452005,1486,9,harvest maturity,84,89,False
+BEN,groundnut,90,10,ALL,R8,0.021926275,1486,9,harvest maturity,84,89,False
+BEN,groundnut,90,20,ALL,R8,0.020629417,1486,9,harvest maturity,84,89,False
+BEN,groundnut,90,30,ALL,R8,0.031765427,1484,9,harvest maturity,84,89,False
+BEN,groundnut,90,40,ALL,R8,0.031639706,1484,9,harvest maturity,84,89,False
+BEN,groundnut,110,0,ALL,R8,0.026955722,1486,9,harvest maturity,102,109,False
+BEN,groundnut,110,10,ALL,R8,0.03487828,1484,9,harvest maturity,102,109,False
+BEN,groundnut,110,20,ALL,R8,0.03425148,1484,9,harvest maturity,102,109,False
+BEN,groundnut,110,30,ALL,R8,0.027045362,1395,9,harvest maturity,102,109,False
+BEN,groundnut,110,40,ALL,R8,0.022005541,1130,9,harvest maturity,102,109,False
+BEN,groundnut,130,0,ALL,R8,0.035599057,1484,9,harvest maturity,121,129,False
+BEN,groundnut,130,10,ALL,R8,0.032368205,1395,9,harvest maturity,121,129,False
+BEN,groundnut,130,20,ALL,R8,0.022989186,1130,9,harvest maturity,121,129,False
+BEN,groundnut,130,30,ALL,R8,0.022669373,857,9,harvest maturity,121,129,False
+BEN,groundnut,130,40,ALL,R8,0.023278818,419,9,harvest maturity,121,129,False

@@ -34,7 +34,7 @@ def main():
     a = ap.parse_args()
 
     root = Path("dryspell_v7") / a.region
-    out = root / f"step4_{a.iso3}"
+    out = root / "step4" / a.iso3
     cells = pd.read_parquet(out / "cell_summary.parquet")
     cells = cells[cells.crop == a.crop]
     ds = xr.open_dataset(out / f"cells_{a.crop}.nc")

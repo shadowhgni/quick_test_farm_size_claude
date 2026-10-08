@@ -1,0 +1,15 @@
+{
+  "unit": "NGA",
+  "iso3": "NGA",
+  "target": {
+    "kind": "country",
+    "iso3": "NGA"
+  },
+  "status": "ok",
+  "n_cells": 29810,
+  "n_analysed": 29805,
+  "n_few_seasons": 0,
+  "zones": "aez8",
+  "zone_source": "HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",
+  "minutes": 0.91
+}

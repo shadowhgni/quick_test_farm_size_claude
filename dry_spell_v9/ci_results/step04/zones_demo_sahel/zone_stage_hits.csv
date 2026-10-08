@@ -1,0 +1,1045 @@
+unit,zone_scheme,crop,cycle,sow,zone,stage,p,n_cells,stage_idx,stage_name,das_start,das_end,overlaps_window
+zones_demo_sahel,aez8,sorghum,70,0,Warm / semiarid,SOW,0.010124324,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,70,10,Warm / semiarid,SOW,0.011493162,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,70,20,Warm / semiarid,SOW,0.014428676,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,70,30,Warm / semiarid,SOW,0.0058749225,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,70,40,Warm / semiarid,SOW,0.0015293991,1036,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,90,0,Warm / semiarid,SOW,0.010116829,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,90,10,Warm / semiarid,SOW,0.011624942,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,90,20,Warm / semiarid,SOW,0.014991633,1036,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,90,30,Warm / semiarid,SOW,0.0059277792,1035,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,90,40,Warm / semiarid,SOW,0.00017898619,978,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,110,0,Warm / semiarid,SOW,0.010666105,1036,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,110,10,Warm / semiarid,SOW,0.013167606,1035,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,110,20,Warm / semiarid,SOW,0.017925631,978,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,110,30,Warm / semiarid,SOW,0.002071385,717,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,110,40,Warm / semiarid,SOW,0.0,166,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,130,0,Warm / semiarid,SOW,0.011162888,978,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,130,10,Warm / semiarid,SOW,0.010439948,717,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,130,20,Warm / semiarid,SOW,0.0107738655,166,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,70,0,Warm / semiarid,S0,0.021892438,1040,1,emergence,5,9,False
+zones_demo_sahel,aez8,sorghum,70,10,Warm / semiarid,S0,0.017418444,1040,1,emergence,5,9,False
+zones_demo_sahel,aez8,sorghum,70,20,Warm / semiarid,S0,0.017260099,1040,1,emergence,5,9,False
+zones_demo_sahel,aez8,sorghum,70,30,Warm / semiarid,S0,0.006972258,1040,1,emergence,5,9,False
+zones_demo_sahel,aez8,sorghum,70,40,Warm / semiarid,S0,0.0022069425,1036,1,emergence,5,9,False
+zones_demo_sahel,aez8,sorghum,90,0,Warm / semiarid,S0,0.026802825,1040,1,emergence,5,12,False
+zones_demo_sahel,aez8,sorghum,90,10,Warm / semiarid,S0,0.029727666,1040,1,emergence,5,12,False
+zones_demo_sahel,aez8,sorghum,90,20,Warm / semiarid,S0,0.023931855,1036,1,emergence,5,12,False
+zones_demo_sahel,aez8,sorghum,90,30,Warm / semiarid,S0,0.0073640742,1035,1,emergence,5,12,False
+zones_demo_sahel,aez8,sorghum,90,40,Warm / semiarid,S0,0.00042705474,978,1,emergence,5,12,False
+zones_demo_sahel,aez8,sorghum,110,0,Warm / semiarid,S0,0.030659879,1036,1,emergence,5,14,False
+zones_demo_sahel,aez8,sorghum,110,10,Warm / semiarid,S0,0.033913765,1035,1,emergence,5,14,False
+zones_demo_sahel,aez8,sorghum,110,20,Warm / semiarid,S0,0.02570417,978,1,emergence,5,14,False
+zones_demo_sahel,aez8,sorghum,110,30,Warm / semiarid,S0,0.0024273475,717,1,emergence,5,14,False
+zones_demo_sahel,aez8,sorghum,110,40,Warm / semiarid,S0,0.001334389,166,1,emergence,5,14,False
+zones_demo_sahel,aez8,sorghum,130,0,Warm / semiarid,S0,0.03296467,978,1,emergence,5,16,False
+zones_demo_sahel,aez8,sorghum,130,10,Warm / semiarid,S0,0.029146332,717,1,emergence,5,16,False
+zones_demo_sahel,aez8,sorghum,130,20,Warm / semiarid,S0,0.012000511,166,1,emergence,5,16,False
+zones_demo_sahel,aez8,sorghum,70,0,Warm / semiarid,S1,0.033045147,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,sorghum,70,10,Warm / semiarid,S1,0.032658026,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,sorghum,70,20,Warm / semiarid,S1,0.024160326,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,sorghum,70,30,Warm / semiarid,S1,0.008457217,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,sorghum,70,40,Warm / semiarid,S1,0.003097807,1036,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,sorghum,90,0,Warm / semiarid,S1,0.03381001,1040,2,3-leaf,13,21,False
+zones_demo_sahel,aez8,sorghum,90,10,Warm / semiarid,S1,0.032523118,1040,2,3-leaf,13,21,False
+zones_demo_sahel,aez8,sorghum,90,20,Warm / semiarid,S1,0.015081462,1036,2,3-leaf,13,21,False
+zones_demo_sahel,aez8,sorghum,90,30,Warm / semiarid,S1,0.0019322,1035,2,3-leaf,13,21,False
+zones_demo_sahel,aez8,sorghum,90,40,Warm / semiarid,S1,0.00033952825,978,2,3-leaf,13,21,False
+zones_demo_sahel,aez8,sorghum,110,0,Warm / semiarid,S1,0.043408655,1036,2,3-leaf,15,26,False
+zones_demo_sahel,aez8,sorghum,110,10,Warm / semiarid,S1,0.032308348,1035,2,3-leaf,15,26,False
+zones_demo_sahel,aez8,sorghum,110,20,Warm / semiarid,S1,0.009608657,978,2,3-leaf,15,26,False
+zones_demo_sahel,aez8,sorghum,110,30,Warm / semiarid,S1,0.0006816673,717,2,3-leaf,15,26,False
+zones_demo_sahel,aez8,sorghum,110,40,Warm / semiarid,S1,0.001334389,166,2,3-leaf,15,26,False
+zones_demo_sahel,aez8,sorghum,130,0,Warm / semiarid,S1,0.04701235,978,2,3-leaf,17,31,False
+zones_demo_sahel,aez8,sorghum,130,10,Warm / semiarid,S1,0.019901851,717,2,3-leaf,17,31,False
+zones_demo_sahel,aez8,sorghum,130,20,Warm / semiarid,S1,0.0023100309,166,2,3-leaf,17,31,False
+zones_demo_sahel,aez8,sorghum,70,0,Warm / semiarid,S2,0.03692726,1040,3,5-leaf,17,23,False
+zones_demo_sahel,aez8,sorghum,70,10,Warm / semiarid,S2,0.025175609,1040,3,5-leaf,17,23,False
+zones_demo_sahel,aez8,sorghum,70,20,Warm / semiarid,S2,0.010960389,1040,3,5-leaf,17,23,False
+zones_demo_sahel,aez8,sorghum,70,30,Warm / semiarid,S2,0.003264189,1040,3,5-leaf,17,23,False
+zones_demo_sahel,aez8,sorghum,70,40,Warm / semiarid,S2,0.0015848068,1036,3,5-leaf,17,23,False
+zones_demo_sahel,aez8,sorghum,90,0,Warm / semiarid,S2,0.036896933,1040,3,5-leaf,22,31,False
+zones_demo_sahel,aez8,sorghum,90,10,Warm / semiarid,S2,0.019564372,1040,3,5-leaf,22,31,False
+zones_demo_sahel,aez8,sorghum,90,20,Warm / semiarid,S2,0.0041955723,1036,3,5-leaf,22,31,False
+zones_demo_sahel,aez8,sorghum,90,30,Warm / semiarid,S2,0.00060222374,1035,3,5-leaf,22,31,False
+zones_demo_sahel,aez8,sorghum,90,40,Warm / semiarid,S2,0.00020640738,978,3,5-leaf,22,31,False
+zones_demo_sahel,aez8,sorghum,110,0,Warm / semiarid,S2,0.026541093,1036,3,5-leaf,27,39,False
+zones_demo_sahel,aez8,sorghum,110,10,Warm / semiarid,S2,0.010032012,1035,3,5-leaf,27,39,False
+zones_demo_sahel,aez8,sorghum,110,20,Warm / semiarid,S2,0.0006251494,978,3,5-leaf,27,39,False
+zones_demo_sahel,aez8,sorghum,110,30,Warm / semiarid,S2,0.0003773606,717,3,5-leaf,27,39,False
+zones_demo_sahel,aez8,sorghum,110,40,Warm / semiarid,S2,0.0005357398,166,3,5-leaf,27,39,False
+zones_demo_sahel,aez8,sorghum,130,0,Warm / semiarid,S2,0.020110507,978,3,5-leaf,32,47,False
+zones_demo_sahel,aez8,sorghum,130,10,Warm / semiarid,S2,0.0008404519,717,3,5-leaf,32,47,False
+zones_demo_sahel,aez8,sorghum,130,20,Warm / semiarid,S2,0.001334389,166,3,5-leaf,32,47,False
+zones_demo_sahel,aez8,sorghum,70,0,Warm / semiarid,S3,0.025221905,1040,4,growing point differentiation,24,28,True
+zones_demo_sahel,aez8,sorghum,70,10,Warm / semiarid,S3,0.011531354,1040,4,growing point differentiation,24,28,True
+zones_demo_sahel,aez8,sorghum,70,20,Warm / semiarid,S3,0.0030636776,1040,4,growing point differentiation,24,28,True
+zones_demo_sahel,aez8,sorghum,70,30,Warm / semiarid,S3,0.0019597756,1040,4,growing point differentiation,24,28,True
+zones_demo_sahel,aez8,sorghum,70,40,Warm / semiarid,S3,0.0009124423,1036,4,growing point differentiation,24,28,True
+zones_demo_sahel,aez8,sorghum,90,0,Warm / semiarid,S3,0.018827762,1040,4,growing point differentiation,32,38,False
+zones_demo_sahel,aez8,sorghum,90,10,Warm / semiarid,S3,0.0032363338,1040,4,growing point differentiation,32,38,False
+zones_demo_sahel,aez8,sorghum,90,20,Warm / semiarid,S3,0.0018746164,1036,4,growing point differentiation,32,38,False
+zones_demo_sahel,aez8,sorghum,90,30,Warm / semiarid,S3,0.00060668605,1035,4,growing point differentiation,32,38,False
+zones_demo_sahel,aez8,sorghum,90,40,Warm / semiarid,S3,0.0006740855,978,4,growing point differentiation,32,38,False
+zones_demo_sahel,aez8,sorghum,110,0,Warm / semiarid,S3,0.009122692,1036,4,growing point differentiation,40,49,False
+zones_demo_sahel,aez8,sorghum,110,10,Warm / semiarid,S3,0.00065920374,1035,4,growing point differentiation,40,49,False
+zones_demo_sahel,aez8,sorghum,110,20,Warm / semiarid,S3,0.00013658425,978,4,growing point differentiation,40,49,False
+zones_demo_sahel,aez8,sorghum,110,30,Warm / semiarid,S3,0.0005975167,717,4,growing point differentiation,40,49,False
+zones_demo_sahel,aez8,sorghum,110,40,Warm / semiarid,S3,0.0005357398,166,4,growing point differentiation,40,49,False
+zones_demo_sahel,aez8,sorghum,130,0,Warm / semiarid,S3,0.00042705474,978,4,growing point differentiation,48,60,False
+zones_demo_sahel,aez8,sorghum,130,10,Warm / semiarid,S3,0.0003773606,717,4,growing point differentiation,48,60,False
+zones_demo_sahel,aez8,sorghum,130,20,Warm / semiarid,S3,0.0005357398,166,4,growing point differentiation,48,60,False
+zones_demo_sahel,aez8,sorghum,70,0,Warm / semiarid,S4,0.023847988,1040,5,flag leaf visible,29,33,True
+zones_demo_sahel,aez8,sorghum,70,10,Warm / semiarid,S4,0.008973953,1040,5,flag leaf visible,29,33,True
+zones_demo_sahel,aez8,sorghum,70,20,Warm / semiarid,S4,0.0030221976,1040,5,flag leaf visible,29,33,True
+zones_demo_sahel,aez8,sorghum,70,30,Warm / semiarid,S4,0.0017482828,1040,5,flag leaf visible,29,33,True
+zones_demo_sahel,aez8,sorghum,70,40,Warm / semiarid,S4,0.00096878054,1036,5,flag leaf visible,29,33,True
+zones_demo_sahel,aez8,sorghum,90,0,Warm / semiarid,S4,0.009340571,1040,5,flag leaf visible,39,46,True
+zones_demo_sahel,aez8,sorghum,90,10,Warm / semiarid,S4,0.0031799003,1040,5,flag leaf visible,39,46,True
+zones_demo_sahel,aez8,sorghum,90,20,Warm / semiarid,S4,0.0015111986,1036,5,flag leaf visible,39,46,True
+zones_demo_sahel,aez8,sorghum,90,30,Warm / semiarid,S4,0.0015616637,1035,5,flag leaf visible,39,46,True
+zones_demo_sahel,aez8,sorghum,90,40,Warm / semiarid,S4,0.0015248295,978,5,flag leaf visible,39,46,True
+zones_demo_sahel,aez8,sorghum,110,0,Warm / semiarid,S4,0.003211729,1036,5,flag leaf visible,50,59,True
+zones_demo_sahel,aez8,sorghum,110,10,Warm / semiarid,S4,0.000551067,1035,5,flag leaf visible,50,59,True
+zones_demo_sahel,aez8,sorghum,110,20,Warm / semiarid,S4,0.0006042624,978,5,flag leaf visible,50,59,True
+zones_demo_sahel,aez8,sorghum,110,30,Warm / semiarid,S4,0.0025360188,717,5,flag leaf visible,50,59,True
+zones_demo_sahel,aez8,sorghum,110,40,Warm / semiarid,S4,0.0,166,5,flag leaf visible,50,59,True
+zones_demo_sahel,aez8,sorghum,130,0,Warm / semiarid,S4,0.000256262,978,5,flag leaf visible,61,72,True
+zones_demo_sahel,aez8,sorghum,130,10,Warm / semiarid,S4,0.0008156793,717,5,flag leaf visible,61,72,True
+zones_demo_sahel,aez8,sorghum,130,20,Warm / semiarid,S4,0.0005357398,166,5,flag leaf visible,61,72,True
+zones_demo_sahel,aez8,sorghum,70,0,Warm / semiarid,S5,0.011529224,1040,6,boot,34,39,True
+zones_demo_sahel,aez8,sorghum,70,10,Warm / semiarid,S5,0.0031831057,1040,6,boot,34,39,True
+zones_demo_sahel,aez8,sorghum,70,20,Warm / semiarid,S5,0.0020238482,1040,6,boot,34,39,True
+zones_demo_sahel,aez8,sorghum,70,30,Warm / semiarid,S5,0.0010208947,1040,6,boot,34,39,True
+zones_demo_sahel,aez8,sorghum,70,40,Warm / semiarid,S5,0.0014387858,1036,6,boot,34,39,True
+zones_demo_sahel,aez8,sorghum,90,0,Warm / semiarid,S5,0.0031751697,1040,6,boot,47,54,True
+zones_demo_sahel,aez8,sorghum,90,10,Warm / semiarid,S5,0.0018149089,1040,6,boot,47,54,True
+zones_demo_sahel,aez8,sorghum,90,20,Warm / semiarid,S5,0.0009211066,1036,6,boot,47,54,True
+zones_demo_sahel,aez8,sorghum,90,30,Warm / semiarid,S5,0.002133125,1035,6,boot,47,54,True
+zones_demo_sahel,aez8,sorghum,90,40,Warm / semiarid,S5,0.0022002426,978,6,boot,47,54,True
+zones_demo_sahel,aez8,sorghum,110,0,Warm / semiarid,S5,0.0016591317,1036,6,boot,60,69,True
+zones_demo_sahel,aez8,sorghum,110,10,Warm / semiarid,S5,0.0015360785,1035,6,boot,60,69,True
+zones_demo_sahel,aez8,sorghum,110,20,Warm / semiarid,S5,0.0022330177,978,6,boot,60,69,True
+zones_demo_sahel,aez8,sorghum,110,30,Warm / semiarid,S5,0.0030372639,717,6,boot,60,69,True
+zones_demo_sahel,aez8,sorghum,110,40,Warm / semiarid,S5,0.00027382257,166,6,boot,60,69,True
+zones_demo_sahel,aez8,sorghum,130,0,Warm / semiarid,S5,0.0014947563,978,6,boot,73,85,True
+zones_demo_sahel,aez8,sorghum,130,10,Warm / semiarid,S5,0.0027769033,717,6,boot,73,85,True
+zones_demo_sahel,aez8,sorghum,130,20,Warm / semiarid,S5,0.0,166,6,boot,73,85,True
+zones_demo_sahel,aez8,sorghum,70,0,Warm / semiarid,S6,0.0094062975,1040,7,half-bloom,40,50,True
+zones_demo_sahel,aez8,sorghum,70,10,Warm / semiarid,S6,0.0032592409,1040,7,half-bloom,40,50,True
+zones_demo_sahel,aez8,sorghum,70,20,Warm / semiarid,S6,0.0019681912,1040,7,half-bloom,40,50,True
+zones_demo_sahel,aez8,sorghum,70,30,Warm / semiarid,S6,0.005231077,1040,7,half-bloom,40,50,True
+zones_demo_sahel,aez8,sorghum,70,40,Warm / semiarid,S6,0.021028243,1036,7,half-bloom,40,50,True
+zones_demo_sahel,aez8,sorghum,90,0,Warm / semiarid,S6,0.002380659,1040,7,half-bloom,55,67,True
+zones_demo_sahel,aez8,sorghum,90,10,Warm / semiarid,S6,0.0021823053,1040,7,half-bloom,55,67,True
+zones_demo_sahel,aez8,sorghum,90,20,Warm / semiarid,S6,0.01457522,1036,7,half-bloom,55,67,True
+zones_demo_sahel,aez8,sorghum,90,30,Warm / semiarid,S6,0.017353171,1035,7,half-bloom,55,67,True
+zones_demo_sahel,aez8,sorghum,90,40,Warm / semiarid,S6,0.05054823,978,7,half-bloom,55,67,True
+zones_demo_sahel,aez8,sorghum,110,0,Warm / semiarid,S6,0.006408397,1036,7,half-bloom,70,84,True
+zones_demo_sahel,aez8,sorghum,110,10,Warm / semiarid,S6,0.008908433,1035,7,half-bloom,70,84,True
+zones_demo_sahel,aez8,sorghum,110,20,Warm / semiarid,S6,0.028130049,978,7,half-bloom,70,84,True
+zones_demo_sahel,aez8,sorghum,110,30,Warm / semiarid,S6,0.041362528,717,7,half-bloom,70,84,True
+zones_demo_sahel,aez8,sorghum,110,40,Warm / semiarid,S6,0.0253799,166,7,half-bloom,70,84,True
+zones_demo_sahel,aez8,sorghum,130,0,Warm / semiarid,S6,0.010879649,978,7,half-bloom,86,101,True
+zones_demo_sahel,aez8,sorghum,130,10,Warm / semiarid,S6,0.013278215,717,7,half-bloom,86,101,True
+zones_demo_sahel,aez8,sorghum,130,20,Warm / semiarid,S6,0.007704364,166,7,half-bloom,86,101,True
+zones_demo_sahel,aez8,sorghum,70,0,Warm / semiarid,S7,0.0020430393,1040,8,soft dough,51,58,True
+zones_demo_sahel,aez8,sorghum,70,10,Warm / semiarid,S7,0.0017209293,1040,8,soft dough,51,58,True
+zones_demo_sahel,aez8,sorghum,70,20,Warm / semiarid,S7,0.004707653,1040,8,soft dough,51,58,True
+zones_demo_sahel,aez8,sorghum,70,30,Warm / semiarid,S7,0.034997355,1040,8,soft dough,51,58,True
+zones_demo_sahel,aez8,sorghum,70,40,Warm / semiarid,S7,0.062387917,1036,8,soft dough,51,58,True
+zones_demo_sahel,aez8,sorghum,90,0,Warm / semiarid,S7,0.0038582843,1040,8,soft dough,68,76,True
+zones_demo_sahel,aez8,sorghum,90,10,Warm / semiarid,S7,0.026174445,1040,8,soft dough,68,76,True
+zones_demo_sahel,aez8,sorghum,90,20,Warm / semiarid,S7,0.045782994,1036,8,soft dough,68,76,True
+zones_demo_sahel,aez8,sorghum,90,30,Warm / semiarid,S7,0.08946998,1035,8,soft dough,68,76,True
+zones_demo_sahel,aez8,sorghum,90,40,Warm / semiarid,S7,0.18018399,978,8,soft dough,68,76,True
+zones_demo_sahel,aez8,sorghum,110,0,Warm / semiarid,S7,0.03989308,1036,8,soft dough,85,94,False
+zones_demo_sahel,aez8,sorghum,110,10,Warm / semiarid,S7,0.06261743,1035,8,soft dough,85,94,False
+zones_demo_sahel,aez8,sorghum,110,20,Warm / semiarid,S7,0.13968779,978,8,soft dough,85,94,False
+zones_demo_sahel,aez8,sorghum,110,30,Warm / semiarid,S7,0.21987528,717,8,soft dough,85,94,False
+zones_demo_sahel,aez8,sorghum,110,40,Warm / semiarid,S7,0.226363,166,8,soft dough,85,94,False
+zones_demo_sahel,aez8,sorghum,130,0,Warm / semiarid,S7,0.10291739,978,8,soft dough,102,112,False
+zones_demo_sahel,aez8,sorghum,130,10,Warm / semiarid,S7,0.17345583,717,8,soft dough,102,112,False
+zones_demo_sahel,aez8,sorghum,130,20,Warm / semiarid,S7,0.1428825,166,8,soft dough,102,112,False
+zones_demo_sahel,aez8,sorghum,70,0,Warm / semiarid,S8,0.0014728247,1040,9,hard dough,59,69,False
+zones_demo_sahel,aez8,sorghum,70,10,Warm / semiarid,S8,0.00079542556,1040,9,hard dough,59,69,False
+zones_demo_sahel,aez8,sorghum,70,20,Warm / semiarid,S8,0.007511591,1040,9,hard dough,59,69,False
+zones_demo_sahel,aez8,sorghum,70,30,Warm / semiarid,S8,0.040328644,1040,9,hard dough,59,69,False
+zones_demo_sahel,aez8,sorghum,70,40,Warm / semiarid,S8,0.07152516,1036,9,hard dough,59,69,False
+zones_demo_sahel,aez8,sorghum,90,0,Warm / semiarid,S8,0.007910739,1040,9,hard dough,77,89,False
+zones_demo_sahel,aez8,sorghum,90,10,Warm / semiarid,S8,0.040307835,1040,9,hard dough,77,89,False
+zones_demo_sahel,aez8,sorghum,90,20,Warm / semiarid,S8,0.073471524,1036,9,hard dough,77,89,False
+zones_demo_sahel,aez8,sorghum,90,30,Warm / semiarid,S8,0.1465585,1035,9,hard dough,77,89,False
+zones_demo_sahel,aez8,sorghum,90,40,Warm / semiarid,S8,0.26163653,978,9,hard dough,77,89,False
+zones_demo_sahel,aez8,sorghum,110,0,Warm / semiarid,S8,0.07560406,1036,9,hard dough,95,109,False
+zones_demo_sahel,aez8,sorghum,110,10,Warm / semiarid,S8,0.14590202,1035,9,hard dough,95,109,False
+zones_demo_sahel,aez8,sorghum,110,20,Warm / semiarid,S8,0.2657546,978,9,hard dough,95,109,False
+zones_demo_sahel,aez8,sorghum,110,30,Warm / semiarid,S8,0.37476245,717,9,hard dough,95,109,False
+zones_demo_sahel,aez8,sorghum,110,40,Warm / semiarid,S8,0.38367638,166,9,hard dough,95,109,False
+zones_demo_sahel,aez8,sorghum,130,0,Warm / semiarid,S8,0.26470917,978,9,hard dough,113,129,False
+zones_demo_sahel,aez8,sorghum,130,10,Warm / semiarid,S8,0.37354657,717,9,hard dough,113,129,False
+zones_demo_sahel,aez8,sorghum,130,20,Warm / semiarid,S8,0.39325288,166,9,hard dough,113,129,False
+zones_demo_sahel,aez8,sorghum,70,0,ALL,SOW,0.010124324,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,70,10,ALL,SOW,0.011493162,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,70,20,ALL,SOW,0.014428676,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,70,30,ALL,SOW,0.0058749225,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,70,40,ALL,SOW,0.0015293991,1036,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,90,0,ALL,SOW,0.010116829,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,90,10,ALL,SOW,0.011624942,1040,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,90,20,ALL,SOW,0.014991633,1036,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,90,30,ALL,SOW,0.0059277792,1035,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,90,40,ALL,SOW,0.00017898619,978,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,110,0,ALL,SOW,0.010666105,1036,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,110,10,ALL,SOW,0.013167606,1035,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,110,20,ALL,SOW,0.017925631,978,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,110,30,ALL,SOW,0.002071385,717,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,110,40,ALL,SOW,0.0,166,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,130,0,ALL,SOW,0.011162888,978,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,130,10,ALL,SOW,0.010439948,717,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,130,20,ALL,SOW,0.0107738655,166,0,sowing to emergence,0,4,False
+zones_demo_sahel,aez8,sorghum,70,0,ALL,S0,0.021892438,1040,1,emergence,5,9,False
+zones_demo_sahel,aez8,sorghum,70,10,ALL,S0,0.017418444,1040,1,emergence,5,9,False
+zones_demo_sahel,aez8,sorghum,70,20,ALL,S0,0.017260099,1040,1,emergence,5,9,False
+zones_demo_sahel,aez8,sorghum,70,30,ALL,S0,0.006972258,1040,1,emergence,5,9,False
+zones_demo_sahel,aez8,sorghum,70,40,ALL,S0,0.0022069425,1036,1,emergence,5,9,False
+zones_demo_sahel,aez8,sorghum,90,0,ALL,S0,0.026802825,1040,1,emergence,5,12,False
+zones_demo_sahel,aez8,sorghum,90,10,ALL,S0,0.029727666,1040,1,emergence,5,12,False
+zones_demo_sahel,aez8,sorghum,90,20,ALL,S0,0.023931855,1036,1,emergence,5,12,False
+zones_demo_sahel,aez8,sorghum,90,30,ALL,S0,0.0073640742,1035,1,emergence,5,12,False
+zones_demo_sahel,aez8,sorghum,90,40,ALL,S0,0.00042705474,978,1,emergence,5,12,False
+zones_demo_sahel,aez8,sorghum,110,0,ALL,S0,0.030659879,1036,1,emergence,5,14,False
+zones_demo_sahel,aez8,sorghum,110,10,ALL,S0,0.033913765,1035,1,emergence,5,14,False
+zones_demo_sahel,aez8,sorghum,110,20,ALL,S0,0.02570417,978,1,emergence,5,14,False
+zones_demo_sahel,aez8,sorghum,110,30,ALL,S0,0.0024273475,717,1,emergence,5,14,False
+zones_demo_sahel,aez8,sorghum,110,40,ALL,S0,0.001334389,166,1,emergence,5,14,False
+zones_demo_sahel,aez8,sorghum,130,0,ALL,S0,0.03296467,978,1,emergence,5,16,False
+zones_demo_sahel,aez8,sorghum,130,10,ALL,S0,0.029146332,717,1,emergence,5,16,False
+zones_demo_sahel,aez8,sorghum,130,20,ALL,S0,0.012000511,166,1,emergence,5,16,False
+zones_demo_sahel,aez8,sorghum,70,0,ALL,S1,0.033045147,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,sorghum,70,10,ALL,S1,0.032658026,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,sorghum,70,20,ALL,S1,0.024160326,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,sorghum,70,30,ALL,S1,0.008457217,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,sorghum,70,40,ALL,S1,0.003097807,1036,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,sorghum,90,0,ALL,S1,0.03381001,1040,2,3-leaf,13,21,False
+zones_demo_sahel,aez8,sorghum,90,10,ALL,S1,0.032523118,1040,2,3-leaf,13,21,False
+zones_demo_sahel,aez8,sorghum,90,20,ALL,S1,0.015081462,1036,2,3-leaf,13,21,False
+zones_demo_sahel,aez8,sorghum,90,30,ALL,S1,0.0019322,1035,2,3-leaf,13,21,False
+zones_demo_sahel,aez8,sorghum,90,40,ALL,S1,0.00033952825,978,2,3-leaf,13,21,False
+zones_demo_sahel,aez8,sorghum,110,0,ALL,S1,0.043408655,1036,2,3-leaf,15,26,False
+zones_demo_sahel,aez8,sorghum,110,10,ALL,S1,0.032308348,1035,2,3-leaf,15,26,False
+zones_demo_sahel,aez8,sorghum,110,20,ALL,S1,0.009608657,978,2,3-leaf,15,26,False
+zones_demo_sahel,aez8,sorghum,110,30,ALL,S1,0.0006816673,717,2,3-leaf,15,26,False
+zones_demo_sahel,aez8,sorghum,110,40,ALL,S1,0.001334389,166,2,3-leaf,15,26,False
+zones_demo_sahel,aez8,sorghum,130,0,ALL,S1,0.04701235,978,2,3-leaf,17,31,False
+zones_demo_sahel,aez8,sorghum,130,10,ALL,S1,0.019901851,717,2,3-leaf,17,31,False
+zones_demo_sahel,aez8,sorghum,130,20,ALL,S1,0.0023100309,166,2,3-leaf,17,31,False
+zones_demo_sahel,aez8,sorghum,70,0,ALL,S2,0.03692726,1040,3,5-leaf,17,23,False
+zones_demo_sahel,aez8,sorghum,70,10,ALL,S2,0.025175609,1040,3,5-leaf,17,23,False
+zones_demo_sahel,aez8,sorghum,70,20,ALL,S2,0.010960389,1040,3,5-leaf,17,23,False
+zones_demo_sahel,aez8,sorghum,70,30,ALL,S2,0.003264189,1040,3,5-leaf,17,23,False
+zones_demo_sahel,aez8,sorghum,70,40,ALL,S2,0.0015848068,1036,3,5-leaf,17,23,False
+zones_demo_sahel,aez8,sorghum,90,0,ALL,S2,0.036896933,1040,3,5-leaf,22,31,False
+zones_demo_sahel,aez8,sorghum,90,10,ALL,S2,0.019564372,1040,3,5-leaf,22,31,False
+zones_demo_sahel,aez8,sorghum,90,20,ALL,S2,0.0041955723,1036,3,5-leaf,22,31,False
+zones_demo_sahel,aez8,sorghum,90,30,ALL,S2,0.00060222374,1035,3,5-leaf,22,31,False
+zones_demo_sahel,aez8,sorghum,90,40,ALL,S2,0.00020640738,978,3,5-leaf,22,31,False
+zones_demo_sahel,aez8,sorghum,110,0,ALL,S2,0.026541093,1036,3,5-leaf,27,39,False
+zones_demo_sahel,aez8,sorghum,110,10,ALL,S2,0.010032012,1035,3,5-leaf,27,39,False
+zones_demo_sahel,aez8,sorghum,110,20,ALL,S2,0.0006251494,978,3,5-leaf,27,39,False
+zones_demo_sahel,aez8,sorghum,110,30,ALL,S2,0.0003773606,717,3,5-leaf,27,39,False
+zones_demo_sahel,aez8,sorghum,110,40,ALL,S2,0.0005357398,166,3,5-leaf,27,39,False
+zones_demo_sahel,aez8,sorghum,130,0,ALL,S2,0.020110507,978,3,5-leaf,32,47,False
+zones_demo_sahel,aez8,sorghum,130,10,ALL,S2,0.0008404519,717,3,5-leaf,32,47,False
+zones_demo_sahel,aez8,sorghum,130,20,ALL,S2,0.001334389,166,3,5-leaf,32,47,False
+zones_demo_sahel,aez8,sorghum,70,0,ALL,S3,0.025221905,1040,4,growing point differentiation,24,28,True
+zones_demo_sahel,aez8,sorghum,70,10,ALL,S3,0.011531354,1040,4,growing point differentiation,24,28,True
+zones_demo_sahel,aez8,sorghum,70,20,ALL,S3,0.0030636776,1040,4,growing point differentiation,24,28,True
+zones_demo_sahel,aez8,sorghum,70,30,ALL,S3,0.0019597756,1040,4,growing point differentiation,24,28,True
+zones_demo_sahel,aez8,sorghum,70,40,ALL,S3,0.0009124423,1036,4,growing point differentiation,24,28,True
+zones_demo_sahel,aez8,sorghum,90,0,ALL,S3,0.018827762,1040,4,growing point differentiation,32,38,False
+zones_demo_sahel,aez8,sorghum,90,10,ALL,S3,0.0032363338,1040,4,growing point differentiation,32,38,False
+zones_demo_sahel,aez8,sorghum,90,20,ALL,S3,0.0018746164,1036,4,growing point differentiation,32,38,False
+zones_demo_sahel,aez8,sorghum,90,30,ALL,S3,0.00060668605,1035,4,growing point differentiation,32,38,False
+zones_demo_sahel,aez8,sorghum,90,40,ALL,S3,0.0006740855,978,4,growing point differentiation,32,38,False
+zones_demo_sahel,aez8,sorghum,110,0,ALL,S3,0.009122692,1036,4,growing point differentiation,40,49,False
+zones_demo_sahel,aez8,sorghum,110,10,ALL,S3,0.00065920374,1035,4,growing point differentiation,40,49,False
+zones_demo_sahel,aez8,sorghum,110,20,ALL,S3,0.00013658425,978,4,growing point differentiation,40,49,False
+zones_demo_sahel,aez8,sorghum,110,30,ALL,S3,0.0005975167,717,4,growing point differentiation,40,49,False
+zones_demo_sahel,aez8,sorghum,110,40,ALL,S3,0.0005357398,166,4,growing point differentiation,40,49,False
+zones_demo_sahel,aez8,sorghum,130,0,ALL,S3,0.00042705474,978,4,growing point differentiation,48,60,False
+zones_demo_sahel,aez8,sorghum,130,10,ALL,S3,0.0003773606,717,4,growing point differentiation,48,60,False
+zones_demo_sahel,aez8,sorghum,130,20,ALL,S3,0.0005357398,166,4,growing point differentiation,48,60,False
+zones_demo_sahel,aez8,sorghum,70,0,ALL,S4,0.023847988,1040,5,flag leaf visible,29,33,True
+zones_demo_sahel,aez8,sorghum,70,10,ALL,S4,0.008973953,1040,5,flag leaf visible,29,33,True
+zones_demo_sahel,aez8,sorghum,70,20,ALL,S4,0.0030221976,1040,5,flag leaf visible,29,33,True
+zones_demo_sahel,aez8,sorghum,70,30,ALL,S4,0.0017482828,1040,5,flag leaf visible,29,33,True
+zones_demo_sahel,aez8,sorghum,70,40,ALL,S4,0.00096878054,1036,5,flag leaf visible,29,33,True
+zones_demo_sahel,aez8,sorghum,90,0,ALL,S4,0.009340571,1040,5,flag leaf visible,39,46,True
+zones_demo_sahel,aez8,sorghum,90,10,ALL,S4,0.0031799003,1040,5,flag leaf visible,39,46,True
+zones_demo_sahel,aez8,sorghum,90,20,ALL,S4,0.0015111986,1036,5,flag leaf visible,39,46,True
+zones_demo_sahel,aez8,sorghum,90,30,ALL,S4,0.0015616637,1035,5,flag leaf visible,39,46,True
+zones_demo_sahel,aez8,sorghum,90,40,ALL,S4,0.0015248295,978,5,flag leaf visible,39,46,True
+zones_demo_sahel,aez8,sorghum,110,0,ALL,S4,0.003211729,1036,5,flag leaf visible,50,59,True
+zones_demo_sahel,aez8,sorghum,110,10,ALL,S4,0.000551067,1035,5,flag leaf visible,50,59,True
+zones_demo_sahel,aez8,sorghum,110,20,ALL,S4,0.0006042624,978,5,flag leaf visible,50,59,True
+zones_demo_sahel,aez8,sorghum,110,30,ALL,S4,0.0025360188,717,5,flag leaf visible,50,59,True
+zones_demo_sahel,aez8,sorghum,110,40,ALL,S4,0.0,166,5,flag leaf visible,50,59,True
+zones_demo_sahel,aez8,sorghum,130,0,ALL,S4,0.000256262,978,5,flag leaf visible,61,72,True
+zones_demo_sahel,aez8,sorghum,130,10,ALL,S4,0.0008156793,717,5,flag leaf visible,61,72,True
+zones_demo_sahel,aez8,sorghum,130,20,ALL,S4,0.0005357398,166,5,flag leaf visible,61,72,True
+zones_demo_sahel,aez8,sorghum,70,0,ALL,S5,0.011529224,1040,6,boot,34,39,True
+zones_demo_sahel,aez8,sorghum,70,10,ALL,S5,0.0031831057,1040,6,boot,34,39,True
+zones_demo_sahel,aez8,sorghum,70,20,ALL,S5,0.0020238482,1040,6,boot,34,39,True
+zones_demo_sahel,aez8,sorghum,70,30,ALL,S5,0.0010208947,1040,6,boot,34,39,True
+zones_demo_sahel,aez8,sorghum,70,40,ALL,S5,0.0014387858,1036,6,boot,34,39,True
+zones_demo_sahel,aez8,sorghum,90,0,ALL,S5,0.0031751697,1040,6,boot,47,54,True
+zones_demo_sahel,aez8,sorghum,90,10,ALL,S5,0.0018149089,1040,6,boot,47,54,True
+zones_demo_sahel,aez8,sorghum,90,20,ALL,S5,0.0009211066,1036,6,boot,47,54,True
+zones_demo_sahel,aez8,sorghum,90,30,ALL,S5,0.002133125,1035,6,boot,47,54,True
+zones_demo_sahel,aez8,sorghum,90,40,ALL,S5,0.0022002426,978,6,boot,47,54,True
+zones_demo_sahel,aez8,sorghum,110,0,ALL,S5,0.0016591317,1036,6,boot,60,69,True
+zones_demo_sahel,aez8,sorghum,110,10,ALL,S5,0.0015360785,1035,6,boot,60,69,True
+zones_demo_sahel,aez8,sorghum,110,20,ALL,S5,0.0022330177,978,6,boot,60,69,True
+zones_demo_sahel,aez8,sorghum,110,30,ALL,S5,0.0030372639,717,6,boot,60,69,True
+zones_demo_sahel,aez8,sorghum,110,40,ALL,S5,0.00027382257,166,6,boot,60,69,True
+zones_demo_sahel,aez8,sorghum,130,0,ALL,S5,0.0014947563,978,6,boot,73,85,True
+zones_demo_sahel,aez8,sorghum,130,10,ALL,S5,0.0027769033,717,6,boot,73,85,True
+zones_demo_sahel,aez8,sorghum,130,20,ALL,S5,0.0,166,6,boot,73,85,True
+zones_demo_sahel,aez8,sorghum,70,0,ALL,S6,0.0094062975,1040,7,half-bloom,40,50,True
+zones_demo_sahel,aez8,sorghum,70,10,ALL,S6,0.0032592409,1040,7,half-bloom,40,50,True
+zones_demo_sahel,aez8,sorghum,70,20,ALL,S6,0.0019681912,1040,7,half-bloom,40,50,True
+zones_demo_sahel,aez8,sorghum,70,30,ALL,S6,0.005231077,1040,7,half-bloom,40,50,True
+zones_demo_sahel,aez8,sorghum,70,40,ALL,S6,0.021028243,1036,7,half-bloom,40,50,True
+zones_demo_sahel,aez8,sorghum,90,0,ALL,S6,0.002380659,1040,7,half-bloom,55,67,True
+zones_demo_sahel,aez8,sorghum,90,10,ALL,S6,0.0021823053,1040,7,half-bloom,55,67,True
+zones_demo_sahel,aez8,sorghum,90,20,ALL,S6,0.01457522,1036,7,half-bloom,55,67,True
+zones_demo_sahel,aez8,sorghum,90,30,ALL,S6,0.017353171,1035,7,half-bloom,55,67,True
+zones_demo_sahel,aez8,sorghum,90,40,ALL,S6,0.05054823,978,7,half-bloom,55,67,True
+zones_demo_sahel,aez8,sorghum,110,0,ALL,S6,0.006408397,1036,7,half-bloom,70,84,True
+zones_demo_sahel,aez8,sorghum,110,10,ALL,S6,0.008908433,1035,7,half-bloom,70,84,True
+zones_demo_sahel,aez8,sorghum,110,20,ALL,S6,0.028130049,978,7,half-bloom,70,84,True
+zones_demo_sahel,aez8,sorghum,110,30,ALL,S6,0.041362528,717,7,half-bloom,70,84,True
+zones_demo_sahel,aez8,sorghum,110,40,ALL,S6,0.0253799,166,7,half-bloom,70,84,True
+zones_demo_sahel,aez8,sorghum,130,0,ALL,S6,0.010879649,978,7,half-bloom,86,101,True
+zones_demo_sahel,aez8,sorghum,130,10,ALL,S6,0.013278215,717,7,half-bloom,86,101,True
+zones_demo_sahel,aez8,sorghum,130,20,ALL,S6,0.007704364,166,7,half-bloom,86,101,True
+zones_demo_sahel,aez8,sorghum,70,0,ALL,S7,0.0020430393,1040,8,soft dough,51,58,True
+zones_demo_sahel,aez8,sorghum,70,10,ALL,S7,0.0017209293,1040,8,soft dough,51,58,True
+zones_demo_sahel,aez8,sorghum,70,20,ALL,S7,0.004707653,1040,8,soft dough,51,58,True
+zones_demo_sahel,aez8,sorghum,70,30,ALL,S7,0.034997355,1040,8,soft dough,51,58,True
+zones_demo_sahel,aez8,sorghum,70,40,ALL,S7,0.062387917,1036,8,soft dough,51,58,True
+zones_demo_sahel,aez8,sorghum,90,0,ALL,S7,0.0038582843,1040,8,soft dough,68,76,True
+zones_demo_sahel,aez8,sorghum,90,10,ALL,S7,0.026174445,1040,8,soft dough,68,76,True
+zones_demo_sahel,aez8,sorghum,90,20,ALL,S7,0.045782994,1036,8,soft dough,68,76,True
+zones_demo_sahel,aez8,sorghum,90,30,ALL,S7,0.08946998,1035,8,soft dough,68,76,True
+zones_demo_sahel,aez8,sorghum,90,40,ALL,S7,0.18018399,978,8,soft dough,68,76,True
+zones_demo_sahel,aez8,sorghum,110,0,ALL,S7,0.03989308,1036,8,soft dough,85,94,False
+zones_demo_sahel,aez8,sorghum,110,10,ALL,S7,0.06261743,1035,8,soft dough,85,94,False
+zones_demo_sahel,aez8,sorghum,110,20,ALL,S7,0.13968779,978,8,soft dough,85,94,False
+zones_demo_sahel,aez8,sorghum,110,30,ALL,S7,0.21987528,717,8,soft dough,85,94,False
+zones_demo_sahel,aez8,sorghum,110,40,ALL,S7,0.226363,166,8,soft dough,85,94,False
+zones_demo_sahel,aez8,sorghum,130,0,ALL,S7,0.10291739,978,8,soft dough,102,112,False
+zones_demo_sahel,aez8,sorghum,130,10,ALL,S7,0.17345583,717,8,soft dough,102,112,False
+zones_demo_sahel,aez8,sorghum,130,20,ALL,S7,0.1428825,166,8,soft dough,102,112,False
+zones_demo_sahel,aez8,sorghum,70,0,ALL,S8,0.0014728247,1040,9,hard dough,59,69,False
+zones_demo_sahel,aez8,sorghum,70,10,ALL,S8,0.00079542556,1040,9,hard dough,59,69,False
+zones_demo_sahel,aez8,sorghum,70,20,ALL,S8,0.007511591,1040,9,hard dough,59,69,False
+zones_demo_sahel,aez8,sorghum,70,30,ALL,S8,0.040328644,1040,9,hard dough,59,69,False
+zones_demo_sahel,aez8,sorghum,70,40,ALL,S8,0.07152516,1036,9,hard dough,59,69,False
+zones_demo_sahel,aez8,sorghum,90,0,ALL,S8,0.007910739,1040,9,hard dough,77,89,False
+zones_demo_sahel,aez8,sorghum,90,10,ALL,S8,0.040307835,1040,9,hard dough,77,89,False
+zones_demo_sahel,aez8,sorghum,90,20,ALL,S8,0.073471524,1036,9,hard dough,77,89,False
+zones_demo_sahel,aez8,sorghum,90,30,ALL,S8,0.1465585,1035,9,hard dough,77,89,False
+zones_demo_sahel,aez8,sorghum,90,40,ALL,S8,0.26163653,978,9,hard dough,77,89,False
+zones_demo_sahel,aez8,sorghum,110,0,ALL,S8,0.07560406,1036,9,hard dough,95,109,False
+zones_demo_sahel,aez8,sorghum,110,10,ALL,S8,0.14590202,1035,9,hard dough,95,109,False
+zones_demo_sahel,aez8,sorghum,110,20,ALL,S8,0.2657546,978,9,hard dough,95,109,False
+zones_demo_sahel,aez8,sorghum,110,30,ALL,S8,0.37476245,717,9,hard dough,95,109,False
+zones_demo_sahel,aez8,sorghum,110,40,ALL,S8,0.38367638,166,9,hard dough,95,109,False
+zones_demo_sahel,aez8,sorghum,130,0,ALL,S8,0.26470917,978,9,hard dough,113,129,False
+zones_demo_sahel,aez8,sorghum,130,10,ALL,S8,0.37354657,717,9,hard dough,113,129,False
+zones_demo_sahel,aez8,sorghum,130,20,ALL,S8,0.39325288,166,9,hard dough,113,129,False
+zones_demo_sahel,aez8,pearl_millet,70,0,Warm / semiarid,SOW,0.008279875,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,70,10,Warm / semiarid,SOW,0.010029896,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,70,20,Warm / semiarid,SOW,0.013771049,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,70,30,Warm / semiarid,SOW,0.0058530695,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,70,40,Warm / semiarid,SOW,0.0014116574,1036,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,90,0,Warm / semiarid,SOW,0.008289463,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,90,10,Warm / semiarid,SOW,0.010147385,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,90,20,Warm / semiarid,SOW,0.014324152,1036,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,90,30,Warm / semiarid,SOW,0.0059277792,1035,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,90,40,Warm / semiarid,SOW,8.752647e-05,978,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,110,0,Warm / semiarid,SOW,0.008757861,1036,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,110,10,Warm / semiarid,SOW,0.011842409,1035,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,110,20,Warm / semiarid,SOW,0.017071377,978,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,110,30,Warm / semiarid,SOW,0.002071385,717,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,110,40,Warm / semiarid,SOW,0.0,166,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,130,0,Warm / semiarid,SOW,0.00988192,978,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,130,10,Warm / semiarid,SOW,0.009998781,717,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,130,20,Warm / semiarid,SOW,0.007973975,166,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,70,0,Warm / semiarid,P0,0.013629785,1040,1,emergence,4,7,False
+zones_demo_sahel,aez8,pearl_millet,70,10,Warm / semiarid,P0,0.015699571,1040,1,emergence,4,7,False
+zones_demo_sahel,aez8,pearl_millet,70,20,Warm / semiarid,P0,0.016798133,1040,1,emergence,4,7,False
+zones_demo_sahel,aez8,pearl_millet,70,30,Warm / semiarid,P0,0.006972258,1040,1,emergence,4,7,False
+zones_demo_sahel,aez8,pearl_millet,70,40,Warm / semiarid,P0,0.0019077448,1036,1,emergence,4,7,False
+zones_demo_sahel,aez8,pearl_millet,90,0,Warm / semiarid,P0,0.021726863,1040,1,emergence,4,9,False
+zones_demo_sahel,aez8,pearl_millet,90,10,Warm / semiarid,P0,0.017584588,1040,1,emergence,4,9,False
+zones_demo_sahel,aez8,pearl_millet,90,20,Warm / semiarid,P0,0.017892657,1036,1,emergence,4,9,False
+zones_demo_sahel,aez8,pearl_millet,90,30,Warm / semiarid,P0,0.007224248,1035,1,emergence,4,9,False
+zones_demo_sahel,aez8,pearl_millet,90,40,Warm / semiarid,P0,0.00039865208,978,1,emergence,4,9,False
+zones_demo_sahel,aez8,pearl_millet,110,0,Warm / semiarid,P0,0.02538554,1036,1,emergence,4,11,False
+zones_demo_sahel,aez8,pearl_millet,110,10,Warm / semiarid,P0,0.025314802,1035,1,emergence,4,11,False
+zones_demo_sahel,aez8,pearl_millet,110,20,Warm / semiarid,P0,0.025675766,978,1,emergence,4,11,False
+zones_demo_sahel,aez8,pearl_millet,110,30,Warm / semiarid,P0,0.0022706022,717,1,emergence,4,11,False
+zones_demo_sahel,aez8,pearl_millet,110,40,Warm / semiarid,P0,0.001334389,166,1,emergence,4,11,False
+zones_demo_sahel,aez8,pearl_millet,130,0,Warm / semiarid,P0,0.029757598,978,1,emergence,4,12,False
+zones_demo_sahel,aez8,pearl_millet,130,10,Warm / semiarid,P0,0.02387362,717,1,emergence,4,12,False
+zones_demo_sahel,aez8,pearl_millet,130,20,Warm / semiarid,P0,0.012000511,166,1,emergence,4,12,False
+zones_demo_sahel,aez8,pearl_millet,70,0,Warm / semiarid,P1,0.026957285,1040,2,3-leaf,8,12,False
+zones_demo_sahel,aez8,pearl_millet,70,10,Warm / semiarid,P1,0.029500937,1040,2,3-leaf,8,12,False
+zones_demo_sahel,aez8,pearl_millet,70,20,Warm / semiarid,P1,0.02375758,1040,2,3-leaf,8,12,False
+zones_demo_sahel,aez8,pearl_millet,70,30,Warm / semiarid,P1,0.008263629,1040,2,3-leaf,8,12,False
+zones_demo_sahel,aez8,pearl_millet,70,40,Warm / semiarid,P1,0.0029752858,1036,2,3-leaf,8,12,False
+zones_demo_sahel,aez8,pearl_millet,90,0,Warm / semiarid,P1,0.032879964,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,pearl_millet,90,10,Warm / semiarid,P1,0.03279153,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,pearl_millet,90,20,Warm / semiarid,P1,0.024369862,1036,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,pearl_millet,90,30,Warm / semiarid,P1,0.0071260077,1035,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,pearl_millet,90,40,Warm / semiarid,P1,0.00037251198,978,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,pearl_millet,110,0,Warm / semiarid,P1,0.035699572,1036,2,3-leaf,12,19,False
+zones_demo_sahel,aez8,pearl_millet,110,10,Warm / semiarid,P1,0.033904683,1035,2,3-leaf,12,19,False
+zones_demo_sahel,aez8,pearl_millet,110,20,Warm / semiarid,P1,0.019998481,978,2,3-leaf,12,19,False
+zones_demo_sahel,aez8,pearl_millet,110,30,Warm / semiarid,P1,0.00079686753,717,2,3-leaf,12,19,False
+zones_demo_sahel,aez8,pearl_millet,110,40,Warm / semiarid,P1,0.001334389,166,2,3-leaf,12,19,False
+zones_demo_sahel,aez8,pearl_millet,130,0,Warm / semiarid,P1,0.04137847,978,2,3-leaf,13,23,False
+zones_demo_sahel,aez8,pearl_millet,130,10,Warm / semiarid,P1,0.023439284,717,2,3-leaf,13,23,False
+zones_demo_sahel,aez8,pearl_millet,130,20,Warm / semiarid,P1,0.0054199295,166,2,3-leaf,13,23,False
+zones_demo_sahel,aez8,pearl_millet,70,0,Warm / semiarid,P2,0.041503046,1040,3,tillering,13,24,False
+zones_demo_sahel,aez8,pearl_millet,70,10,Warm / semiarid,P2,0.033225417,1040,3,tillering,13,24,False
+zones_demo_sahel,aez8,pearl_millet,70,20,Warm / semiarid,P2,0.015225311,1040,3,tillering,13,24,False
+zones_demo_sahel,aez8,pearl_millet,70,30,Warm / semiarid,P2,0.0042095687,1040,3,tillering,13,24,False
+zones_demo_sahel,aez8,pearl_millet,70,40,Warm / semiarid,P2,0.0021038763,1036,3,tillering,13,24,False
+zones_demo_sahel,aez8,pearl_millet,90,0,Warm / semiarid,P2,0.04685989,1040,3,tillering,17,33,False
+zones_demo_sahel,aez8,pearl_millet,90,10,Warm / semiarid,P2,0.026935244,1040,3,tillering,17,33,False
+zones_demo_sahel,aez8,pearl_millet,90,20,Warm / semiarid,P2,0.012300002,1036,3,tillering,17,33,False
+zones_demo_sahel,aez8,pearl_millet,90,30,Warm / semiarid,P2,0.0010543189,1035,3,tillering,17,33,False
+zones_demo_sahel,aez8,pearl_millet,90,40,Warm / semiarid,P2,0.0006033678,978,3,tillering,17,33,False
+zones_demo_sahel,aez8,pearl_millet,110,0,Warm / semiarid,P2,0.043500684,1036,3,tillering,20,42,False
+zones_demo_sahel,aez8,pearl_millet,110,10,Warm / semiarid,P2,0.026094569,1035,3,tillering,20,42,False
+zones_demo_sahel,aez8,pearl_millet,110,20,Warm / semiarid,P2,0.005439567,978,3,tillering,20,42,False
+zones_demo_sahel,aez8,pearl_millet,110,30,Warm / semiarid,P2,0.0008107233,717,3,tillering,20,42,False
+zones_demo_sahel,aez8,pearl_millet,110,40,Warm / semiarid,P2,0.0005357398,166,3,tillering,20,42,False
+zones_demo_sahel,aez8,pearl_millet,130,0,Warm / semiarid,P2,0.032107137,978,3,tillering,24,52,False
+zones_demo_sahel,aez8,pearl_millet,130,10,Warm / semiarid,P2,0.008417869,717,3,tillering,24,52,False
+zones_demo_sahel,aez8,pearl_millet,130,20,Warm / semiarid,P2,0.001334389,166,3,tillering,24,52,False
+zones_demo_sahel,aez8,pearl_millet,70,0,Warm / semiarid,P3,0.022872824,1040,4,panicle initiation,25,29,False
+zones_demo_sahel,aez8,pearl_millet,70,10,Warm / semiarid,P3,0.011244722,1040,4,panicle initiation,25,29,False
+zones_demo_sahel,aez8,pearl_millet,70,20,Warm / semiarid,P3,0.0031292369,1040,4,panicle initiation,25,29,False
+zones_demo_sahel,aez8,pearl_millet,70,30,Warm / semiarid,P3,0.0019782688,1040,4,panicle initiation,25,29,False
+zones_demo_sahel,aez8,pearl_millet,70,40,Warm / semiarid,P3,0.00074502564,1036,4,panicle initiation,25,29,False
+zones_demo_sahel,aez8,pearl_millet,90,0,Warm / semiarid,P3,0.011482056,1040,4,panicle initiation,34,40,False
+zones_demo_sahel,aez8,pearl_millet,90,10,Warm / semiarid,P3,0.0033905942,1040,4,panicle initiation,34,40,False
+zones_demo_sahel,aez8,pearl_millet,90,20,Warm / semiarid,P3,0.0018691565,1036,4,panicle initiation,34,40,False
+zones_demo_sahel,aez8,pearl_millet,90,30,Warm / semiarid,P3,0.0005819121,1035,4,panicle initiation,34,40,False
+zones_demo_sahel,aez8,pearl_millet,90,40,Warm / semiarid,P3,0.00057585974,978,4,panicle initiation,34,40,False
+zones_demo_sahel,aez8,pearl_millet,110,0,Warm / semiarid,P3,0.004023595,1036,4,panicle initiation,43,51,False
+zones_demo_sahel,aez8,pearl_millet,110,10,Warm / semiarid,P3,0.0005677171,1035,4,panicle initiation,43,51,False
+zones_demo_sahel,aez8,pearl_millet,110,20,Warm / semiarid,P3,0.00013658425,978,4,panicle initiation,43,51,False
+zones_demo_sahel,aez8,pearl_millet,110,30,Warm / semiarid,P3,0.0005975167,717,4,panicle initiation,43,51,False
+zones_demo_sahel,aez8,pearl_millet,110,40,Warm / semiarid,P3,0.0005357398,166,4,panicle initiation,43,51,False
+zones_demo_sahel,aez8,pearl_millet,130,0,Warm / semiarid,P3,0.00033952825,978,4,panicle initiation,53,62,False
+zones_demo_sahel,aez8,pearl_millet,130,10,Warm / semiarid,P3,0.00022297516,717,4,panicle initiation,53,62,False
+zones_demo_sahel,aez8,pearl_millet,130,20,Warm / semiarid,P3,0.0005357398,166,4,panicle initiation,53,62,False
+zones_demo_sahel,aez8,pearl_millet,70,0,Warm / semiarid,P4,0.023159867,1040,5,flag leaf / boot,30,34,False
+zones_demo_sahel,aez8,pearl_millet,70,10,Warm / semiarid,P4,0.0085546775,1040,5,flag leaf / boot,30,34,False
+zones_demo_sahel,aez8,pearl_millet,70,20,Warm / semiarid,P4,0.002977983,1040,5,flag leaf / boot,30,34,False
+zones_demo_sahel,aez8,pearl_millet,70,30,Warm / semiarid,P4,0.0015942163,1040,5,flag leaf / boot,30,34,False
+zones_demo_sahel,aez8,pearl_millet,70,40,Warm / semiarid,P4,0.00087677175,1036,5,flag leaf / boot,30,34,False
+zones_demo_sahel,aez8,pearl_millet,90,0,Warm / semiarid,P4,0.0042306064,1040,5,flag leaf / boot,41,48,False
+zones_demo_sahel,aez8,pearl_millet,90,10,Warm / semiarid,P4,0.0020477206,1040,5,flag leaf / boot,41,48,False
+zones_demo_sahel,aez8,pearl_millet,90,20,Warm / semiarid,P4,0.0014150925,1036,5,flag leaf / boot,41,48,False
+zones_demo_sahel,aez8,pearl_millet,90,30,Warm / semiarid,P4,0.0015916977,1035,5,flag leaf / boot,41,48,False
+zones_demo_sahel,aez8,pearl_millet,90,40,Warm / semiarid,P4,0.002142646,978,5,flag leaf / boot,41,48,False
+zones_demo_sahel,aez8,pearl_millet,110,0,Warm / semiarid,P4,0.0019195117,1036,5,flag leaf / boot,52,61,False
+zones_demo_sahel,aez8,pearl_millet,110,10,Warm / semiarid,P4,0.0005822342,1035,5,flag leaf / boot,52,61,False
+zones_demo_sahel,aez8,pearl_millet,110,20,Warm / semiarid,P4,0.0006042624,978,5,flag leaf / boot,52,61,False
+zones_demo_sahel,aez8,pearl_millet,110,30,Warm / semiarid,P4,0.0025369143,717,5,flag leaf / boot,52,61,False
+zones_demo_sahel,aez8,pearl_millet,110,40,Warm / semiarid,P4,0.0,166,5,flag leaf / boot,52,61,False
+zones_demo_sahel,aez8,pearl_millet,130,0,Warm / semiarid,P4,0.0003319532,978,5,flag leaf / boot,63,75,False
+zones_demo_sahel,aez8,pearl_millet,130,10,Warm / semiarid,P4,0.0016680579,717,5,flag leaf / boot,63,75,False
+zones_demo_sahel,aez8,pearl_millet,130,20,Warm / semiarid,P4,0.0005357398,166,5,flag leaf / boot,63,75,False
+zones_demo_sahel,aez8,pearl_millet,70,0,Warm / semiarid,P5,0.011242593,1040,6,panicle emergence (heading),35,39,False
+zones_demo_sahel,aez8,pearl_millet,70,10,Warm / semiarid,P5,0.0031388912,1040,6,panicle emergence (heading),35,39,False
+zones_demo_sahel,aez8,pearl_millet,70,20,Warm / semiarid,P5,0.00195674,1040,6,panicle emergence (heading),35,39,False
+zones_demo_sahel,aez8,pearl_millet,70,30,Warm / semiarid,P5,0.00086325017,1040,6,panicle emergence (heading),35,39,False
+zones_demo_sahel,aez8,pearl_millet,70,40,Warm / semiarid,P5,0.0014387858,1036,6,panicle emergence (heading),35,39,False
+zones_demo_sahel,aez8,pearl_millet,90,0,Warm / semiarid,P5,0.0029784914,1040,6,panicle emergence (heading),49,54,False
+zones_demo_sahel,aez8,pearl_millet,90,10,Warm / semiarid,P5,0.0017019871,1040,6,panicle emergence (heading),49,54,False
+zones_demo_sahel,aez8,pearl_millet,90,20,Warm / semiarid,P5,0.0009211066,1036,6,panicle emergence (heading),49,54,False
+zones_demo_sahel,aez8,pearl_millet,90,30,Warm / semiarid,P5,0.0019233831,1035,6,panicle emergence (heading),49,54,False
+zones_demo_sahel,aez8,pearl_millet,90,40,Warm / semiarid,P5,0.0021649844,978,6,panicle emergence (heading),49,54,False
+zones_demo_sahel,aez8,pearl_millet,110,0,Warm / semiarid,P5,0.0014150925,1036,6,panicle emergence (heading),62,70,False
+zones_demo_sahel,aez8,pearl_millet,110,10,Warm / semiarid,P5,0.0015360785,1035,6,panicle emergence (heading),62,70,False
+zones_demo_sahel,aez8,pearl_millet,110,20,Warm / semiarid,P5,0.00246756,978,6,panicle emergence (heading),62,70,False
+zones_demo_sahel,aez8,pearl_millet,110,30,Warm / semiarid,P5,0.0029355285,717,6,panicle emergence (heading),62,70,False
+zones_demo_sahel,aez8,pearl_millet,110,40,Warm / semiarid,P5,0.00027382257,166,6,panicle emergence (heading),62,70,False
+zones_demo_sahel,aez8,pearl_millet,130,0,Warm / semiarid,P5,0.0015248295,978,6,panicle emergence (heading),76,86,False
+zones_demo_sahel,aez8,pearl_millet,130,10,Warm / semiarid,P5,0.0025079912,717,6,panicle emergence (heading),76,86,False
+zones_demo_sahel,aez8,pearl_millet,130,20,Warm / semiarid,P5,0.00027382257,166,6,panicle emergence (heading),76,86,False
+zones_demo_sahel,aez8,pearl_millet,70,0,Warm / semiarid,P6,0.0094062975,1040,7,flowering (anthesis),40,50,True
+zones_demo_sahel,aez8,pearl_millet,70,10,Warm / semiarid,P6,0.0032592409,1040,7,flowering (anthesis),40,50,True
+zones_demo_sahel,aez8,pearl_millet,70,20,Warm / semiarid,P6,0.0019681912,1040,7,flowering (anthesis),40,50,True
+zones_demo_sahel,aez8,pearl_millet,70,30,Warm / semiarid,P6,0.005231077,1040,7,flowering (anthesis),40,50,True
+zones_demo_sahel,aez8,pearl_millet,70,40,Warm / semiarid,P6,0.021028243,1036,7,flowering (anthesis),40,50,True
+zones_demo_sahel,aez8,pearl_millet,90,0,Warm / semiarid,P6,0.002380659,1040,7,flowering (anthesis),55,67,True
+zones_demo_sahel,aez8,pearl_millet,90,10,Warm / semiarid,P6,0.0021823053,1040,7,flowering (anthesis),55,67,True
+zones_demo_sahel,aez8,pearl_millet,90,20,Warm / semiarid,P6,0.01457522,1036,7,flowering (anthesis),55,67,True
+zones_demo_sahel,aez8,pearl_millet,90,30,Warm / semiarid,P6,0.017353171,1035,7,flowering (anthesis),55,67,True
+zones_demo_sahel,aez8,pearl_millet,90,40,Warm / semiarid,P6,0.05054823,978,7,flowering (anthesis),55,67,True
+zones_demo_sahel,aez8,pearl_millet,110,0,Warm / semiarid,P6,0.0070887194,1036,7,flowering (anthesis),71,85,True
+zones_demo_sahel,aez8,pearl_millet,110,10,Warm / semiarid,P6,0.009800998,1035,7,flowering (anthesis),71,85,True
+zones_demo_sahel,aez8,pearl_millet,110,20,Warm / semiarid,P6,0.030923393,978,7,flowering (anthesis),71,85,True
+zones_demo_sahel,aez8,pearl_millet,110,30,Warm / semiarid,P6,0.05552432,717,7,flowering (anthesis),71,85,True
+zones_demo_sahel,aez8,pearl_millet,110,40,Warm / semiarid,P6,0.03407418,166,7,flowering (anthesis),71,85,True
+zones_demo_sahel,aez8,pearl_millet,130,0,Warm / semiarid,P6,0.023642698,978,7,flowering (anthesis),87,102,True
+zones_demo_sahel,aez8,pearl_millet,130,10,Warm / semiarid,P6,0.02250621,717,7,flowering (anthesis),87,102,True
+zones_demo_sahel,aez8,pearl_millet,130,20,Warm / semiarid,P6,0.0135340085,166,7,flowering (anthesis),87,102,True
+zones_demo_sahel,aez8,pearl_millet,70,0,Warm / semiarid,P7,0.0021309603,1040,8,milk,51,59,True
+zones_demo_sahel,aez8,pearl_millet,70,10,Warm / semiarid,P7,0.0017646357,1040,8,milk,51,59,True
+zones_demo_sahel,aez8,pearl_millet,70,20,Warm / semiarid,P7,0.005417343,1040,8,milk,51,59,True
+zones_demo_sahel,aez8,pearl_millet,70,30,Warm / semiarid,P7,0.036945514,1040,8,milk,51,59,True
+zones_demo_sahel,aez8,pearl_millet,70,40,Warm / semiarid,P7,0.0682713,1036,8,milk,51,59,True
+zones_demo_sahel,aez8,pearl_millet,90,0,Warm / semiarid,P7,0.0040371995,1040,8,milk,68,77,True
+zones_demo_sahel,aez8,pearl_millet,90,10,Warm / semiarid,P7,0.033197105,1040,8,milk,68,77,True
+zones_demo_sahel,aez8,pearl_millet,90,20,Warm / semiarid,P7,0.0546887,1036,8,milk,68,77,True
+zones_demo_sahel,aez8,pearl_millet,90,30,Warm / semiarid,P7,0.102813475,1035,8,milk,68,77,True
+zones_demo_sahel,aez8,pearl_millet,90,40,Warm / semiarid,P7,0.19833614,978,8,milk,68,77,True
+zones_demo_sahel,aez8,pearl_millet,110,0,Warm / semiarid,P7,0.04571405,1036,8,milk,86,96,True
+zones_demo_sahel,aez8,pearl_millet,110,10,Warm / semiarid,P7,0.088889524,1035,8,milk,86,96,True
+zones_demo_sahel,aez8,pearl_millet,110,20,Warm / semiarid,P7,0.17994902,978,8,milk,86,96,True
+zones_demo_sahel,aez8,pearl_millet,110,30,Warm / semiarid,P7,0.28882676,717,8,milk,86,96,True
+zones_demo_sahel,aez8,pearl_millet,110,40,Warm / semiarid,P7,0.26762113,166,8,milk,86,96,True
+zones_demo_sahel,aez8,pearl_millet,130,0,Warm / semiarid,P7,0.1390938,978,8,milk,103,114,True
+zones_demo_sahel,aez8,pearl_millet,130,10,Warm / semiarid,P7,0.21634237,717,8,milk,103,114,True
+zones_demo_sahel,aez8,pearl_millet,130,20,Warm / semiarid,P7,0.226363,166,8,milk,103,114,True
+zones_demo_sahel,aez8,pearl_millet,70,0,Warm / semiarid,P8,0.00127513,1040,9,dough,60,69,False
+zones_demo_sahel,aez8,pearl_millet,70,10,Warm / semiarid,P8,0.00070750475,1040,9,dough,60,69,False
+zones_demo_sahel,aez8,pearl_millet,70,20,Warm / semiarid,P8,0.007511591,1040,9,dough,60,69,False
+zones_demo_sahel,aez8,pearl_millet,70,30,Warm / semiarid,P8,0.03997891,1040,9,dough,60,69,False
+zones_demo_sahel,aez8,pearl_millet,70,40,Warm / semiarid,P8,0.070131704,1036,9,dough,60,69,False
+zones_demo_sahel,aez8,pearl_millet,90,0,Warm / semiarid,P8,0.007910739,1040,9,dough,78,89,False
+zones_demo_sahel,aez8,pearl_millet,90,10,Warm / semiarid,P8,0.04028494,1040,9,dough,78,89,False
+zones_demo_sahel,aez8,pearl_millet,90,20,Warm / semiarid,P8,0.07183828,1036,9,dough,78,89,False
+zones_demo_sahel,aez8,pearl_millet,90,30,Warm / semiarid,P8,0.13974084,1035,9,dough,78,89,False
+zones_demo_sahel,aez8,pearl_millet,90,40,Warm / semiarid,P8,0.26022455,978,9,dough,78,89,False
+zones_demo_sahel,aez8,pearl_millet,110,0,Warm / semiarid,P8,0.07326285,1036,9,dough,97,109,False
+zones_demo_sahel,aez8,pearl_millet,110,10,Warm / semiarid,P8,0.14405285,1035,9,dough,97,109,False
+zones_demo_sahel,aez8,pearl_millet,110,20,Warm / semiarid,P8,0.2585394,978,9,dough,97,109,False
+zones_demo_sahel,aez8,pearl_millet,110,30,Warm / semiarid,P8,0.36468792,717,9,dough,97,109,False
+zones_demo_sahel,aez8,pearl_millet,110,40,Warm / semiarid,P8,0.3745148,166,9,dough,97,109,False
+zones_demo_sahel,aez8,pearl_millet,130,0,Warm / semiarid,P8,0.26222795,978,9,dough,115,129,False
+zones_demo_sahel,aez8,pearl_millet,130,10,Warm / semiarid,P8,0.36915335,717,9,dough,115,129,False
+zones_demo_sahel,aez8,pearl_millet,130,20,Warm / semiarid,P8,0.38340256,166,9,dough,115,129,False
+zones_demo_sahel,aez8,pearl_millet,70,0,ALL,SOW,0.008279875,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,70,10,ALL,SOW,0.010029896,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,70,20,ALL,SOW,0.013771049,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,70,30,ALL,SOW,0.0058530695,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,70,40,ALL,SOW,0.0014116574,1036,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,90,0,ALL,SOW,0.008289463,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,90,10,ALL,SOW,0.010147385,1040,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,90,20,ALL,SOW,0.014324152,1036,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,90,30,ALL,SOW,0.0059277792,1035,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,90,40,ALL,SOW,8.752647e-05,978,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,110,0,ALL,SOW,0.008757861,1036,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,110,10,ALL,SOW,0.011842409,1035,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,110,20,ALL,SOW,0.017071377,978,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,110,30,ALL,SOW,0.002071385,717,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,110,40,ALL,SOW,0.0,166,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,130,0,ALL,SOW,0.00988192,978,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,130,10,ALL,SOW,0.009998781,717,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,130,20,ALL,SOW,0.007973975,166,0,sowing to emergence,0,3,False
+zones_demo_sahel,aez8,pearl_millet,70,0,ALL,P0,0.013629785,1040,1,emergence,4,7,False
+zones_demo_sahel,aez8,pearl_millet,70,10,ALL,P0,0.015699571,1040,1,emergence,4,7,False
+zones_demo_sahel,aez8,pearl_millet,70,20,ALL,P0,0.016798133,1040,1,emergence,4,7,False
+zones_demo_sahel,aez8,pearl_millet,70,30,ALL,P0,0.006972258,1040,1,emergence,4,7,False
+zones_demo_sahel,aez8,pearl_millet,70,40,ALL,P0,0.0019077448,1036,1,emergence,4,7,False
+zones_demo_sahel,aez8,pearl_millet,90,0,ALL,P0,0.021726863,1040,1,emergence,4,9,False
+zones_demo_sahel,aez8,pearl_millet,90,10,ALL,P0,0.017584588,1040,1,emergence,4,9,False
+zones_demo_sahel,aez8,pearl_millet,90,20,ALL,P0,0.017892657,1036,1,emergence,4,9,False
+zones_demo_sahel,aez8,pearl_millet,90,30,ALL,P0,0.007224248,1035,1,emergence,4,9,False
+zones_demo_sahel,aez8,pearl_millet,90,40,ALL,P0,0.00039865208,978,1,emergence,4,9,False
+zones_demo_sahel,aez8,pearl_millet,110,0,ALL,P0,0.02538554,1036,1,emergence,4,11,False
+zones_demo_sahel,aez8,pearl_millet,110,10,ALL,P0,0.025314802,1035,1,emergence,4,11,False
+zones_demo_sahel,aez8,pearl_millet,110,20,ALL,P0,0.025675766,978,1,emergence,4,11,False
+zones_demo_sahel,aez8,pearl_millet,110,30,ALL,P0,0.0022706022,717,1,emergence,4,11,False
+zones_demo_sahel,aez8,pearl_millet,110,40,ALL,P0,0.001334389,166,1,emergence,4,11,False
+zones_demo_sahel,aez8,pearl_millet,130,0,ALL,P0,0.029757598,978,1,emergence,4,12,False
+zones_demo_sahel,aez8,pearl_millet,130,10,ALL,P0,0.02387362,717,1,emergence,4,12,False
+zones_demo_sahel,aez8,pearl_millet,130,20,ALL,P0,0.012000511,166,1,emergence,4,12,False
+zones_demo_sahel,aez8,pearl_millet,70,0,ALL,P1,0.026957285,1040,2,3-leaf,8,12,False
+zones_demo_sahel,aez8,pearl_millet,70,10,ALL,P1,0.029500937,1040,2,3-leaf,8,12,False
+zones_demo_sahel,aez8,pearl_millet,70,20,ALL,P1,0.02375758,1040,2,3-leaf,8,12,False
+zones_demo_sahel,aez8,pearl_millet,70,30,ALL,P1,0.008263629,1040,2,3-leaf,8,12,False
+zones_demo_sahel,aez8,pearl_millet,70,40,ALL,P1,0.0029752858,1036,2,3-leaf,8,12,False
+zones_demo_sahel,aez8,pearl_millet,90,0,ALL,P1,0.032879964,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,pearl_millet,90,10,ALL,P1,0.03279153,1040,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,pearl_millet,90,20,ALL,P1,0.024369862,1036,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,pearl_millet,90,30,ALL,P1,0.0071260077,1035,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,pearl_millet,90,40,ALL,P1,0.00037251198,978,2,3-leaf,10,16,False
+zones_demo_sahel,aez8,pearl_millet,110,0,ALL,P1,0.035699572,1036,2,3-leaf,12,19,False
+zones_demo_sahel,aez8,pearl_millet,110,10,ALL,P1,0.033904683,1035,2,3-leaf,12,19,False
+zones_demo_sahel,aez8,pearl_millet,110,20,ALL,P1,0.019998481,978,2,3-leaf,12,19,False
+zones_demo_sahel,aez8,pearl_millet,110,30,ALL,P1,0.00079686753,717,2,3-leaf,12,19,False
+zones_demo_sahel,aez8,pearl_millet,110,40,ALL,P1,0.001334389,166,2,3-leaf,12,19,False
+zones_demo_sahel,aez8,pearl_millet,130,0,ALL,P1,0.04137847,978,2,3-leaf,13,23,False
+zones_demo_sahel,aez8,pearl_millet,130,10,ALL,P1,0.023439284,717,2,3-leaf,13,23,False
+zones_demo_sahel,aez8,pearl_millet,130,20,ALL,P1,0.0054199295,166,2,3-leaf,13,23,False
+zones_demo_sahel,aez8,pearl_millet,70,0,ALL,P2,0.041503046,1040,3,tillering,13,24,False
+zones_demo_sahel,aez8,pearl_millet,70,10,ALL,P2,0.033225417,1040,3,tillering,13,24,False
+zones_demo_sahel,aez8,pearl_millet,70,20,ALL,P2,0.015225311,1040,3,tillering,13,24,False
+zones_demo_sahel,aez8,pearl_millet,70,30,ALL,P2,0.0042095687,1040,3,tillering,13,24,False
+zones_demo_sahel,aez8,pearl_millet,70,40,ALL,P2,0.0021038763,1036,3,tillering,13,24,False
+zones_demo_sahel,aez8,pearl_millet,90,0,ALL,P2,0.04685989,1040,3,tillering,17,33,False
+zones_demo_sahel,aez8,pearl_millet,90,10,ALL,P2,0.026935244,1040,3,tillering,17,33,False
+zones_demo_sahel,aez8,pearl_millet,90,20,ALL,P2,0.012300002,1036,3,tillering,17,33,False
+zones_demo_sahel,aez8,pearl_millet,90,30,ALL,P2,0.0010543189,1035,3,tillering,17,33,False
+zones_demo_sahel,aez8,pearl_millet,90,40,ALL,P2,0.0006033678,978,3,tillering,17,33,False
+zones_demo_sahel,aez8,pearl_millet,110,0,ALL,P2,0.043500684,1036,3,tillering,20,42,False
+zones_demo_sahel,aez8,pearl_millet,110,10,ALL,P2,0.026094569,1035,3,tillering,20,42,False
+zones_demo_sahel,aez8,pearl_millet,110,20,ALL,P2,0.005439567,978,3,tillering,20,42,False
+zones_demo_sahel,aez8,pearl_millet,110,30,ALL,P2,0.0008107233,717,3,tillering,20,42,False
+zones_demo_sahel,aez8,pearl_millet,110,40,ALL,P2,0.0005357398,166,3,tillering,20,42,False
+zones_demo_sahel,aez8,pearl_millet,130,0,ALL,P2,0.032107137,978,3,tillering,24,52,False
+zones_demo_sahel,aez8,pearl_millet,130,10,ALL,P2,0.008417869,717,3,tillering,24,52,False
+zones_demo_sahel,aez8,pearl_millet,130,20,ALL,P2,0.001334389,166,3,tillering,24,52,False
+zones_demo_sahel,aez8,pearl_millet,70,0,ALL,P3,0.022872824,1040,4,panicle initiation,25,29,False
+zones_demo_sahel,aez8,pearl_millet,70,10,ALL,P3,0.011244722,1040,4,panicle initiation,25,29,False
+zones_demo_sahel,aez8,pearl_millet,70,20,ALL,P3,0.0031292369,1040,4,panicle initiation,25,29,False
+zones_demo_sahel,aez8,pearl_millet,70,30,ALL,P3,0.0019782688,1040,4,panicle initiation,25,29,False
+zones_demo_sahel,aez8,pearl_millet,70,40,ALL,P3,0.00074502564,1036,4,panicle initiation,25,29,False
+zones_demo_sahel,aez8,pearl_millet,90,0,ALL,P3,0.011482056,1040,4,panicle initiation,34,40,False
+zones_demo_sahel,aez8,pearl_millet,90,10,ALL,P3,0.0033905942,1040,4,panicle initiation,34,40,False
+zones_demo_sahel,aez8,pearl_millet,90,20,ALL,P3,0.0018691565,1036,4,panicle initiation,34,40,False
+zones_demo_sahel,aez8,pearl_millet,90,30,ALL,P3,0.0005819121,1035,4,panicle initiation,34,40,False
+zones_demo_sahel,aez8,pearl_millet,90,40,ALL,P3,0.00057585974,978,4,panicle initiation,34,40,False
+zones_demo_sahel,aez8,pearl_millet,110,0,ALL,P3,0.004023595,1036,4,panicle initiation,43,51,False
+zones_demo_sahel,aez8,pearl_millet,110,10,ALL,P3,0.0005677171,1035,4,panicle initiation,43,51,False
+zones_demo_sahel,aez8,pearl_millet,110,20,ALL,P3,0.00013658425,978,4,panicle initiation,43,51,False
+zones_demo_sahel,aez8,pearl_millet,110,30,ALL,P3,0.0005975167,717,4,panicle initiation,43,51,False
+zones_demo_sahel,aez8,pearl_millet,110,40,ALL,P3,0.0005357398,166,4,panicle initiation,43,51,False
+zones_demo_sahel,aez8,pearl_millet,130,0,ALL,P3,0.00033952825,978,4,panicle initiation,53,62,False
+zones_demo_sahel,aez8,pearl_millet,130,10,ALL,P3,0.00022297516,717,4,panicle initiation,53,62,False
+zones_demo_sahel,aez8,pearl_millet,130,20,ALL,P3,0.0005357398,166,4,panicle initiation,53,62,False
+zones_demo_sahel,aez8,pearl_millet,70,0,ALL,P4,0.023159867,1040,5,flag leaf / boot,30,34,False
+zones_demo_sahel,aez8,pearl_millet,70,10,ALL,P4,0.0085546775,1040,5,flag leaf / boot,30,34,False
+zones_demo_sahel,aez8,pearl_millet,70,20,ALL,P4,0.002977983,1040,5,flag leaf / boot,30,34,False
+zones_demo_sahel,aez8,pearl_millet,70,30,ALL,P4,0.0015942163,1040,5,flag leaf / boot,30,34,False
+zones_demo_sahel,aez8,pearl_millet,70,40,ALL,P4,0.00087677175,1036,5,flag leaf / boot,30,34,False
+zones_demo_sahel,aez8,pearl_millet,90,0,ALL,P4,0.0042306064,1040,5,flag leaf / boot,41,48,False
+zones_demo_sahel,aez8,pearl_millet,90,10,ALL,P4,0.0020477206,1040,5,flag leaf / boot,41,48,False
+zones_demo_sahel,aez8,pearl_millet,90,20,ALL,P4,0.0014150925,1036,5,flag leaf / boot,41,48,False
+zones_demo_sahel,aez8,pearl_millet,90,30,ALL,P4,0.0015916977,1035,5,flag leaf / boot,41,48,False
+zones_demo_sahel,aez8,pearl_millet,90,40,ALL,P4,0.002142646,978,5,flag leaf / boot,41,48,False
+zones_demo_sahel,aez8,pearl_millet,110,0,ALL,P4,0.0019195117,1036,5,flag leaf / boot,52,61,False
+zones_demo_sahel,aez8,pearl_millet,110,10,ALL,P4,0.0005822342,1035,5,flag leaf / boot,52,61,False
+zones_demo_sahel,aez8,pearl_millet,110,20,ALL,P4,0.0006042624,978,5,flag leaf / boot,52,61,False
+zones_demo_sahel,aez8,pearl_millet,110,30,ALL,P4,0.0025369143,717,5,flag leaf / boot,52,61,False
+zones_demo_sahel,aez8,pearl_millet,110,40,ALL,P4,0.0,166,5,flag leaf / boot,52,61,False
+zones_demo_sahel,aez8,pearl_millet,130,0,ALL,P4,0.0003319532,978,5,flag leaf / boot,63,75,False
+zones_demo_sahel,aez8,pearl_millet,130,10,ALL,P4,0.0016680579,717,5,flag leaf / boot,63,75,False
+zones_demo_sahel,aez8,pearl_millet,130,20,ALL,P4,0.0005357398,166,5,flag leaf / boot,63,75,False
+zones_demo_sahel,aez8,pearl_millet,70,0,ALL,P5,0.011242593,1040,6,panicle emergence (heading),35,39,False
+zones_demo_sahel,aez8,pearl_millet,70,10,ALL,P5,0.0031388912,1040,6,panicle emergence (heading),35,39,False
+zones_demo_sahel,aez8,pearl_millet,70,20,ALL,P5,0.00195674,1040,6,panicle emergence (heading),35,39,False
+zones_demo_sahel,aez8,pearl_millet,70,30,ALL,P5,0.00086325017,1040,6,panicle emergence (heading),35,39,False
+zones_demo_sahel,aez8,pearl_millet,70,40,ALL,P5,0.0014387858,1036,6,panicle emergence (heading),35,39,False
+zones_demo_sahel,aez8,pearl_millet,90,0,ALL,P5,0.0029784914,1040,6,panicle emergence (heading),49,54,False
+zones_demo_sahel,aez8,pearl_millet,90,10,ALL,P5,0.0017019871,1040,6,panicle emergence (heading),49,54,False
+zones_demo_sahel,aez8,pearl_millet,90,20,ALL,P5,0.0009211066,1036,6,panicle emergence (heading),49,54,False
+zones_demo_sahel,aez8,pearl_millet,90,30,ALL,P5,0.0019233831,1035,6,panicle emergence (heading),49,54,False
+zones_demo_sahel,aez8,pearl_millet,90,40,ALL,P5,0.0021649844,978,6,panicle emergence (heading),49,54,False
+zones_demo_sahel,aez8,pearl_millet,110,0,ALL,P5,0.0014150925,1036,6,panicle emergence (heading),62,70,False
+zones_demo_sahel,aez8,pearl_millet,110,10,ALL,P5,0.0015360785,1035,6,panicle emergence (heading),62,70,False
+zones_demo_sahel,aez8,pearl_millet,110,20,ALL,P5,0.00246756,978,6,panicle emergence (heading),62,70,False
+zones_demo_sahel,aez8,pearl_millet,110,30,ALL,P5,0.0029355285,717,6,panicle emergence (heading),62,70,False
+zones_demo_sahel,aez8,pearl_millet,110,40,ALL,P5,0.00027382257,166,6,panicle emergence (heading),62,70,False
+zones_demo_sahel,aez8,pearl_millet,130,0,ALL,P5,0.0015248295,978,6,panicle emergence (heading),76,86,False
+zones_demo_sahel,aez8,pearl_millet,130,10,ALL,P5,0.0025079912,717,6,panicle emergence (heading),76,86,False
+zones_demo_sahel,aez8,pearl_millet,130,20,ALL,P5,0.00027382257,166,6,panicle emergence (heading),76,86,False
+zones_demo_sahel,aez8,pearl_millet,70,0,ALL,P6,0.0094062975,1040,7,flowering (anthesis),40,50,True
+zones_demo_sahel,aez8,pearl_millet,70,10,ALL,P6,0.0032592409,1040,7,flowering (anthesis),40,50,True
+zones_demo_sahel,aez8,pearl_millet,70,20,ALL,P6,0.0019681912,1040,7,flowering (anthesis),40,50,True
+zones_demo_sahel,aez8,pearl_millet,70,30,ALL,P6,0.005231077,1040,7,flowering (anthesis),40,50,True
+zones_demo_sahel,aez8,pearl_millet,70,40,ALL,P6,0.021028243,1036,7,flowering (anthesis),40,50,True
+zones_demo_sahel,aez8,pearl_millet,90,0,ALL,P6,0.002380659,1040,7,flowering (anthesis),55,67,True
+zones_demo_sahel,aez8,pearl_millet,90,10,ALL,P6,0.0021823053,1040,7,flowering (anthesis),55,67,True
+zones_demo_sahel,aez8,pearl_millet,90,20,ALL,P6,0.01457522,1036,7,flowering (anthesis),55,67,True
+zones_demo_sahel,aez8,pearl_millet,90,30,ALL,P6,0.017353171,1035,7,flowering (anthesis),55,67,True
+zones_demo_sahel,aez8,pearl_millet,90,40,ALL,P6,0.05054823,978,7,flowering (anthesis),55,67,True
+zones_demo_sahel,aez8,pearl_millet,110,0,ALL,P6,0.0070887194,1036,7,flowering (anthesis),71,85,True
+zones_demo_sahel,aez8,pearl_millet,110,10,ALL,P6,0.009800998,1035,7,flowering (anthesis),71,85,True
+zones_demo_sahel,aez8,pearl_millet,110,20,ALL,P6,0.030923393,978,7,flowering (anthesis),71,85,True
+zones_demo_sahel,aez8,pearl_millet,110,30,ALL,P6,0.05552432,717,7,flowering (anthesis),71,85,True
+zones_demo_sahel,aez8,pearl_millet,110,40,ALL,P6,0.03407418,166,7,flowering (anthesis),71,85,True
+zones_demo_sahel,aez8,pearl_millet,130,0,ALL,P6,0.023642698,978,7,flowering (anthesis),87,102,True
+zones_demo_sahel,aez8,pearl_millet,130,10,ALL,P6,0.02250621,717,7,flowering (anthesis),87,102,True
+zones_demo_sahel,aez8,pearl_millet,130,20,ALL,P6,0.0135340085,166,7,flowering (anthesis),87,102,True
+zones_demo_sahel,aez8,pearl_millet,70,0,ALL,P7,0.0021309603,1040,8,milk,51,59,True
+zones_demo_sahel,aez8,pearl_millet,70,10,ALL,P7,0.0017646357,1040,8,milk,51,59,True
+zones_demo_sahel,aez8,pearl_millet,70,20,ALL,P7,0.005417343,1040,8,milk,51,59,True
+zones_demo_sahel,aez8,pearl_millet,70,30,ALL,P7,0.036945514,1040,8,milk,51,59,True
+zones_demo_sahel,aez8,pearl_millet,70,40,ALL,P7,0.0682713,1036,8,milk,51,59,True
+zones_demo_sahel,aez8,pearl_millet,90,0,ALL,P7,0.0040371995,1040,8,milk,68,77,True
+zones_demo_sahel,aez8,pearl_millet,90,10,ALL,P7,0.033197105,1040,8,milk,68,77,True
+zones_demo_sahel,aez8,pearl_millet,90,20,ALL,P7,0.0546887,1036,8,milk,68,77,True
+zones_demo_sahel,aez8,pearl_millet,90,30,ALL,P7,0.102813475,1035,8,milk,68,77,True
+zones_demo_sahel,aez8,pearl_millet,90,40,ALL,P7,0.19833614,978,8,milk,68,77,True
+zones_demo_sahel,aez8,pearl_millet,110,0,ALL,P7,0.04571405,1036,8,milk,86,96,True
+zones_demo_sahel,aez8,pearl_millet,110,10,ALL,P7,0.088889524,1035,8,milk,86,96,True
+zones_demo_sahel,aez8,pearl_millet,110,20,ALL,P7,0.17994902,978,8,milk,86,96,True
+zones_demo_sahel,aez8,pearl_millet,110,30,ALL,P7,0.28882676,717,8,milk,86,96,True
+zones_demo_sahel,aez8,pearl_millet,110,40,ALL,P7,0.26762113,166,8,milk,86,96,True
+zones_demo_sahel,aez8,pearl_millet,130,0,ALL,P7,0.1390938,978,8,milk,103,114,True
+zones_demo_sahel,aez8,pearl_millet,130,10,ALL,P7,0.21634237,717,8,milk,103,114,True
+zones_demo_sahel,aez8,pearl_millet,130,20,ALL,P7,0.226363,166,8,milk,103,114,True
+zones_demo_sahel,aez8,pearl_millet,70,0,ALL,P8,0.00127513,1040,9,dough,60,69,False
+zones_demo_sahel,aez8,pearl_millet,70,10,ALL,P8,0.00070750475,1040,9,dough,60,69,False
+zones_demo_sahel,aez8,pearl_millet,70,20,ALL,P8,0.007511591,1040,9,dough,60,69,False
+zones_demo_sahel,aez8,pearl_millet,70,30,ALL,P8,0.03997891,1040,9,dough,60,69,False
+zones_demo_sahel,aez8,pearl_millet,70,40,ALL,P8,0.070131704,1036,9,dough,60,69,False
+zones_demo_sahel,aez8,pearl_millet,90,0,ALL,P8,0.007910739,1040,9,dough,78,89,False
+zones_demo_sahel,aez8,pearl_millet,90,10,ALL,P8,0.04028494,1040,9,dough,78,89,False
+zones_demo_sahel,aez8,pearl_millet,90,20,ALL,P8,0.07183828,1036,9,dough,78,89,False
+zones_demo_sahel,aez8,pearl_millet,90,30,ALL,P8,0.13974084,1035,9,dough,78,89,False
+zones_demo_sahel,aez8,pearl_millet,90,40,ALL,P8,0.26022455,978,9,dough,78,89,False
+zones_demo_sahel,aez8,pearl_millet,110,0,ALL,P8,0.07326285,1036,9,dough,97,109,False
+zones_demo_sahel,aez8,pearl_millet,110,10,ALL,P8,0.14405285,1035,9,dough,97,109,False
+zones_demo_sahel,aez8,pearl_millet,110,20,ALL,P8,0.2585394,978,9,dough,97,109,False
+zones_demo_sahel,aez8,pearl_millet,110,30,ALL,P8,0.36468792,717,9,dough,97,109,False
+zones_demo_sahel,aez8,pearl_millet,110,40,ALL,P8,0.3745148,166,9,dough,97,109,False
+zones_demo_sahel,aez8,pearl_millet,130,0,ALL,P8,0.26222795,978,9,dough,115,129,False
+zones_demo_sahel,aez8,pearl_millet,130,10,ALL,P8,0.36915335,717,9,dough,115,129,False
+zones_demo_sahel,aez8,pearl_millet,130,20,ALL,P8,0.38340256,166,9,dough,115,129,False
+zones_demo_sahel,aez8,groundnut,70,0,Warm / semiarid,SOW,0.013629785,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,70,10,Warm / semiarid,SOW,0.015699571,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,70,20,Warm / semiarid,SOW,0.016798133,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,70,30,Warm / semiarid,SOW,0.006972258,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,70,40,Warm / semiarid,SOW,0.0019077448,1036,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,90,0,Warm / semiarid,SOW,0.0134424465,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,90,10,Warm / semiarid,SOW,0.015836988,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,90,20,Warm / semiarid,SOW,0.01739915,1036,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,90,30,Warm / semiarid,SOW,0.007224248,1035,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,90,40,Warm / semiarid,SOW,0.00017898619,978,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,110,0,Warm / semiarid,SOW,0.01421348,1036,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,110,10,Warm / semiarid,SOW,0.01665422,1035,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,110,20,Warm / semiarid,SOW,0.020600433,978,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,110,30,Warm / semiarid,SOW,0.0022169598,717,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,110,40,Warm / semiarid,SOW,0.0,166,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,130,0,Warm / semiarid,SOW,0.015022775,978,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,130,10,Warm / semiarid,SOW,0.012809604,717,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,130,20,Warm / semiarid,SOW,0.012000511,166,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,70,0,Warm / semiarid,VE,0.05095343,1040,1,emergence,8,27,False
+zones_demo_sahel,aez8,groundnut,70,10,Warm / semiarid,VE,0.04140532,1040,1,emergence,8,27,False
+zones_demo_sahel,aez8,groundnut,70,20,Warm / semiarid,VE,0.026623562,1040,1,emergence,8,27,False
+zones_demo_sahel,aez8,groundnut,70,30,Warm / semiarid,VE,0.0102431765,1040,1,emergence,8,27,False
+zones_demo_sahel,aez8,groundnut,70,40,Warm / semiarid,VE,0.003772718,1036,1,emergence,8,27,False
+zones_demo_sahel,aez8,groundnut,90,0,Warm / semiarid,VE,0.05118113,1040,1,emergence,8,29,False
+zones_demo_sahel,aez8,groundnut,90,10,Warm / semiarid,VE,0.04092277,1040,1,emergence,8,29,False
+zones_demo_sahel,aez8,groundnut,90,20,Warm / semiarid,VE,0.027304426,1036,1,emergence,8,29,False
+zones_demo_sahel,aez8,groundnut,90,30,Warm / semiarid,VE,0.007907017,1035,1,emergence,8,29,False
+zones_demo_sahel,aez8,groundnut,90,40,Warm / semiarid,VE,0.00063346216,978,1,emergence,8,29,False
+zones_demo_sahel,aez8,groundnut,110,0,Warm / semiarid,VE,0.055139776,1036,1,emergence,8,30,False
+zones_demo_sahel,aez8,groundnut,110,10,Warm / semiarid,VE,0.044075914,1035,1,emergence,8,30,False
+zones_demo_sahel,aez8,groundnut,110,20,Warm / semiarid,VE,0.026987566,978,1,emergence,8,30,False
+zones_demo_sahel,aez8,groundnut,110,30,Warm / semiarid,VE,0.002804708,717,1,emergence,8,30,False
+zones_demo_sahel,aez8,groundnut,110,40,Warm / semiarid,VE,0.001334389,166,1,emergence,8,30,False
+zones_demo_sahel,aez8,groundnut,130,0,Warm / semiarid,VE,0.059239842,978,1,emergence,8,32,False
+zones_demo_sahel,aez8,groundnut,130,10,Warm / semiarid,VE,0.032323923,717,1,emergence,8,32,False
+zones_demo_sahel,aez8,groundnut,130,20,Warm / semiarid,VE,0.0133349,166,1,emergence,8,32,False
+zones_demo_sahel,aez8,groundnut,70,0,Warm / semiarid,R1,0.024340494,1040,2,beginning bloom,28,31,False
+zones_demo_sahel,aez8,groundnut,70,10,Warm / semiarid,R1,0.009919737,1040,2,beginning bloom,28,31,False
+zones_demo_sahel,aez8,groundnut,70,20,Warm / semiarid,R1,0.0027152372,1040,2,beginning bloom,28,31,False
+zones_demo_sahel,aez8,groundnut,70,30,Warm / semiarid,R1,0.0017136869,1040,2,beginning bloom,28,31,False
+zones_demo_sahel,aez8,groundnut,70,40,Warm / semiarid,R1,0.0007014003,1036,2,beginning bloom,28,31,False
+zones_demo_sahel,aez8,groundnut,90,0,Warm / semiarid,R1,0.02304601,1040,2,beginning bloom,30,34,False
+zones_demo_sahel,aez8,groundnut,90,10,Warm / semiarid,R1,0.008079306,1040,2,beginning bloom,30,34,False
+zones_demo_sahel,aez8,groundnut,90,20,Warm / semiarid,R1,0.0029303904,1036,2,beginning bloom,30,34,False
+zones_demo_sahel,aez8,groundnut,90,30,Warm / semiarid,R1,0.00031313568,1035,2,beginning bloom,30,34,False
+zones_demo_sahel,aez8,groundnut,90,40,Warm / semiarid,R1,0.0003552993,978,2,beginning bloom,30,34,False
+zones_demo_sahel,aez8,groundnut,110,0,Warm / semiarid,R1,0.020879384,1036,2,beginning bloom,31,38,False
+zones_demo_sahel,aez8,groundnut,110,10,Warm / semiarid,R1,0.0020864168,1035,2,beginning bloom,31,38,False
+zones_demo_sahel,aez8,groundnut,110,20,Warm / semiarid,R1,0.00037251198,978,2,beginning bloom,31,38,False
+zones_demo_sahel,aez8,groundnut,110,30,Warm / semiarid,R1,0.0,717,2,beginning bloom,31,38,False
+zones_demo_sahel,aez8,groundnut,110,40,Warm / semiarid,R1,0.0005357398,166,2,beginning bloom,31,38,False
+zones_demo_sahel,aez8,groundnut,130,0,Warm / semiarid,R1,0.013154389,978,2,beginning bloom,33,40,False
+zones_demo_sahel,aez8,groundnut,130,10,Warm / semiarid,R1,0.0007333229,717,2,beginning bloom,33,40,False
+zones_demo_sahel,aez8,groundnut,130,20,Warm / semiarid,R1,0.001334389,166,2,beginning bloom,33,40,False
+zones_demo_sahel,aez8,groundnut,70,0,Warm / semiarid,R2,0.018939523,1040,3,beginning peg,32,36,False
+zones_demo_sahel,aez8,groundnut,70,10,Warm / semiarid,R2,0.0029869357,1040,3,beginning peg,32,36,False
+zones_demo_sahel,aez8,groundnut,70,20,Warm / semiarid,R2,0.001956232,1040,3,beginning peg,32,36,False
+zones_demo_sahel,aez8,groundnut,70,30,Warm / semiarid,R2,0.0013668258,1040,3,beginning peg,32,36,False
+zones_demo_sahel,aez8,groundnut,70,40,Warm / semiarid,R2,0.0014872439,1036,3,beginning peg,32,36,False
+zones_demo_sahel,aez8,groundnut,90,0,Warm / semiarid,R2,0.012395582,1040,3,beginning peg,35,41,False
+zones_demo_sahel,aez8,groundnut,90,10,Warm / semiarid,R2,0.003790753,1040,3,beginning peg,35,41,False
+zones_demo_sahel,aez8,groundnut,90,20,Warm / semiarid,R2,0.0017952585,1036,3,beginning peg,35,41,False
+zones_demo_sahel,aez8,groundnut,90,30,Warm / semiarid,R2,0.0006130794,1035,3,beginning peg,35,41,False
+zones_demo_sahel,aez8,groundnut,90,40,Warm / semiarid,R2,0.00057585974,978,3,beginning peg,35,41,False
+zones_demo_sahel,aez8,groundnut,110,0,Warm / semiarid,R2,0.009086636,1036,3,beginning peg,39,46,False
+zones_demo_sahel,aez8,groundnut,110,10,Warm / semiarid,R2,0.000608347,1035,3,beginning peg,39,46,False
+zones_demo_sahel,aez8,groundnut,110,20,Warm / semiarid,R2,0.00024806854,978,3,beginning peg,39,46,False
+zones_demo_sahel,aez8,groundnut,110,30,Warm / semiarid,R2,0.0005525264,717,3,beginning peg,39,46,False
+zones_demo_sahel,aez8,groundnut,110,40,Warm / semiarid,R2,0.0005357398,166,3,beginning peg,39,46,False
+zones_demo_sahel,aez8,groundnut,130,0,Warm / semiarid,R2,0.0014909833,978,3,beginning peg,41,52,False
+zones_demo_sahel,aez8,groundnut,130,10,Warm / semiarid,R2,0.0005877481,717,3,beginning peg,41,52,False
+zones_demo_sahel,aez8,groundnut,130,20,Warm / semiarid,R2,0.0,166,3,beginning peg,41,52,False
+zones_demo_sahel,aez8,groundnut,70,0,Warm / semiarid,R3,0.011024568,1040,4,beginning pod,37,42,True
+zones_demo_sahel,aez8,groundnut,70,10,Warm / semiarid,R3,0.0031890832,1040,4,beginning pod,37,42,True
+zones_demo_sahel,aez8,groundnut,70,20,Warm / semiarid,R3,0.0017011787,1040,4,beginning pod,37,42,True
+zones_demo_sahel,aez8,groundnut,70,30,Warm / semiarid,R3,0.0011275208,1040,4,beginning pod,37,42,True
+zones_demo_sahel,aez8,groundnut,70,40,Warm / semiarid,R3,0.00289702,1036,4,beginning pod,37,42,True
+zones_demo_sahel,aez8,groundnut,90,0,Warm / semiarid,R3,0.0033071598,1040,4,beginning pod,42,49,True
+zones_demo_sahel,aez8,groundnut,90,10,Warm / semiarid,R3,0.0020919351,1040,4,beginning pod,42,49,True
+zones_demo_sahel,aez8,groundnut,90,20,Warm / semiarid,R3,0.0014150925,1036,4,beginning pod,42,49,True
+zones_demo_sahel,aez8,groundnut,90,30,Warm / semiarid,R3,0.0015916977,1035,4,beginning pod,42,49,True
+zones_demo_sahel,aez8,groundnut,90,40,Warm / semiarid,R3,0.0021133402,978,4,beginning pod,42,49,True
+zones_demo_sahel,aez8,groundnut,110,0,Warm / semiarid,R3,0.0033635837,1036,4,beginning pod,47,57,True
+zones_demo_sahel,aez8,groundnut,110,10,Warm / semiarid,R3,0.0007992861,1035,4,beginning pod,47,57,True
+zones_demo_sahel,aez8,groundnut,110,20,Warm / semiarid,R3,0.0006042624,978,4,beginning pod,47,57,True
+zones_demo_sahel,aez8,groundnut,110,30,Warm / semiarid,R3,0.0025360188,717,4,beginning pod,47,57,True
+zones_demo_sahel,aez8,groundnut,110,40,Warm / semiarid,R3,0.0,166,4,beginning pod,47,57,True
+zones_demo_sahel,aez8,groundnut,130,0,Warm / semiarid,R3,0.00036793092,978,4,beginning pod,53,65,True
+zones_demo_sahel,aez8,groundnut,130,10,Warm / semiarid,R3,0.0002836143,717,4,beginning pod,53,65,True
+zones_demo_sahel,aez8,groundnut,130,20,Warm / semiarid,R3,0.0005357398,166,4,beginning pod,53,65,True
+zones_demo_sahel,aez8,groundnut,70,0,Warm / semiarid,R4,0.0030701375,1040,5,full pod,43,48,True
+zones_demo_sahel,aez8,groundnut,70,10,Warm / semiarid,R4,0.001976996,1040,5,full pod,43,48,True
+zones_demo_sahel,aez8,groundnut,70,20,Warm / semiarid,R4,0.0016398858,1040,5,full pod,43,48,True
+zones_demo_sahel,aez8,groundnut,70,30,Warm / semiarid,R4,0.0023716358,1040,5,full pod,43,48,True
+zones_demo_sahel,aez8,groundnut,70,40,Warm / semiarid,R4,0.01572388,1036,5,full pod,43,48,True
+zones_demo_sahel,aez8,groundnut,90,0,Warm / semiarid,R4,0.0031579388,1040,5,full pod,50,58,True
+zones_demo_sahel,aez8,groundnut,90,10,Warm / semiarid,R4,0.0019501514,1040,5,full pod,50,58,True
+zones_demo_sahel,aez8,groundnut,90,20,Warm / semiarid,R4,0.0015551756,1036,5,full pod,50,58,True
+zones_demo_sahel,aez8,groundnut,90,30,Warm / semiarid,R4,0.002648885,1035,5,full pod,50,58,True
+zones_demo_sahel,aez8,groundnut,90,40,Warm / semiarid,R4,0.0052094636,978,5,full pod,50,58,True
+zones_demo_sahel,aez8,groundnut,110,0,Warm / semiarid,R4,0.0019583292,1036,5,full pod,58,69,True
+zones_demo_sahel,aez8,groundnut,110,10,Warm / semiarid,R4,0.0016346554,1035,5,full pod,58,69,True
+zones_demo_sahel,aez8,groundnut,110,20,Warm / semiarid,R4,0.0022330177,978,5,full pod,58,69,True
+zones_demo_sahel,aez8,groundnut,110,30,Warm / semiarid,R4,0.0030372639,717,5,full pod,58,69,True
+zones_demo_sahel,aez8,groundnut,110,40,Warm / semiarid,R4,0.00027382257,166,5,full pod,58,69,True
+zones_demo_sahel,aez8,groundnut,130,0,Warm / semiarid,R4,0.0006042624,978,5,full pod,66,79,True
+zones_demo_sahel,aez8,groundnut,130,10,Warm / semiarid,R4,0.0025360188,717,5,full pod,66,79,True
+zones_demo_sahel,aez8,groundnut,130,20,Warm / semiarid,R4,0.0,166,5,full pod,66,79,True
+zones_demo_sahel,aez8,groundnut,70,0,Warm / semiarid,R5,0.0029913401,1040,6,beginning seed,49,52,True
+zones_demo_sahel,aez8,groundnut,70,10,Warm / semiarid,R5,0.0015409735,1040,6,beginning seed,49,52,True
+zones_demo_sahel,aez8,groundnut,70,20,Warm / semiarid,R5,0.001721587,1040,6,beginning seed,49,52,True
+zones_demo_sahel,aez8,groundnut,70,30,Warm / semiarid,R5,0.010282687,1040,6,beginning seed,49,52,True
+zones_demo_sahel,aez8,groundnut,70,40,Warm / semiarid,R5,0.028450735,1036,6,beginning seed,49,52,True
+zones_demo_sahel,aez8,groundnut,90,0,Warm / semiarid,R5,0.0016574725,1040,6,beginning seed,59,65,True
+zones_demo_sahel,aez8,groundnut,90,10,Warm / semiarid,R5,0.0014681212,1040,6,beginning seed,59,65,True
+zones_demo_sahel,aez8,groundnut,90,20,Warm / semiarid,R5,0.0066254456,1036,6,beginning seed,59,65,True
+zones_demo_sahel,aez8,groundnut,90,30,Warm / semiarid,R5,0.008639993,1035,6,beginning seed,59,65,True
+zones_demo_sahel,aez8,groundnut,90,40,Warm / semiarid,R5,0.030457405,978,6,beginning seed,59,65,True
+zones_demo_sahel,aez8,groundnut,110,0,Warm / semiarid,R5,0.0015551756,1036,6,beginning seed,70,78,True
+zones_demo_sahel,aez8,groundnut,110,10,Warm / semiarid,R5,0.002648885,1035,6,beginning seed,70,78,True
+zones_demo_sahel,aez8,groundnut,110,20,Warm / semiarid,R5,0.0052094636,978,6,beginning seed,70,78,True
+zones_demo_sahel,aez8,groundnut,110,30,Warm / semiarid,R5,0.007425863,717,6,beginning seed,70,78,True
+zones_demo_sahel,aez8,groundnut,110,40,Warm / semiarid,R5,0.0005357398,166,6,beginning seed,70,78,True
+zones_demo_sahel,aez8,groundnut,130,0,Warm / semiarid,R5,0.0025872376,978,6,beginning seed,80,90,True
+zones_demo_sahel,aez8,groundnut,130,10,Warm / semiarid,R5,0.0030930522,717,6,beginning seed,80,90,True
+zones_demo_sahel,aez8,groundnut,130,20,Warm / semiarid,R5,0.00027382257,166,6,beginning seed,80,90,True
+zones_demo_sahel,aez8,groundnut,70,0,Warm / semiarid,R6,0.0019764635,1040,7,full seed,53,58,True
+zones_demo_sahel,aez8,groundnut,70,10,Warm / semiarid,R6,0.0016990762,1040,7,full seed,53,58,True
+zones_demo_sahel,aez8,groundnut,70,20,Warm / semiarid,R6,0.00461679,1040,7,full seed,53,58,True
+zones_demo_sahel,aez8,groundnut,70,30,Warm / semiarid,R6,0.034820497,1040,7,full seed,53,58,True
+zones_demo_sahel,aez8,groundnut,70,40,Warm / semiarid,R6,0.061970495,1036,7,full seed,53,58,True
+zones_demo_sahel,aez8,groundnut,90,0,Warm / semiarid,R6,0.0018984693,1040,7,full seed,66,73,True
+zones_demo_sahel,aez8,groundnut,90,10,Warm / semiarid,R6,0.014300469,1040,7,full seed,66,73,True
+zones_demo_sahel,aez8,groundnut,90,20,Warm / semiarid,R6,0.03513614,1036,7,full seed,66,73,True
+zones_demo_sahel,aez8,groundnut,90,30,Warm / semiarid,R6,0.05725788,1035,7,full seed,66,73,True
+zones_demo_sahel,aez8,groundnut,90,40,Warm / semiarid,R6,0.12384859,978,7,full seed,66,73,True
+zones_demo_sahel,aez8,groundnut,110,0,Warm / semiarid,R6,0.015891246,1036,7,full seed,79,88,True
+zones_demo_sahel,aez8,groundnut,110,10,Warm / semiarid,R6,0.02224433,1035,7,full seed,79,88,True
+zones_demo_sahel,aez8,groundnut,110,20,Warm / semiarid,R6,0.055565737,978,7,full seed,79,88,True
+zones_demo_sahel,aez8,groundnut,110,30,Warm / semiarid,R6,0.09725764,717,7,full seed,79,88,True
+zones_demo_sahel,aez8,groundnut,110,40,Warm / semiarid,R6,0.08408084,166,7,full seed,79,88,True
+zones_demo_sahel,aez8,groundnut,130,0,Warm / semiarid,R6,0.028005935,978,7,full seed,91,104,True
+zones_demo_sahel,aez8,groundnut,130,10,Warm / semiarid,R6,0.040642366,717,7,full seed,91,104,True
+zones_demo_sahel,aez8,groundnut,130,20,Warm / semiarid,R6,0.0253799,166,7,full seed,91,104,True
+zones_demo_sahel,aez8,groundnut,70,0,Warm / semiarid,R7,0.0014728247,1040,8,beginning maturity,59,69,False
+zones_demo_sahel,aez8,groundnut,70,10,Warm / semiarid,R7,0.00079542556,1040,8,beginning maturity,59,69,False
+zones_demo_sahel,aez8,groundnut,70,20,Warm / semiarid,R7,0.007511591,1040,8,beginning maturity,59,69,False
+zones_demo_sahel,aez8,groundnut,70,30,Warm / semiarid,R7,0.040328644,1040,8,beginning maturity,59,69,False
+zones_demo_sahel,aez8,groundnut,70,40,Warm / semiarid,R7,0.07152516,1036,8,beginning maturity,59,69,False
+zones_demo_sahel,aez8,groundnut,90,0,Warm / semiarid,R7,0.007910739,1040,8,beginning maturity,74,89,False
+zones_demo_sahel,aez8,groundnut,90,10,Warm / semiarid,R7,0.040982403,1040,8,beginning maturity,74,89,False
+zones_demo_sahel,aez8,groundnut,90,20,Warm / semiarid,R7,0.07592294,1036,8,beginning maturity,74,89,False
+zones_demo_sahel,aez8,groundnut,90,30,Warm / semiarid,R7,0.14865477,1035,8,beginning maturity,74,89,False
+zones_demo_sahel,aez8,groundnut,90,40,Warm / semiarid,R7,0.26936853,978,8,beginning maturity,74,89,False
+zones_demo_sahel,aez8,groundnut,110,0,Warm / semiarid,R7,0.07692671,1036,8,beginning maturity,89,109,False
+zones_demo_sahel,aez8,groundnut,110,10,Warm / semiarid,R7,0.14739554,1035,8,beginning maturity,89,109,False
+zones_demo_sahel,aez8,groundnut,110,20,Warm / semiarid,R7,0.284646,978,8,beginning maturity,89,109,False
+zones_demo_sahel,aez8,groundnut,110,30,Warm / semiarid,R7,0.3815051,717,8,beginning maturity,89,109,False
+zones_demo_sahel,aez8,groundnut,110,40,Warm / semiarid,R7,0.3960757,166,8,beginning maturity,89,109,False
+zones_demo_sahel,aez8,groundnut,130,0,Warm / semiarid,R7,0.2839409,978,8,beginning maturity,105,129,False
+zones_demo_sahel,aez8,groundnut,130,10,Warm / semiarid,R7,0.3783118,717,8,beginning maturity,105,129,False
+zones_demo_sahel,aez8,groundnut,130,20,Warm / semiarid,R7,0.3958019,166,8,beginning maturity,105,129,False
+zones_demo_sahel,aez8,groundnut,70,0,ALL,SOW,0.013629785,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,70,10,ALL,SOW,0.015699571,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,70,20,ALL,SOW,0.016798133,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,70,30,ALL,SOW,0.006972258,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,70,40,ALL,SOW,0.0019077448,1036,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,90,0,ALL,SOW,0.0134424465,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,90,10,ALL,SOW,0.015836988,1040,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,90,20,ALL,SOW,0.01739915,1036,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,90,30,ALL,SOW,0.007224248,1035,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,90,40,ALL,SOW,0.00017898619,978,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,110,0,ALL,SOW,0.01421348,1036,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,110,10,ALL,SOW,0.01665422,1035,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,110,20,ALL,SOW,0.020600433,978,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,110,30,ALL,SOW,0.0022169598,717,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,110,40,ALL,SOW,0.0,166,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,130,0,ALL,SOW,0.015022775,978,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,130,10,ALL,SOW,0.012809604,717,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,130,20,ALL,SOW,0.012000511,166,0,sowing to emergence,0,7,False
+zones_demo_sahel,aez8,groundnut,70,0,ALL,VE,0.05095343,1040,1,emergence,8,27,False
+zones_demo_sahel,aez8,groundnut,70,10,ALL,VE,0.04140532,1040,1,emergence,8,27,False
+zones_demo_sahel,aez8,groundnut,70,20,ALL,VE,0.026623562,1040,1,emergence,8,27,False
+zones_demo_sahel,aez8,groundnut,70,30,ALL,VE,0.0102431765,1040,1,emergence,8,27,False
+zones_demo_sahel,aez8,groundnut,70,40,ALL,VE,0.003772718,1036,1,emergence,8,27,False
+zones_demo_sahel,aez8,groundnut,90,0,ALL,VE,0.05118113,1040,1,emergence,8,29,False
+zones_demo_sahel,aez8,groundnut,90,10,ALL,VE,0.04092277,1040,1,emergence,8,29,False
+zones_demo_sahel,aez8,groundnut,90,20,ALL,VE,0.027304426,1036,1,emergence,8,29,False
+zones_demo_sahel,aez8,groundnut,90,30,ALL,VE,0.007907017,1035,1,emergence,8,29,False
+zones_demo_sahel,aez8,groundnut,90,40,ALL,VE,0.00063346216,978,1,emergence,8,29,False
+zones_demo_sahel,aez8,groundnut,110,0,ALL,VE,0.055139776,1036,1,emergence,8,30,False
+zones_demo_sahel,aez8,groundnut,110,10,ALL,VE,0.044075914,1035,1,emergence,8,30,False
+zones_demo_sahel,aez8,groundnut,110,20,ALL,VE,0.026987566,978,1,emergence,8,30,False
+zones_demo_sahel,aez8,groundnut,110,30,ALL,VE,0.002804708,717,1,emergence,8,30,False
+zones_demo_sahel,aez8,groundnut,110,40,ALL,VE,0.001334389,166,1,emergence,8,30,False
+zones_demo_sahel,aez8,groundnut,130,0,ALL,VE,0.059239842,978,1,emergence,8,32,False
+zones_demo_sahel,aez8,groundnut,130,10,ALL,VE,0.032323923,717,1,emergence,8,32,False
+zones_demo_sahel,aez8,groundnut,130,20,ALL,VE,0.0133349,166,1,emergence,8,32,False
+zones_demo_sahel,aez8,groundnut,70,0,ALL,R1,0.024340494,1040,2,beginning bloom,28,31,False
+zones_demo_sahel,aez8,groundnut,70,10,ALL,R1,0.009919737,1040,2,beginning bloom,28,31,False
+zones_demo_sahel,aez8,groundnut,70,20,ALL,R1,0.0027152372,1040,2,beginning bloom,28,31,False
+zones_demo_sahel,aez8,groundnut,70,30,ALL,R1,0.0017136869,1040,2,beginning bloom,28,31,False
+zones_demo_sahel,aez8,groundnut,70,40,ALL,R1,0.0007014003,1036,2,beginning bloom,28,31,False
+zones_demo_sahel,aez8,groundnut,90,0,ALL,R1,0.02304601,1040,2,beginning bloom,30,34,False
+zones_demo_sahel,aez8,groundnut,90,10,ALL,R1,0.008079306,1040,2,beginning bloom,30,34,False
+zones_demo_sahel,aez8,groundnut,90,20,ALL,R1,0.0029303904,1036,2,beginning bloom,30,34,False
+zones_demo_sahel,aez8,groundnut,90,30,ALL,R1,0.00031313568,1035,2,beginning bloom,30,34,False
+zones_demo_sahel,aez8,groundnut,90,40,ALL,R1,0.0003552993,978,2,beginning bloom,30,34,False
+zones_demo_sahel,aez8,groundnut,110,0,ALL,R1,0.020879384,1036,2,beginning bloom,31,38,False
+zones_demo_sahel,aez8,groundnut,110,10,ALL,R1,0.0020864168,1035,2,beginning bloom,31,38,False
+zones_demo_sahel,aez8,groundnut,110,20,ALL,R1,0.00037251198,978,2,beginning bloom,31,38,False
+zones_demo_sahel,aez8,groundnut,110,30,ALL,R1,0.0,717,2,beginning bloom,31,38,False
+zones_demo_sahel,aez8,groundnut,110,40,ALL,R1,0.0005357398,166,2,beginning bloom,31,38,False
+zones_demo_sahel,aez8,groundnut,130,0,ALL,R1,0.013154389,978,2,beginning bloom,33,40,False
+zones_demo_sahel,aez8,groundnut,130,10,ALL,R1,0.0007333229,717,2,beginning bloom,33,40,False
+zones_demo_sahel,aez8,groundnut,130,20,ALL,R1,0.001334389,166,2,beginning bloom,33,40,False
+zones_demo_sahel,aez8,groundnut,70,0,ALL,R2,0.018939523,1040,3,beginning peg,32,36,False
+zones_demo_sahel,aez8,groundnut,70,10,ALL,R2,0.0029869357,1040,3,beginning peg,32,36,False
+zones_demo_sahel,aez8,groundnut,70,20,ALL,R2,0.001956232,1040,3,beginning peg,32,36,False
+zones_demo_sahel,aez8,groundnut,70,30,ALL,R2,0.0013668258,1040,3,beginning peg,32,36,False
+zones_demo_sahel,aez8,groundnut,70,40,ALL,R2,0.0014872439,1036,3,beginning peg,32,36,False
+zones_demo_sahel,aez8,groundnut,90,0,ALL,R2,0.012395582,1040,3,beginning peg,35,41,False
+zones_demo_sahel,aez8,groundnut,90,10,ALL,R2,0.003790753,1040,3,beginning peg,35,41,False
+zones_demo_sahel,aez8,groundnut,90,20,ALL,R2,0.0017952585,1036,3,beginning peg,35,41,False
+zones_demo_sahel,aez8,groundnut,90,30,ALL,R2,0.0006130794,1035,3,beginning peg,35,41,False
+zones_demo_sahel,aez8,groundnut,90,40,ALL,R2,0.00057585974,978,3,beginning peg,35,41,False
+zones_demo_sahel,aez8,groundnut,110,0,ALL,R2,0.009086636,1036,3,beginning peg,39,46,False
+zones_demo_sahel,aez8,groundnut,110,10,ALL,R2,0.000608347,1035,3,beginning peg,39,46,False
+zones_demo_sahel,aez8,groundnut,110,20,ALL,R2,0.00024806854,978,3,beginning peg,39,46,False
+zones_demo_sahel,aez8,groundnut,110,30,ALL,R2,0.0005525264,717,3,beginning peg,39,46,False
+zones_demo_sahel,aez8,groundnut,110,40,ALL,R2,0.0005357398,166,3,beginning peg,39,46,False
+zones_demo_sahel,aez8,groundnut,130,0,ALL,R2,0.0014909833,978,3,beginning peg,41,52,False
+zones_demo_sahel,aez8,groundnut,130,10,ALL,R2,0.0005877481,717,3,beginning peg,41,52,False
+zones_demo_sahel,aez8,groundnut,130,20,ALL,R2,0.0,166,3,beginning peg,41,52,False
+zones_demo_sahel,aez8,groundnut,70,0,ALL,R3,0.011024568,1040,4,beginning pod,37,42,True
+zones_demo_sahel,aez8,groundnut,70,10,ALL,R3,0.0031890832,1040,4,beginning pod,37,42,True
+zones_demo_sahel,aez8,groundnut,70,20,ALL,R3,0.0017011787,1040,4,beginning pod,37,42,True
+zones_demo_sahel,aez8,groundnut,70,30,ALL,R3,0.0011275208,1040,4,beginning pod,37,42,True
+zones_demo_sahel,aez8,groundnut,70,40,ALL,R3,0.00289702,1036,4,beginning pod,37,42,True
+zones_demo_sahel,aez8,groundnut,90,0,ALL,R3,0.0033071598,1040,4,beginning pod,42,49,True
+zones_demo_sahel,aez8,groundnut,90,10,ALL,R3,0.0020919351,1040,4,beginning pod,42,49,True
+zones_demo_sahel,aez8,groundnut,90,20,ALL,R3,0.0014150925,1036,4,beginning pod,42,49,True
+zones_demo_sahel,aez8,groundnut,90,30,ALL,R3,0.0015916977,1035,4,beginning pod,42,49,True
+zones_demo_sahel,aez8,groundnut,90,40,ALL,R3,0.0021133402,978,4,beginning pod,42,49,True
+zones_demo_sahel,aez8,groundnut,110,0,ALL,R3,0.0033635837,1036,4,beginning pod,47,57,True
+zones_demo_sahel,aez8,groundnut,110,10,ALL,R3,0.0007992861,1035,4,beginning pod,47,57,True
+zones_demo_sahel,aez8,groundnut,110,20,ALL,R3,0.0006042624,978,4,beginning pod,47,57,True
+zones_demo_sahel,aez8,groundnut,110,30,ALL,R3,0.0025360188,717,4,beginning pod,47,57,True
+zones_demo_sahel,aez8,groundnut,110,40,ALL,R3,0.0,166,4,beginning pod,47,57,True
+zones_demo_sahel,aez8,groundnut,130,0,ALL,R3,0.00036793092,978,4,beginning pod,53,65,True
+zones_demo_sahel,aez8,groundnut,130,10,ALL,R3,0.0002836143,717,4,beginning pod,53,65,True
+zones_demo_sahel,aez8,groundnut,130,20,ALL,R3,0.0005357398,166,4,beginning pod,53,65,True
+zones_demo_sahel,aez8,groundnut,70,0,ALL,R4,0.0030701375,1040,5,full pod,43,48,True
+zones_demo_sahel,aez8,groundnut,70,10,ALL,R4,0.001976996,1040,5,full pod,43,48,True
+zones_demo_sahel,aez8,groundnut,70,20,ALL,R4,0.0016398858,1040,5,full pod,43,48,True
+zones_demo_sahel,aez8,groundnut,70,30,ALL,R4,0.0023716358,1040,5,full pod,43,48,True
+zones_demo_sahel,aez8,groundnut,70,40,ALL,R4,0.01572388,1036,5,full pod,43,48,True
+zones_demo_sahel,aez8,groundnut,90,0,ALL,R4,0.0031579388,1040,5,full pod,50,58,True
+zones_demo_sahel,aez8,groundnut,90,10,ALL,R4,0.0019501514,1040,5,full pod,50,58,True
+zones_demo_sahel,aez8,groundnut,90,20,ALL,R4,0.0015551756,1036,5,full pod,50,58,True
+zones_demo_sahel,aez8,groundnut,90,30,ALL,R4,0.002648885,1035,5,full pod,50,58,True
+zones_demo_sahel,aez8,groundnut,90,40,ALL,R4,0.0052094636,978,5,full pod,50,58,True
+zones_demo_sahel,aez8,groundnut,110,0,ALL,R4,0.0019583292,1036,5,full pod,58,69,True
+zones_demo_sahel,aez8,groundnut,110,10,ALL,R4,0.0016346554,1035,5,full pod,58,69,True
+zones_demo_sahel,aez8,groundnut,110,20,ALL,R4,0.0022330177,978,5,full pod,58,69,True
+zones_demo_sahel,aez8,groundnut,110,30,ALL,R4,0.0030372639,717,5,full pod,58,69,True
+zones_demo_sahel,aez8,groundnut,110,40,ALL,R4,0.00027382257,166,5,full pod,58,69,True
+zones_demo_sahel,aez8,groundnut,130,0,ALL,R4,0.0006042624,978,5,full pod,66,79,True
+zones_demo_sahel,aez8,groundnut,130,10,ALL,R4,0.0025360188,717,5,full pod,66,79,True
+zones_demo_sahel,aez8,groundnut,130,20,ALL,R4,0.0,166,5,full pod,66,79,True
+zones_demo_sahel,aez8,groundnut,70,0,ALL,R5,0.0029913401,1040,6,beginning seed,49,52,True
+zones_demo_sahel,aez8,groundnut,70,10,ALL,R5,0.0015409735,1040,6,beginning seed,49,52,True
+zones_demo_sahel,aez8,groundnut,70,20,ALL,R5,0.001721587,1040,6,beginning seed,49,52,True
+zones_demo_sahel,aez8,groundnut,70,30,ALL,R5,0.010282687,1040,6,beginning seed,49,52,True
+zones_demo_sahel,aez8,groundnut,70,40,ALL,R5,0.028450735,1036,6,beginning seed,49,52,True
+zones_demo_sahel,aez8,groundnut,90,0,ALL,R5,0.0016574725,1040,6,beginning seed,59,65,True
+zones_demo_sahel,aez8,groundnut,90,10,ALL,R5,0.0014681212,1040,6,beginning seed,59,65,True
+zones_demo_sahel,aez8,groundnut,90,20,ALL,R5,0.0066254456,1036,6,beginning seed,59,65,True
+zones_demo_sahel,aez8,groundnut,90,30,ALL,R5,0.008639993,1035,6,beginning seed,59,65,True
+zones_demo_sahel,aez8,groundnut,90,40,ALL,R5,0.030457405,978,6,beginning seed,59,65,True
+zones_demo_sahel,aez8,groundnut,110,0,ALL,R5,0.0015551756,1036,6,beginning seed,70,78,True
+zones_demo_sahel,aez8,groundnut,110,10,ALL,R5,0.002648885,1035,6,beginning seed,70,78,True
+zones_demo_sahel,aez8,groundnut,110,20,ALL,R5,0.0052094636,978,6,beginning seed,70,78,True
+zones_demo_sahel,aez8,groundnut,110,30,ALL,R5,0.007425863,717,6,beginning seed,70,78,True
+zones_demo_sahel,aez8,groundnut,110,40,ALL,R5,0.0005357398,166,6,beginning seed,70,78,True
+zones_demo_sahel,aez8,groundnut,130,0,ALL,R5,0.0025872376,978,6,beginning seed,80,90,True
+zones_demo_sahel,aez8,groundnut,130,10,ALL,R5,0.0030930522,717,6,beginning seed,80,90,True
+zones_demo_sahel,aez8,groundnut,130,20,ALL,R5,0.00027382257,166,6,beginning seed,80,90,True
+zones_demo_sahel,aez8,groundnut,70,0,ALL,R6,0.0019764635,1040,7,full seed,53,58,True
+zones_demo_sahel,aez8,groundnut,70,10,ALL,R6,0.0016990762,1040,7,full seed,53,58,True
+zones_demo_sahel,aez8,groundnut,70,20,ALL,R6,0.00461679,1040,7,full seed,53,58,True
+zones_demo_sahel,aez8,groundnut,70,30,ALL,R6,0.034820497,1040,7,full seed,53,58,True
+zones_demo_sahel,aez8,groundnut,70,40,ALL,R6,0.061970495,1036,7,full seed,53,58,True
+zones_demo_sahel,aez8,groundnut,90,0,ALL,R6,0.0018984693,1040,7,full seed,66,73,True
+zones_demo_sahel,aez8,groundnut,90,10,ALL,R6,0.014300469,1040,7,full seed,66,73,True
+zones_demo_sahel,aez8,groundnut,90,20,ALL,R6,0.03513614,1036,7,full seed,66,73,True
+zones_demo_sahel,aez8,groundnut,90,30,ALL,R6,0.05725788,1035,7,full seed,66,73,True
+zones_demo_sahel,aez8,groundnut,90,40,ALL,R6,0.12384859,978,7,full seed,66,73,True
+zones_demo_sahel,aez8,groundnut,110,0,ALL,R6,0.015891246,1036,7,full seed,79,88,True
+zones_demo_sahel,aez8,groundnut,110,10,ALL,R6,0.02224433,1035,7,full seed,79,88,True
+zones_demo_sahel,aez8,groundnut,110,20,ALL,R6,0.055565737,978,7,full seed,79,88,True
+zones_demo_sahel,aez8,groundnut,110,30,ALL,R6,0.09725764,717,7,full seed,79,88,True
+zones_demo_sahel,aez8,groundnut,110,40,ALL,R6,0.08408084,166,7,full seed,79,88,True
+zones_demo_sahel,aez8,groundnut,130,0,ALL,R6,0.028005935,978,7,full seed,91,104,True
+zones_demo_sahel,aez8,groundnut,130,10,ALL,R6,0.040642366,717,7,full seed,91,104,True
+zones_demo_sahel,aez8,groundnut,130,20,ALL,R6,0.0253799,166,7,full seed,91,104,True
+zones_demo_sahel,aez8,groundnut,70,0,ALL,R7,0.0014728247,1040,8,beginning maturity,59,69,False
+zones_demo_sahel,aez8,groundnut,70,10,ALL,R7,0.00079542556,1040,8,beginning maturity,59,69,False
+zones_demo_sahel,aez8,groundnut,70,20,ALL,R7,0.007511591,1040,8,beginning maturity,59,69,False
+zones_demo_sahel,aez8,groundnut,70,30,ALL,R7,0.040328644,1040,8,beginning maturity,59,69,False
+zones_demo_sahel,aez8,groundnut,70,40,ALL,R7,0.07152516,1036,8,beginning maturity,59,69,False
+zones_demo_sahel,aez8,groundnut,90,0,ALL,R7,0.007910739,1040,8,beginning maturity,74,89,False
+zones_demo_sahel,aez8,groundnut,90,10,ALL,R7,0.040982403,1040,8,beginning maturity,74,89,False
+zones_demo_sahel,aez8,groundnut,90,20,ALL,R7,0.07592294,1036,8,beginning maturity,74,89,False
+zones_demo_sahel,aez8,groundnut,90,30,ALL,R7,0.14865477,1035,8,beginning maturity,74,89,False
+zones_demo_sahel,aez8,groundnut,90,40,ALL,R7,0.26936853,978,8,beginning maturity,74,89,False
+zones_demo_sahel,aez8,groundnut,110,0,ALL,R7,0.07692671,1036,8,beginning maturity,89,109,False
+zones_demo_sahel,aez8,groundnut,110,10,ALL,R7,0.14739554,1035,8,beginning maturity,89,109,False
+zones_demo_sahel,aez8,groundnut,110,20,ALL,R7,0.284646,978,8,beginning maturity,89,109,False
+zones_demo_sahel,aez8,groundnut,110,30,ALL,R7,0.3815051,717,8,beginning maturity,89,109,False
+zones_demo_sahel,aez8,groundnut,110,40,ALL,R7,0.3960757,166,8,beginning maturity,89,109,False
+zones_demo_sahel,aez8,groundnut,130,0,ALL,R7,0.2839409,978,8,beginning maturity,105,129,False
+zones_demo_sahel,aez8,groundnut,130,10,ALL,R7,0.3783118,717,8,beginning maturity,105,129,False
+zones_demo_sahel,aez8,groundnut,130,20,ALL,R7,0.3958019,166,8,beginning maturity,105,129,False

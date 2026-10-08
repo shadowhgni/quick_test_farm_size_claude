@@ -1,0 +1,152 @@
+name: Dry-spell v9 - CHIRPS + PKU GIMMS NDVI -> seasons -> sowing risk (country / bbox / polygon / cell) -> aggregate
+
+# The same run_all.py as on the HPC, on the ci_nga box (Nigeria, 2.5-14.5E, 4.5-14.5N), with REAL data:
+# CHIRPS v2.0 daily 1981-2025 (~45 years of COG windows), PKU GIMMS NDVI v1.2 1982-2015 (4 zips,
+# ~2.6 GB from Zenodo, cropped then deleted), Natural Earth, HarvestChoice AEZ, Koppen-Geiger 1991-2020.
+# Then: NDVI phenology, regime (rain + NDVI), onset / NDVI-adjusted demise, 5 countries + aggregate,
+# single-target runs (bbox / polygon / cell), independent checks, and a committed fingerprint.
+on:
+  push:
+    branches: ['claude/**']
+    paths:
+      - 'dry_spell_v9/**'
+      - '.github/workflows/dry_spell_v9.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: dry-spell-v9-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci_nga:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: write
+    env:
+      W: ${{ github.workspace }}/work
+      CODE: ${{ github.workspace }}/dry_spell_v9
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'dry_spell_v9/requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          pip install -r dry_spell_v9/requirements.txt
+          python --version; nproc; free -g; df -h .
+
+      - name: Cache CHIRPS download
+        uses: actions/cache@v4
+        with:
+          path: work/dryspell_v9_data/chirps/ci_nga
+          key: v9-chirps-v2-ci_nga-1981-2025-r1
+
+      - name: Cache cropped NDVI
+        uses: actions/cache@v4
+        with:
+          path: work/dryspell_v9_data/ndvi/ci_nga
+          key: v9-pku-gimms-ndvi-avhrr-ci_nga-1982-2015-r1
+
+      - name: JSON settings override (dry run)
+        run: |
+          mkdir -p "$W" && cd "$W"
+          echo '{"FALSE_START_EXCLUDE": true, "SUMMARY_ZONES": "koppen"}' > override.json
+          python "$CODE/run_all.py" --region ci_nga --config override.json --countries NGA --dry_run | tee dry.txt
+          grep -q "FALSE_START_EXCLUDE=True" dry.txt && grep -q "SUMMARY_ZONES=koppen" dry.txt
+          echo '{"NOT_A_SETTING": 1}' > bad.json
+          ! python "$CODE/run_all.py" --region ci_nga --config bad.json --dry_run 2>/dev/null
+
+      - name: run_all.py (steps 1-6, 5 countries)
+        run: |
+          cd "$W"
+          python "$CODE/run_all.py" --region ci_nga --countries NGA BEN NER CMR TCD \
+            --workers 4 --country_jobs 2 --threads 32
+          cat dryspell_v9/ci_nga/run_all_status.csv
+          python "$CODE/run_all.py" --region ci_nga --countries NGA BEN NER CMR TCD --resume --dry_run
+
+      - name: Single targets (bbox with Koppen zones, polygon, one cell)
+        run: |
+          cd "$W"
+          python "$CODE/run_all.py" --region ci_nga --steps 4 --target_bbox 7 10.5 9.5 12.5 \
+            --target_name kano_box --step4_args "--zones koppen" --workers 4
+          python - <<'EOF'
+          import geopandas as gpd
+          from shapely.geometry import box
+          gpd.GeoDataFrame({"NAME": ["guinea_savanna", "sahel"]},
+                           geometry=[box(6, 8, 8, 10), box(4, 12.5, 6, 13.8)], crs=4326).to_file("zones_demo.gpkg")
+          EOF
+          python "$CODE/run_all.py" --region ci_nga --steps 4 --target_polygon zones_demo.gpkg \
+            --polygon_field NAME --polygon_value sahel --workers 4
+          python "$CODE/run_all.py" --region ci_nga --steps 4 --target_point 12.0 8.52 --target_name kano_cell --workers 2
+          ls dryspell_v9/ci_nga/step04/
+          head -5 dryspell_v9/ci_nga/step04/kano_cell/season_detail.csv
+          for d in kano_box zones_demo_sahel kano_cell; do
+            python -c "import json,sys; s=json.load(open('dryspell_v9/ci_nga/step04/$d/status.json')); print(s); sys.exit(s['status']!='ok')"
+          done
+
+      - name: Independent checks (seasons, sowing risk, aggregation)
+        run: |
+          cd "$W"
+          python "$CODE/tests/check_seasons.py" --region ci_nga --cells 8
+          for c in sorghum pearl_millet groundnut; do
+            python "$CODE/tests/check_sowing.py" --region ci_nga --iso3 NGA --crop $c --cells 6
+          done
+          python "$CODE/tests/check_aggregate.py" --region ci_nga
+          python "$CODE/tests/check_spell_stats.py" --region ci_nga --cells 15
+
+      - name: Compare with the previous reference (information only)
+        if: always()
+        run: |
+          cd "$W"
+          python "$CODE/tests/compare_reference.py" --region ci_nga || echo "::notice::results differ from the committed reference (expected after a method change)"
+
+      - name: Summary
+        if: always()
+        run: |
+          cd "$W"
+          python - <<'EOF' >> "$GITHUB_STEP_SUMMARY" || true
+          import pandas as pd
+          print("## Countries\n\n```\n" + pd.read_csv("dryspell_v9/ci_nga/step04/SSA/countries.csv").to_string(index=False) + "\n```\n")
+          s = pd.read_csv("dryspell_v9/ci_nga/step04/SSA/ssa_summary.csv")
+          n = s[s.zone == "ALL"]
+          cols = ["crop", "cycle", "sow", "pct_cells_impossible", "p_hit_window_mean", "most_hit_stage", "most_hit_p"]
+          print("## All countries pooled\n\n```\n" + n[cols].round(3).to_string(index=False) + "\n```\n")
+          EOF
+          { echo '```'; grep -E "regime|cells |NDVI end of season" dryspell_v9/ci_nga/step03/step03.log | tail -14;
+            grep -E "seasons|amplitude|cells" dryspell_v9/ci_nga/step02/step02.log | tail -8; echo '```'; } >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Collect reference fingerprint and small results
+        if: always()
+        run: |
+          cd "$W"
+          python "$CODE/tests/compare_reference.py" --region ci_nga --write "$CODE/reference/ci_nga" || true
+          R="$CODE/ci_results"; rm -rf "$R"; mkdir -p "$R"
+          cp dryspell_v9_data/download_ci_nga.log "$R/" 2>/dev/null || true
+          cd dryspell_v9/ci_nga || exit 0
+          cp run_all.log run_all_status.csv run_all_settings.json "$R/" 2>/dev/null || true
+          for s in step02 step03; do
+            mkdir -p "$R/$s" && cp $s/*.log "$R/$s/" 2>/dev/null || true
+            cp $s/diagnostics/*.png "$R/$s/" 2>/dev/null || true
+          done
+          for d in step04/*/ step06/*/; do
+            n="${d%/}"; mkdir -p "$R/$n"
+            cp "$d"/*.json "$d"/*.log "$R/$n/" 2>/dev/null || true
+            for f in "$d"/*.csv; do [ -f "$f" ] && [ "$(stat -c%s "$f")" -lt 3000000 ] && cp "$f" "$R/$n/"; done
+            [ -d "$d/png" ] && cp -r "$d/png" "$R/$n/"
+          done
+          du -sh "$R"
+
+      - name: Commit reference and results
+        if: always() && github.event_name == 'push'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dry_spell_v9/reference dry_spell_v9/ci_results || true
+          git diff --cached --quiet && exit 0
+          git commit -m "ci: dry_spell_v9 ci_nga reference and results [skip ci]"
+          for i in 1 2 3; do git pull --rebase origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && break; sleep 5; done

@@ -1,0 +1,20 @@
+{
+  "unit": "kano_box",
+  "iso3": null,
+  "target": {
+    "kind": "bbox",
+    "bbox": [
+      7.0,
+      10.5,
+      9.5,
+      12.5
+    ]
+  },
+  "status": "ok",
+  "n_cells": 2000,
+  "n_analysed": 2000,
+  "n_few_seasons": 0,
+  "zones": "koppen",
+  "zone_source": "Koppen-Geiger 1991_2020 (Beck et al. 2023), majority per cell",
+  "minutes": 0.3
+}

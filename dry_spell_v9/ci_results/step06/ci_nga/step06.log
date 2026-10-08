@@ -1,0 +1,18 @@
+10:00:49 [MainProcess] INFO - ======================================================================
+10:00:49 [MainProcess] INFO - v9 STEP6 dry spells in the season  region=ci_nga target=ci_nga zones=aez8
+10:00:49 [MainProcess] INFO -   spells >= 10 d (< 1.0 mm), window [onset + 10, rain demise - 10], latitude bands 1.0 deg
+10:00:49 [MainProcess] INFO - ======================================================================
+10:00:49 [MainProcess] INFO -   zones: HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell; 6 classes; 11 latitude bands
+10:00:50 [MainProcess] INFO -   20/25 chunks
+10:00:50 [MainProcess] INFO -   25/25 chunks
+10:00:50 [MainProcess] INFO -   1,972,935 valid seasons, 177,732 qualifying spells
+10:00:59 [MainProcess] INFO -   n_spells       median   0.00  IQR   0.00-0.00    (1,972,935 of 1,972,935 seasons)
+10:00:59 [MainProcess] INFO -   spell_len      median  11.00  IQR  10.00-13.00   (159,812 of 1,972,935 seasons)
+10:00:59 [MainProcess] INFO -   first_start    median  71.00  IQR  40.00-93.00   (159,812 of 1,972,935 seasons)
+10:00:59 [MainProcess] INFO -   first_len      median  11.00  IQR  10.00-13.00   (159,812 of 1,972,935 seasons)
+10:00:59 [MainProcess] INFO -   last_start     median 100.00  IQR  84.00-117.00  (16,033 of 1,972,935 seasons)
+10:00:59 [MainProcess] INFO -   last_len       median  11.00  IQR  10.00-13.00   (16,033 of 1,972,935 seasons)
+10:00:59 [MainProcess] INFO -   longest_start  median  72.00  IQR  41.00-94.00   (159,812 of 1,972,935 seasons)
+10:00:59 [MainProcess] INFO -   longest_len    median  11.00  IQR  10.00-13.00   (159,812 of 1,972,935 seasons)
+10:00:59 [MainProcess] INFO -   dry_frac       median   0.00  IQR   0.00-0.00    (1,972,935 of 1,972,935 seasons)
+10:00:59 [MainProcess] INFO - STEP6 done in 0.2 min -> dryspell_v9/ci_nga/step06/ci_nga
