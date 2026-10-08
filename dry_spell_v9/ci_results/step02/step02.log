@@ -1,10 +1,10 @@
-17:05:21 [MainProcess] INFO - ======================================================================
-17:05:21 [MainProcess] INFO - v9 STEP2 NDVI  region=ci_nga  AVHRR_solely 1982-2015  grid 150x126  half-months 816/816
-17:05:21 [MainProcess] INFO -   min amplitude 0.05, peak separation 3 half-months, SOS/EOS thresholds 0.5/0.5, gaps <= 3, median 3
-17:05:21 [MainProcess] INFO - ======================================================================
-17:05:26 [MainProcess] INFO -   8/8 chunks
-17:05:26 [MainProcess] INFO -   599 NDVI pixels without signal take the nearest pixel with one (<= 2 px); 1,031 stay without signal
-17:05:27 [MainProcess] INFO - Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
-17:05:27 [MainProcess] INFO - generated new fontManager
-17:05:29 [MainProcess] INFO -   NDVI pixels: no signal 1,630, one season 13,378, two seasons 3,892
-17:05:29 [MainProcess] INFO - STEP2 NDVI done in 0.1 min -> dryspell_v9/ci_nga/step02/ndvi_phenology.nc
+07:00:27 [MainProcess] INFO - ======================================================================
+07:00:27 [MainProcess] INFO - v9 STEP2 NDVI  region=ci_nga  AVHRR_solely 1982-2015  grid 150x126  half-months 816/816
+07:00:27 [MainProcess] INFO -   min amplitude 0.05, peak separation 3 half-months, SOS/EOS thresholds 0.5/0.5, gaps <= 3, median 3
+07:00:27 [MainProcess] INFO - ======================================================================
+07:00:33 [MainProcess] INFO -   8/8 chunks
+07:00:33 [MainProcess] INFO -   599 NDVI pixels without signal take the nearest pixel with one (<= 2 px); 1,031 stay without signal
+07:00:34 [MainProcess] INFO - Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+07:00:34 [MainProcess] INFO - generated new fontManager
+07:00:35 [MainProcess] INFO -   NDVI pixels: no signal 1,630, one season 13,378, two seasons 3,892
+07:00:35 [MainProcess] INFO - STEP2 NDVI done in 0.1 min -> dryspell_v9/ci_nga/step02/ndvi_phenology.nc

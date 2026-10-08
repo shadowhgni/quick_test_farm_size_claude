@@ -12,164 +12,189 @@
   "CROPS": {
     "sorghum": {
       "label": "Sorghum",
+      "reference_cycle": 110,
+      "emergence_das": 5,
+      "anchor": "S6",
+      "post_anchor_exponent": 0.6,
       "stages": [
         [
           "S0",
           "emergence",
-          0.04
+          5
         ],
         [
           "S1",
           "3-leaf",
-          0.14
+          15
         ],
         [
           "S2",
           "5-leaf",
-          0.24
+          27
         ],
         [
           "S3",
           "growing point differentiation",
-          0.34
+          40
         ],
         [
           "S4",
           "flag leaf visible",
-          0.44
+          50
         ],
         [
           "S5",
           "boot",
-          0.55
+          60
         ],
         [
           "S6",
           "half-bloom",
-          0.65
+          70
         ],
         [
           "S7",
           "soft dough",
-          0.75
+          85
         ],
         [
           "S8",
           "hard dough",
-          0.9
+          95
         ]
       ],
       "window": [
-        0.47,
-        0.79
+        [
+          "S5",
+          -7
+        ],
+        [
+          "S6",
+          14
+        ]
       ]
     },
     "pearl_millet": {
       "label": "Pearl millet",
+      "reference_cycle": 92,
+      "emergence_das": 4,
+      "anchor": "P6",
+      "post_anchor_exponent": 0.6,
       "stages": [
         [
           "P0",
           "emergence",
-          0.05
+          4
         ],
         [
           "P1",
-          "3rd leaf",
-          0.13
+          "3-leaf",
+          10
         ],
         [
           "P2",
-          "5th leaf",
-          0.24
+          "tillering",
+          17
         ],
         [
           "P3",
           "panicle initiation",
-          0.41
+          35
         ],
         [
           "P4",
-          "flag leaf visible",
-          0.59
+          "flag leaf / boot",
+          42
         ],
         [
           "P5",
-          "boot",
-          0.65
+          "panicle emergence (heading)",
+          50
         ],
         [
           "P6",
-          "50% flowering",
-          0.72
+          "flowering (anthesis)",
+          57
         ],
         [
           "P7",
           "milk",
-          0.82
+          70
         ],
         [
           "P8",
           "dough",
-          0.92
+          80
         ]
       ],
       "window": [
-        0.65,
-        0.92
+        [
+          "P6",
+          0
+        ],
+        [
+          "P8",
+          -1
+        ]
       ]
     },
     "groundnut": {
       "label": "Groundnut",
+      "reference_cycle": 120,
+      "emergence_das": 8,
+      "anchor": "R1",
+      "pre_anchor_exponent": 0.3,
       "stages": [
         [
           "VE",
           "emergence",
-          0.07
+          8
         ],
         [
           "R1",
           "beginning bloom",
-          0.22
+          32
         ],
         [
           "R2",
           "beginning peg",
-          0.3
+          40
         ],
         [
           "R3",
           "beginning pod",
-          0.38
+          50
         ],
         [
           "R4",
           "full pod",
-          0.45
+          62
         ],
         [
           "R5",
           "beginning seed",
-          0.52
+          75
         ],
         [
           "R6",
           "full seed",
-          0.62
+          85
         ],
         [
           "R7",
           "beginning maturity",
-          0.78
-        ],
-        [
-          "R8",
-          "harvest maturity",
-          0.93
+          97
         ]
       ],
       "window": [
-        0.38,
-        0.78
+        [
+          "R3",
+          0
+        ],
+        [
+          "R7",
+          -1
+        ]
       ]
     }
   },
