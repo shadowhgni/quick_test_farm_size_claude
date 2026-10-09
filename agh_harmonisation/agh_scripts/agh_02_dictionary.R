@@ -82,6 +82,9 @@ tm <- if (needs_terminag) load_terminag() else list(vars = tibble(name = charact
 inventory <- map(seq_len(nrow(src)), \(i) {
   list_data_files(src$data_path[i]) |> mutate(source_id = src$source_id[i], .before = 1)
 }) |> list_rbind()
+# no registered source yet (first run, catalog only): keep the columns used below
+if (nrow(inventory) == 0) inventory <- tibble(source_id = character(), container = character(),
+                                              member = character(), file = character())
 if (nrow(inventory) > 0) inventory <- inventory |> mutate(file = file_key(coalesce(member, container)))
 missing_data <- src |> filter(!source_id %in% inventory$source_id)
 if (nrow(missing_data) > 0) warning("No data files found for: ", paste(missing_data$source_id, collapse = ", "),
@@ -127,7 +130,7 @@ if (include_catalog && file.exists(cat_file)) {
   }) |> list_rbind()
 }
 
-dictionary <- bind_rows(reg_dicts, cat_dicts)
+dictionary <- bind_rows(reg_dicts, cat_dicts) |> as_tibble()   # list_rbind() of nothing is a data.frame
 if (nrow(dictionary) == 0) stop("No dictionary parsed. Check sources.csv (enabled, dict_path) and step 1 output.")
 
 dictionary <- dictionary |>
