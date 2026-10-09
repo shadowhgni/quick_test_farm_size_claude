@@ -401,7 +401,7 @@ if (!is.null(plot_crop)) {
   plot_crop <- plot_crop |>
     left_join(unconverted, by = level_keys$plot_crop) |>
     ensure("yield_kg_ha") |>
-    mutate(qc_flag = add_flag(qc_flags(pick(everything()), "plot_crop"),
+    mutate(qc_flag = add_flag(qc_flags(pick(everything()), "plot_crop", item_col = "crop"),
                               if_else(.unconv %in% TRUE, "no_harvest_unit_factor", NA_character_))) |>
     select(-.unconv)
 }
