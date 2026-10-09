@@ -180,7 +180,9 @@ parse_ddi <- function(path) {
   files <- xml2::xml_find_all(doc, "//fileDscr")
   file_tbl <- tibble(
     file_id   = xml2::xml_attr(files, "ID"),
-    file      = node_text(files, "./fileTxt/fileName") |> str_remove(data_exts),
+    # older World Bank (Nesstar) exports name files "sec_a.NSDstat" for data "sec_a.dta"
+    file      = node_text(files, "./fileTxt/fileName") |> str_remove(data_exts) |>
+                  str_remove(regex("\\.nsdstat$", ignore_case = TRUE)),
     file_desc = node_text(files, "./fileTxt/fileCont")
   )
   vars <- xml2::xml_find_all(doc, "//dataDscr/var")
