@@ -237,7 +237,7 @@ Values in the outputs were checked by hand (areas, OM and fertilizer rates, TLU)
 
 ## 🤖 Automated Test (GitHub Action)
 
-`.github/workflows/agh-mock-test.yml` runs on every push or pull request that touches `agh_harmonisation/`, and can also be started by hand from the *Actions* tab. It:
+`.github/workflows/agh-mock-test.yml` runs on every push or pull request that touches `agh_harmonisation/`, and can also be started by hand from the *Actions* tab (GitHub only offers that once the workflow file is on the default branch). It:
 1. installs the R packages;
 2. checks that every script parses;
 3. builds the mock data (`tests/make_mock.R`);
@@ -246,7 +246,7 @@ Values in the outputs were checked by hand (areas, OM and fertilizer rates, TLU)
 
 The outputs are kept as a downloadable artifact of each run. To run the same test locally, from `agh_harmonisation/`: `Rscript tests/run_mock_test.R` (step 1 is skipped unless `NADA_MOCK_URL` is set).
 
-It never touches real microdata or the live catalogs, so it needs no login or secrets.
+It never touches real microdata or the live catalogs, so it needs no login or secrets. It does need internet access to GitHub: steps 2–5 download terminag (`controvoc/terminag`) for the Carob labels and units, and without it the Carob checks fail.
 
 ---
 
