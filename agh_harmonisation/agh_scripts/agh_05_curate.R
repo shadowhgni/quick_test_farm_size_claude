@@ -37,6 +37,8 @@ add_flag <- \(a, b) case_when(is.na(a) ~ b, is.na(b) ~ a, a == b ~ a, .default =
 # sum that is NA when every value is NA (0 only when some value is known);
 # an empty selection (e.g. no fallow plot) is a real 0
 sum_na <- function(x) if (length(x) > 0 && all(is.na(x))) NA_real_ else sum(x, na.rm = TRUE)
+# add missing columns
+ensure <- \(df, cols, type = NA_real_) { for (c in cols) if (!c %in% names(df)) df[[c]] <- type; df }
 
 long <- readRDS(agh_path("agh_extract", "agh_long_raw.rds"))
 concepts <- read_cfg("concepts.csv")
@@ -179,16 +181,20 @@ upairs <- long |>
 
 um_file <- agh_path("agh_config", "unit_map.csv")
 um_old <- if (file.exists(um_file)) read_cfg("unit_map.csv") else
-  tibble(source_id = character(), concept = character(), item = character(), unit = character(),
-         factor = character(), target = character(), checked = character(), n = character())
+  tibble(source_id = character(), concept = character(), item = character(), region = character(),
+         unit = character(), factor = character(), target = character(), checked = character(),
+         n = character(), basis = character())
+um_old <- um_old |> ensure(c("region", "basis"), NA_character_) |> relocate(region, .after = item)
 um_new <- upairs |>
   anti_join(um_old |> filter(is.na(item)), by = c("source_id", "concept", "unit")) |>
   mutate(item = NA_character_, factor = as.character(default_factor(unit, unit_target)),
          target = unit_target, checked = NA_character_, n = as.character(n)) |>
   select(source_id, concept, item, unit, factor, target, checked, n)
-um <- bind_rows(um_old, um_new) |> arrange(source_id, concept, unit, item)
+um <- bind_rows(um_old, um_new) |> arrange(source_id, concept, unit, item, region)
 write_template(um, um_file, paste("unit_map: factor converts value x factor -> target unit. item (optional) = std item",
-                                  "(e.g. maize) for item-specific factors such as LSMS conversion tables; source_id * = all sources."))
+                                  "(e.g. maize) for item-specific factors such as LSMS conversion tables; region (optional) = household adm1",
+                                  "(std value) the factor applies to; source_id * = all sources. basis = where the factor comes from",
+                                  "(agh_units_import.R fills it). Most specific wins: item + region > item > source > *."))
 if (nrow(um_new) > 0) say("unit_map.csv: %d new units appended (%d with a default factor).",
                           nrow(um_new), sum(!is.na(um_new$factor)))
 
@@ -202,17 +208,28 @@ cur <- long |>
   left_join(vm_use |> rename(raw_n = raw, value_std = std), by = c("concept", "raw_n")) |>
   mutate(item_std = coalesce(item_std, item_n), unit = normalise(unit_raw))
 
-# unit factor: item-specific > source-specific > wildcard
-f_item <- um_use |> filter(!is.na(item), source_id != "*") |> select(source_id, concept, item_std = item, unit, f1 = factor)
+# household region (adm1 std value), for region-specific factors
+hh_region <- cur |>
+  filter(concept == "adm1", !is.na(hhid)) |>
+  summarise(region = first(normalise(value_std[!is.na(value_std)]), default = NA_character_), .by = c(source_id, hhid))
+cur <- cur |> left_join(hh_region, by = c("source_id", "hhid"))
+
+# unit factor: item + region > item > source-specific > wildcard
+f_ireg <- um_use |> filter(!is.na(item), !is.na(region), source_id != "*") |>
+  transmute(source_id, concept, item_std = item, region = normalise(region), unit, f0 = factor) |>
+  distinct(source_id, concept, item_std, region, unit, .keep_all = TRUE)
+f_item <- um_use |> filter(!is.na(item), is.na(region), source_id != "*") |> select(source_id, concept, item_std = item, unit, f1 = factor) |>
+  distinct(source_id, concept, item_std, unit, .keep_all = TRUE)
 f_src  <- um_use |> filter(is.na(item), source_id != "*") |> select(source_id, concept, unit, f2 = factor)
 f_any  <- um_use |> filter(is.na(item), source_id == "*") |> select(concept, unit, f3 = factor) |> distinct(concept, unit, .keep_all = TRUE)
 
 cur <- cur |>
+  left_join(f_ireg, by = c("source_id", "concept", "item_std", "region", "unit")) |>
   left_join(f_item, by = c("source_id", "concept", "item_std", "unit")) |>
   left_join(f_src,  by = c("source_id", "concept", "unit")) |>
   left_join(f_any,  by = c("concept", "unit")) |>
   mutate(
-    unit_factor = coalesce(f1, f2, f3),
+    unit_factor = coalesce(f0, f1, f2, f3),
     unit_status = case_when(kind != "num" ~ NA_character_, is.na(unit_raw) ~ "no_unit_var",
                             !is.na(unit_factor) ~ "converted", .default = "unknown_unit"),
     value_num = if_else(kind == "num",
@@ -220,7 +237,7 @@ cur <- cur |>
                         NA_real_),
     value_lgl = if_else(kind == "lgl", as.logical(value_std), NA)
   ) |>
-  select(-f1, -f2, -f3)
+  select(-f0, -f1, -f2, -f3, -region)
 
 # hhid must identify one household per source. A household-level concept with several
 # different values for one hhid (two weights, two districts ...) means it does not: e.g. in
@@ -282,7 +299,6 @@ make_level <- function(lv) {
 }
 
 tabs <- map(set_names(names(level_keys)), make_level)
-ensure <- \(df, cols, type = NA_real_) { for (c in cols) if (!c %in% names(df)) df[[c]] <- type; df }
 
 src_info <- cur |> distinct(source_id, program, country, year)
 
@@ -474,4 +490,5 @@ write_csv(um |> filter(is.na(factor)), agh_path("agh_curated", "qc_unknown_units
 
 say("\nLevel tables:")
 print(imap(out, \(t, nm) tibble(table = nm, rows = nrow(t), cols = ncol(t), sources = n_distinct(t$source_id))) |> list_rbind())
-say("Labels without a reviewed std: %d | units without factor: %d", sum(!as_lgl(vm$checked) %in% TRUE), sum(is.na(um$factor)))
+say("Labels without a reviewed std: %d | values in a unit without factor: %d", sum(!as_lgl(vm$checked) %in% TRUE),
+    sum(cur$unit_status %in% "unknown_unit"))

@@ -61,6 +61,7 @@ AG_HARMONISATION/                     ← project root (agh.root = ".." seen fro
 │   ├── agh_04_extract.R              # step 4 · source_map → one long table
 │   ├── agh_05_curate.R               # step 5 · curation rules → level tables + QC
 │   ├── agh_06_query.R                # helpers to subset the curated tables
+│   ├── agh_units_import.R            # propose unit_map rows from a conversion table (LSMS factor files)
 │   ├── config_defaults/              # copied to agh_config/ on first run (never overwritten)
 │   └── README.md
 ├── tests/                            # mock data + end-to-end test (also run by the GitHub Action)
@@ -178,7 +179,19 @@ Several variables mapped to one key are pasted together, e.g. `gardenid` + `plot
   - rule sets in English, French and Portuguese for species, land use, tenure and sex.
 
   Species may carry a class (`cattle:calf`), which `tlu_factors.csv` can price separately.
-- **`unit_map.csv`.** Generic units (kg, g, tonne, quintal, ha, acre, m²) are pre-filled. **Local units are left blank** (bags, ox carts, heaps); fill them yourself. The optional `item` column takes crop-specific factors, e.g. from the LSMS conversion-factor files.
+- **`unit_map.csv`.** Generic units (kg, g, tonne, quintal, ha, acre, m²) are pre-filled. **Local units are left blank** (bags, ox carts, heaps); fill them yourself.
+  - Optional columns: `item` for crop-specific factors, `region` for factors that differ by region (matched to the household's `adm1` std value), and `basis` for where the factor comes from. The most specific row wins: item + region > item > source > `*`.
+  - **`agh_units_import.R`** proposes these rows from a published conversion table, e.g. Malawi IHS5 `ihs_seasonalcropconversion_factor_2020.dta` (region × crop × unit × shelled/unshelled) or `ihs_treeconversion_factor_2020.dta`. Run it after step 5, review the rows (`checked` blank), then re-run step 5:
+
+    ```r
+    source("agh_units_import.R")
+    agh_import_units("C:/data/lsms/ihs_seasonalcropconversion_factor_2020.dta",
+                     sources = "MWI_IHS2_2004", concept = "harvest_qty",
+                     region_map = c(central = "centre"),   # table region -> household adm1
+                     basis = "IHS5 seasonal-crop factors, collected 2016/2019")
+    ```
+
+    It matches crops by words (`local maize` = `MAIZE LOCAL`; several varieties → median, noted), units with spaces ignored (`oxcart` = `OX-CART`) and the shelled/unshelled condition from the unit label. Anything ambiguous is left blank and explained in `agh_meta/unit_import_report.csv`. For example, a "50 kg bag" of maize when the survey did not record whether it was shelled: set `condition_default = "shelled"` (or `"unshelled"`) if you decide, and the choice is written in `basis`. Other tables need their column names: `item_col`, `unit_col`, `factor_col`, `region_col`, `condition_col`.
 - **Derived variables:**
   - plot area (GPS first, else reported);
   - fallow flag;
@@ -235,9 +248,10 @@ Values in the outputs were checked by hand (areas, OM and fertilizer rates, TLU)
 | part | status |
 |---|---|
 | DDI parsing paths | same as the PFP-N workflow, which parsed the real Malawi IHS codebooks on your machine |
-| NADA search endpoint and response shape (`result$found`, `result$rows`) | as used by the CRAN package *nadaverse*; **not yet run against the live sites** (the sandbox can't reach them) |
-| National NADA sites (via AGM) | **assumed** to expose the same API; failures are logged in `catalog_log.csv`, not fatal |
-| Concept regexes | tested on mock labels only. Expect false positives and misses on real codebooks; that is why `source_map.csv` exists |
+| NADA search endpoint and response shape (`result$found`, `result$rows`) | run against the live World Bank catalog: 169 LSMS codebooks harvested |
+| National NADA sites (via AGM) | run against DataFirst's AGM pointers: Ghana, Kenya, Botswana and Tanzania catalogs answered (52 codebooks); failures are logged in `catalog_log.csv`, not fatal |
+| Concept regexes | run on 5 real LSMS codebooks and the Malawi IHS2 (2004) data. Expect false positives and misses (e.g. IHS2 crops per plot, phrased "in the last cropping season", were missed); that is why `source_map.csv` exists |
+| Unit conversion factors from another round | **assumption**: where a round recorded no factors (e.g. Malawi IHS2 2004), factors published with a later round (IHS5: `ihs_seasonalcropconversion_factor_2020`, collected 2016/2019) are applied. `agh_units_import.R` writes this in the `basis` of every row it adds |
 | TLU factors | Jahnke (1982), as reported by Rothman-Ostrow et al. (2020), *Front. Vet. Sci.* 7:556788 |
 
 ---
