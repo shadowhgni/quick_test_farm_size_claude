@@ -1,0 +1,10 @@
+# Generic unit conversions used to pre-fill unit_map.csv. pattern = regex on the normalised unit label. Local units (bags, oxcarts, heaps) are NOT here: their factors are country- and crop-specific (LSMS ships conversion-factor files) and must go in unit_map.csv.
+dimension,pattern,factor,target
+mass,^(kgs?|kilo|kilos|kilograms?|kilogrammes?|quilos?)$,1,kg
+mass,^(g|grams?|grammes?|gramas?)$,0.001,kg
+mass,^(t|tons?|tonnes?|metric tons?|tonnes metriques)$,1000,kg
+mass,^(quintals?|quintaux|qx)$,100,kg
+area,^(ha|hectares?|hectars?)$,10000,m2
+area,^(acres?)$,4046.8564224,m2
+area,^(m2|sq m|square met(er|re)s?|metres? carres?)$,1,m2
+area,^(are|ares)$,100,m2

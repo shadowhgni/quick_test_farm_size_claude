@@ -1,0 +1,56 @@
+# Runs the agh workflow end to end on mock data (no microdata, no login needed).
+# Triggered on pushes and pull requests that touch agh_harmonisation/, or by hand.
+name: agh mock test
+
+on:
+  push:
+    paths: ["agh_harmonisation/**", ".github/workflows/agh-mock-test.yml"]
+  pull_request:
+    paths: ["agh_harmonisation/**", ".github/workflows/agh-mock-test.yml"]
+  workflow_dispatch:
+
+jobs:
+  mock-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: agh_harmonisation
+    env:
+      NADA_MOCK_URL: http://127.0.0.1:8765
+    steps:
+      # The runner context is not available in job-level env, so set the test root in a step
+      - name: Set test root
+        run: echo "AGH_TEST_ROOT=$RUNNER_TEMP/agh_test" >> "$GITHUB_ENV"
+        working-directory: .
+
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true   # binary packages, fast install
+
+      - name: Install R packages
+        run: |
+          Rscript -e 'install.packages(c("dplyr","tidyr","readr","purrr","stringr","tibble","forcats","haven","xml2","httr2","readxl","jsonlite"))'
+
+      - name: Parse every script
+        run: Rscript -e 'for (f in list.files("agh_scripts", "\\.R$", full.names = TRUE)) invisible(parse(f)); cat("all scripts parse\n")'
+
+      - name: Mock test (steps 1-5, local mock NADA server)
+        run: |
+          mkdir -p "$AGH_TEST_ROOT/nada"
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory "$AGH_TEST_ROOT/nada" > "$RUNNER_TEMP/nada.log" 2>&1 &
+          sleep 2
+          Rscript tests/run_mock_test.R
+
+      - name: Keep test outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agh-mock-test-outputs
+          path: |
+            ${{ env.AGH_TEST_ROOT }}/agh_meta/*.csv
+            ${{ env.AGH_TEST_ROOT }}/agh_config/
+            ${{ env.AGH_TEST_ROOT }}/agh_curated/*.csv
+          if-no-files-found: warn

@@ -1,0 +1,7 @@
+# Registry of datasets to extract. ONLY data_path and dict_path are required. data_path: folder, zip, or file. dict_path: DDI .xml | "nada:<server>:<id>" (a codebook harvested in step 1) | XLSForm .xlsx | table .csv/.xlsx (columns name + label; optional file) | "terminag" (Carob and other terminag-coded data) | "data" (read labels from .dta/.sav). dict_format is detected when blank. Rows with enabled = FALSE are skipped.
+source_id,program,country,year,data_path,dict_path,dict_format,enabled,notes
+MWI_IHS5_2019,LSMS,Malawi,2019,C:/data/lsms/MWI_2019_IHS-V_v06_M_Stata.zip,nada:wb:3818,,FALSE,example
+ETH_ESS4_2018,LSMS,Ethiopia,2018,C:/data/lsms/ETH_2018_ESS_v03_M_Stata.zip,nada:wb:3823,,FALSE,example (check catalog id)
+RHoMIS_2024,RHoMIS,,2015-2023,C:/data/rhomis/processed_data.csv,C:/data/rhomis/variable_dictionary.csv,,FALSE,example: point at the files you downloaded
+LCAS_MWI,LCAS,Malawi,,C:/data/lcas/,C:/data/lcas/forms/,xlsform,FALSE,example: a folder of xlsforms is accepted
+carob_fertilizer,carob,,,C:/data/carob/carob_fertilizer.zip,terminag,,FALSE,example

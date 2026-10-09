@@ -1,0 +1,14 @@
+# Rebuildable outputs (created one level above agh_scripts/)
+agh_meta/
+agh_extract/
+agh_curated/
+# Your curated config holds local paths; commit it deliberately if you want it versioned
+agh_config/
+# Never commit microdata (World Bank / national terms of use)
+*.dta
+*.sav
+*.zip
+*.rds
+.Rhistory
+.RData
+.Rproj.user/

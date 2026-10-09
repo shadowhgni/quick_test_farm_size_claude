@@ -1,0 +1,5 @@
+# NADA catalogs to harvest DDI codebooks from (step 1). base_url = site root before /index.php. collection = NADA collection code (blank = whole catalog). title_regex filters study titles (useful for national catalogs). type = nada (search API) or agm (DataFirst African Government Microdata pointers, resolved to national NADA sites).
+server,base_url,collection,title_regex,type,enabled,notes
+wb,https://microdata.worldbank.org,lsms,,nada,TRUE,World Bank LSMS collection (collection code verified from catalog/lsms URL)
+datafirst,https://www.datafirst.uct.ac.za/dataportal,AGM,,agm,TRUE,AGM entries point to national NADA catalogs (verified for Rwanda)
+fao,https://microdata.fao.org,,agricultur|agris|census of agri|farm|crop|livestock,nada,FALSE,FAO microdata catalog (API base from the nadaverse package); enable if wanted
