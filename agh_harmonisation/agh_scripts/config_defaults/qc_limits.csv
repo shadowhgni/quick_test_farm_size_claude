@@ -1,0 +1,16 @@
+# Plausibility limits used by step 5 to FLAG rows (qc_flag column); rows are never dropped or changed. check = flag name; table = level table; column = value checked; item = animal (hh_animal) the row applies to, blank = all others; min / max = bounds (blank = none); basis = where the limit comes from. Edit freely and re-run step 5.
+check,table,column,item,min,max,basis
+area_small,plot,plot_area_m2,,10,,assumed
+area_large,plot,plot_area_m2,,,1000000,assumed (100 ha)
+fert_high,plot,fertilizer_kg_ha,,,1000,verified: terminag valid_max of fertilizer_amount
+OM_high,plot,OM_kg_ha,,,100000,assumed
+yield_high,plot_crop,yield_kg_ha,,,30000,assumed; terminag's own max (150000) is too loose for a flag
+heads_high,hh_animal,heads,cattle,,500,assumed (smallholder household surveys)
+heads_high,hh_animal,heads,goat,,500,assumed
+heads_high,hh_animal,heads,sheep,,500,assumed
+heads_high,hh_animal,heads,pig,,200,assumed
+heads_high,hh_animal,heads,donkey,,50,assumed
+heads_high,hh_animal,heads,horse,,50,assumed
+heads_high,hh_animal,heads,camel,,200,assumed
+heads_high,hh_animal,heads,,,1000,assumed (poultry and any animal without its own row)
+TLU_high,hh,TLU,,,100,assumed

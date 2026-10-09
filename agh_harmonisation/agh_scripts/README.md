@@ -73,7 +73,8 @@ AG_HARMONISATION/                     ← project root (agh.root = ".." seen fro
 │   ├── value_map.csv                 #   raw labels → standard values (crops, species, land use …)
 │   ├── unit_map.csv                  #   raw units → conversion factors
 │   ├── unit_defaults.csv             #   generic units used to pre-fill unit_map
-│   └── tlu_factors.csv               #   TLU per species (and per class, e.g. cattle:calf)
+│   ├── tlu_factors.csv               #   TLU per species (and per class, e.g. cattle:calf)
+│   └── qc_limits.csv                 #   plausibility limits for qc_flag (flag only, never drop)
 │
 ├── agh_meta/                         ← steps 1–3 (rebuildable)
 │   ├── ddi/<server>_<id>.xml         #   harvested codebooks
@@ -93,7 +94,7 @@ AG_HARMONISATION/                     ← project root (agh.root = ".." seen fro
     ├── agh_hh.*  agh_plot.*  agh_plot_crop.*  agh_plot_input.*  agh_hh_animal.*
     ├── agh_long.rds                  #   curated long table
     ├── output_dictionary.csv         #   columns, units, terminag names
-    └── qc_*.csv                      #   unchecked labels, unknown units, missing TLU, value summaries
+    └── qc_*.csv                      #   unchecked labels, unknown units, missing TLU, hhid conflicts, value summaries
 ```
 
 > ⚠️ **Never delete `agh_config/` without a backup.** It holds every curation decision. Everything else can be rebuilt.
@@ -166,6 +167,10 @@ Only rows with `keep = TRUE` are extracted. The template pre-ticks unambiguous r
 
 Several variables mapped to one key are pasted together, e.g. `gardenid` + `plotid` → `1_2`.
 
+> ⚠️ **`hhid` must identify one household within a source.** Surveys often carry several household numbers, and the template proposes all of them. In Malawi IHS2 (2004), `hhid` is numbered *within each enumeration area* (578 values for 11,280 households). The household id is `case_id`, which equals `psu` + the 3-digit `hhid` in every file. Map `case_id` (or `psu` + `hhid` as two key rows). The output column is always called `hhid`. Step 5 checks this: household values that conflict for one `hhid` (two weights, two districts) are listed in `agh_curated/qc_hhid_conflicts.csv` with a warning.
+
+**Items listed without a value are kept.** A crop column with no harvest in the same file (e.g. IHS2 `o08a`–`o08e`, the crops grown on each plot, while the harvest is asked per household in module P) becomes a *presence* record: the plot–crop row exists, with no quantity. A roster that lists every crop with a harvest column is different: there, an empty harvest means the crop was not grown, and nothing is kept.
+
 ### Step 5: curation rules
 
 - **`value_map.csv`.** Every new label is appended with a **suggestion** and an empty `checked` column. Suggestions come from:
@@ -179,11 +184,13 @@ Several variables mapped to one key are pasted together, e.g. `gardenid` + `plot
   - fallow flag;
   - OM and fertilizer totals, per type and per ha (falls back to Carob's per-ha rates);
   - crop area and yield (falls back to a reported yield);
+  - for each plot–crop row, `n_plots_crop_hh` (plots of the household growing that crop in the season) and `harvest_kg_hh` (the household-level harvest of that crop). Nothing is attributed to a plot; keep `n_plots_crop_hh == 1` to use `harvest_kg_hh` as that plot's harvest;
   - TLU per household;
   - farm, cropland and fallow hectares.
 - **QC.**
-  - Implausible values are **flagged, not dropped** (`qc_flag`). Limits are in `qc_limits` at the top of `agh_05_curate.R`.
-  - The `qc_*.csv` files list unreviewed labels, unknown units and species without a TLU factor.
+  - Implausible values are **flagged, not dropped** (`qc_flag` in plot, plot_crop, hh_animal and hh). Limits are in **`agh_config/qc_limits.csv`**: plot area, fertilizer and OM per ha, yield, heads per species and TLU per household. Most are assumptions; revise them like the other maps.
+  - `no_harvest_unit_factor` marks a harvest reported in a unit that has no factor yet.
+  - The `qc_*.csv` files list unreviewed labels, unknown units, species without a TLU factor and `hhid` conflicts.
 
 Edit the maps and re-run **step 5 only**. Data are not re-read.
 
@@ -242,7 +249,7 @@ Values in the outputs were checked by hand (areas, OM and fertilizer rates, TLU)
 2. checks that every script parses;
 3. builds the mock data (`tests/make_mock.R`);
 4. starts a local mock NADA server and runs steps 1–5 with the curation a user would do;
-5. checks 11 values computed by hand (`tests/run_mock_test.R`), e.g. GPS acres → m², OM kg/ha, two fertilizer applications, TLU with cattle classes, the Carob rate fallback and the yield flag.
+5. checks 13 values computed by hand (`tests/run_mock_test.R`), e.g. GPS acres → m², OM kg/ha, two fertilizer applications, TLU with cattle classes, the Carob rate fallback, the yield flag, plots per crop and the hhid uniqueness check.
 
 The outputs are kept as a downloadable artifact of each run. To run the same test locally, from `agh_harmonisation/`: `Rscript tests/run_mock_test.R` (step 1 is skipped unless `NADA_MOCK_URL` is set).
 

@@ -118,18 +118,20 @@ extract_file <- function(sid, fmatch, m) {
   units <- m |> filter(role == "unit")
 
   item_cells <- if (nrow(items) > 0) cell(items) |>
-    transmute(.row, rep, item_type = concept, item_raw = coalesce(value_lbl, value_raw)) |>
+    transmute(.row, rep, item_type = concept, item_raw = coalesce(value_lbl, value_raw), item_col = col) |>
     distinct(.row, rep, item_type, .keep_all = TRUE) else
-    tibble(.row = integer(), rep = character(), item_type = character(), item_raw = character())
+    tibble(.row = integer(), rep = character(), item_type = character(), item_raw = character(), item_col = character())
   unit_cells <- if (nrow(units) > 0) cell(units) |>
     left_join(units |> distinct(col, unit_of), by = "col") |>
     transmute(.row, rep, concept = unit_of, unit_raw = coalesce(value_lbl, value_raw)) |>
     distinct(.row, rep, concept, .keep_all = TRUE) else
     tibble(.row = integer(), rep = character(), concept = character(), unit_raw = character())
 
-  if (nrow(vals) == 0) return(list(log = tibble(source_id = sid, file = fmatch, status = "no_value_rows")))
+  if (nrow(vals) == 0 && nrow(items) == 0) return(list(log = tibble(source_id = sid, file = fmatch, status = "no_value_rows")))
 
-  v <- cell(vals) |>
+  v <- if (nrow(vals) == 0) tibble(.row = integer(), rep = character(), col = character(), concept = character(),
+                                   value_raw = character(), value_lbl = character(), item_fixed = character(),
+                                   multiply = character(), item_type = character()) else cell(vals) |>
     left_join(vals |> distinct(col, concept, item_fixed, multiply), by = c("col", "concept")) |>
     filter(!is.na(value_raw), value_raw != "") |>
     mutate(item_type = item_of(concept))
@@ -143,10 +145,20 @@ extract_file <- function(sid, fmatch, m) {
       mutate("{val}" := coalesce(.data[[val]], .fill)) |> select(-.fill)
   }
   v <- v |>
-    join_rep(item_cells, "item_type", "item_raw") |>
+    join_rep(item_cells |> select(-item_col), "item_type", "item_raw") |>
     mutate(item_raw = if_else(!is.na(item_fixed), word(item_fixed, 2, -1, sep = ":"), item_raw),
            item_type = if_else(!is.na(item_fixed), word(item_fixed, 1, sep = ":"), item_type)) |>
     join_rep(unit_cells, "concept", "unit_raw")
+
+  # items whose type has no value mapped in this file (e.g. crops grown on each plot when the
+  # harvest is asked per household in another file) are kept as presence records: concept =
+  # item type, no value. Rosters with a value column (harvest per pre-listed crop) are not:
+  # there an empty value means the item is absent.
+  valued <- unique(item_of(vals$concept))
+  presence <- item_cells |>
+    filter(!item_type %in% valued, !is.na(item_raw), item_raw != "") |>
+    transmute(.row, rep, item_type, item_raw, concept = item_type, col = item_col)
+  v <- bind_rows(v, presence)
 
   out <- v |>
     left_join(keys, by = ".row") |>

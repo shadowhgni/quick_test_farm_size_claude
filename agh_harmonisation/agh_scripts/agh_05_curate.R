@@ -3,7 +3,7 @@ rm(list = ls())
 # agh_05_curate.R — curation rules: recode, convert units, derive, reshape by level
 #
 # Reads   agh_extract/agh_long_raw.rds, agh_config/{concepts, value_map, unit_map,
-#         unit_defaults, tlu_factors}.csv
+#         unit_defaults, tlu_factors, qc_limits}.csv
 # Writes  agh_config/value_map.csv   ✋ raw labels -> standard values (new labels appended,
 #                                       pre-filled with a suggestion, checked = blank)
 #         agh_config/unit_map.csv    ✋ raw units -> factor to the target unit (same logic)
@@ -12,27 +12,31 @@ rm(list = ls())
 #         agh_curated/output_dictionary.csv  columns of the level tables
 #         agh_curated/qc_*.csv       unmapped labels, unknown units, missing TLU, value summaries
 #
-# Re-run this step alone after editing value_map / unit_map / tlu_factors.
+# Re-run this step alone after editing value_map / unit_map / tlu_factors / qc_limits.
 # =============================================================================
 
 source(file.path(getOption("agh.scripts", "."), "agh_utils.R"))
 init_config()
 
-# Plausibility flags on derived values (rows are flagged in qc_flag, never dropped)
-qc_limits <- list(
-  plot_area_m2_min = 10,        # [assumed]
-  plot_area_m2_max = 100 * 1e4, # [assumed] 100 ha
-  fertilizer_kg_ha_max = 1000,  # [verified] terminag valid_max of fertilizer_amount
-  OM_kg_ha_max = 100000,        # [assumed]
-  yield_kg_ha_max = 30000       # [assumed]; terminag's own max (150000) is too loose for a flag
-)
-flag <- function(...) {
-  conds <- list(...)
-  map_chr(seq_along(conds[[1]]), \(i) {
-    hit <- names(conds)[map_lgl(conds, \(x) isTRUE(x[i]))]
-    if (length(hit) == 0) NA_character_ else paste(hit, collapse = "; ")
+# Plausibility flags (rows are flagged in qc_flag, never dropped): limits in qc_limits.csv
+qc <- read_cfg("qc_limits.csv") |> mutate(min = num(min), max = num(max))
+qc_flags <- function(df, tbl, item_col = NULL) {
+  rules <- qc |> filter(table == tbl, column %in% names(df))
+  hits <- map(seq_len(nrow(rules)), \(i) {
+    r <- rules[i, ]
+    x <- df[[r$column]]
+    own <- rules$item[rules$column == r$column & !is.na(rules$item)]
+    applies <- if (is.null(item_col)) TRUE else if (is.na(r$item)) !df[[item_col]] %in% own else df[[item_col]] %in% r$item
+    hit <- applies & ((!is.na(r$min) & x < r$min) | (!is.na(r$max) & x > r$max))
+    if_else(hit %in% TRUE, r$check, NA_character_)
   })
+  reduce(hits, add_flag, .init = rep(NA_character_, nrow(df)))
 }
+add_flag <- \(a, b) case_when(is.na(a) ~ b, is.na(b) ~ a, a == b ~ a, .default = paste(a, b, sep = "; "))
+
+# sum that is NA when every value is NA (0 only when some value is known);
+# an empty selection (e.g. no fallow plot) is a real 0
+sum_na <- function(x) if (length(x) > 0 && all(is.na(x))) NA_real_ else sum(x, na.rm = TRUE)
 
 long <- readRDS(agh_path("agh_extract", "agh_long_raw.rds"))
 concepts <- read_cfg("concepts.csv")
@@ -218,6 +222,24 @@ cur <- cur |>
   ) |>
   select(-f1, -f2, -f3)
 
+# hhid must identify one household per source. A household-level concept with several
+# different values for one hhid (two weights, two districts ...) means it does not: e.g. in
+# Malawi IHS2 "hhid" is numbered within each EA and case_id is the household id. Map the
+# unique id (or EA + household number as two hhid key rows, which are pasted) in source_map.
+hh_first <- concepts |> filter(level == "hh", kind %in% c("num", "cat"), agg == "first") |> pull(concept)
+hhid_conflicts <- cur |>
+  filter(concept %in% hh_first, !is.na(hhid)) |>
+  mutate(v = coalesce(as.character(value_num), value_std, value_raw)) |>
+  summarise(n_values = n_distinct(v, na.rm = TRUE), values = str_trunc(paste(unique(na.omit(v)), collapse = "; "), 80),
+            files = paste(unique(file), collapse = "; "), .by = c(source_id, hhid, concept)) |>
+  filter(n_values > 1)
+write_csv(hhid_conflicts, agh_path("agh_curated", "qc_hhid_conflicts.csv"), na = "")
+if (nrow(hhid_conflicts) > 0) {
+  warning("hhid is not unique in: ", paste(unique(hhid_conflicts$source_id), collapse = ", "), " (",
+          n_distinct(paste(hhid_conflicts$source_id, hhid_conflicts$hhid)), " hhid with conflicting household values; ",
+          "see agh_curated/qc_hhid_conflicts.csv). Map a unique household id as hhid in source_map.csv.")
+}
+
 # -----------------------------------------------------------------------------
 # 4. Level tables (wide). Keys: hh < parcel < plot (season) < plot_crop / plot_input; hh_animal
 # -----------------------------------------------------------------------------
@@ -277,6 +299,7 @@ if (!is.null(hh_animal)) {
     mutate(tlu_factor = coalesce(f_class, f_species), TLU = heads * tlu_factor) |>
     select(-f_class, -f_species) |>
     relocate(animal, animal_class, .after = hhid)
+  hh_animal$qc_flag <- qc_flags(hh_animal, "hh_animal", item_col = "animal")
   tlu_missing <- hh_animal |> filter(is.na(tlu_factor), !is.na(heads)) |> count(animal, animal_raw, name = "n_records")
   write_csv(tlu_missing, agh_path("agh_curated", "qc_tlu_missing.csv"), na = "")
 }
@@ -322,10 +345,7 @@ if (!is.null(plot) || !is.null(plot_agg)) {
       OM_used_any      = coalesce(OM_used_any, OM_rate > 0),
       fertilizer_used_any = coalesce(fertilizer_used_any, fertilizer_rate > 0)
     ) |>
-    mutate(qc_flag = flag(area_small = plot_area_m2 < qc_limits$plot_area_m2_min,
-                          area_large = plot_area_m2 > qc_limits$plot_area_m2_max,
-                          fert_high  = fertilizer_kg_ha > qc_limits$fertilizer_kg_ha_max,
-                          OM_high    = OM_kg_ha > qc_limits$OM_kg_ha_max))
+    mutate(qc_flag = qc_flags(pick(everything()), "plot"))
 }
 
 # ---- plot_crop --------------------------------------------------------------
@@ -343,15 +363,32 @@ if (!is.null(plot_crop)) {
       ensure("yield") |>
       mutate(yield_kg_ha = coalesce(harvest_kg / (crop_area_m2 / 1e4), yield),
              yield_source = case_when(!is.na(harvest_kg / (crop_area_m2 / 1e4)) ~ "harvest/area",
-                                      !is.na(yield) ~ "reported_yield"),
-             qc_flag = flag(yield_high = yield_kg_ha > qc_limits$yield_kg_ha_max,
-                            no_harvest_unit_factor = is.na(harvest_kg) & is.na(yield)))
+                                      !is.na(yield) ~ "reported_yield"))
   }
+  # Crops listed per plot while the harvest is asked per household (e.g. Malawi IHS2):
+  # n_plots_crop_hh = plots of the household growing the crop that season, harvest_kg_hh =
+  # the household-level harvest of that crop. Nothing is attributed to a plot here; keep
+  # n_plots_crop_hh == 1 to use harvest_kg_hh as that plot's harvest.
+  on_plot <- !is.na(plot_crop$plot_id) | !is.na(plot_crop$parcel_id)
+  n_pl <- plot_crop[on_plot, ] |>
+    summarise(n_plots_crop_hh = n_distinct(paste(parcel_id, plot_id)), .by = c(source_id, hhid, season, crop))
+  h_hh <- plot_crop[!on_plot, ] |>
+    summarise(harvest_kg_hh = sum_na(harvest_kg), .by = c(source_id, hhid, season, crop))
+  plot_crop <- plot_crop |>
+    left_join(n_pl, by = c("source_id", "hhid", "season", "crop")) |>
+    left_join(h_hh, by = c("source_id", "hhid", "season", "crop"))
+  # a harvest was reported but its unit has no factor in unit_map.csv
+  unconverted <- cur |>
+    filter(concept == "harvest_qty", unit_status %in% "unknown_unit") |>
+    distinct(across(all_of(level_keys$plot_crop))) |>
+    mutate(.unconv = TRUE)
+  plot_crop <- plot_crop |>
+    left_join(unconverted, by = level_keys$plot_crop) |>
+    ensure("yield_kg_ha") |>
+    mutate(qc_flag = add_flag(qc_flags(pick(everything()), "plot_crop"),
+                              if_else(.unconv %in% TRUE, "no_harvest_unit_factor", NA_character_))) |>
+    select(-.unconv)
 }
-
-# sum that is NA when every value is NA (0 only when some value is known);
-# an empty selection (e.g. no fallow plot) is a real 0
-sum_na <- function(x) if (length(x) > 0 && all(is.na(x))) NA_real_ else sum(x, na.rm = TRUE)
 
 # ---- hh ---------------------------------------------------------------------
 hh <- tabs$hh %||% tibble(source_id = character(), hhid = character())
@@ -382,6 +419,7 @@ if (!is.null(plot)) {
 for (part in hh_parts) {
   hh <- hh |> full_join(part, by = c("source_id", "hhid"))
 }
+hh$qc_flag <- qc_flags(hh, "hh")
 
 out <- list(hh = hh, plot = plot, plot_crop = plot_crop, plot_input = plot_in, hh_animal = hh_animal) |>
   compact() |>
@@ -410,7 +448,9 @@ derived_desc <- tribble(
   "yield_kg_ha", "harvest_kg / crop_area_m2, else reported yield (e.g. Carob)", "kg/ha",
   "yield_source", "harvest/area or reported_yield", "",
   "TLU", "sum of heads x TLU factor (tlu_factors.csv)", "TLU",
-  "qc_flag", "plausibility flags (limits in qc_limits at the top of agh_05_curate.R); rows are kept", "",
+  "qc_flag", "plausibility flags (limits in agh_config/qc_limits.csv); rows are kept", "",
+  "n_plots_crop_hh", "plots of the household growing this crop in this season", "",
+  "harvest_kg_hh", "household-level harvest of this crop and season (rows without a plot)", "kg",
   "TLU_complete", "FALSE when some species had no TLU factor", "",
   "plots_area_ha", "sum of plot areas", "ha",
   "cropland_ha", "area of plots used for crops", "ha",

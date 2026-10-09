@@ -93,6 +93,8 @@ stopifnot(
   "bag unit converted"         = near(pc$harvest_kg[pc$hhid == "A2"], 60000),
   "implausible yield flagged"  = pc$qc_flag[pc$hhid == "A2"] %in% "yield_high",
   "intercrop area not guessed" = all(is.na(pc$crop_area_m2[pc$hhid == "A1"])),
-  "crop label recoded"         = "common bean" %in% pc$crop
+  "crop label recoded"         = "common bean" %in% pc$crop,
+  "plots per crop counted"     = all(pc$n_plots_crop_hh[pc$hhid == "c1" & pc$crop == "maize"] == 2),
+  "unique hhid not flagged"    = nrow(read_csv(file.path(root, "agh_curated", "qc_hhid_conflicts.csv"), show_col_types = FALSE)) == 0
 )
 message("\nAll checks passed.")
