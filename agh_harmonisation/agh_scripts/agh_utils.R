@@ -160,10 +160,23 @@ node_text <- function(nodes, xpath) {
   xml2::xml_find_first(nodes, xpath) |> xml2::xml_text() |> str_squish()
 }
 
+# DDI XML without namespaces, so plain paths like //dataDscr/var work. Dropping the
+# root's default xmlns before parsing takes a fraction of a second; xml_ns_strip()
+# took 17-27 s on 3-6 MB World Bank codebooks and hours for a full LSMS harvest.
+# Falls back to xml_ns_strip() if the cheap route finds no DDI sections.
+read_ddi <- function(path) {
+  txt <- read_file(path) |> sub(pattern = "\\sxmlns=\"[^\"]*\"", replacement = "")
+  doc <- xml2::read_xml(txt)
+  if (length(xml2::xml_find_all(doc, "//stdyDscr | //dataDscr | //fileDscr")) == 0) {
+    doc <- xml2::read_xml(path) |> xml2::xml_ns_strip()
+  }
+  doc
+}
+
 # DDI Codebook 2.5 (World Bank / NADA exports). Element paths are those used in
 # the PFP-N workflow, which parsed the Malawi IHS exports on the user's machine.
 parse_ddi <- function(path) {
-  doc <- xml2::read_xml(path) |> xml2::xml_ns_strip()
+  doc <- read_ddi(path)
   files <- xml2::xml_find_all(doc, "//fileDscr")
   file_tbl <- tibble(
     file_id   = xml2::xml_attr(files, "ID"),
