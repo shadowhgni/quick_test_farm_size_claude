@@ -23,7 +23,8 @@
 #          "OX-CART"); "shelled" / "unshelled" in the label is the condition.
 #   condition  label condition, else rows "not applicable", else condition_default
 #          if given; a label without condition against shelled AND unshelled rows
-#          is ambiguous and left blank.
+#          is ambiguous and left blank. condition_default is per run: restrict a run
+#          to some items with items = regex, e.g. items = "maize", condition_default = "shelled".
 #   region factors are kept per region; region_map renames table regions to the
 #          household adm1 std values (e.g. table "Central" = IHS2 "Centre").
 # Assumption written in basis: a table collected in one survey round is applied to
@@ -35,7 +36,7 @@ source(file.path(getOption("agh.scripts", "."), "agh_utils.R"))
 agh_import_units <- function(file, sources, concept = "harvest_qty",
                              item_col = "crop_code", unit_col = "unit_name", factor_col = "conversion",
                              region_col = "region", condition_col = "condition",
-                             region_map = NULL, condition_default = NULL, basis = basename(file)) {
+                             region_map = NULL, condition_default = NULL, items = NULL, basis = basename(file)) {
   words <- \(x) normalise(x) |> str_remove_all("\\b(other|specify)\\b") |> str_squish() |>
     str_split(" ") |> map(\(w) unique(str_remove(w[w != ""], "(?<=[a-z]{3})s$")))
   squash <- \(x) normalise(x) |> str_remove_all(" ")
@@ -61,7 +62,7 @@ agh_import_units <- function(file, sources, concept = "harvest_qty",
   # (item, unit) pairs that still have no factor, with their households' regions
   need <- readRDS(agh_path("agh_curated", "agh_long.rds")) |>
     filter(source_id %in% sources, concept == !!concept, unit_status %in% "unknown_unit") |>
-    filter(!is.na(item_std)) |>
+    filter(!is.na(item_std), is.null(items) | str_detect(item_std, paste(items %||% ".", collapse = "|"))) |>
     count(source_id, item = item_std, unit, name = "n") |>
     mutate(cond = cond_of(unit), unit_base = str_squish(str_remove_all(unit, "\\b(un)?shelled\\b")))
 

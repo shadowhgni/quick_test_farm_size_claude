@@ -191,7 +191,7 @@ Several variables mapped to one key are pasted together, e.g. `gardenid` + `plot
                      basis = "IHS5 seasonal-crop factors, collected 2016/2019")
     ```
 
-    It matches crops by words (`local maize` = `MAIZE LOCAL`; several varieties → median, noted), units with spaces ignored (`oxcart` = `OX-CART`) and the shelled/unshelled condition from the unit label. Anything ambiguous is left blank and explained in `agh_meta/unit_import_report.csv`. For example, a "50 kg bag" of maize when the survey did not record whether it was shelled: set `condition_default = "shelled"` (or `"unshelled"`) if you decide, and the choice is written in `basis`. Other tables need their column names: `item_col`, `unit_col`, `factor_col`, `region_col`, `condition_col`.
+    It matches crops by words (`local maize` = `MAIZE LOCAL`; several varieties → median, noted), units with spaces ignored (`oxcart` = `OX-CART`) and the shelled/unshelled condition from the unit label. Anything ambiguous is left blank and explained in `agh_meta/unit_import_report.csv`. For example, a "50 kg bag" of maize when the survey did not record whether it was shelled: set `condition_default = "shelled"` (or `"unshelled"`) if you decide, restricted to some crops with `items` (a regex on the std item, e.g. `items = "maize"`), and the choice is written in `basis`. Other tables need their column names: `item_col`, `unit_col`, `factor_col`, `region_col`, `condition_col`.
 - **Derived variables:**
   - plot area (GPS first, else reported);
   - fallow flag;
