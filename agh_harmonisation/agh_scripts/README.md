@@ -110,6 +110,7 @@ AG_HARMONISATION/                     ← project root (agh.root = ".." seen fro
 │   ├── coverage_by_study.csv         #   ⭐ which study documents which concept
 │   ├── data_inventory.csv            #   data files found per registered source
 │   ├── dict_vs_data.csv              #   dictionary files with / without data
+│   ├── ddi_parsed/                   #   parsed codebooks (cache for step 2; safe to delete)
 │   └── unit_import_report.csv        #   what agh_units_import.R matched, and why not
 │
 ├── agh_extract/                      ← step 4 (rebuildable)
@@ -209,7 +210,7 @@ Only rows with `keep = TRUE` are extracted. The template pre-ticks unambiguous r
 
 Several variables mapped to one key are pasted together, e.g. `gardenid` + `plotid` → `1_2`.
 
-> ⚠️ **`hhid` must identify one household within a source.** Surveys often carry several household numbers, and the template proposes all of them. In Malawi IHS2 (2004), `hhid` is numbered *within each enumeration area* (578 values for 11,280 households). The household id is `case_id`, which equals `psu` + the 3-digit `hhid` in every file. Map `case_id` (or `psu` + `hhid` as two key rows). The output column is always called `hhid`. Step 5 checks this: household values that conflict for one `hhid` (two weights, two districts) are listed in `agh_curated/qc_hhid_conflicts.csv` with a warning.
+> ⚠️ **`hhid` must identify one household within a source.** Surveys often carry several household numbers, and the template proposes all of them. In Malawi IHS2 (2004), `hhid` is numbered *within each enumeration area* (578 values for 11,280 households). The household id is `case_id`, which equals `psu` + the 3-digit `hhid` in every file. Map `case_id` (or `psu` + `hhid` as two key rows). The same holds for EHCVM: in Benin 2018 and 2021 the module files have only `grappe` (cluster) and `menage` (household number within the cluster), so tick **both** as `hhid` key rows in every file. Use the same keys in all files of a survey: a pasted `grappe_menage` never matches the derived files' `hhid` (`ehcvm_menage`, `ehcvm_individu`). Panel households (EHCVM-2 `PanelHH`) link rounds; they do not change uniqueness within a round. The output column is always called `hhid`. Step 5 checks this: household values that conflict for one `hhid` (two weights, two districts) are listed in `agh_curated/qc_hhid_conflicts.csv` with a warning.
 
 **Items listed without a value are kept.** A crop column with no harvest in the same file (e.g. IHS2 `o08a`–`o08e`, the crops grown on each plot, while the harvest is asked per household in module P) becomes a *presence* record: the plot–crop row exists, with no quantity. A roster that lists every crop with a harvest column is different: there, an empty harvest means the crop was not grown, and nothing is kept.
 
@@ -333,7 +334,7 @@ Real-data runs found and fixed: Nesstar file names (`.NSDstat`), the first run c
 
 ## 🚧 Known Limitations
 
-- **Step 2 is slow on a full harvest.** Parsing all ~220 LSMS codebooks (670 MB of XML) takes one to two hours and is not cached between runs. Parse only the studies you need (trim `study_catalog.csv`, or set `include_catalog <- FALSE` in step 2).
+- **Step 2 is slow on the first full harvest.** Parsing all ~220 LSMS codebooks (670 MB of XML) takes one to two hours the first time. Each parsed codebook is then cached in `agh_meta/ddi_parsed/` and reused while its XML is unchanged, so later runs are much faster. To skip catalog codebooks altogether, set `include_catalog <- FALSE` in step 2.
 - **Concept tagging misses and over-proposes.** On IHS2 it missed the per-plot crops (labels say "in the last cropping season") and proposed harvest given to labourers as harvest. Review `source_map.csv`.
 - **Food consumption** is not a concept yet, so food conversion tables (e.g. `ihs_foodconversion_factor_2020.dta`) are not used.
 - **Region-specific factors** apply only where the table has the region; other regions stay unconverted (`no_harvest_unit_factor`).

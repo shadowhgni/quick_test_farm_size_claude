@@ -174,22 +174,34 @@ extract_file <- function(sid, fmatch, m) {
 
 jobs <- smap |> distinct(source_id, file_match)
 say("Extracting %d files from %d sources ...", nrow(jobs), n_distinct(jobs$source_id))
+# one file at a time; memory is released after each (large modules can hold millions of cells)
 res <- map(seq_len(nrow(jobs)), \(i) {
   j <- jobs[i, ]
   say("  %s / %s", j$source_id, j$file_match)
-  tryCatch(extract_file(j$source_id, j$file_match, smap |> filter(source_id == j$source_id, file_match == j$file_match)),
-           error = \(e) list(log = tibble(source_id = j$source_id, file = j$file_match, status = "error",
-                                          missing = conditionMessage(e))))
+  r <- tryCatch(extract_file(j$source_id, j$file_match, smap |> filter(source_id == j$source_id, file_match == j$file_match)),
+                error = \(e) list(log = tibble(source_id = j$source_id, file = j$file_match, status = "error",
+                                               missing = conditionMessage(e))))
+  free_mem()
+  r
 })
 
+xlog <- map(res, "log") |> list_rbind()
 long_raw <- map(res, "data") |> compact() |> list_rbind() |>
   left_join(src |> select(source_id, program, country, year), by = "source_id") |>
   relocate(program, country, year, .after = source_id)
-xlog <- map(res, "log") |> list_rbind()
+rm(res)
+free_mem()
 
-no_hh <- long_raw |> filter(is.na(hhid)) |> distinct(source_id, file)
-if (nrow(no_hh) > 0) warning("Files without an hhid key (map one, or they cannot be joined): ",
-                             paste(no_hh$source_id, no_hh$file, sep = "/", collapse = ", "))
+# files whose values have no household key are dropped in step 5; list them in the log
+no_hh <- long_raw |> filter(is.na(hhid)) |> distinct(source_id, file) |> mutate(no_hhid_key = TRUE)
+xlog <- xlog |> left_join(no_hh, by = c("source_id", "file")) |> mutate(no_hhid_key = coalesce(no_hhid_key, FALSE))
+if (nrow(no_hh) > 0) {
+  warning(nrow(no_hh), " extracted files have no hhid key, so their values cannot be joined to households and are dropped",
+          " in step 5 (no_hhid_key in agh_extract/extract_log.csv), e.g. ",
+          paste(head(paste(no_hh$source_id, no_hh$file, sep = "/"), 3), collapse = ", "),
+          ". Tick the household id (e.g. EHCVM grappe + menage) as key rows in those files, or untick their rows.",
+          call. = FALSE)
+}
 
 saveRDS(long_raw, agh_path("agh_extract", "agh_long_raw.rds"))
 write_csv(xlog, agh_path("agh_extract", "extract_log.csv"), na = "")

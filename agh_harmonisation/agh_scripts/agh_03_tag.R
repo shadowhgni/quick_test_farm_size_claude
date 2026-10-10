@@ -44,6 +44,7 @@ tag <- function(dict, rules) {
 }
 
 say("Tagging %s variables against %d concepts ...", format(nrow(dictionary), big.mark = ","), nrow(concepts))
+free_mem()
 tagged <- tag(dictionary, concepts) |>
   left_join(concepts |> select(concept, kind, level, unit_of, domain, terminag), by = "concept") |>
   mutate(n_concepts = n_distinct(concept), .by = c(dict_id, file, var))

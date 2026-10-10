@@ -207,6 +207,8 @@ cur <- long |>
   left_join(vm_use |> rename(item_type = concept, item_n = raw, item_std = std), by = c("item_type", "item_n")) |>
   left_join(vm_use |> rename(raw_n = raw, value_std = std), by = c("concept", "raw_n")) |>
   mutate(item_std = coalesce(item_std, item_n), unit = normalise(unit_raw))
+rm(long, pairs, upairs)   # the raw long table is not needed after this point
+free_mem()
 
 # household region (adm1 std value), for region-specific factors
 hh_region <- cur |>
@@ -254,7 +256,9 @@ write_csv(hhid_conflicts, agh_path("agh_curated", "qc_hhid_conflicts.csv"), na =
 if (nrow(hhid_conflicts) > 0) {
   warning("hhid is not unique in: ", paste(unique(hhid_conflicts$source_id), collapse = ", "), " (",
           n_distinct(paste(hhid_conflicts$source_id, hhid_conflicts$hhid)), " hhid with conflicting household values; ",
-          "see agh_curated/qc_hhid_conflicts.csv). Map a unique household id as hhid in source_map.csv.")
+          "see agh_curated/qc_hhid_conflicts.csv). Usually the household number restarts in each cluster ",
+          "(EHCVM menage, IHS2 hhid): tick the cluster AND the household number as hhid key rows in every file ",
+          "(e.g. grappe + menage; they are pasted into one id), or map the survey's unique id.", call. = FALSE)
 }
 
 # -----------------------------------------------------------------------------
@@ -298,7 +302,8 @@ make_level <- function(lv) {
     reduce(\(a, b) left_join(a, b, by = keys), .init = base)
 }
 
-tabs <- map(set_names(names(level_keys)), make_level)
+free_mem()
+tabs <- map(set_names(names(level_keys)), \(lv) { t <- make_level(lv); free_mem(); t })
 
 src_info <- cur |> distinct(source_id, program, country, year)
 

@@ -56,7 +56,7 @@ parse_one_dict <- function(path, fmt, inv, terminag_vars) {
              list_rbind() |> (\(d) list(meta = NULL, dict = d))())
   }
   switch(fmt,
-    ddi       = parse_ddi(path),
+    ddi       = parse_ddi_cached(path),
     xlsx_auto = list(meta = NULL, dict = if (is_xlsform(path)) parse_xlsform(path) else parse_table_dict(path)),
     xlsform   = list(meta = NULL, dict = parse_xlsform(path)),
     table     = list(meta = NULL, dict = parse_table_dict(path)),
@@ -123,16 +123,26 @@ if (include_catalog && file.exists(cat_file)) {
     filter(!is.na(ddi_file))
   linked <- src$dict_path[str_detect(src$dict_path, "^nada:")] |> str_remove("^nada:") |> str_replace(":", "_")
   studies <- studies |> filter(!paste(server, id, sep = "_") %in% linked)
-  say("Parsing %d catalog DDI codebooks ...", nrow(studies))
-  cat_dicts <- map(seq_len(nrow(studies)), \(i) {
-    s <- studies[i, ]
-    out <- tryCatch(parse_ddi(s$ddi_file), error = \(e) NULL)
-    if (is.null(out) || nrow(out$dict) == 0) return(NULL)
-    out$dict |> mutate(dict_id = paste(s$server, s$id, sep = "_"), source_id = NA_character_,
-                       program = s$server, country = s$country,
-                       year = paste(unique(na.omit(c(s$year_start, s$year_end))), collapse = "-"),
-                       study = s$title, registered = FALSE, .before = 1)
+  n_cached <- sum(file.exists(agh_path("agh_meta", "ddi_parsed", paste0(map_chr(studies$ddi_file, digest_path), ".rds"))))
+  say("Parsing %d catalog DDI codebooks (%d already parsed and cached) ...", nrow(studies), n_cached)
+  # in batches, releasing memory after each one
+  batch_size <- 20
+  batches <- split(seq_len(nrow(studies)), ceiling(seq_len(nrow(studies)) / batch_size))
+  cat_dicts <- map(batches, \(idx) {
+    b <- map(idx, \(i) {
+      s <- studies[i, ]
+      out <- tryCatch(parse_ddi_cached(s$ddi_file), error = \(e) NULL)
+      if (is.null(out) || nrow(out$dict) == 0) return(NULL)
+      out$dict |> mutate(dict_id = paste(s$server, s$id, sep = "_"), source_id = NA_character_,
+                         program = s$server, country = s$country,
+                         year = paste(unique(na.omit(c(s$year_start, s$year_end))), collapse = "-"),
+                         study = s$title, registered = FALSE, .before = 1)
+    }) |> list_rbind()
+    free_mem()
+    say("  %d / %d", max(idx), nrow(studies))
+    b
   }) |> list_rbind()
+  free_mem()
 }
 
 dictionary <- bind_rows(reg_dicts, cat_dicts) |> as_tibble()   # list_rbind() of nothing is a data.frame
