@@ -132,9 +132,23 @@ if (!file.exists(map_file)) {
       nrow(template), sum(template$keep %in% "TRUE"))
 } else {
   existing <- read_cfg("source_map.csv")
-  new <- template |> anti_join(existing, by = c("source_id", "file", "var", "concept"))
+  # datasets registered after source_map.csv was written: add their template rows and stop
+  # so you can curate them (rows of datasets already in the map are never changed)
+  added <- template |> filter(!source_id %in% existing$source_id)
+  if (nrow(added) > 0) {
+    hdr <- readLines(map_file, n = 1)
+    writeLines(hdr, map_file)
+    write_csv(bind_rows(existing, added |> mutate(across(everything(), as.character))), map_file,
+              append = TRUE, col_names = TRUE, na = "")
+    options(agh.map_created = TRUE)
+    say("\nAdded %d template rows (%d pre-ticked) to agh_config/source_map.csv for %s. Curate them, then run step 4.",
+        nrow(added), sum(added$keep %in% "TRUE"), paste(unique(added$source_id), collapse = ", "))
+  }
+  new <- template |>
+    filter(source_id %in% existing$source_id) |>
+    anti_join(existing, by = c("source_id", "file", "var", "concept"))
   write_csv(new, agh_path("agh_meta", "source_map_new.csv"), na = "")
-  say("\nsource_map.csv kept as is. %d new candidate rows in agh_meta/source_map_new.csv (copy the ones you want).", nrow(new))
+  say("\nsource_map.csv: rows of datasets already curated kept as is. %d new candidate rows for them in agh_meta/source_map_new.csv (copy the ones you want).", nrow(new))
 }
 
 say("\nConcept coverage (number of studies with >= 1 candidate):")

@@ -43,7 +43,9 @@ if (nrow(bad_role) > 0) stop("role must be key|item|value|unit; check rows: ",
                              paste(bad_role$source_id, bad_role$var, collapse = "; "))
 no_unit_of <- smap |> filter(role == "unit", is.na(unit_of))
 if (nrow(no_unit_of) > 0) stop("unit rows need unit_of: ", paste(no_unit_of$var, collapse = ", "))
-if (nrow(smap) == 0) stop("No keep = TRUE rows in source_map.csv for enabled sources.")
+if (nrow(smap) == 0) stop("No keep = TRUE rows in source_map.csv for the enabled sources (",
+                          paste(src$source_id, collapse = ", "), "). Tick keep = TRUE on the variables to extract ",
+                          "(step 3 adds template rows for each newly registered dataset), then run again.")
 
 key_concepts <- c("hhid", "parcel_id", "plot_id", "season")
 
