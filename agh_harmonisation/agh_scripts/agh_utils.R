@@ -204,7 +204,10 @@ parse_ddi <- function(path) {
   ) |>
     left_join(file_tbl, by = "file_id") |>
     select(file, var, label, question, file_desc, value_labels)
-  list(meta = ddi_meta(doc), dict = dict)
+  # different files with one name (e.g. one per survey round) cannot be told apart by name
+  meta <- ddi_meta(doc) |>
+    mutate(dup_files = paste(unique(file_tbl$file[duplicated(file_tbl$file) & !is.na(file_tbl$file)]), collapse = "; "))
+  list(meta = meta, dict = dict)
 }
 
 ddi_meta <- function(doc) {

@@ -65,13 +65,16 @@ cands <- tagged |>
   select(-var_key) |>
   mutate(n_in_file = n(), .by = c(dict_id, file, concept))
 
+# one value-label summary per variable: some codebooks have two different files with the
+# same name (e.g. one per survey round), whose variables then share (dict_id, file, var)
 vl_text <- dictionary |>
   select(dict_id, file, var, value_labels) |>
   filter(!map_lgl(value_labels, is.null)) |>
   mutate(values = map_chr(value_labels, \(v) str_trunc(paste(v$value, v$value_label, sep = "=", collapse = "; "), 200))) |>
+  distinct(dict_id, file, var, .keep_all = TRUE) |>
   select(-value_labels)
 
-cands <- cands |> left_join(vl_text, by = c("dict_id", "file", "var")) |>
+cands <- cands |> left_join(vl_text, by = c("dict_id", "file", "var"), relationship = "many-to-one") |>
   arrange(dict_id, file, factor(concept, levels = concepts$concept))
 write_csv(cands, agh_path("agh_meta", "candidates.csv"), na = "")
 
@@ -107,7 +110,7 @@ map_cols <- c("keep", "source_id", "file", "var", "var_regex", "rep", "concept",
 
 template <- reg |>
   mutate(
-    role = case_match(kind, "key" ~ "key", "item" ~ "item", "unit" ~ "unit", .default = "value"),
+    role = if_else(kind %in% c("key", "item", "unit"), kind, "value"),
     # [assumed] pre-tick only unambiguous rows: one concept for the variable and one
     # variable for the concept in that file. Everything else waits for you.
     keep = if_else(n_concepts == 1 & n_in_file == 1, "TRUE", NA_character_),

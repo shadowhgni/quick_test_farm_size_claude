@@ -98,6 +98,11 @@ reg_dicts <- map(seq_len(nrow(src)), \(i) {
   out <- tryCatch(parse_one_dict(path, s$dict_format, inv, tm$vars), error = \(e) {
     warning(s$source_id, ": ", conditionMessage(e)); NULL })
   if (is.null(out) || nrow(out$dict) == 0) return(NULL)
+  if (nzchar(out$meta$dup_files[1] %||% "")) {
+    warning(s$source_id, ": the codebook has several different files named ", out$meta$dup_files[1],
+            ". Their variables share one name in the dictionary, and step 4 reads the first data file of that name;",
+            " set data_file in source_map.csv if you need another one.")
+  }
   d <- out$dict
   # a dictionary without file names belongs to the single data file, if there is one
   if (all(is.na(d$file)) && nrow(inv) == 1) d$file <- inv$file
