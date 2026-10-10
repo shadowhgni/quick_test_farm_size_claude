@@ -22,9 +22,9 @@ dictionary <- readRDS(agh_path("agh_meta", "dictionary.rds"))
 concepts <- read_cfg("concepts.csv")
 
 dup <- concepts |> count(concept) |> filter(n > 1)
-if (nrow(dup) > 0) stop("Duplicated concepts in concepts.csv: ", paste(dup$concept, collapse = ", "))
+if (nrow(dup) > 0) agh_halt("Duplicated concepts in agh_config/concepts.csv: ", paste(dup$concept, collapse = ", "))
 bad <- concepts |> filter(is.na(pattern) | is.na(kind) | is.na(level))
-if (nrow(bad) > 0) stop("concepts.csv rows missing pattern/kind/level: ", paste(bad$concept, collapse = ", "))
+if (nrow(bad) > 0) agh_halt("agh_config/concepts.csv rows missing pattern/kind/level: ", paste(bad$concept, collapse = ", "))
 
 dictionary <- dictionary |>
   mutate(txt  = normalise(paste(var, coalesce(label, ""), coalesce(question, ""))),
@@ -44,6 +44,7 @@ tag <- function(dict, rules) {
 }
 
 say("Tagging %s variables against %d concepts ...", format(nrow(dictionary), big.mark = ","), nrow(concepts))
+free_mem()
 tagged <- tag(dictionary, concepts) |>
   left_join(concepts |> select(concept, kind, level, unit_of, domain, terminag), by = "concept") |>
   mutate(n_concepts = n_distinct(concept), .by = c(dict_id, file, var))
@@ -132,9 +133,23 @@ if (!file.exists(map_file)) {
       nrow(template), sum(template$keep %in% "TRUE"))
 } else {
   existing <- read_cfg("source_map.csv")
-  new <- template |> anti_join(existing, by = c("source_id", "file", "var", "concept"))
+  # datasets registered after source_map.csv was written: add their template rows and stop
+  # so you can curate them (rows of datasets already in the map are never changed)
+  added <- template |> filter(!source_id %in% existing$source_id)
+  if (nrow(added) > 0) {
+    hdr <- readLines(map_file, n = 1)
+    writeLines(hdr, map_file)
+    write_csv(bind_rows(existing, added |> mutate(across(everything(), as.character))), map_file,
+              append = TRUE, col_names = TRUE, na = "")
+    options(agh.map_created = TRUE)
+    say("\nAdded %d template rows (%d pre-ticked) to agh_config/source_map.csv for %s. Curate them, then run step 4.",
+        nrow(added), sum(added$keep %in% "TRUE"), paste(unique(added$source_id), collapse = ", "))
+  }
+  new <- template |>
+    filter(source_id %in% existing$source_id) |>
+    anti_join(existing, by = c("source_id", "file", "var", "concept"))
   write_csv(new, agh_path("agh_meta", "source_map_new.csv"), na = "")
-  say("\nsource_map.csv kept as is. %d new candidate rows in agh_meta/source_map_new.csv (copy the ones you want).", nrow(new))
+  say("\nsource_map.csv: rows of datasets already curated kept as is. %d new candidate rows for them in agh_meta/source_map_new.csv (copy the ones you want).", nrow(new))
 }
 
 say("\nConcept coverage (number of studies with >= 1 candidate):")

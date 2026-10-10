@@ -53,6 +53,30 @@ read_cfg <- function(name, dir = "agh_config") {
     mutate(across(everything(), str_trim))
 }
 
+# Pause the workflow with an instruction for you (something to curate or fix in agh_config/),
+# not a code error: run_all.R prints the instruction and ends without an error.
+agh_halt <- function(...) {
+  stop(structure(class = c("agh_halt", "error", "condition"), list(message = paste0(...), call = NULL)))
+}
+
+# Release memory between heavy batches (large surveys and full LSMS harvests)
+free_mem <- function() invisible(gc(verbose = FALSE, full = TRUE))
+
+# Parsed DDI, cached in agh_meta/ddi_parsed/: re-used while the XML is unchanged and the
+# parser is the same version (bump ddi_parser_version when parse_ddi() changes)
+ddi_parser_version <- 3L
+parse_ddi_cached <- function(path) {
+  cache <- agh_path("agh_meta", "ddi_parsed", paste0(digest_path(path), ".rds"))
+  if (file.exists(cache) && file.mtime(cache) >= file.mtime(path)) {
+    out <- readRDS(cache)
+    if (identical(out$parser_version, ddi_parser_version)) return(out)
+  }
+  out <- parse_ddi(path)
+  out$parser_version <- ddi_parser_version
+  saveRDS(out, cache)
+  out
+}
+
 # Cached download; delete the cached file to force a refresh
 fetch <- function(url, dest, quiet = TRUE) {
   if (!file.exists(dest) || file.size(dest) == 0) {

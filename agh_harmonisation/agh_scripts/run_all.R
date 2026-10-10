@@ -16,14 +16,26 @@ steps <- c(
   "agh_05_curate.R"                     # rules -> agh_curated/agh_<level>.*
 )
 
+# A step may pause the workflow with an instruction (agh_halt: something to curate or fix
+# in agh_config/). That is not an error: the instruction is printed and the run ends here.
+paused <- NULL
 for (s in steps) {
   message("\n==== ", s, " ====")
-  source(file.path(getOption("agh.scripts"), s), local = new.env())
-  # Step 3 creates agh_config/source_map.csv on the first run; stop so you can curate it
-  if (s == "agh_03_tag.R" && isTRUE(getOption("agh.map_created"))) {
-    stop("Curate agh_config/source_map.csv (keep = TRUE rows), then run again.")
+  paused <- tryCatch({
+    source(file.path(getOption("agh.scripts"), s), local = new.env())
+    NULL
+  }, agh_halt = \(e) conditionMessage(e))
+  # Step 3 writes (or adds to) agh_config/source_map.csv for new datasets: curate it first
+  if (is.null(paused) && s == "agh_03_tag.R" && isTRUE(getOption("agh.map_created"))) {
+    paused <- "Curate agh_config/source_map.csv (tick keep = TRUE on the variables to extract), then run run_all.R again."
   }
+  if (!is.null(paused)) break
 }
 
-source(file.path(getOption("agh.scripts"), "agh_06_query.R"))
-print(agh_tables())
+if (!is.null(paused)) {
+  message("\n", strrep("-", 72), "\n  Workflow paused after ", s, ": nothing is wrong, you have something to do.\n\n  ",
+          paused, "\n", strrep("-", 72))
+} else {
+  source(file.path(getOption("agh.scripts"), "agh_06_query.R"))
+  print(agh_tables())
+}
