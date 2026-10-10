@@ -47,7 +47,7 @@ Retrieval and curation are kept apart. Steps 1–4 only **find and copy** values
 setwd("path/to/AG_HARMONISATION/agh_scripts")
 
 # 2. First run: creates agh_config/ with defaults, harvests codebooks, tags variables,
-#    writes agh_config/source_map.csv and STOPS so you can curate it
+#    writes agh_config/source_map.csv and PAUSES so you can curate it
 source("run_all.R")
 
 # 3. Register your datasets in agh_config/sources.csv, curate source_map.csv, re-run
@@ -165,6 +165,8 @@ AG_HARMONISATION/                     ← project root (agh.root = ".." seen fro
 | 5 | `agh_05_curate.R` | maps, TLU, limits | level tables, **`value_map.csv`**, **`unit_map.csv`**, QC | ✋ review the maps, re-run step 5 |
 | — | `agh_units_import.R` | a conversion table | proposed rows in **`unit_map.csv`** | ✋ review, re-run step 5 |
 | — | `agh_06_query.R` | level tables | — | subset |
+
+> ⏸️ When the workflow needs you (a new `source_map.csv` to curate, nothing ticked yet, a concept missing from `concepts.csv` …), `run_all.R` **pauses**: it prints a framed "Workflow paused after <step>" message with the instruction and ends without an error. Do what it says and run `run_all.R` again. Real errors (a file that cannot be read, a download that fails) still stop with an error.
 
 ### Step 1: harvesting codebooks
 

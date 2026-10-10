@@ -136,7 +136,7 @@ if (include_catalog && file.exists(cat_file)) {
 }
 
 dictionary <- bind_rows(reg_dicts, cat_dicts) |> as_tibble()   # list_rbind() of nothing is a data.frame
-if (nrow(dictionary) == 0) stop("No dictionary parsed. Check sources.csv (enabled, dict_path) and step 1 output.")
+if (nrow(dictionary) == 0) agh_halt("No dictionary parsed. Register a dataset in agh_config/sources.csv (enabled = TRUE, dict_path), or keep include_catalog <- TRUE and run step 1.")
 
 dictionary <- dictionary |>
   mutate(var_stem = var_stem(var)) |>

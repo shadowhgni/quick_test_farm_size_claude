@@ -53,6 +53,12 @@ read_cfg <- function(name, dir = "agh_config") {
     mutate(across(everything(), str_trim))
 }
 
+# Pause the workflow with an instruction for you (something to curate or fix in agh_config/),
+# not a code error: run_all.R prints the instruction and ends without an error.
+agh_halt <- function(...) {
+  stop(structure(class = c("agh_halt", "error", "condition"), list(message = paste0(...), call = NULL)))
+}
+
 # Cached download; delete the cached file to force a refresh
 fetch <- function(url, dest, quiet = TRUE) {
   if (!file.exists(dest) || file.size(dest) == 0) {

@@ -22,9 +22,9 @@ dictionary <- readRDS(agh_path("agh_meta", "dictionary.rds"))
 concepts <- read_cfg("concepts.csv")
 
 dup <- concepts |> count(concept) |> filter(n > 1)
-if (nrow(dup) > 0) stop("Duplicated concepts in concepts.csv: ", paste(dup$concept, collapse = ", "))
+if (nrow(dup) > 0) agh_halt("Duplicated concepts in agh_config/concepts.csv: ", paste(dup$concept, collapse = ", "))
 bad <- concepts |> filter(is.na(pattern) | is.na(kind) | is.na(level))
-if (nrow(bad) > 0) stop("concepts.csv rows missing pattern/kind/level: ", paste(bad$concept, collapse = ", "))
+if (nrow(bad) > 0) agh_halt("agh_config/concepts.csv rows missing pattern/kind/level: ", paste(bad$concept, collapse = ", "))
 
 dictionary <- dictionary |>
   mutate(txt  = normalise(paste(var, coalesce(label, ""), coalesce(question, ""))),
