@@ -4,7 +4,7 @@
 
 **One pipeline to harmonise LSMS, Carob, LCAS, RHoMIS and other farm-household data at household, plot, plot-crop, input and livestock level**
 
-![R](https://img.shields.io/badge/R-%E2%89%A54.3-276DC3?logo=r) ![tidyverse](https://img.shields.io/badge/tidyverse-native%20pipe%20%7C%3E-1A162D) ![vocabulary](https://img.shields.io/badge/vocabulary-terminag-2E7D32) ![licence](https://img.shields.io/badge/licence-GNU%20GPL-blue)
+![R](https://img.shields.io/badge/R-%E2%89%A54.3-276DC3?logo=r) ![vocabulary](https://img.shields.io/badge/vocabulary-terminag-2E7D32) ![licence](https://img.shields.io/badge/licence-GNU%20GPL-blue)
 
 </div>
 
