@@ -1,0 +1,26 @@
+key,value
+regime_no season (arid / no data),2080
+regime_unimodal,34358
+regime_transition,3527
+regime_bimodal,8035
+reason_ok,45935
+reason_no CHIRPS data,2065
+reason_missing rainfall days,0
+reason_arid (no season),0
+reason_too few valid seasons,0
+reason_bimodal (masked),0
+rain_regime_no season (arid / no data),2080
+rain_regime_unimodal,34358
+rain_regime_transition,5745
+rain_regime_bimodal,5817
+mean_onset_doy_median,133.05747985839844
+mean_demise_doy_median,307.47540283203125
+mean_season_len_median,175.41177368164062
+mean_mean_annual_mm,1175.419189453125
+mean_n_valid_seasons,37.043582916259766
+mean_demise_shift_median,27.52326202392578
+mean_false_start_share,0.00795724056661129
+mean_false_demise_share,0.013432184234261513
+n_spells,14868520
+n_valid_seasons,1701597
+last_day_with_data,2025-12-31
