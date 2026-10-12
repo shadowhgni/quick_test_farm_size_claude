@@ -109,7 +109,7 @@ jobs:
         run: |
           cd "$W"
           for s in $SCEN; do
-            echo "=== $s"; export DRYSPELL_V10_SCENARIO=$s
+            echo "=== $s"; export DRYSPELL_V9_SCENARIO=$s
             python "$CODE/tests/check_seasons.py" --region ci_nga --cells 8
             for c in sorghum pearl_millet groundnut; do
               python "$CODE/tests/check_sowing.py" --region ci_nga --iso3 NGA --crop $c --cells 5
@@ -123,7 +123,7 @@ jobs:
         run: |
           cd "$W"
           for s in $SCEN; do
-            DRYSPELL_V10_SCENARIO=$s python "$CODE/tests/compare_reference.py" --region ci_nga \
+            DRYSPELL_V9_SCENARIO=$s python "$CODE/tests/compare_reference.py" --region ci_nga \
               || echo "::notice::$s differs from the committed reference (expected after a method change)"
           done
 
@@ -141,7 +141,7 @@ jobs:
         run: |
           cd "$W"
           for s in $SCEN; do
-            DRYSPELL_V10_SCENARIO=$s python "$CODE/tests/compare_reference.py" --region ci_nga \
+            DRYSPELL_V9_SCENARIO=$s python "$CODE/tests/compare_reference.py" --region ci_nga \
               --write "$CODE/reference/ci_nga/$s" || true
           done
           R="$CODE/ci_results"; rm -rf "$R"; mkdir -p "$R"
