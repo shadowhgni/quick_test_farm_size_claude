@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-v9 STEP 5 - aggregate the per-country step 4 results into one SSA folder
+v9 STEP 6 - aggregate the per-country step 4 results into one SSA folder
 ========================================================================
 
 Reads every COUNTRY folder dryspell_v9/<region>/step04/<ISO3>/ written by v9_04_sowing_risk.py
-(bbox / polygon / point runs are ignored) and builds dryspell_v9/<region>/step04/<SSA_NAME>/ :
+(bbox / polygon / point runs are ignored) and builds dryspell_v9/<region>/<scenario>/step06/<SSA_NAME>/ :
 
   countries.csv            status of every country (ok / skipped + why / missing), cell counts
   country_summary.csv      national rows (zone == ALL) of every country, crop x cycle x sow
@@ -23,8 +23,8 @@ exactly: the SSA columns *_median_wmean are cell-weighted means of country media
 
 Usage
 -----
-  python v9_05_aggregate.py --region ssa
-  python v9_05_aggregate.py --region study --name WA --countries NGA BEN GHA
+  python v9_06_aggregate.py --region ssa
+  python v9_06_aggregate.py --region study --name WA --countries NGA BEN GHA
 """
 
 import argparse
@@ -197,15 +197,15 @@ def plot_country_comparison(path, crop, cs, cycles, sows, value, title, cmap):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--region", default="ssa")
-    ap.add_argument("--name", default=C.SSA_NAME, help="output sub-folder of step04/")
+    ap.add_argument("--name", default=C.SSA_NAME, help="output sub-folder of step06/")
     ap.add_argument("--countries", nargs="*", default=None, help="default: every country folder of step04/")
     ap.add_argument("--no_mosaic", action="store_true", help="tables and charts only (no ssa_cells_*.nc, no maps)")
     a = ap.parse_args()
 
     rdir = C.region_dir(a.region)
     sdir = rdir / "step04"
-    out = sdir / a.name
-    C.setup_logging(out / "step05.log")
+    out = rdir / "step06" / a.name
+    C.setup_logging(out / "step06.log")
     t0 = time.time()
     found = sorted(p.name for p in sdir.iterdir() if p.is_dir() and p.name != a.name and is_country(p))
     wanted = a.countries or found
@@ -224,7 +224,7 @@ def main():
     status.to_csv(out / "countries.csv", index=False)
     ok = status.loc[status.status == "ok", "unit"].tolist()
     logger.info("=" * 70)
-    logger.info(f"v9 STEP5  region={a.region}  countries ok {len(ok)}, skipped "
+    logger.info(f"v9 STEP6  region={a.region}  countries ok {len(ok)}, skipped "
                 f"{(status.status == 'skipped').sum()}, missing/incomplete "
                 f"{status.status.isin(['missing', 'incomplete']).sum()}")
     logger.info("=" * 70)
@@ -336,7 +336,7 @@ def main():
             logger.info(f"  {r.cycle:>3} d  sow +{r.sow:<3} impossible {r.pct_cells_impossible:5.1f}%  "
                         f"P(hit window) {r.p_hit_window_mean:.2f}  most hit: {r.most_hit_stage} "
                         f"({r.most_hit_stage_name}) p={r.most_hit_p:.2f}")
-    logger.info(f"STEP5 done in {(time.time() - t0) / 60:.1f} min -> {out}")
+    logger.info(f"STEP6 done in {(time.time() - t0) / 60:.1f} min -> {out}")
 
 
 if __name__ == "__main__":

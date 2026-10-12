@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Independent check of v9 step 6: for sampled cells, rebuild every season's dry spells straight from
+Independent check of v9 step 5: for sampled cells, rebuild every season's dry spells straight from
 the CHIRPS cache (runs of days < DRY_MM inside [onset + EXCLUDE_FIRST, demise - EXCLUDE_LAST],
 missing days break runs, runs >= SPELL_STATS_MIN) with plain Python, take the per-cell medians,
 and compare with cells_spell_stats.nc. Also checks that the pooled "ALL" season counts equal the
@@ -39,7 +39,7 @@ def main():
     ap.add_argument("--cells", type=int, default=12)
     a = ap.parse_args()
     rdir = C.region_dir(a.region)
-    out = rdir / "step06" / (a.name or a.region)
+    out = rdir / "step05" / (a.name or a.region)
     ds = xr.open_dataset(out / "cells_spell_stats.nc")
     cm = C.read_json(C.data_dir("chirps", a.region, "meta.json"))
     lat, lon = np.array(cm["lat"]), np.array(cm["lon"])
@@ -56,14 +56,22 @@ def main():
         se = se[se.valid]
         x = np.asarray(mm[:, r, c]).astype(np.int64)
         dry_day = (x != 65535) & has & (x < round(C.DRY_MM * 100))
+        all_runs = runs(dry_day)
         rec = {k: [] for k in ("n", "fs", "fl", "ls", "ll", "gs", "gl", "md")}
         dem_col = "demise_rain_date" if C.SPELL_STATS_DEMISE == "rain" else "demise_date"
         for s in se.itertuples():
             on = int(C.day_index(np.array([s.onset_date], dtype="datetime64[D]"))[0])
             de = int(C.day_index(np.array([getattr(s, dem_col)], dtype="datetime64[D]"))[0])
             w0, w1 = on + C.SPELL_STATS_EXCLUDE_FIRST, de - C.SPELL_STATS_EXCLUDE_LAST
-            sp = [(on_ + w0 - on, e + w0 - on) for on_, e in runs(dry_day[w0:w1 + 1]) if e - on_ + 1 >= C.SPELL_STATS_MIN] \
-                if w1 >= w0 else []
+            sp = []
+            for b0, b1 in all_runs:                   # whole-record runs, then the window rule
+                if b1 < w0 or b0 > w1:
+                    continue
+                if C.SPELL_STATS_EDGE_POLICY == "exclude" and (b0 < w0 or b1 > w1):
+                    continue
+                c0, c1 = max(b0, w0), min(b1, w1)
+                if c1 - c0 + 1 >= C.SPELL_STATS_MIN:
+                    sp.append((c0 - on, c1 - on))
             rec["n"].append(len(sp))
             if sp:
                 L = [e - b + 1 for b, e in sp]
@@ -90,7 +98,7 @@ def main():
             got = float(ds[k].values[i, j])
             if not (np.isclose(got, v, atol=1e-5) or (np.isnan(got) and np.isnan(v))):
                 bad += 1
-                print(f"MISMATCH {k} at {la:.3f},{lo:.3f}: step6 {got} vs loop {v}")
+                print(f"MISMATCH {k} at {la:.3f},{lo:.3f}: step5 {got} vs loop {v}")
     # pooled counts
     zs = pd.read_csv(out / "summary_by_zone.csv")
     allz = zs[(zs.zone == "ALL") & (zs.metric == "n_spells")].iloc[0]

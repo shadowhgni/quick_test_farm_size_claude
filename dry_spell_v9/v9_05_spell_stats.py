@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-v9 STEP 6 - dry spells inside the (major) rainy season: maps, PDFs, latitude and zone summaries
+v9 STEP 5 - dry spells inside the (major) rainy season: maps, PDFs, latitude and zone summaries
 =============================================================================================
 
 Independent of the crops (step 4): for every valid season of step 3, the dry spells (< DRY_MM,
@@ -32,10 +32,10 @@ Pooled over all seasons of all cells of a group (exact, from 1-day histograms):
   png/map_<metric>.png        maps of the per-cell medians
 
 Target: the whole region (default), or --iso3 / --bbox / --polygon / --point as in step 4.
-Output: dryspell_v9/<region>/step06/<name>/   (name = region, ISO3 or --name)
+Output: dryspell_v9/<region>/<scenario>/step05/<name>/   (name = region, ISO3 or --name)
 
-  python v9_06_spell_stats.py --region ci_nga
-  python v9_06_spell_stats.py --region ssa --iso3 KEN --zones koppen
+  python v9_05_spell_stats.py --region ci_nga
+  python v9_05_spell_stats.py --region ssa --iso3 KEN --zones koppen
 """
 
 import os
@@ -162,6 +162,8 @@ def process_rows(r0, r1):
     pi, qi = S4._pair_spells(sp_cell, sp_s, sp_e, se_cell, on, de)
     cs, ce = np.maximum(sp_s[pi], w0[qi]), np.minimum(sp_e[pi], w1[qi])
     ok = ce - cs + 1 >= C.SPELL_STATS_MIN
+    if C.SPELL_STATS_EDGE_POLICY == "exclude":            # a spell crossing a window edge is dropped
+        ok &= (sp_s[pi] >= w0[qi]) & (sp_e[pi] <= w1[qi])
     sid, s, e = qi[ok], (cs - on[qi])[ok], (ce - on[qi])[ok]
     oo = np.lexsort((s, sid))
     sid, s, e = sid[oo], s[oo], e[oo]
@@ -387,8 +389,8 @@ def main():
     s3 = rdir / "step03"
     whole = not (a.iso3 or a.bbox or a.polygon or a.point)
     name = a.name or (a.region if whole else S4.default_name(a))
-    out = rdir / "step06" / name
-    C.setup_logging(out / "step06.log")
+    out = rdir / "step05" / name
+    C.setup_logging(out / "step05.log")
     t0 = time.time()
     if not (s3 / "seasons").exists():
         sys.exit(f"{s3 / 'seasons'} not found - run v9_03_spells_seasons.py first")
@@ -399,9 +401,10 @@ def main():
         gm = d.load()
     lon, lat = gm.lon.values, gm.lat.values
     logger.info("=" * 70)
-    logger.info(f"v9 STEP6 dry spells in the season  region={a.region} target={name} zones={a.zones}")
+    logger.info(f"v9 STEP5 dry spells in the season  region={a.region} target={name} zones={a.zones}")
     logger.info(f"  spells >= {C.SPELL_STATS_MIN} d (< {C.DRY_MM} mm), window [onset + {C.SPELL_STATS_EXCLUDE_FIRST}, "
-                f"{C.SPELL_STATS_DEMISE} demise - {C.SPELL_STATS_EXCLUDE_LAST}], latitude bands {C.LAT_BAND_DEG} deg")
+                f"{C.SPELL_STATS_DEMISE} demise - {C.SPELL_STATS_EXCLUDE_LAST}] ({C.SPELL_STATS_EDGE_POLICY}), latitude bands "
+                f"{C.LAT_BAND_DEG} deg; season source {C.SEASON_SOURCE}; scenario {C.SCENARIO}")
     logger.info("=" * 70)
 
     if whole:
@@ -516,7 +519,7 @@ def main():
     C.write_json(out / "status.json", {"unit": name, "target": target, "status": "ok",
                                        "n_cells": int(mask.sum()), "n_seasons": n_seasons, "n_spells": n_spells,
                                        "zone_source": zone_src, "minutes": round((time.time() - t0) / 60, 2)})
-    logger.info(f"STEP6 done in {(time.time() - t0) / 60:.1f} min -> {out}")
+    logger.info(f"STEP5 done in {(time.time() - t0) / 60:.1f} min -> {out}")
 
 
 if __name__ == "__main__":

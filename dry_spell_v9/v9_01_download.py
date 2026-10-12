@@ -84,15 +84,79 @@ def encode(a):
     return out
 
 
+def import_v7_cache(out, bbox):
+    """CHIRPS_V7_CACHE: start the v9 cache from the v7 one (same encoding: uint16 mm*100, 65535 = no data,
+    day 0 = 1 Jan 1981, ascending lon / lat). Its grid becomes the v9 grid; the days v7 holds are marked
+    done, the others are downloaded by download_chirps as usual."""
+    import os as _os
+    import rasterio
+    from rasterio.windows import from_bounds
+    src = Path(C.CHIRPS_V7_CACHE)
+    info_f, dat_v7 = src / "cache_info.json", src / "rain_u16.dat"
+    if not (info_f.exists() and dat_v7.exists()):
+        sys.exit(f"CHIRPS_V7_CACHE = {src}: rain_u16.dat / cache_info.json not found (v7 writes them to "
+                 f"dryspell_v7/<region>/cache/)")
+    if C.ORIGIN != np.datetime64("1981-01-01", "D"):
+        sys.exit("CHIRPS_V7_CACHE needs DATA_YEAR_MIN = 1981 (the v7 cache starts on 1 Jan 1981)")
+    info = C.read_json(info_f)
+    n7, nlat, nlon = info["shape"]
+    step = 0.05
+    lon = np.round(info["lon0"] + np.arange(nlon) * step, 4)
+    lat = np.round(info["lat0"] + np.arange(nlat) * step, 4)
+    days = pd.date_range(f"{C.DATA_YEAR_MIN}-01-01", f"{C.DATA_YEAR_MAX}-12-31", freq="D")
+    has = np.zeros(len(days), bool)
+    for w in info.get("done", {}).values():
+        w = np.asarray(w, dtype=int)
+        has[w[(w >= 0) & (w < len(days))]] = True
+    logger.info(f"CHIRPS from the v7 cache {src}: grid {nlon}x{nlat} lon {lon[0]}..{lon[-1]} lat {lat[0]}..{lat[-1]}, "
+                f"{has.sum():,} days with data")
+    if not (lon[0] <= bbox[0] + step and lon[-1] >= bbox[2] - step and lat[0] <= bbox[1] + step
+            and lat[-1] >= bbox[3] - step):
+        logger.warning(f"  the v7 grid does not cover the whole region bbox {list(bbox)} - the v9 grid is the v7 grid")
+    # window of the CHIRPS COG matching the v7 grid (for the days v7 lacks)
+    with rasterio.open(cog_url(pd.Timestamp(f"{C.DATA_YEAR_MIN}-01-01"))) as cog:
+        win = from_bounds(lon[0] - step / 2, lat[0] - step / 2, lon[-1] + step / 2, lat[-1] + step / 2,
+                          transform=cog.transform).round_offsets().round_lengths()
+        tr = cog.window_transform(win)
+    lon_c = np.round(tr.c + (np.arange(int(win.width)) + 0.5) * tr.a, 4)
+    lat_c = np.round(tr.f + (np.arange(int(win.height)) + 0.5) * tr.e, 4)[::-1]
+    if len(lon_c) != nlon or len(lat_c) != nlat or np.abs(lon_c - lon).max() > 1e-3 or np.abs(lat_c - lat).max() > 1e-3:
+        sys.exit("the v7 cache grid is not aligned on the CHIRPS COG grid - download instead (CHIRPS_V7_CACHE = None)")
+    dat_f = out / "rain_u16.dat"
+    shape = (len(days), nlat, nlon)
+    if C.CHIRPS_V7_CACHE_MODE == "link" and n7 == len(days):
+        _os.symlink(dat_v7.resolve(), dat_f)
+        logger.info(f"  linked {dat_f} -> {dat_v7.resolve()}")
+    else:
+        logger.info(f"  copying {min(n7, len(days)):,} days into {dat_f} ({np.prod(shape) * 2 / 1e9:.1f} GB)")
+        a7 = np.memmap(dat_v7, dtype=np.uint16, mode="r", shape=(n7, nlat, nlon))
+        mm = np.memmap(dat_f, dtype=np.uint16, mode="w+", shape=shape)
+        for t0 in range(0, len(days), 366):
+            t1 = min(t0 + 366, len(days))
+            mm[t0:t1] = a7[t0:t1] if t1 <= n7 else NODATA
+            if t0 < n7 < t1:
+                mm[t0:n7] = a7[t0:n7]
+        mm.flush()
+        del mm, a7
+    meta = {"bbox": list(bbox), "lon": lon.tolist(), "lat": lat.tolist(), "n_days": len(days),
+            "origin": str(C.ORIGIN), "window": [int(win.col_off), int(win.row_off), int(win.width), int(win.height)],
+            "source": f"v7 cache {src.resolve()} ({C.CHIRPS_V7_CACHE_MODE}) + {C.CHIRPS_COG_URL}",
+            "nodata": NODATA, "scale": SCALE, "failed_days": []}
+    np.save(out / "day_done.npy", has)
+    C.write_json(out / "meta.json", meta)
+
+
 def download_chirps(region, bbox, threads, retry_missing=False):
     import rasterio
     out = C.data_dir("chirps", region)
     out.mkdir(parents=True, exist_ok=True)
     meta_f, done_f, dat_f = out / "meta.json", out / "day_done.npy", out / "rain_u16.dat"
     days = pd.date_range(f"{C.DATA_YEAR_MIN}-01-01", f"{C.DATA_YEAR_MAX}-12-31", freq="D")
+    if C.CHIRPS_V7_CACHE and not meta_f.exists():
+        import_v7_cache(out, bbox)
     if meta_f.exists():
         meta = C.read_json(meta_f)
-        if list(meta["bbox"]) != list(bbox):
+        if list(meta["bbox"]) != list(bbox) and not str(meta.get("source", "")).startswith("v7 cache"):
             sys.exit(f"{out} was built for bbox {meta['bbox']}, not {list(bbox)} - use another region name")
         lon, lat = np.array(meta["lon"]), np.array(meta["lat"])
         win = rasterio.windows.Window(*meta["window"])

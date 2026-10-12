@@ -10,7 +10,7 @@ A "fingerprint" is a few small CSV files summarising a run:
   pooled.csv     the pooled (SSA / all countries) values, zone == ALL
 
   # CI: write the reference into the repository
-  python tests/compare_reference.py --region ci_nga --write reference/ci_nga
+  DRYSPELL_V9_SCENARIO=base python tests/compare_reference.py --region ci_nga --write reference/ci_nga/base
   # HPC: after  python run_all.py --region ci_nga --countries NGA BEN NER CMR TCD
   python tests/compare_reference.py --region ci_nga            # compares with reference/ci_nga
 
@@ -45,7 +45,7 @@ def fingerprint(region, name="SSA"):
     g += [{"key": "n_spells", "value": meta["n_spells"]}, {"key": "n_valid_seasons", "value": meta["n_valid_seasons"]},
           {"key": "last_day_with_data", "value": meta["last_day_with_data"]}]
     out = {"grid": pd.DataFrame(g)}
-    s = rdir / "step04" / name
+    s = rdir / "step06" / name
     cs = pd.read_csv(s / "country_summary.csv")
     out["countries"] = cs[["iso3", "crop", "cycle", "sow", "n_cells", "pct_cells_impossible", "p_hit_window_mean",
                            "most_hit_stage", "most_hit_p"]].sort_values(["iso3", "crop", "cycle", "sow"])
@@ -53,7 +53,7 @@ def fingerprint(region, name="SSA"):
     out["pooled"] = ps[ps.zone == "ALL"][["crop", "cycle", "sow", "n_cells", "pct_cells_impossible",
                                          "p_hit_window_mean", "most_hit_stage", "most_hit_p"]] \
         .sort_values(["crop", "cycle", "sow"])
-    s6 = rdir / "step06" / region / "summary_by_zone.csv"
+    s6 = rdir / "step05" / region / "summary_by_zone.csv"
     if s6.exists():
         z = pd.read_csv(s6)
         out["spells"] = z[z.zone == "ALL"][["metric", "n_seasons", "n_defined", "mean", "p25", "median", "p75"]] \
@@ -95,7 +95,7 @@ def main():
             v.to_csv(d / f"{k}.csv", index=False)
         print(f"fingerprint written to {d}")
         return
-    ref = Path(a.reference) if a.reference else HERE / "reference" / a.region
+    ref = Path(a.reference) if a.reference else HERE / "reference" / a.region / C.SCENARIO
     bad = 0
     for k, v in fp.items():
         if not (ref / f"{k}.csv").exists():

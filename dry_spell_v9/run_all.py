@@ -9,10 +9,15 @@ run_all.py - the whole v9 dry-spell workflow, from scratch
   step 3  v9_03_spells_seasons.py   dry spells, regime (rain + NDVI), major-season onset / demise
   step 4  v9_04_sowing_risk.py      ONE RUN PER COUNTRY -> dryspell_v9/<region>/step04/<ISO3>/
                                     or ONE target: --target_bbox / --target_polygon / --target_point
-  step 5  v9_05_aggregate.py        all countries -> dryspell_v9/<region>/step04/<SSA_NAME>/
-  step 6  v9_06_spell_stats.py      dry spells inside the season (number, first / last / longest start
+  step 5  v9_05_spell_stats.py      dry spells inside the season (number, first / last / longest start
                                     and duration): maps, PDFs, summaries by latitude and zone, for the
-                                    whole region (or the single target) -> step06/<region or target>/
+                                    whole region (or the single target) -> step05/<region or target>/
+  step 6  v9_06_aggregate.py        all countries of step 4 -> step06/<SSA_NAME>/
+  step 7  v9_07_compare.py          with >= 2 scenarios: what changes between them -> compare/<names>/
+
+SCENARIOS (v9_config.py section L): --scenarios base chirps mask_bimodal runs steps 2-6 once per scenario,
+each into dryspell_v9/<region>/<scenario>/ (step 1 downloads are shared), then step 7 compares them
+with the first scenario as the base. Without --scenarios: SCENARIO_DEFAULT only.
 
 Settings: v9_config.py; --config my_settings.json overrides any of them for every step
 (e.g. {"FALSE_START_EXCLUDE": true, "SUMMARY_ZONES": "koppen", "DEMISE_ADJUST": "none"}).
@@ -23,6 +28,7 @@ Run it from any working folder; inputs go to ./dryspell_v9_data, results to ./dr
   python run_all.py --region ssa --dry_run                   # show the plan
   python run_all.py --region ci_nga --workers 8              # the GitHub CI box (parity check:
   python tests/compare_reference.py --region ci_nga          #  same numbers as the CI reference)
+  python run_all.py --region ssa --scenarios base chirps mask_bimodal excl0 excl20 --workers 40 --country_jobs 4
   python run_all.py --region ci_nga --steps 4 --target_point 12.0 8.5
   python run_all.py --region ssa --steps 4 --target_polygon states.gpkg --polygon_field NAME \\
          --polygon_value Kano --target_name kano
@@ -34,7 +40,7 @@ Run it from any working folder; inputs go to ./dryspell_v9_data, results to ./dr
 * A failing country is logged and the run continues; steps 1-3 failing stops the run.
 * --country_jobs N runs N countries at once; --workers is shared between them.
 * Extra step 4 options pass through: --step4_args "--grace 10 --zones koppen".
-* Log: dryspell_v9/<region>/run_all.log, run_all_status.csv, run_all_logs/.
+* Log: dryspell_v9/<region>/run_all.log, run_all_status.csv; step logs in <region>/<scenario>/run_all_logs/.
 """
 
 import argparse
@@ -63,8 +69,8 @@ sys.path.insert(0, str(HERE))
 import v9_common as C   # noqa: E402
 
 SCRIPTS = {1: HERE / "v9_01_download.py", 2: HERE / "v9_02_ndvi_phenology.py",
-           3: HERE / "v9_03_spells_seasons.py", 4: HERE / "v9_04_sowing_risk.py", 5: HERE / "v9_05_aggregate.py",
-           6: HERE / "v9_06_spell_stats.py"}
+           3: HERE / "v9_03_spells_seasons.py", 4: HERE / "v9_04_sowing_risk.py", 5: HERE / "v9_05_spell_stats.py",
+           6: HERE / "v9_06_aggregate.py", 7: HERE / "v9_07_compare.py"}
 SKIP_EXIT = 3      # step 4: nothing to analyse in this country / target
 
 # Sub-Saharan Africa (UN M49), ISO 3166-1 alpha-3. SOL = Somaliland, drawn by Natural Earth as a
@@ -112,11 +118,14 @@ def main():
     ap.add_argument("--region", default="ssa", help=f"one of {list(C.REGIONS)} or a new name with --bbox")
     ap.add_argument("--bbox", nargs=4, type=float, metavar=("LON_MIN", "LAT_MIN", "LON_MAX", "LAT_MAX"),
                     help="extent of a NEW region (data download + steps 2-3)")
-    ap.add_argument("--steps", nargs="+", type=int, default=[1, 2, 3, 4, 5, 6], choices=[1, 2, 3, 4, 5, 6])
+    ap.add_argument("--steps", nargs="+", type=int, default=[1, 2, 3, 4, 5, 6, 7], choices=[1, 2, 3, 4, 5, 6, 7])
+    ap.add_argument("--scenarios", nargs="+", default=None,
+                    help=f"named scenarios of v9_config.py section L (first = base of the comparison); "
+                         f"default {C.SCENARIO_DEFAULT!r}; available: {sorted(C.SCENARIOS)}")
     ap.add_argument("--countries", nargs="+", default=None, help="ISO3 codes (default: all SSA countries in the region)")
     tg = ap.add_mutually_exclusive_group()
     tg.add_argument("--target_bbox", nargs=4, type=float, metavar=("W", "S", "E", "N"),
-                    help="steps 4 and 6 for this box only (no country loop, no step 5)")
+                    help="steps 4 and 5 for this box only (no country loop, no step 6)")
     tg.add_argument("--target_polygon", default=None, help="step 4 for this polygon file only")
     tg.add_argument("--target_point", nargs=2, type=float, metavar=("LAT", "LON"), help="step 4 for one cell")
     ap.add_argument("--polygon_field", default=None)
@@ -126,18 +135,22 @@ def main():
     ap.add_argument("--threads", type=int, default=32, help="parallel downloads in step 1")
     ap.add_argument("--country_jobs", type=int, default=1, help="countries run at the same time in step 4")
     ap.add_argument("--step4_args", default="", help='extra step 4 options, e.g. "--grace 10 --zones koppen"')
-    ap.add_argument("--step6_args", default="", help='extra step 6 options, e.g. "--zones koppen"')
-    ap.add_argument("--name", default=C.SSA_NAME, help="step 5 output folder (step04/<name>)")
+    ap.add_argument("--step5_args", default="", help='extra step 5 options, e.g. "--zones koppen"')
+    ap.add_argument("--name", default=C.SSA_NAME, help="step 6 output folder (step06/<name>)")
     ap.add_argument("--resume", action="store_true", help="skip work that is already done")
     ap.add_argument("--dry_run", action="store_true", help="print the plan and exit")
     a = ap.parse_args()
 
     name, bbox = C.parse_region(a.region, a.bbox)
-    rdir = C.region_dir(name)
+    scenarios = a.scenarios or [C.SCENARIO_DEFAULT]
+    for s in scenarios:
+        C.scenario_settings(s)                       # unknown name -> error before anything runs
+    top = Path(C.OUT_ROOT) / name                    # region-level log and status
+    rdir = C.region_dir(name, scenarios[0])
     logs = rdir / "run_all_logs"
-    rdir.mkdir(parents=True, exist_ok=True)
+    top.mkdir(parents=True, exist_ok=True)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s - %(message)s", datefmt="%H:%M:%S",
-                        handlers=[logging.StreamHandler(), logging.FileHandler(rdir / "run_all.log", mode="a")],
+                        handlers=[logging.StreamHandler(), logging.FileHandler(top / "run_all.log", mode="a")],
                         force=True)
     py = sys.executable
     reg = ["--region", name] + (["--bbox", *map(str, a.bbox)] if a.bbox else [])
@@ -151,29 +164,35 @@ def main():
             target_args += ["--polygon_field", a.polygon_field, "--polygon_value", a.polygon_value]
     elif a.target_point:
         target_args = ["--point", *a.target_point]
-    steps = [s for s in a.steps if not (s == 2 and not C.USE_NDVI) and not (s == 5 and single)]
+    steps = [s for s in a.steps if not (s == 6 and single) and not (s == 7 and len(scenarios) < 2)]
+    use_ndvi = any(C.scenario_settings(s)["USE_NDVI"] for s in scenarios)
     status = []
     t_all = time.time()
     logger.info("=" * 70)
-    logger.info(f"run_all v9  region={name} bbox={bbox} steps={steps} workers={a.workers} "
+    logger.info(f"run_all v9  region={name} bbox={bbox} scenarios={scenarios} steps={steps} workers={a.workers} "
                 f"country_jobs={a.country_jobs} resume={a.resume} config={C.CONFIG_FILE or 'v9_config.py'}")
-    logger.info(f"  USE_NDVI={C.USE_NDVI} REGIME_SOURCE={C.REGIME_SOURCE} DEMISE_ADJUST={C.DEMISE_ADJUST} "
-                f"FALSE_START_EXCLUDE={C.FALSE_START_EXCLUDE} FALSE_DEMISE_EXCLUDE={C.FALSE_DEMISE_EXCLUDE} "
-                f"SUMMARY_ZONES={C.SUMMARY_ZONES}")
+    for s in scenarios:
+        S = C.scenario_settings(s)
+        logger.info(f"  [{s}] SEASON_SOURCE={S['SEASON_SOURCE']} BIMODAL_SEASON={S['BIMODAL_SEASON']} "
+                    f"DRY_SPELL_MIN_DAYS={S['DRY_SPELL_MIN_DAYS']} USE_NDVI={S['USE_NDVI']} "
+                    f"REGIME_SOURCE={S['REGIME_SOURCE']} DEMISE_ADJUST={S['DEMISE_ADJUST']} "
+                    f"FALSE_START_EXCLUDE={S['FALSE_START_EXCLUDE']} FALSE_DEMISE_EXCLUDE={S['FALSE_DEMISE_EXCLUDE']} "
+                    f"spell stats exclude {S['SPELL_STATS_EXCLUDE_FIRST']}/{S['SPELL_STATS_EXCLUDE_LAST']} d "
+                    f"({S['SPELL_STATS_EDGE_POLICY']}), crop exclude {S['CROP_SPELL_EXCLUDE_FIRST']}/"
+                    f"{S['CROP_SPELL_EXCLUDE_LAST']} d, SUMMARY_ZONES={S['SUMMARY_ZONES']}")
     logger.info("=" * 70)
-    if not a.dry_run:
-        C.write_json(rdir / "run_all_settings.json", C.settings_json())
-
     import pandas as pd
-    sf = rdir / "run_all_status.csv"
+    sf = top / "run_all_status.csv"
     started = time.strftime("%Y-%m-%d %H:%M:%S")
     previous = pd.read_csv(sf) if (sf.exists() and not a.dry_run) else None   # earlier runs are kept
 
     def record(step, unit, rc, minutes, state, note=""):
-        status.append({"run_started": started, "step": step, "unit": unit, "exit_code": rc, "status": state,
-                       "minutes": minutes, "note": note})
+        status.append({"run_started": started, "scenario": scen_now[0], "step": step, "unit": unit,
+                       "exit_code": rc, "status": state, "minutes": minutes, "note": note})
         if not a.dry_run:
             pd.concat([previous, pd.DataFrame(status)], ignore_index=True).to_csv(sf, index=False)
+
+    scen_now = [""]
 
     def stop_on_failure(step, rc, mins, log):
         if rc != 0:
@@ -195,7 +214,7 @@ def main():
 
     # ---------------------------------------------------------------- step 1
     if 1 in steps:
-        only = ["boundaries", "aez", "koppen", "chirps"] + (["ndvi"] if C.USE_NDVI else [])
+        only = ["boundaries", "aez", "koppen", "chirps"] + (["ndvi"] if use_ndvi else [])
         simple_step(1, [py, SCRIPTS[1], *reg, "--threads", a.threads, "--only", *only])
         if not a.dry_run:
             meta = C.read_json(C.data_dir("chirps", name, "meta.json"))
@@ -203,99 +222,124 @@ def main():
                 logger.warning(f"step 1: {len(meta['failed_days'])} days could not be downloaded (they count as "
                                f"missing): {meta['failed_days'][:10]} - rerun to retry them")
 
-    # ---------------------------------------------------------------- steps 2-3
-    ndvi_in = C.data_dir("ndvi", name, "period_done.npy")
-    chirps_in = C.data_dir("chirps", name, "day_done.npy")
-    cfg_in = [C.CONFIG_FILE] if C.CONFIG_FILE else []
-    cfg_in.append(HERE / "v9_config.py")
-    if 2 in steps:
-        simple_step(2, [py, SCRIPTS[2], *reg, "--workers", a.workers],
-                    [rdir / "step02" / "ndvi_phenology.nc"], [ndvi_in, *cfg_in])
-    if 3 in steps:
-        simple_step(3, [py, SCRIPTS[3], *reg, "--workers", a.workers],
-                    [rdir / "step03" / "meta.json"],
-                    [chirps_in, rdir / "step02" / "ndvi_phenology.nc", *cfg_in])
-
-    # ---------------------------------------------------------------- step 4
-    if 4 in steps and single:
-        cmd = [py, SCRIPTS[4], "--region", name, "--workers", a.workers, *target_args]
-        if a.target_name:
-            cmd += ["--name", a.target_name]
-        cmd += shlex.split(a.step4_args)
-        logger.info(f"step 4: {' '.join(map(str, cmd[1:]))}")
+    # ================================================================ steps 2-6, per scenario
+    for scen in scenarios:
+        scen_now[0] = scen
+        os.environ["DRYSPELL_V9_SCENARIO"] = scen          # inherited by every step
+        S = C.scenario_settings(scen)
+        rdir = C.region_dir(name, scen)
+        logs = rdir / "run_all_logs"
+        rdir.mkdir(parents=True, exist_ok=True)
+        logger.info(f"---------------- scenario {scen} -> {rdir}")
         if not a.dry_run:
-            rc, mins = run(cmd, logs / "step4_target.log")
-            state = {0: "ok", SKIP_EXIT: "skipped"}.get(rc, "failed")
-            record(4, a.target_name or "target", rc, mins, state)
-            (logger.error if state == "failed" else logger.info)(
-                f"step 4 target: {state} in {mins} min\n{tail(logs / 'step4_target.log', 4)}")
-    elif 4 in steps:
-        countries = [c.upper() for c in (a.countries or SSA_ISO3)]
-        bnd = C.load_boundaries(bbox)
-        present = set(bnd["iso_a3"]) if bnd is not None else set(countries)
-        todo, absent = [c for c in countries if c in present], [c for c in countries if c not in present]
-        for c in absent:
-            logger.info(f"step 4 {c}: no polygon inside the region bbox - not run")
-            record(4, c, None, 0, "not_in_region")
-        w = max(1, a.workers // max(1, a.country_jobs))
-        extra = shlex.split(a.step4_args)
+            C.write_json(rdir / "run_all_settings.json", {**S, "SCENARIO": scen, "SCENARIOS": None})
+        if not S["USE_NDVI"] and 2 in steps:
+            logger.info("step 2: skipped (USE_NDVI = False in this scenario)")
+        # ---------------------------------------------------------------- steps 2-3
+        ndvi_in = C.data_dir("ndvi", name, "period_done.npy")
+        chirps_in = C.data_dir("chirps", name, "day_done.npy")
+        cfg_in = [C.CONFIG_FILE] if C.CONFIG_FILE else []
+        cfg_in.append(HERE / "v9_config.py")
+        if 2 in steps and S["USE_NDVI"]:
+            simple_step(2, [py, SCRIPTS[2], *reg, "--workers", a.workers],
+                        [rdir / "step02" / "ndvi_phenology.nc"], [ndvi_in, *cfg_in])
+        if 3 in steps:
+            simple_step(3, [py, SCRIPTS[3], *reg, "--workers", a.workers],
+                        [rdir / "step03" / "meta.json"],
+                        [chirps_in, rdir / "step02" / "ndvi_phenology.nc", *cfg_in])
 
-        def one(c):
-            st = rdir / "step04" / c / "status.json"
-            if a.resume and st.exists():
-                s = C.read_json(st).get("status")
-                if s in ("ok", "skipped"):
-                    return c, 0, 0, f"resumed ({s})", ""
-            cmd = [py, SCRIPTS[4], "--region", name, "--iso3", c, "--workers", w, *extra]
-            if a.dry_run:
-                return c, 0, 0, "planned", ""
-            rc, mins = run(cmd, logs / f"step4_{c}.log")
-            state = {0: "ok", SKIP_EXIT: "skipped"}.get(rc, "failed")
-            note = C.read_json(st).get("reason", "") if (rc == SKIP_EXIT and st.exists()) else ""
-            return c, rc, mins, state, note
+        # ---------------------------------------------------------------- step 4
+        if 4 in steps and single:
+            cmd = [py, SCRIPTS[4], "--region", name, "--workers", a.workers, *target_args]
+            if a.target_name:
+                cmd += ["--name", a.target_name]
+            cmd += shlex.split(a.step4_args)
+            logger.info(f"step 4: {' '.join(map(str, cmd[1:]))}")
+            if not a.dry_run:
+                rc, mins = run(cmd, logs / "step4_target.log")
+                state = {0: "ok", SKIP_EXIT: "skipped"}.get(rc, "failed")
+                record(4, a.target_name or "target", rc, mins, state)
+                (logger.error if state == "failed" else logger.info)(
+                    f"step 4 target: {state} in {mins} min\n{tail(logs / 'step4_target.log', 4)}")
+        elif 4 in steps:
+            countries = [c.upper() for c in (a.countries or SSA_ISO3)]
+            bnd = C.load_boundaries(bbox)
+            present = set(bnd["iso_a3"]) if bnd is not None else set(countries)
+            todo, absent = [c for c in countries if c in present], [c for c in countries if c not in present]
+            for c in absent:
+                logger.info(f"step 4 {c}: no polygon inside the region bbox - not run")
+                record(4, c, None, 0, "not_in_region")
+            w = max(1, a.workers // max(1, a.country_jobs))
+            extra = shlex.split(a.step4_args)
 
-        logger.info(f"step 4: {len(todo)} countries, {a.country_jobs} at a time, {w} workers each")
-        n = {"ok": 0, "skipped": 0, "failed": 0}
-        with ThreadPoolExecutor(max_workers=max(1, a.country_jobs)) as pool:
-            futs = [pool.submit(one, c) for c in todo]
-            for i, f in enumerate(as_completed(futs), 1):
-                c, rc, mins, state, note = f.result()
-                record(4, c, rc, mins, state, note)
-                for k in n:
-                    n[k] += state == k or state == f"resumed ({k})"
-                msg = f"step 4 [{i}/{len(todo)}] {c}: {state}" + (f" in {mins} min" if mins else "") + \
-                      (f" - {note}" if note else "")
-                (logger.error(msg + f"\n{tail(logs / f'step4_{c}.log')}") if state == "failed" else logger.info(msg))
-        logger.info(f"step 4: ok {n['ok']}, skipped {n['skipped']}, failed {n['failed']}, not in region {len(absent)}")
+            def one(c):
+                st = rdir / "step04" / c / "status.json"
+                if a.resume and st.exists():
+                    s = C.read_json(st).get("status")
+                    if s in ("ok", "skipped"):
+                        return c, 0, 0, f"resumed ({s})", ""
+                cmd = [py, SCRIPTS[4], "--region", name, "--iso3", c, "--workers", w, *extra]
+                if a.dry_run:
+                    return c, 0, 0, "planned", ""
+                rc, mins = run(cmd, logs / f"step4_{c}.log")
+                state = {0: "ok", SKIP_EXIT: "skipped"}.get(rc, "failed")
+                note = C.read_json(st).get("reason", "") if (rc == SKIP_EXIT and st.exists()) else ""
+                return c, rc, mins, state, note
 
-    # ---------------------------------------------------------------- step 5
-    if 5 in steps:
-        cmd = [py, SCRIPTS[5], "--region", name, "--name", a.name]
-        if a.countries:
-            cmd += ["--countries", *[c.upper() for c in a.countries]]
-        logger.info(f"step 5: {' '.join(map(str, cmd[1:]))}")
+            logger.info(f"step 4: {len(todo)} countries, {a.country_jobs} at a time, {w} workers each")
+            n = {"ok": 0, "skipped": 0, "failed": 0}
+            with ThreadPoolExecutor(max_workers=max(1, a.country_jobs)) as pool:
+                futs = [pool.submit(one, c) for c in todo]
+                for i, f in enumerate(as_completed(futs), 1):
+                    c, rc, mins, state, note = f.result()
+                    record(4, c, rc, mins, state, note)
+                    for k in n:
+                        n[k] += state == k or state == f"resumed ({k})"
+                    msg = f"step 4 [{i}/{len(todo)}] {c}: {state}" + (f" in {mins} min" if mins else "") + \
+                          (f" - {note}" if note else "")
+                    (logger.error(msg + f"\n{tail(logs / f'step4_{c}.log')}") if state == "failed" else logger.info(msg))
+            logger.info(f"step 4: ok {n['ok']}, skipped {n['skipped']}, failed {n['failed']}, not in region {len(absent)}")
+
+        # ---------------------------------------------------------------- step 5
+        if 5 in steps:
+            cmd = [py, SCRIPTS[5], "--region", name, "--workers", a.workers] + shlex.split(a.step5_args)
+            if single:
+                cmd += [str(x) for x in target_args] + (["--name", a.target_name] if a.target_name else [])
+            logger.info(f"step 5: {' '.join(map(str, cmd[1:]))}")
+            if not a.dry_run:
+                rc, mins = run(cmd, logs / "step5.log")
+                state = {0: "ok", SKIP_EXIT: "skipped"}.get(rc, "failed")
+                record(5, a.target_name or ("target" if single else name), rc, mins, state)
+                (logger.error if state == "failed" else logger.info)(
+                    f"step 5: {state} in {mins} min\n{tail(logs / 'step5.log', 3)}")
+
+
+        # ---------------------------------------------------------------- step 6
+        if 6 in steps:
+            cmd = [py, SCRIPTS[6], "--region", name, "--name", a.name]
+            if a.countries:
+                cmd += ["--countries", *[c.upper() for c in a.countries]]
+            logger.info(f"step 6: {' '.join(map(str, cmd[1:]))}")
+            if not a.dry_run:
+                rc, mins = run(cmd, logs / "step6.log")
+                record(6, "", rc, mins, "ok" if rc == 0 else "failed")
+                if rc != 0:
+                    logger.error(f"step 6 FAILED (exit {rc}):\n{tail(logs / 'step6.log')}")
+                else:
+                    logger.info(f"step 6: done in {mins} min -> {rdir / 'step06' / a.name}")
+
+    # ---------------------------------------------------------------- step 7
+    scen_now[0] = "compare"
+    if 7 in steps:
+        cmd = [py, SCRIPTS[7], "--region", name, "--scenarios", *scenarios]
+        logger.info(f"step 7: {' '.join(map(str, cmd[1:]))}")
         if not a.dry_run:
-            rc, mins = run(cmd, logs / "step5.log")
-            record(5, "", rc, mins, "ok" if rc == 0 else "failed")
-            if rc != 0:
-                logger.error(f"step 5 FAILED (exit {rc}):\n{tail(logs / 'step5.log')}")
-            else:
-                logger.info(f"step 5: done in {mins} min -> {rdir / 'step04' / a.name}")
+            rc, mins = run(cmd, top / "compare" / "step7.log")
+            record(7, "", rc, mins, "ok" if rc == 0 else "failed")
+            (logger.error if rc else logger.info)(f"step 7: {'FAILED' if rc else 'done'} in {mins} min\n"
+                                                  f"{tail(top / 'compare' / 'step7.log', 14)}")
 
-    # ---------------------------------------------------------------- step 6
-    if 6 in steps:
-        cmd = [py, SCRIPTS[6], "--region", name, "--workers", a.workers] + shlex.split(a.step6_args)
-        if single:
-            cmd += [str(x) for x in target_args] + (["--name", a.target_name] if a.target_name else [])
-        logger.info(f"step 6: {' '.join(map(str, cmd[1:]))}")
-        if not a.dry_run:
-            rc, mins = run(cmd, logs / "step6.log")
-            state = {0: "ok", SKIP_EXIT: "skipped"}.get(rc, "failed")
-            record(6, a.target_name or ("target" if single else name), rc, mins, state)
-            (logger.error if state == "failed" else logger.info)(
-                f"step 6: {state} in {mins} min\n{tail(logs / 'step6.log', 3)}")
-
-    logger.info(f"run_all finished in {(time.time() - t_all) / 60:.1f} min - status: {rdir / 'run_all_status.csv'}")
+    logger.info(f"run_all finished in {(time.time() - t_all) / 60:.1f} min - status: {sf}")
     if any(s["status"] == "failed" for s in status):
         sys.exit(1)
 

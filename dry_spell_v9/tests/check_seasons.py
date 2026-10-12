@@ -55,11 +55,60 @@ def in_bounds(doy, lo, hi):
     return lo <= d <= hi
 
 
+def check_rads(region, n_cells):
+    """SEASON_SOURCE = "rads": the stored seasons must be exactly the RADS seasons (re-read and re-paired
+    here) that pass the length / rainfall-coverage / overlap rules, re-checked season by season."""
+    import v9_rads as R
+    cm = C.read_json(C.data_dir("chirps", region, "meta.json"))
+    lat, lon = np.array(cm["lat"]), np.array(cm["lon"])
+    years, on, de, _, _ = R.load_rads(lon, lat, 4)
+    root = C.region_dir(region) / "step03"
+    has = np.load(root / "day_has_data.npy")
+    gm = xr.open_dataset(root / "grid_meta.nc")
+    ok_cells = np.argwhere(gm.valid.values.astype(bool))
+    pick = [tuple(x) for x in ok_cells[np.random.default_rng(3).choice(len(ok_cells), min(n_cells, len(ok_cells)),
+                                                                        replace=False)]]
+    se = pd.read_parquet(root / "seasons", filters=[("row", "in", sorted({r for r, _ in pick}))])
+    bad = n = 0
+    src = gm.season_source.values
+    for r, c in pick:
+        if src[r, c] == 1:                            # BIMODAL_SEASON = "major": CHIRPS season where RADS has none
+            continue
+        mine, prev_end = {}, None
+        masked = C.BIMODAL_SEASON == "mask" and int(gm.regime.values[r, c]) == C.REGIME_BI
+        for k, y in enumerate(years if not masked else []):       # masked bimodal cell: no season
+            o, d = int(on[k, r, c]), int(de[k, r, c])
+            ok = o != R.SENT and d != R.SENT
+            if ok:
+                ln = d - o + 1
+                ok = C.SEASON_LEN_MIN <= ln <= C.SEASON_LEN_MAX and o >= 0 and d < len(has) \
+                    and has[o:d + 1].mean() >= C.WINDOW_MIN_COVER
+            if ok and prev_end is not None and o <= prev_end:
+                ok = False
+            prev_end = d if ok else None
+            if ok:
+                oy = int(str(C.index_to_date(o))[:4])
+                if oy not in mine:
+                    mine[oy] = (str(C.index_to_date(o)), str(C.index_to_date(d)))
+        got = se[(se.row == r) & (se.col == c) & se.reason.isin([C.S_OK, C.S_FALSE_START, C.S_FALSE_DEMISE])]
+        got = {int(y): (str(pd.Timestamp(o).date()), str(pd.Timestamp(d).date()))
+               for y, o, d in zip(got.year, got.onset_date, got.demise_rain_date)}
+        n += len(mine)
+        if got != mine:
+            bad += 1
+            print(f"MISMATCH RADS seasons row {r} col {c}: {len(got)} vs {len(mine)}; "
+                  f"e.g. {sorted(set(got.items()) ^ set(mine.items()))[:3]}")
+    print(f"RADS source: checked {len(pick)} cells, {n} seasons against the RADS files; failures: {bad}")
+    return bad
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--region", default="ci_nga")
     ap.add_argument("--cells", type=int, default=6)
     a = ap.parse_args()
+    if C.SEASON_SOURCE == "rads":
+        sys.exit(1 if check_rads(a.region, max(a.cells, 10)) else 0)
     root = C.region_dir(a.region) / "step03"
     gm = xr.open_dataset(root / "grid_meta.nc")
     cm = C.read_json(C.data_dir("chirps", a.region, "meta.json"))
@@ -117,7 +166,8 @@ def main():
                   f"{int(gm.regime.values[r, c])}/{gm.window_start_doy.values[r, c]}/{gm.window_len.values[r, c]}")
         ref = np.mean(np.nan_to_num(clim, nan=md)[(reg["start"] + np.arange(reg["length"])) % 365])
         mine = {}
-        for y in range(C.SEASON_YEAR_MIN - 1, C.SEASON_YEAR_MAX + 1):
+        masked = C.BIMODAL_SEASON == "mask" and reg["regime"] == C.REGIME_BI
+        for y in (range(C.SEASON_YEAR_MIN - 1, C.SEASON_YEAR_MAX + 1) if not masked else []):
             s = int(S2.doy_to_index(np.array([y]), np.array([reg["start"]]))[0])
             L = reg["length"]
             seg = np.array([rain[t] if 0 <= t < shape[0] else np.nan for t in range(s, s + L)])
@@ -174,6 +224,9 @@ def main():
         if not (lat.min() <= la <= lat.max() and lon.min() <= lo_ <= lon.max()):
             continue
         r, c = int(np.abs(lat - la).argmin()), int(np.abs(lon - lo_).argmin())
+        if int(gm.reason.values[r, c]) == C.REASON_BIMODAL:
+            print(f"skip {name:<14} bimodal cell masked (BIMODAL_SEASON = mask)")
+            continue
         rreg, reg = int(gm.rain_regime.values[r, c]), int(gm.regime.values[r, c])
         on = float(gm.onset_doy_median.values[r, c])
         v = se[(se.row == r) & (se.col == c) & se.valid]

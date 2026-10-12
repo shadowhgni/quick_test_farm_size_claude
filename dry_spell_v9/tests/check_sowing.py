@@ -68,6 +68,15 @@ def main():
                     best = None
                     for q in spc.itertuples():
                         cs, ce = max(q.start, S), min(q.end, M)
+                        F, Lx, pol = s4.C.CROP_SPELL_EXCLUDE_FIRST, s4.C.CROP_SPELL_EXCLUDE_LAST, s4.C.CROP_SPELL_EDGE_POLICY
+                        if F > 0:                     # spells near onset ignored (or dropped if crossing)
+                            if pol == "exclude" and q.start < on + F:
+                                continue
+                            cs = max(cs, on + F)
+                        if Lx > 0:                    # spells near demise
+                            if pol == "exclude" and q.end > de - Lx:
+                                continue
+                            ce = min(ce, de - Lx)
                         ln = ce - cs + 1
                         if ln >= minc and (best is None or ln > best[0] or (ln == best[0] and cs < best[1])):
                             best = (ln, cs, ce)
