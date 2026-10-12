@@ -326,8 +326,10 @@ def download_aez():
 # NDVI (PKU GIMMS NDVI v1.2)
 # =============================================================================
 
-def fetch_resumable(url, dst, tries=6):
-    """HTTP download with resume (Range) and retries."""
+def fetch_resumable(url, dst, tries=8):
+    """HTTP download with resume (Range) and retries. A transfer shorter than the size the server
+    announced is resumed, and a .zip that is not a valid zip archive is discarded and fetched again,
+    so a cut connection can never leave a truncated file behind."""
     dst = Path(dst)
     tmp = dst.with_suffix(dst.suffix + ".part")
     for attempt in range(tries):
@@ -337,9 +339,21 @@ def fetch_resumable(url, dst, tries=6):
             hdr["Range"] = f"bytes={have}-"
         try:
             with urllib.request.urlopen(urllib.request.Request(url, headers=hdr), timeout=300) as r:
-                mode = "ab" if (have and r.status == 206) else "wb"
-                with open(tmp, mode) as f:
+                resumed = bool(have) and r.status == 206
+                total = None
+                cr, cl = r.headers.get("Content-Range"), r.headers.get("Content-Length")
+                if resumed and cr and "/" in cr and cr.split("/")[-1].strip().isdigit():
+                    total = int(cr.split("/")[-1])
+                elif cl and cl.isdigit():
+                    total = (have if resumed else 0) + int(cl)
+                with open(tmp, "ab" if resumed else "wb") as f:
                     shutil.copyfileobj(r, f, length=8 << 20)
+            size = tmp.stat().st_size
+            if total is not None and size < total:
+                raise IOError(f"incomplete transfer: {size:,} of {total:,} bytes - resuming")
+            if dst.suffix.lower() == ".zip" and not zipfile.is_zipfile(tmp):
+                tmp.unlink()
+                raise IOError("downloaded file is not a valid zip archive - fetching again")
             tmp.rename(dst)
             return dst
         except Exception as e:                             # noqa: BLE001 - resumed on the next attempt
@@ -405,6 +419,9 @@ def download_ndvi(region, bbox, keep_zips=False):
         if all(done[i] for i in need):
             continue
         z = raw / f"PKU_GIMMS_NDVI_{C.NDVI_PRODUCT}_{period}.zip"
+        if z.exists() and not zipfile.is_zipfile(z):         # left over from an interrupted run
+            logger.warning(f"NDVI: {z.name} is not a valid zip - downloading it again")
+            z.unlink()
         if not z.exists():
             url = ndvi_zip_url(period)
             logger.info(f"NDVI: downloading {url}")
