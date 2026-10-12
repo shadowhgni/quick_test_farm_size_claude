@@ -1,8 +1,8 @@
-11:46:34 [MainProcess] INFO - ======================================================================
-11:46:34 [MainProcess] INFO - v9 STEP2 NDVI  region=ci_nga  AVHRR_solely 1982-2015  grid 150x126  half-months 816/816
-11:46:34 [MainProcess] INFO -   min amplitude 0.05, peak separation 3 half-months, SOS/EOS thresholds 0.5/0.5, gaps <= 3, median 3
-11:46:34 [MainProcess] INFO - ======================================================================
-11:46:35 [MainProcess] INFO -   8/8 chunks
-11:46:36 [MainProcess] INFO -   599 NDVI pixels without signal take the nearest pixel with one (<= 2 px); 1,031 stay without signal
-11:46:37 [MainProcess] INFO -   NDVI pixels: no signal 1,630, one season 13,378, two seasons 3,892
-11:46:37 [MainProcess] INFO - STEP2 NDVI done in 0.0 min -> dryspell_v9/ci_nga/mask_bimodal/step02/ndvi_phenology.nc
+12:08:56 [MainProcess] INFO - ======================================================================
+12:08:56 [MainProcess] INFO - v9 STEP2 NDVI  region=ci_nga  AVHRR_solely 1982-2015  grid 150x126  half-months 816/816
+12:08:56 [MainProcess] INFO -   min amplitude 0.05, peak separation 3 half-months, SOS/EOS thresholds 0.5/0.5, gaps <= 3, median 3
+12:08:56 [MainProcess] INFO - ======================================================================
+12:08:59 [MainProcess] INFO -   8/8 chunks
+12:08:59 [MainProcess] INFO -   599 NDVI pixels without signal take the nearest pixel with one (<= 2 px); 1,031 stay without signal
+12:09:01 [MainProcess] INFO -   NDVI pixels: no signal 1,630, one season 13,378, two seasons 3,892
+12:09:01 [MainProcess] INFO - STEP2 NDVI done in 0.1 min -> dryspell_v9/ci_nga/mask_bimodal/step02/ndvi_phenology.nc

@@ -1,13 +1,13 @@
 crop,cycle,sow,zone,stage_idx,stage,n_cells,p,stage_name,das_start,das_end,overlaps_window
-groundnut,70,0,ALL,0,SOW,36670,0.006695947095467685,sowing to emergence,0,7,False
-groundnut,70,0,ALL,1,VE,36670,0.023187994314889555,emergence,8,27,False
-groundnut,70,0,ALL,2,R1,36670,0.008413964384237796,beginning bloom,28,31,False
-groundnut,70,0,ALL,3,R2,36670,0.007666883326381237,beginning peg,32,36,False
-groundnut,70,0,ALL,4,R3,36670,0.007066724283070629,beginning pod,37,42,True
-groundnut,70,0,ALL,5,R4,36670,0.008098748660239978,full pod,43,48,True
-groundnut,70,0,ALL,6,R5,36670,0.010400827665994,beginning seed,49,52,True
-groundnut,70,0,ALL,7,R6,36670,0.013178768616662121,full seed,53,58,True
-groundnut,70,0,ALL,8,R7,36670,0.011838936967193892,beginning maturity,59,69,False
+groundnut,70,0,ALL,0,SOW,36670,0.006696107482323425,sowing to emergence,0,7,False
+groundnut,70,0,ALL,1,VE,36670,0.02318822625473139,emergence,8,27,False
+groundnut,70,0,ALL,2,R1,36670,0.008414063519634578,beginning bloom,28,31,False
+groundnut,70,0,ALL,3,R2,36670,0.0076670048057922,beginning peg,32,36,False
+groundnut,70,0,ALL,4,R3,36670,0.00706599392708481,beginning pod,37,42,True
+groundnut,70,0,ALL,5,R4,36670,0.008098021269566403,full pod,43,48,True
+groundnut,70,0,ALL,6,R5,36670,0.010400100368448321,beginning seed,49,52,True
+groundnut,70,0,ALL,7,R6,36670,0.013179010915080447,full seed,53,58,True
+groundnut,70,0,ALL,8,R7,36670,0.01183920058775566,beginning maturity,59,69,False
 groundnut,70,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,7,False
 groundnut,70,0,Cool / humid,1,VE,225,0.002137081716,emergence,8,27,False
 groundnut,70,0,Cool / humid,2,R1,225,0.0031002831359999996,beginning bloom,28,31,False
@@ -26,24 +26,24 @@ groundnut,70,0,Cool / subhumid,5,R4,405,0.00027483834232098765,full pod,43,48,Tr
 groundnut,70,0,Cool / subhumid,6,R5,405,0.0002564667933580247,beginning seed,49,52,True
 groundnut,70,0,Cool / subhumid,7,R6,405,0.000601516860617284,full seed,53,58,True
 groundnut,70,0,Cool / subhumid,8,R7,405,0.0004038390207654321,beginning maturity,59,69,False
-groundnut,70,0,Warm / arid,0,SOW,2329,0.04483653534048948,sowing to emergence,0,7,False
-groundnut,70,0,Warm / arid,1,VE,2329,0.1020513126019751,emergence,8,27,False
-groundnut,70,0,Warm / arid,2,R1,2329,0.020839279419063973,beginning bloom,28,31,False
-groundnut,70,0,Warm / arid,3,R2,2329,0.017567029293688276,beginning peg,32,36,False
-groundnut,70,0,Warm / arid,4,R3,2329,0.01344920395427222,beginning pod,37,42,True
-groundnut,70,0,Warm / arid,5,R4,2329,0.018210127071275225,full pod,43,48,True
-groundnut,70,0,Warm / arid,6,R5,2329,0.022278862513525115,beginning seed,49,52,True
-groundnut,70,0,Warm / arid,7,R6,2329,0.04608748049635037,full seed,53,58,True
-groundnut,70,0,Warm / arid,8,R7,2329,0.04963819528982396,beginning maturity,59,69,False
+groundnut,70,0,Warm / arid,0,SOW,2329,0.044839061832546157,sowing to emergence,0,7,False
+groundnut,70,0,Warm / arid,1,VE,2329,0.10205457757621297,emergence,8,27,False
+groundnut,70,0,Warm / arid,2,R1,2329,0.020840023203950196,beginning bloom,28,31,False
+groundnut,70,0,Warm / arid,3,R2,2329,0.017568133115070845,beginning peg,32,36,False
+groundnut,70,0,Warm / arid,4,R3,2329,0.013437296456419065,beginning pod,37,42,True
+groundnut,70,0,Warm / arid,5,R4,2329,0.018197859692571917,full pod,43,48,True
+groundnut,70,0,Warm / arid,6,R5,2329,0.022266595714469727,beginning seed,49,52,True
+groundnut,70,0,Warm / arid,7,R6,2329,0.046089668688707605,full seed,53,58,True
+groundnut,70,0,Warm / arid,8,R7,2329,0.04964112440103049,beginning maturity,59,69,False
 groundnut,70,0,Warm / humid,0,SOW,2499,0.00011074768707482992,sowing to emergence,0,7,False
-groundnut,70,0,Warm / humid,1,VE,2499,0.0065583626448979596,emergence,8,27,False
-groundnut,70,0,Warm / humid,2,R1,2499,0.007134013971428572,beginning bloom,28,31,False
-groundnut,70,0,Warm / humid,3,R2,2499,0.010242042081632654,beginning peg,32,36,False
-groundnut,70,0,Warm / humid,4,R3,2499,0.01818396731292517,beginning pod,37,42,True
-groundnut,70,0,Warm / humid,5,R4,2499,0.027297172741496598,full pod,43,48,True
-groundnut,70,0,Warm / humid,6,R5,2499,0.037656214326530615,beginning seed,49,52,True
-groundnut,70,0,Warm / humid,7,R6,2499,0.04276886133333333,full seed,53,58,True
-groundnut,70,0,Warm / humid,8,R7,2499,0.0355084985170068,beginning maturity,59,69,False
+groundnut,70,0,Warm / humid,1,VE,2499,0.006558741156462585,emergence,8,27,False
+groundnut,70,0,Warm / humid,2,R1,2499,0.007134771917006804,beginning bloom,28,31,False
+groundnut,70,0,Warm / humid,3,R2,2499,0.010242800027210884,beginning peg,32,36,False
+groundnut,70,0,Warm / humid,4,R3,2499,0.018184345517006803,beginning pod,37,42,True
+groundnut,70,0,Warm / humid,5,R4,2499,0.027297929918367346,full pod,43,48,True
+groundnut,70,0,Warm / humid,6,R5,2499,0.03765697150340136,beginning seed,49,52,True
+groundnut,70,0,Warm / humid,7,R6,2499,0.04277037645578231,full seed,53,58,True
+groundnut,70,0,Warm / humid,8,R7,2499,0.03550963927891156,beginning maturity,59,69,False
 groundnut,70,0,Warm / semiarid,0,SOW,18780,0.007382934427374868,sowing to emergence,0,7,False
 groundnut,70,0,Warm / semiarid,1,VE,18780,0.028694809780724174,emergence,8,27,False
 groundnut,70,0,Warm / semiarid,2,R1,18780,0.010937447303280086,beginning bloom,28,31,False
@@ -62,15 +62,15 @@ groundnut,70,0,Warm / subhumid,5,R4,12432,0.007352732275820463,full pod,43,48,Tr
 groundnut,70,0,Warm / subhumid,6,R5,12432,0.009680652506837193,beginning seed,49,52,True
 groundnut,70,0,Warm / subhumid,7,R6,12432,0.01191357127630309,full seed,53,58,True
 groundnut,70,0,Warm / subhumid,8,R7,12432,0.00947505572097812,beginning maturity,59,69,False
-groundnut,70,10,ALL,0,SOW,36616,0.010025857788693467,sowing to emergence,0,7,False
-groundnut,70,10,ALL,1,VE,36616,0.020051951383548174,emergence,8,27,False
-groundnut,70,10,ALL,2,R1,36616,0.00580889895046974,beginning bloom,28,31,False
-groundnut,70,10,ALL,3,R2,36616,0.007173879078271794,beginning peg,32,36,False
-groundnut,70,10,ALL,4,R3,36616,0.010774598120985362,beginning pod,37,42,True
-groundnut,70,10,ALL,5,R4,36616,0.01192708077589032,full pod,43,48,True
-groundnut,70,10,ALL,6,R5,36616,0.012800074984378414,beginning seed,49,52,True
-groundnut,70,10,ALL,7,R6,36616,0.01716173250109242,full seed,53,58,True
-groundnut,70,10,ALL,8,R7,36616,0.016011882575376883,beginning maturity,59,69,False
+groundnut,70,10,ALL,0,SOW,36616,0.01002589668251038,sowing to emergence,0,7,False
+groundnut,70,10,ALL,1,VE,36616,0.020052144213977493,emergence,8,27,False
+groundnut,70,10,ALL,2,R1,36616,0.0058081995375081925,beginning bloom,28,31,False
+groundnut,70,10,ALL,3,R2,36616,0.007173166672766004,beginning peg,32,36,False
+groundnut,70,10,ALL,4,R3,36616,0.010773885314343456,beginning pod,37,42,True
+groundnut,70,10,ALL,5,R4,36616,0.01192724754757483,full pod,43,48,True
+groundnut,70,10,ALL,6,R5,36616,0.012800264695488311,beginning seed,49,52,True
+groundnut,70,10,ALL,7,R6,36616,0.01716207268958925,full seed,53,58,True
+groundnut,70,10,ALL,8,R7,36616,0.016012297427681888,beginning maturity,59,69,False
 groundnut,70,10,Cool / humid,0,SOW,225,0.0008371851602666666,sowing to emergence,0,7,False
 groundnut,70,10,Cool / humid,1,VE,225,0.007020367173333333,emergence,8,27,False
 groundnut,70,10,Cool / humid,2,R1,225,0.014872816573333333,beginning bloom,28,31,False
@@ -89,24 +89,24 @@ groundnut,70,10,Cool / subhumid,5,R4,405,0.000601516860617284,full pod,43,48,Tru
 groundnut,70,10,Cool / subhumid,6,R5,405,0.0004038390207654321,beginning seed,49,52,True
 groundnut,70,10,Cool / subhumid,7,R6,405,0.0002246044357530864,full seed,53,58,True
 groundnut,70,10,Cool / subhumid,8,R7,405,0.0,beginning maturity,59,69,False
-groundnut,70,10,Warm / arid,0,SOW,2275,0.049195681982417576,sowing to emergence,0,7,False
-groundnut,70,10,Warm / arid,1,VE,2275,0.07072086023956044,emergence,8,27,False
-groundnut,70,10,Warm / arid,2,R1,2275,0.011601332552527472,beginning bloom,28,31,False
-groundnut,70,10,Warm / arid,3,R2,2275,0.012750518826373626,beginning peg,32,36,False
-groundnut,70,10,Warm / arid,4,R3,2275,0.0189012791789011,beginning pod,37,42,True
-groundnut,70,10,Warm / arid,5,R4,2275,0.029680556148131868,full pod,43,48,True
-groundnut,70,10,Warm / arid,6,R5,2275,0.042743564308131865,beginning seed,49,52,True
-groundnut,70,10,Warm / arid,7,R6,2275,0.08085744510637363,full seed,53,58,True
-groundnut,70,10,Warm / arid,8,R7,2275,0.0969795345120879,beginning maturity,59,69,False
+groundnut,70,10,Warm / arid,0,SOW,2275,0.04919630914945055,sowing to emergence,0,7,False
+groundnut,70,10,Warm / arid,1,VE,2275,0.0707231290131868,emergence,8,27,False
+groundnut,70,10,Warm / arid,2,R1,2275,0.011589657131428571,beginning bloom,28,31,False
+groundnut,70,10,Warm / arid,3,R2,2275,0.012738216466153845,beginning peg,32,36,False
+groundnut,70,10,Warm / arid,4,R3,2275,0.01888897755120879,beginning pod,37,42,True
+groundnut,70,10,Warm / arid,5,R4,2275,0.029681573205274727,full pod,43,48,True
+groundnut,70,10,Warm / arid,6,R5,2275,0.04274536445978022,beginning seed,49,52,True
+groundnut,70,10,Warm / arid,7,R6,2275,0.08086167084791208,full seed,53,58,True
+groundnut,70,10,Warm / arid,8,R7,2275,0.09698579914725275,beginning maturity,59,69,False
 groundnut,70,10,Warm / humid,0,SOW,2499,0.0016278603374149658,sowing to emergence,0,7,False
-groundnut,70,10,Warm / humid,1,VE,2499,0.013728135047619047,emergence,8,27,False
-groundnut,70,10,Warm / humid,2,R1,2499,0.014831666175510204,beginning bloom,28,31,False
-groundnut,70,10,Warm / humid,3,R2,2499,0.022723548884353743,beginning peg,32,36,False
-groundnut,70,10,Warm / humid,4,R3,2499,0.03880854919047619,beginning pod,37,42,True
-groundnut,70,10,Warm / humid,5,R4,2499,0.041973274816326525,full pod,43,48,True
-groundnut,70,10,Warm / humid,6,R5,2499,0.047093006925170065,beginning seed,49,52,True
-groundnut,70,10,Warm / humid,7,R6,2499,0.053180864843537415,full seed,53,58,True
-groundnut,70,10,Warm / humid,8,R7,2499,0.04307690884353742,beginning maturity,59,69,False
+groundnut,70,10,Warm / humid,1,VE,2499,0.013728892224489796,emergence,8,27,False
+groundnut,70,10,Warm / humid,2,R1,2499,0.014832043610884353,beginning bloom,28,31,False
+groundnut,70,10,Warm / humid,3,R2,2499,0.022724305292517007,beginning peg,32,36,False
+groundnut,70,10,Warm / humid,4,R3,2499,0.03880930559863945,beginning pod,37,42,True
+groundnut,70,10,Warm / humid,5,R4,2499,0.041974789938775514,full pod,43,48,True
+groundnut,70,10,Warm / humid,6,R5,2499,0.0470941446122449,beginning seed,49,52,True
+groundnut,70,10,Warm / humid,7,R6,2499,0.053182004068027214,full seed,53,58,True
+groundnut,70,10,Warm / humid,8,R7,2499,0.04307728704761905,beginning maturity,59,69,False
 groundnut,70,10,Warm / semiarid,0,SOW,18780,0.012192813444004259,sowing to emergence,0,7,False
 groundnut,70,10,Warm / semiarid,1,VE,18780,0.02457462646315229,emergence,8,27,False
 groundnut,70,10,Warm / semiarid,2,R1,18780,0.005170943336895634,beginning bloom,28,31,False
@@ -125,15 +125,15 @@ groundnut,70,10,Warm / subhumid,5,R4,12432,0.011732893695463318,full pod,43,48,T
 groundnut,70,10,Warm / subhumid,6,R5,12432,0.010744014516328828,beginning seed,49,52,True
 groundnut,70,10,Warm / subhumid,7,R6,12432,0.012741957094835908,full seed,53,58,True
 groundnut,70,10,Warm / subhumid,8,R7,12432,0.010303501433011583,beginning maturity,59,69,False
-groundnut,70,20,ALL,0,SOW,36557,0.006599984822501847,sowing to emergence,0,7,False
-groundnut,70,20,ALL,1,VE,36557,0.015072642092731897,emergence,8,27,False
-groundnut,70,20,ALL,2,R1,36557,0.008794472874847498,beginning bloom,28,31,False
-groundnut,70,20,ALL,3,R2,36557,0.010517672844462072,beginning peg,32,36,False
-groundnut,70,20,ALL,4,R3,36557,0.01301686580602894,beginning pod,37,42,True
-groundnut,70,20,ALL,5,R4,36557,0.01493053753292119,full pod,43,48,True
-groundnut,70,20,ALL,6,R5,36557,0.01581912364094428,beginning seed,49,52,True
-groundnut,70,20,ALL,7,R6,36557,0.02550380810389255,full seed,53,58,True
-groundnut,70,20,ALL,8,R7,36557,0.027217255669830673,beginning maturity,59,69,False
+groundnut,70,20,ALL,0,SOW,36557,0.006600046825910222,sowing to emergence,0,7,False
+groundnut,70,20,ALL,1,VE,36557,0.015072781746724292,emergence,8,27,False
+groundnut,70,20,ALL,2,R1,36557,0.008794524899904258,beginning bloom,28,31,False
+groundnut,70,20,ALL,3,R2,36557,0.010517812653417951,beginning peg,32,36,False
+groundnut,70,20,ALL,4,R3,36557,0.013017051932680473,beginning pod,37,42,True
+groundnut,70,20,ALL,5,R4,36557,0.014930723659572723,full pod,43,48,True
+groundnut,70,20,ALL,6,R5,36557,0.015818426091254754,beginning seed,49,52,True
+groundnut,70,20,ALL,7,R6,36557,0.025503182553601227,full seed,53,58,True
+groundnut,70,20,ALL,8,R7,36557,0.02721664046480838,beginning maturity,59,69,False
 groundnut,70,20,Cool / humid,0,SOW,225,0.0012998966919999999,sowing to emergence,0,7,False
 groundnut,70,20,Cool / humid,1,VE,225,0.024084695333333333,emergence,8,27,False
 groundnut,70,20,Cool / humid,2,R1,225,0.02480897505333333,beginning bloom,28,31,False
@@ -152,23 +152,23 @@ groundnut,70,20,Cool / subhumid,5,R4,405,0.0002246044357530864,full pod,43,48,Tr
 groundnut,70,20,Cool / subhumid,6,R5,405,7.48222966419753e-05,beginning seed,49,52,True
 groundnut,70,20,Cool / subhumid,7,R6,405,0.0006765680069135802,full seed,53,58,True
 groundnut,70,20,Cool / subhumid,8,R7,405,0.0010245132271604939,beginning maturity,59,69,False
-groundnut,70,20,Warm / arid,0,SOW,2230,0.019051591034080717,sowing to emergence,0,7,False
-groundnut,70,20,Warm / arid,1,VE,2230,0.03141426320448431,emergence,8,27,False
+groundnut,70,20,Warm / arid,0,SOW,2230,0.01905218469147982,sowing to emergence,0,7,False
+groundnut,70,20,Warm / arid,1,VE,2230,0.03141485546995516,emergence,8,27,False
 groundnut,70,20,Warm / arid,2,R1,2230,0.0123780553232287,beginning bloom,28,31,False
-groundnut,70,20,Warm / arid,3,R2,2230,0.02347224097219731,beginning peg,32,36,False
-groundnut,70,20,Warm / arid,4,R3,2230,0.03626035630044843,beginning pod,37,42,True
-groundnut,70,20,Warm / arid,5,R4,2230,0.05251650891838565,full pod,43,48,True
-groundnut,70,20,Warm / arid,6,R5,2230,0.07749427422421525,beginning seed,49,52,True
-groundnut,70,20,Warm / arid,7,R6,2230,0.13574550601076232,full seed,53,58,True
-groundnut,70,20,Warm / arid,8,R7,2230,0.16869406279103139,beginning maturity,59,69,False
-groundnut,70,20,Warm / humid,0,SOW,2499,0.004111149693197279,sowing to emergence,0,7,False
-groundnut,70,20,Warm / humid,1,VE,2499,0.02944541736054422,emergence,8,27,False
-groundnut,70,20,Warm / humid,2,R1,2499,0.03431398692517007,beginning bloom,28,31,False
-groundnut,70,20,Warm / humid,3,R2,2499,0.039919111931972784,beginning peg,32,36,False
-groundnut,70,20,Warm / humid,4,R3,2499,0.05044786114285714,beginning pod,37,42,True
-groundnut,70,20,Warm / humid,5,R4,2499,0.052519765632653065,full pod,43,48,True
-groundnut,70,20,Warm / humid,6,R5,2499,0.04906058995918367,beginning seed,49,52,True
-groundnut,70,20,Warm / humid,7,R6,2499,0.064449694707483,full seed,53,58,True
+groundnut,70,20,Warm / arid,3,R2,2230,0.023472834629596415,beginning peg,32,36,False
+groundnut,70,20,Warm / arid,4,R3,2230,0.03626213448878924,beginning pod,37,42,True
+groundnut,70,20,Warm / arid,5,R4,2230,0.05251828919461883,full pod,43,48,True
+groundnut,70,20,Warm / arid,6,R5,2230,0.07748241081973095,beginning seed,49,52,True
+groundnut,70,20,Warm / arid,7,R6,2230,0.1357348368807175,full seed,53,58,True
+groundnut,70,20,Warm / arid,8,R7,2230,0.16868397131121074,beginning maturity,59,69,False
+groundnut,70,20,Warm / humid,0,SOW,2499,0.004111528281632653,sowing to emergence,0,7,False
+groundnut,70,20,Warm / humid,1,VE,2499,0.029446931714285716,emergence,8,27,False
+groundnut,70,20,Warm / humid,2,R1,2499,0.03431474640816327,beginning bloom,28,31,False
+groundnut,70,20,Warm / humid,3,R2,2499,0.039920627054421766,beginning peg,32,36,False
+groundnut,70,20,Warm / humid,4,R3,2499,0.05044900036734694,beginning pod,37,42,True
+groundnut,70,20,Warm / humid,5,R4,2499,0.052520904857142864,full pod,43,48,True
+groundnut,70,20,Warm / humid,6,R5,2499,0.04906096816326531,beginning seed,49,52,True
+groundnut,70,20,Warm / humid,7,R6,2499,0.06445007291156463,full seed,53,58,True
 groundnut,70,20,Warm / humid,8,R7,2499,0.0548375993537415,beginning maturity,59,69,False
 groundnut,70,20,Warm / semiarid,0,SOW,18766,0.008400069730496642,sowing to emergence,0,7,False
 groundnut,70,20,Warm / semiarid,1,VE,18766,0.015045955527070231,emergence,8,27,False
@@ -188,15 +188,15 @@ groundnut,70,20,Warm / subhumid,5,R4,12432,0.01268268398431467,full pod,43,48,Tr
 groundnut,70,20,Warm / subhumid,6,R5,12432,0.011845550224115188,beginning seed,49,52,True
 groundnut,70,20,Warm / subhumid,7,R6,12432,0.017516618359716858,full seed,53,58,True
 groundnut,70,20,Warm / subhumid,8,R7,12432,0.018694545625337837,beginning maturity,59,69,False
-groundnut,70,30,ALL,0,SOW,35551,0.0031042113100841046,sowing to emergence,0,7,False
-groundnut,70,30,ALL,1,VE,35551,0.014331082524064022,emergence,8,27,False
-groundnut,70,30,ALL,2,R1,35551,0.009943131755928102,beginning bloom,28,31,False
-groundnut,70,30,ALL,3,R2,35551,0.011410769030688307,beginning peg,32,36,False
-groundnut,70,30,ALL,4,R3,35551,0.012746669169446709,beginning pod,37,42,True
-groundnut,70,30,ALL,5,R4,35551,0.017978183046918512,full pod,43,48,True
-groundnut,70,30,ALL,6,R5,35551,0.02340496372664623,beginning seed,49,52,True
-groundnut,70,30,ALL,7,R6,35551,0.03810596189091728,full seed,53,58,True
-groundnut,70,30,ALL,8,R7,35551,0.03895587921538072,beginning maturity,59,69,False
+groundnut,70,30,ALL,0,SOW,35551,0.003104237965986892,sowing to emergence,0,7,False
+groundnut,70,30,ALL,1,VE,35551,0.014331298591741442,emergence,8,27,False
+groundnut,70,30,ALL,2,R1,35551,0.009943376301566763,beginning bloom,28,31,False
+groundnut,70,30,ALL,3,R2,35551,0.011411013250260189,beginning peg,32,36,False
+groundnut,70,30,ALL,4,R3,35551,0.01274537991294197,beginning pod,37,42,True
+groundnut,70,30,ALL,5,R4,35551,0.017976975985345,full pod,43,48,True
+groundnut,70,30,ALL,6,R5,35551,0.023403812164552333,beginning seed,49,52,True
+groundnut,70,30,ALL,7,R6,35551,0.038105221858850666,full seed,53,58,True
+groundnut,70,30,ALL,8,R7,35551,0.03895670116469298,beginning maturity,59,69,False
 groundnut,70,30,Cool / humid,0,SOW,225,0.003984505758666667,sowing to emergence,0,7,False
 groundnut,70,30,Cool / humid,1,VE,225,0.036304194533333334,emergence,8,27,False
 groundnut,70,30,Cool / humid,2,R1,225,0.023092946533333335,beginning bloom,28,31,False
@@ -216,20 +216,20 @@ groundnut,70,30,Cool / subhumid,6,R5,405,0.0012344149397530864,beginning seed,49
 groundnut,70,30,Cool / subhumid,7,R6,405,0.003974161195061728,full seed,53,58,True
 groundnut,70,30,Cool / subhumid,8,R7,405,0.003097091812345679,beginning maturity,59,69,False
 groundnut,70,30,Warm / arid,0,SOW,1285,0.007553426030350196,sowing to emergence,0,7,False
-groundnut,70,30,Warm / arid,1,VE,1285,0.020913457749416345,emergence,8,27,False
-groundnut,70,30,Warm / arid,2,R1,1285,0.019592293910894943,beginning bloom,28,31,False
-groundnut,70,30,Warm / arid,3,R2,1285,0.023850585485603114,beginning peg,32,36,False
-groundnut,70,30,Warm / arid,4,R3,1285,0.03199809991284047,beginning pod,37,42,True
-groundnut,70,30,Warm / arid,5,R4,1285,0.06498808867859923,full pod,43,48,True
-groundnut,70,30,Warm / arid,6,R5,1285,0.1142661246459144,beginning seed,49,52,True
-groundnut,70,30,Warm / arid,7,R6,1285,0.22584608046692606,full seed,53,58,True
-groundnut,70,30,Warm / arid,8,R7,1285,0.2511162356186771,beginning maturity,59,69,False
-groundnut,70,30,Warm / humid,0,SOW,2499,0.007068030599999999,sowing to emergence,0,7,False
-groundnut,70,30,Warm / humid,1,VE,2499,0.05037422933333333,emergence,8,27,False
-groundnut,70,30,Warm / humid,2,R1,2499,0.04010375571428571,beginning bloom,28,31,False
-groundnut,70,30,Warm / humid,3,R2,2499,0.04742358068027211,beginning peg,32,36,False
-groundnut,70,30,Warm / humid,4,R3,2499,0.049680101537414964,beginning pod,37,42,True
-groundnut,70,30,Warm / humid,5,R4,2499,0.06330279190476192,full pod,43,48,True
+groundnut,70,30,Warm / arid,1,VE,1285,0.02091573258988327,emergence,8,27,False
+groundnut,70,30,Warm / arid,2,R1,1285,0.01959684553891051,beginning bloom,28,31,False
+groundnut,70,30,Warm / arid,3,R2,1285,0.023855135815564203,beginning peg,32,36,False
+groundnut,70,30,Warm / arid,4,R3,1285,0.03196169272996109,beginning pod,37,42,True
+groundnut,70,30,Warm / arid,5,R4,1285,0.06495395374007783,full pod,43,48,True
+groundnut,70,30,Warm / arid,6,R5,1285,0.11423426389883269,beginning seed,49,52,True
+groundnut,70,30,Warm / arid,7,R6,1285,0.2258255971673152,full seed,53,58,True
+groundnut,70,30,Warm / arid,8,R7,1285,0.2511389970038911,beginning maturity,59,69,False
+groundnut,70,30,Warm / humid,0,SOW,2499,0.007068408804081634,sowing to emergence,0,7,False
+groundnut,70,30,Warm / humid,1,VE,2499,0.05037612496598639,emergence,8,27,False
+groundnut,70,30,Warm / humid,2,R1,2499,0.04010489032653061,beginning bloom,28,31,False
+groundnut,70,30,Warm / humid,3,R2,2499,0.047424718367346935,beginning peg,32,36,False
+groundnut,70,30,Warm / humid,4,R3,2499,0.0496804797414966,beginning pod,37,42,True
+groundnut,70,30,Warm / humid,5,R4,2499,0.06330317087755102,full pod,43,48,True
 groundnut,70,30,Warm / humid,6,R5,2499,0.06707580285714286,beginning seed,49,52,True
 groundnut,70,30,Warm / humid,7,R6,2499,0.08163016272108843,full seed,53,58,True
 groundnut,70,30,Warm / humid,8,R7,2499,0.07328301525170068,beginning maturity,59,69,False
@@ -251,15 +251,15 @@ groundnut,70,30,Warm / subhumid,5,R4,12432,0.01739247105551802,full pod,43,48,Tr
 groundnut,70,30,Warm / subhumid,6,R5,12432,0.02279497381922458,beginning seed,49,52,True
 groundnut,70,30,Warm / subhumid,7,R6,12432,0.026986881808767696,full seed,53,58,True
 groundnut,70,30,Warm / subhumid,8,R7,12432,0.02407256317012548,beginning maturity,59,69,False
-groundnut,70,40,ALL,0,SOW,33733,0.004689650436284944,sowing to emergence,0,7,False
-groundnut,70,40,ALL,1,VE,33733,0.01762489061651795,emergence,8,27,False
-groundnut,70,40,ALL,2,R1,33733,0.010343210643183233,beginning bloom,28,31,False
-groundnut,70,40,ALL,3,R2,33733,0.012548111707319242,beginning peg,32,36,False
-groundnut,70,40,ALL,4,R3,33733,0.017826535000029644,beginning pod,37,42,True
+groundnut,70,40,ALL,0,SOW,33733,0.004689706496226248,sowing to emergence,0,7,False
+groundnut,70,40,ALL,1,VE,33733,0.017625031078973112,emergence,8,27,False
+groundnut,70,40,ALL,2,R1,33733,0.01034323877735452,beginning bloom,28,31,False
+groundnut,70,40,ALL,3,R2,33733,0.01254813984149053,beginning peg,32,36,False
+groundnut,70,40,ALL,4,R3,33733,0.017826562925799663,beginning pod,37,42,True
 groundnut,70,40,ALL,5,R4,33733,0.02352000144333442,full pod,43,48,True
 groundnut,70,40,ALL,6,R5,33733,0.028416807065870218,beginning seed,49,52,True
-groundnut,70,40,ALL,7,R6,33733,0.047156753146118044,full seed,53,58,True
-groundnut,70,40,ALL,8,R7,33733,0.04777107855696203,beginning maturity,59,69,False
+groundnut,70,40,ALL,7,R6,33733,0.04715683692342809,full seed,53,58,True
+groundnut,70,40,ALL,8,R7,33733,0.047771190468443366,beginning maturity,59,69,False
 groundnut,70,40,Cool / humid,0,SOW,225,0.017666601520000002,sowing to emergence,0,7,False
 groundnut,70,40,Cool / humid,1,VE,225,0.041222216213333336,emergence,8,27,False
 groundnut,70,40,Cool / humid,2,R1,225,0.014285703853333335,beginning bloom,28,31,False
@@ -287,15 +287,15 @@ groundnut,70,40,Warm / arid,5,R4,253,0.13354786387351777,full pod,43,48,True
 groundnut,70,40,Warm / arid,6,R5,253,0.2318421375889328,beginning seed,49,52,True
 groundnut,70,40,Warm / arid,7,R6,253,0.4546378964822134,full seed,53,58,True
 groundnut,70,40,Warm / arid,8,R7,253,0.48916653833992096,beginning maturity,59,69,False
-groundnut,70,40,Warm / humid,0,SOW,2499,0.01756535463265306,sowing to emergence,0,7,False
-groundnut,70,40,Warm / humid,1,VE,2499,0.07444722897959183,emergence,8,27,False
-groundnut,70,40,Warm / humid,2,R1,2499,0.045945040197278915,beginning bloom,28,31,False
-groundnut,70,40,Warm / humid,3,R2,2499,0.05671059789115646,beginning peg,32,36,False
-groundnut,70,40,Warm / humid,4,R3,2499,0.07007651027210884,beginning pod,37,42,True
+groundnut,70,40,Warm / humid,0,SOW,2499,0.017566113346938774,sowing to emergence,0,7,False
+groundnut,70,40,Warm / humid,1,VE,2499,0.07444911692517005,emergence,8,27,False
+groundnut,70,40,Warm / humid,2,R1,2499,0.045945417632653064,beginning bloom,28,31,False
+groundnut,70,40,Warm / humid,3,R2,2499,0.05671097455782313,beginning peg,32,36,False
+groundnut,70,40,Warm / humid,4,R3,2499,0.07007688924489797,beginning pod,37,42,True
 groundnut,70,40,Warm / humid,5,R4,2499,0.07912274353741497,full pod,43,48,True
 groundnut,70,40,Warm / humid,6,R5,2499,0.08257102170068029,beginning seed,49,52,True
-groundnut,70,40,Warm / humid,7,R6,2499,0.08969669952380953,full seed,53,58,True
-groundnut,70,40,Warm / humid,8,R7,2499,0.07084273334013605,beginning maturity,59,69,False
+groundnut,70,40,Warm / humid,7,R6,2499,0.08969784105442176,full seed,53,58,True
+groundnut,70,40,Warm / humid,8,R7,2499,0.07084425,beginning maturity,59,69,False
 groundnut,70,40,Warm / semiarid,0,SOW,17921,0.0026104621406411476,sowing to emergence,0,7,False
 groundnut,70,40,Warm / semiarid,1,VE,17921,0.008674952144400424,emergence,8,27,False
 groundnut,70,40,Warm / semiarid,2,R1,17921,0.004766587867222812,beginning bloom,28,31,False
@@ -315,14 +315,14 @@ groundnut,70,40,Warm / subhumid,6,R5,12430,0.02661680492859211,beginning seed,49
 groundnut,70,40,Warm / subhumid,7,R6,12430,0.028367599445567177,full seed,53,58,True
 groundnut,70,40,Warm / subhumid,8,R7,12430,0.0218843237985358,beginning maturity,59,69,False
 groundnut,90,0,ALL,0,SOW,36557,0.0061895191528002855,sowing to emergence,0,7,False
-groundnut,90,0,ALL,1,VE,36557,0.023403909811871872,emergence,8,29,False
-groundnut,90,0,ALL,2,R1,36557,0.008140074330005197,beginning bloom,30,34,False
-groundnut,90,0,ALL,3,R2,36557,0.007264022983171485,beginning peg,35,41,False
-groundnut,90,0,ALL,4,R3,36557,0.008326909119522937,beginning pod,42,49,True
-groundnut,90,0,ALL,5,R4,36557,0.01253840406250513,full pod,50,58,True
-groundnut,90,0,ALL,6,R5,36557,0.014430392676806085,beginning seed,59,65,True
-groundnut,90,0,ALL,7,R6,36557,0.019408551463085046,full seed,66,73,True
-groundnut,90,0,ALL,8,R7,36557,0.031846384520556936,beginning maturity,74,89,False
+groundnut,90,0,ALL,1,VE,36557,0.02340397138892688,emergence,8,29,False
+groundnut,90,0,ALL,2,R1,36557,0.008140162211062178,beginning bloom,30,34,False
+groundnut,90,0,ALL,3,R2,36557,0.007264111231961047,beginning peg,35,41,False
+groundnut,90,0,ALL,4,R3,36557,0.008326960759208907,beginning pod,42,49,True
+groundnut,90,0,ALL,5,R4,36557,0.012538543833739093,full pod,50,58,True
+groundnut,90,0,ALL,6,R5,36557,0.014430604970949477,beginning seed,59,65,True
+groundnut,90,0,ALL,7,R6,36557,0.019407889902645185,full seed,66,73,True
+groundnut,90,0,ALL,8,R7,36557,0.03184586806455672,beginning maturity,74,89,False
 groundnut,90,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,7,False
 groundnut,90,0,Cool / humid,1,VE,225,0.00393746816,emergence,8,29,False
 groundnut,90,0,Cool / humid,2,R1,225,0.004167246366666667,beginning bloom,30,34,False
@@ -342,23 +342,23 @@ groundnut,90,0,Cool / subhumid,6,R5,405,0.0004038390207654321,beginning seed,59,
 groundnut,90,0,Cool / subhumid,7,R6,405,7.48222966419753e-05,full seed,66,73,True
 groundnut,90,0,Cool / subhumid,8,R7,405,0.0010245132271604939,beginning maturity,74,89,False
 groundnut,90,0,Warm / arid,0,SOW,2230,0.041271177180269056,sowing to emergence,0,7,False
-groundnut,90,0,Warm / arid,1,VE,2230,0.10412867392825113,emergence,8,29,False
-groundnut,90,0,Warm / arid,2,R1,2230,0.018342900152466365,beginning bloom,30,34,False
-groundnut,90,0,Warm / arid,3,R2,2230,0.013852337957847535,beginning peg,35,41,False
+groundnut,90,0,Warm / arid,1,VE,2230,0.10412926549775785,emergence,8,29,False
+groundnut,90,0,Warm / arid,2,R1,2230,0.018343493809865472,beginning bloom,30,34,False
+groundnut,90,0,Warm / arid,3,R2,2230,0.01385293091928251,beginning peg,35,41,False
 groundnut,90,0,Warm / arid,4,R3,2230,0.01267012849237668,beginning pod,42,49,True
-groundnut,90,0,Warm / arid,5,R4,2230,0.02293176711390135,full pod,50,58,True
-groundnut,90,0,Warm / arid,6,R5,2230,0.04065810179910314,beginning seed,59,65,True
-groundnut,90,0,Warm / arid,7,R6,2230,0.08640077132914799,full seed,66,73,True
-groundnut,90,0,Warm / arid,8,R7,2230,0.18323471260089685,beginning maturity,74,89,False
+groundnut,90,0,Warm / arid,5,R4,2230,0.022932358683408077,full pod,50,58,True
+groundnut,90,0,Warm / arid,6,R5,2230,0.04065987998744395,beginning seed,59,65,True
+groundnut,90,0,Warm / arid,7,R6,2230,0.08638950366995515,full seed,66,73,True
+groundnut,90,0,Warm / arid,8,R7,2230,0.18322581121973094,beginning maturity,74,89,False
 groundnut,90,0,Warm / humid,0,SOW,2499,0.00011074768707482992,sowing to emergence,0,7,False
-groundnut,90,0,Warm / humid,1,VE,2499,0.0073212545823129254,emergence,8,29,False
-groundnut,90,0,Warm / humid,2,R1,2499,0.007655970329931972,beginning bloom,30,34,False
-groundnut,90,0,Warm / humid,3,R2,2499,0.016676375591836736,beginning peg,35,41,False
-groundnut,90,0,Warm / humid,4,R3,2499,0.029174159693877554,beginning pod,42,49,True
-groundnut,90,0,Warm / humid,5,R4,2499,0.04503355497278912,full pod,50,58,True
-groundnut,90,0,Warm / humid,6,R5,2499,0.05710558623129252,beginning seed,59,65,True
-groundnut,90,0,Warm / humid,7,R6,2499,0.05721866441496599,full seed,66,73,True
-groundnut,90,0,Warm / humid,8,R7,2499,0.06891915121768707,beginning maturity,74,89,False
+groundnut,90,0,Warm / humid,1,VE,2499,0.007321634323809524,emergence,8,29,False
+groundnut,90,0,Warm / humid,2,R1,2499,0.007656728659863945,beginning bloom,30,34,False
+groundnut,90,0,Warm / humid,3,R2,2499,0.01667713430612245,beginning peg,35,41,False
+groundnut,90,0,Warm / humid,4,R3,2499,0.029174915333333332,beginning pod,42,49,True
+groundnut,90,0,Warm / humid,5,R4,2499,0.045035073170068024,full pod,50,58,True
+groundnut,90,0,Warm / humid,6,R5,2499,0.05710709904761905,beginning seed,59,65,True
+groundnut,90,0,Warm / humid,7,R6,2499,0.057219042619047616,full seed,66,73,True
+groundnut,90,0,Warm / humid,8,R7,2499,0.06891953326530612,beginning maturity,74,89,False
 groundnut,90,0,Warm / semiarid,0,SOW,18766,0.0070234061161195795,sowing to emergence,0,7,False
 groundnut,90,0,Warm / semiarid,1,VE,18766,0.029039775614782055,emergence,8,29,False
 groundnut,90,0,Warm / semiarid,2,R1,18766,0.010601606065139083,beginning bloom,30,34,False
@@ -378,14 +378,14 @@ groundnut,90,0,Warm / subhumid,6,R5,12432,0.01306458364559202,beginning seed,59,
 groundnut,90,0,Warm / subhumid,7,R6,12432,0.01571384477195946,full seed,66,73,True
 groundnut,90,0,Warm / subhumid,8,R7,12432,0.022969542545173745,beginning maturity,74,89,False
 groundnut,90,10,ALL,0,SOW,35551,0.009331251348895953,sowing to emergence,0,7,False
-groundnut,90,10,ALL,1,VE,35551,0.019772673195465666,emergence,8,29,False
-groundnut,90,10,ALL,2,R1,35551,0.005926942830350763,beginning bloom,30,34,False
-groundnut,90,10,ALL,3,R2,35551,0.00877028544344463,beginning peg,35,41,False
-groundnut,90,10,ALL,4,R3,35551,0.010884737398973306,beginning pod,42,49,True
-groundnut,90,10,ALL,5,R4,35551,0.014081250555202386,full pod,50,58,True
-groundnut,90,10,ALL,6,R5,35551,0.015344752462546764,beginning seed,59,65,True
-groundnut,90,10,ALL,7,R6,35551,0.027663401353492167,full seed,66,73,True
-groundnut,90,10,ALL,8,R7,35551,0.04390134045450198,beginning maturity,74,89,False
+groundnut,90,10,ALL,1,VE,35551,0.019772809138927174,emergence,8,29,False
+groundnut,90,10,ALL,2,R1,35551,0.005926969446704734,beginning bloom,30,34,False
+groundnut,90,10,ALL,3,R2,35551,0.00877033883434784,beginning peg,35,41,False
+groundnut,90,10,ALL,4,R3,35551,0.010884925980222778,beginning pod,42,49,True
+groundnut,90,10,ALL,5,R4,35551,0.014081521470225873,full pod,50,58,True
+groundnut,90,10,ALL,6,R5,35551,0.015343545539816037,beginning seed,59,65,True
+groundnut,90,10,ALL,7,R6,35551,0.02766227656679137,full seed,66,73,True
+groundnut,90,10,ALL,8,R7,35551,0.04390076495114062,beginning maturity,74,89,False
 groundnut,90,10,Cool / humid,0,SOW,225,0.0008371851602666666,sowing to emergence,0,7,False
 groundnut,90,10,Cool / humid,1,VE,225,0.008331699753333335,emergence,8,29,False
 groundnut,90,10,Cool / humid,2,R1,225,0.016925491893333332,beginning bloom,30,34,False
@@ -405,22 +405,22 @@ groundnut,90,10,Cool / subhumid,6,R5,405,0.0003546489992098765,beginning seed,59
 groundnut,90,10,Cool / subhumid,7,R6,405,0.0013049617056790123,full seed,66,73,True
 groundnut,90,10,Cool / subhumid,8,R7,405,0.003974161195061728,beginning maturity,74,89,False
 groundnut,90,10,Warm / arid,0,SOW,1285,0.058873287945525286,sowing to emergence,0,7,False
-groundnut,90,10,Warm / arid,1,VE,1285,0.08266919584824901,emergence,8,29,False
+groundnut,90,10,Warm / arid,1,VE,1285,0.08267147393385213,emergence,8,29,False
 groundnut,90,10,Warm / arid,2,R1,1285,0.005949413549416342,beginning bloom,30,34,False
 groundnut,90,10,Warm / arid,3,R2,1285,0.006204832679688717,beginning peg,35,41,False
-groundnut,90,10,Warm / arid,4,R3,1285,0.011988812829571985,beginning pod,42,49,True
-groundnut,90,10,Warm / arid,5,R4,1285,0.025260645713618676,full pod,50,58,True
-groundnut,90,10,Warm / arid,6,R5,1285,0.046480572224124515,beginning seed,59,65,True
-groundnut,90,10,Warm / arid,7,R6,1285,0.1243760977081712,full seed,66,73,True
-groundnut,90,10,Warm / arid,8,R7,1285,0.2668323849027237,beginning maturity,74,89,False
+groundnut,90,10,Warm / arid,4,R3,1285,0.011991088968093385,beginning pod,42,49,True
+groundnut,90,10,Warm / arid,5,R4,1285,0.025265196692607003,full pod,50,58,True
+groundnut,90,10,Warm / arid,6,R5,1285,0.046446439881712064,beginning seed,59,65,True
+groundnut,90,10,Warm / arid,7,R6,1285,0.12434423436498054,full seed,66,73,True
+groundnut,90,10,Warm / arid,8,R7,1285,0.2668164447937743,beginning maturity,74,89,False
 groundnut,90,10,Warm / humid,0,SOW,2499,0.0014489934704761905,sowing to emergence,0,7,False
-groundnut,90,10,Warm / humid,1,VE,2499,0.016142160544217687,emergence,8,29,False
-groundnut,90,10,Warm / humid,2,R1,2499,0.017142782068027208,beginning bloom,30,34,False
-groundnut,90,10,Warm / humid,3,R2,2499,0.035572179020408164,beginning peg,35,41,False
-groundnut,90,10,Warm / humid,4,R3,2499,0.043026555891156455,beginning pod,42,49,True
-groundnut,90,10,Warm / humid,5,R4,2499,0.059102953707482996,full pod,50,58,True
-groundnut,90,10,Warm / humid,6,R5,2499,0.05870329353741498,beginning seed,59,65,True
-groundnut,90,10,Warm / humid,7,R6,2499,0.07986419463265307,full seed,66,73,True
+groundnut,90,10,Warm / humid,1,VE,2499,0.016142918489795918,emergence,8,29,False
+groundnut,90,10,Warm / humid,2,R1,2499,0.017143160272108843,beginning bloom,30,34,False
+groundnut,90,10,Warm / humid,3,R2,2499,0.03557293850340136,beginning peg,35,41,False
+groundnut,90,10,Warm / humid,4,R3,2499,0.043028070244897965,beginning pod,42,49,True
+groundnut,90,10,Warm / humid,5,R4,2499,0.05910447190476191,full pod,50,58,True
+groundnut,90,10,Warm / humid,6,R5,2499,0.05870367174149659,beginning seed,59,65,True
+groundnut,90,10,Warm / humid,7,R6,2499,0.07986457360544218,full seed,66,73,True
 groundnut,90,10,Warm / humid,8,R7,2499,0.09172309823129252,beginning maturity,74,89,False
 groundnut,90,10,Warm / semiarid,0,SOW,18705,0.01231811372650628,sowing to emergence,0,7,False
 groundnut,90,10,Warm / semiarid,1,VE,18705,0.025133441180860732,emergence,8,29,False
@@ -440,15 +440,15 @@ groundnut,90,10,Warm / subhumid,5,R4,12432,0.014886192171621623,full pod,50,58,T
 groundnut,90,10,Warm / subhumid,6,R5,12432,0.014120828568999357,beginning seed,59,65,True
 groundnut,90,10,Warm / subhumid,7,R6,12432,0.026835555701045687,full seed,66,73,True
 groundnut,90,10,Warm / subhumid,8,R7,12432,0.029622792645592023,beginning maturity,74,89,False
-groundnut,90,20,ALL,0,SOW,33733,0.006099221952983725,sowing to emergence,0,7,False
-groundnut,90,20,ALL,1,VE,33733,0.014993036744760326,emergence,8,29,False
-groundnut,90,20,ALL,2,R1,33733,0.008524287495654106,beginning bloom,30,34,False
-groundnut,90,20,ALL,3,R2,33733,0.010058847813594996,beginning peg,35,41,False
-groundnut,90,20,ALL,4,R3,33733,0.01303691578549195,beginning pod,42,49,True
-groundnut,90,20,ALL,5,R4,33733,0.016405492923605963,full pod,50,58,True
+groundnut,90,20,ALL,0,SOW,33733,0.006099250024634631,sowing to emergence,0,7,False
+groundnut,90,20,ALL,1,VE,33733,0.014993149073044202,emergence,8,29,False
+groundnut,90,20,ALL,2,R1,33733,0.008524399615536714,beginning bloom,30,34,False
+groundnut,90,20,ALL,3,R2,33733,0.010058959933477604,beginning peg,35,41,False
+groundnut,90,20,ALL,4,R3,33733,0.013036999979604542,beginning pod,42,49,True
+groundnut,90,20,ALL,5,R4,33733,0.016405520849375983,full pod,50,58,True
 groundnut,90,20,ALL,6,R5,33733,0.02090168695073074,beginning seed,59,65,True
-groundnut,90,20,ALL,7,R6,33733,0.03436695235881777,full seed,66,73,True
-groundnut,90,20,ALL,8,R7,33733,0.05337189977173687,beginning maturity,74,89,False
+groundnut,90,20,ALL,7,R6,33733,0.034366980284587796,full seed,66,73,True
+groundnut,90,20,ALL,8,R7,33733,0.05337201230842202,beginning maturity,74,89,False
 groundnut,90,20,Cool / humid,0,SOW,225,0.0012998966919999999,sowing to emergence,0,7,False
 groundnut,90,20,Cool / humid,1,VE,225,0.027358009493333335,emergence,8,29,False
 groundnut,90,20,Cool / humid,2,R1,225,0.027632992706666668,beginning bloom,30,34,False
@@ -476,15 +476,15 @@ groundnut,90,20,Warm / arid,5,R4,253,0.034676256794466405,full pod,50,58,True
 groundnut,90,20,Warm / arid,6,R5,253,0.08312723390513835,beginning seed,59,65,True
 groundnut,90,20,Warm / arid,7,R6,253,0.26885665735177866,full seed,66,73,True
 groundnut,90,20,Warm / arid,8,R7,253,0.5245997494071146,beginning maturity,74,89,False
-groundnut,90,20,Warm / humid,0,SOW,2499,0.004056238091156463,sowing to emergence,0,7,False
-groundnut,90,20,Warm / humid,1,VE,2499,0.033582418707482985,emergence,8,29,False
-groundnut,90,20,Warm / humid,2,R1,2499,0.03629689700680272,beginning bloom,30,34,False
-groundnut,90,20,Warm / humid,3,R2,2499,0.042941477836734694,beginning peg,35,41,False
-groundnut,90,20,Warm / humid,4,R3,2499,0.0536830617414966,beginning pod,42,49,True
-groundnut,90,20,Warm / humid,5,R4,2499,0.07062422666666666,full pod,50,58,True
+groundnut,90,20,Warm / humid,0,SOW,2499,0.004056616756462585,sowing to emergence,0,7,False
+groundnut,90,20,Warm / humid,1,VE,2499,0.03358393075510204,emergence,8,29,False
+groundnut,90,20,Warm / humid,2,R1,2499,0.03629841289795918,beginning bloom,30,34,False
+groundnut,90,20,Warm / humid,3,R2,2499,0.04294299680272109,beginning peg,35,41,False
+groundnut,90,20,Warm / humid,4,R3,2499,0.053684201734693876,beginning pod,42,49,True
+groundnut,90,20,Warm / humid,5,R4,2499,0.07062460333333334,full pod,50,58,True
 groundnut,90,20,Warm / humid,6,R5,2499,0.07852208360544219,beginning seed,59,65,True
-groundnut,90,20,Warm / humid,7,R6,2499,0.10004005080272109,full seed,66,73,True
-groundnut,90,20,Warm / humid,8,R7,2499,0.09150357200680273,beginning maturity,74,89,False
+groundnut,90,20,Warm / humid,7,R6,2499,0.10004043054421768,full seed,66,73,True
+groundnut,90,20,Warm / humid,8,R7,2499,0.09150509020408164,beginning maturity,74,89,False
 groundnut,90,20,Warm / semiarid,0,SOW,17921,0.008773793027448245,sowing to emergence,0,7,False
 groundnut,90,20,Warm / semiarid,1,VE,17921,0.0155549139243011,emergence,8,29,False
 groundnut,90,20,Warm / semiarid,2,R1,17921,0.004337416516836114,beginning bloom,30,34,False
@@ -503,15 +503,15 @@ groundnut,90,20,Warm / subhumid,5,R4,12430,0.018690148683748995,full pod,50,58,T
 groundnut,90,20,Warm / subhumid,6,R5,12430,0.026520172387111823,beginning seed,59,65,True
 groundnut,90,20,Warm / subhumid,7,R6,12430,0.03242273783250201,full seed,66,73,True
 groundnut,90,20,Warm / subhumid,8,R7,12430,0.02837975339718423,beginning maturity,74,89,False
-groundnut,90,30,ALL,0,SOW,32137,0.002556533389740797,sowing to emergence,0,7,False
-groundnut,90,30,ALL,1,VE,32137,0.013822561871699286,emergence,8,29,False
-groundnut,90,30,ALL,2,R1,32137,0.00967549931739117,beginning bloom,30,34,False
-groundnut,90,30,ALL,3,R2,32137,0.011738107824205745,beginning peg,35,41,False
-groundnut,90,30,ALL,4,R3,32137,0.01629215493767371,beginning pod,42,49,True
+groundnut,90,30,ALL,0,SOW,32137,0.0025565628731773343,sowing to emergence,0,7,False
+groundnut,90,30,ALL,1,VE,32137,0.013822708851442262,emergence,8,29,False
+groundnut,90,30,ALL,2,R1,32137,0.009675616988673492,beginning bloom,30,34,False
+groundnut,90,30,ALL,3,R2,32137,0.011738137132666398,beginning peg,35,41,False
+groundnut,90,30,ALL,4,R3,32137,0.01629218446485422,beginning pod,42,49,True
 groundnut,90,30,ALL,5,R4,32137,0.020255234684736598,full pod,50,58,True
-groundnut,90,30,ALL,6,R5,32137,0.024575085107010612,beginning seed,59,65,True
-groundnut,90,30,ALL,7,R6,32137,0.04094555702408439,full seed,66,73,True
-groundnut,90,30,ALL,8,R7,32137,0.06755880430413543,beginning maturity,74,89,False
+groundnut,90,30,ALL,6,R5,32137,0.024575114415471264,beginning seed,59,65,True
+groundnut,90,30,ALL,7,R6,32137,0.04094567513280642,full seed,66,73,True
+groundnut,90,30,ALL,8,R7,32137,0.06755889288567694,beginning maturity,74,89,False
 groundnut,90,30,Cool / humid,0,SOW,225,0.0038363576119999996,sowing to emergence,0,7,False
 groundnut,90,30,Cool / humid,1,VE,225,0.03938578733333333,emergence,8,29,False
 groundnut,90,30,Cool / humid,2,R1,225,0.01899304656,beginning bloom,30,34,False
@@ -539,15 +539,15 @@ groundnut,90,30,Warm / arid,5,R4,12,0.014724311416666665,full pod,50,58,True
 groundnut,90,30,Warm / arid,6,R5,12,0.13865592833333332,beginning seed,59,65,True
 groundnut,90,30,Warm / arid,7,R6,12,0.47522306916666673,full seed,66,73,True
 groundnut,90,30,Warm / arid,8,R7,12,0.6930196391666666,beginning maturity,74,89,False
-groundnut,90,30,Warm / humid,0,SOW,2499,0.007002609636734694,sowing to emergence,0,7,False
-groundnut,90,30,Warm / humid,1,VE,2499,0.05207405459863946,emergence,8,29,False
-groundnut,90,30,Warm / humid,2,R1,2499,0.04706911340136055,beginning bloom,30,34,False
-groundnut,90,30,Warm / humid,3,R2,2499,0.04950223993197279,beginning peg,35,41,False
-groundnut,90,30,Warm / humid,4,R3,2499,0.06712316007482992,beginning pod,42,49,True
+groundnut,90,30,Warm / humid,0,SOW,2499,0.007002989378231294,sowing to emergence,0,7,False
+groundnut,90,30,Warm / humid,1,VE,2499,0.05207594869387755,emergence,8,29,False
+groundnut,90,30,Warm / humid,2,R1,2499,0.04707063006122449,beginning bloom,30,34,False
+groundnut,90,30,Warm / humid,3,R2,2499,0.049502621979591835,beginning peg,35,41,False
+groundnut,90,30,Warm / humid,4,R3,2499,0.06712353904761904,beginning pod,42,49,True
 groundnut,90,30,Warm / humid,5,R4,2499,0.08257555268707484,full pod,50,58,True
-groundnut,90,30,Warm / humid,6,R5,2499,0.0903856969387755,beginning seed,59,65,True
-groundnut,90,30,Warm / humid,7,R6,2499,0.0930709506802721,full seed,66,73,True
-groundnut,90,30,Warm / humid,8,R7,2499,0.07431383132653062,beginning maturity,74,89,False
+groundnut,90,30,Warm / humid,6,R5,2499,0.09038607360544218,beginning seed,59,65,True
+groundnut,90,30,Warm / humid,7,R6,2499,0.09307247272108844,full seed,66,73,True
+groundnut,90,30,Warm / humid,8,R7,2499,0.07431496517006804,beginning maturity,74,89,False
 groundnut,90,30,Warm / semiarid,0,SOW,16566,0.0026359030513823495,sowing to emergence,0,7,False
 groundnut,90,30,Warm / semiarid,1,VE,16566,0.00678185525816733,emergence,8,29,False
 groundnut,90,30,Warm / semiarid,2,R1,16566,0.0028613110652420614,beginning bloom,30,34,False
@@ -566,14 +566,14 @@ groundnut,90,30,Warm / subhumid,5,R4,12430,0.029152519472196298,full pod,50,58,T
 groundnut,90,30,Warm / subhumid,6,R5,12430,0.03029889617264682,beginning seed,59,65,True
 groundnut,90,30,Warm / subhumid,7,R6,12430,0.029509827111584876,full seed,66,73,True
 groundnut,90,30,Warm / subhumid,8,R7,12430,0.023828492830168947,beginning maturity,74,89,False
-groundnut,90,40,ALL,0,SOW,29847,0.004551677401403826,sowing to emergence,0,7,False
-groundnut,90,40,ALL,1,VE,29847,0.019109983527691228,emergence,8,29,False
-groundnut,90,40,ALL,2,R1,29847,0.011900264484906357,beginning bloom,30,34,False
-groundnut,90,40,ALL,3,R2,29847,0.017197864902104065,beginning peg,35,41,False
+groundnut,90,40,ALL,0,SOW,29847,0.0045517409134820915,sowing to emergence,0,7,False
+groundnut,90,40,ALL,1,VE,29847,0.01911014195634402,emergence,8,29,False
+groundnut,90,40,ALL,2,R1,29847,0.011900296123764533,beginning bloom,30,34,False
+groundnut,90,40,ALL,3,R2,29847,0.01719789677532415,beginning peg,35,41,False
 groundnut,90,40,ALL,4,R3,29847,0.02077291845666901,beginning pod,42,49,True
-groundnut,90,40,ALL,5,R4,29847,0.02503800676285724,full pod,50,58,True
-groundnut,90,40,ALL,6,R5,29847,0.02489059938070828,beginning seed,59,65,True
-groundnut,90,40,ALL,7,R6,29847,0.04472558516496331,full seed,66,73,True
+groundnut,90,40,ALL,5,R4,29847,0.025038101913793683,full pod,50,58,True
+groundnut,90,40,ALL,6,R5,29847,0.024890725936140987,beginning seed,59,65,True
+groundnut,90,40,ALL,7,R6,29847,0.04472568031589976,full seed,66,73,True
 groundnut,90,40,ALL,8,R7,29847,0.07320115408570377,beginning maturity,74,89,False
 groundnut,90,40,Cool / humid,0,SOW,225,0.017666601520000002,sowing to emergence,0,7,False
 groundnut,90,40,Cool / humid,1,VE,225,0.044780455213333334,emergence,8,29,False
@@ -593,14 +593,14 @@ groundnut,90,40,Cool / subhumid,5,R4,405,0.003298924913580247,full pod,50,58,Tru
 groundnut,90,40,Cool / subhumid,6,R5,405,0.000890395852839506,beginning seed,59,65,True
 groundnut,90,40,Cool / subhumid,7,R6,405,0.0006159414651851851,full seed,66,73,True
 groundnut,90,40,Cool / subhumid,8,R7,405,0.00031475859851851854,beginning maturity,74,89,False
-groundnut,90,40,Warm / humid,0,SOW,2499,0.017433667258503403,sowing to emergence,0,7,False
-groundnut,90,40,Warm / humid,1,VE,2499,0.07776748231292516,emergence,8,29,False
-groundnut,90,40,Warm / humid,2,R1,2499,0.05342376980952381,beginning bloom,30,34,False
-groundnut,90,40,Warm / humid,3,R2,2499,0.06677443727891157,beginning peg,35,41,False
+groundnut,90,40,Warm / humid,0,SOW,2499,0.017434422897959184,sowing to emergence,0,7,False
+groundnut,90,40,Warm / humid,1,VE,2499,0.07776937640816327,emergence,8,29,False
+groundnut,90,40,Warm / humid,2,R1,2499,0.05342415108843538,beginning bloom,30,34,False
+groundnut,90,40,Warm / humid,3,R2,2499,0.06677481702040816,beginning peg,35,41,False
 groundnut,90,40,Warm / humid,4,R3,2499,0.0848189368707483,beginning pod,42,49,True
-groundnut,90,40,Warm / humid,5,R4,2499,0.10152294639455782,full pod,50,58,True
-groundnut,90,40,Warm / humid,6,R5,2499,0.08476696236734693,beginning seed,59,65,True
-groundnut,90,40,Warm / humid,7,R6,2499,0.06956004673469388,full seed,66,73,True
+groundnut,90,40,Warm / humid,5,R4,2499,0.10152408869387756,full pod,50,58,True
+groundnut,90,40,Warm / humid,6,R5,2499,0.08476847210884354,beginning seed,59,65,True
+groundnut,90,40,Warm / humid,7,R6,2499,0.0695611844217687,full seed,66,73,True
 groundnut,90,40,Warm / humid,8,R7,2499,0.0389014329387755,beginning maturity,74,89,False
 groundnut,90,40,Warm / semiarid,0,SOW,14289,0.0018192513423934493,sowing to emergence,0,7,False
 groundnut,90,40,Warm / semiarid,1,VE,14289,0.006597690069815943,emergence,8,29,False
@@ -621,14 +621,14 @@ groundnut,90,40,Warm / subhumid,6,R5,12429,0.027823865575347977,beginning seed,5
 groundnut,90,40,Warm / subhumid,7,R6,12429,0.023501208098720732,full seed,66,73,True
 groundnut,90,40,Warm / subhumid,8,R7,12429,0.013624830233325287,beginning maturity,74,89,False
 groundnut,110,0,ALL,0,SOW,33733,0.003966856878558089,sowing to emergence,0,7,False
-groundnut,110,0,ALL,1,VE,33733,0.01928679781642605,emergence,8,30,False
-groundnut,110,0,ALL,2,R1,33733,0.008517012851513356,beginning bloom,31,38,False
-groundnut,110,0,ALL,3,R2,33733,0.007350656463528295,beginning peg,39,46,False
-groundnut,110,0,ALL,4,R3,33733,0.011320091828091187,beginning pod,47,57,True
-groundnut,110,0,ALL,5,R4,33733,0.015416092698707496,full pod,58,69,True
-groundnut,110,0,ALL,6,R5,33733,0.0161941598615599,beginning seed,70,78,True
+groundnut,110,0,ALL,1,VE,33733,0.019286825971437462,emergence,8,30,False
+groundnut,110,0,ALL,2,R1,33733,0.008517068932294786,beginning bloom,31,38,False
+groundnut,110,0,ALL,3,R2,33733,0.007350740657640885,beginning peg,39,46,False
+groundnut,110,0,ALL,4,R3,33733,0.0113202045731776,beginning pod,47,57,True
+groundnut,110,0,ALL,5,R4,33733,0.015416204818590105,full pod,58,69,True
+groundnut,110,0,ALL,6,R5,33733,0.016194187787329915,beginning seed,70,78,True
 groundnut,110,0,ALL,7,R6,33733,0.026254614324281857,full seed,79,88,True
-groundnut,110,0,ALL,8,R7,33733,0.060452626708742185,beginning maturity,89,109,False
+groundnut,110,0,ALL,8,R7,33733,0.060452738411822256,beginning maturity,89,109,False
 groundnut,110,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,7,False
 groundnut,110,0,Cool / humid,1,VE,225,0.00393746816,emergence,8,30,False
 groundnut,110,0,Cool / humid,2,R1,225,0.006292736948,beginning bloom,31,38,False
@@ -657,14 +657,14 @@ groundnut,110,0,Warm / arid,6,R5,253,0.03269905112252964,beginning seed,70,78,Tr
 groundnut,110,0,Warm / arid,7,R6,253,0.12886067636363635,full seed,79,88,True
 groundnut,110,0,Warm / arid,8,R7,253,0.5295450986166007,beginning maturity,89,109,False
 groundnut,110,0,Warm / humid,0,SOW,2499,0.00011074768707482992,sowing to emergence,0,7,False
-groundnut,110,0,Warm / humid,1,VE,2499,0.007338568536054422,emergence,8,30,False
-groundnut,110,0,Warm / humid,2,R1,2499,0.01278074979319728,beginning bloom,31,38,False
-groundnut,110,0,Warm / humid,3,R2,2499,0.02269366119047619,beginning peg,39,46,False
-groundnut,110,0,Warm / humid,4,R3,2499,0.044940665578231294,beginning pod,47,57,True
-groundnut,110,0,Warm / humid,5,R4,2499,0.06584180639455782,full pod,58,69,True
-groundnut,110,0,Warm / humid,6,R5,2499,0.07057881911564626,beginning seed,70,78,True
+groundnut,110,0,Warm / humid,1,VE,2499,0.007338945971428572,emergence,8,30,False
+groundnut,110,0,Warm / humid,2,R1,2499,0.01278150773877551,beginning bloom,31,38,False
+groundnut,110,0,Warm / humid,3,R2,2499,0.022694798108843537,beginning peg,39,46,False
+groundnut,110,0,Warm / humid,4,R3,2499,0.04494218377551021,beginning pod,47,57,True
+groundnut,110,0,Warm / humid,5,R4,2499,0.06584332536054421,full pod,58,69,True
+groundnut,110,0,Warm / humid,6,R5,2499,0.0705792011632653,beginning seed,70,78,True
 groundnut,110,0,Warm / humid,7,R6,2499,0.08904985945578231,full seed,79,88,True
-groundnut,110,0,Warm / humid,8,R7,2499,0.11869470734693877,beginning maturity,89,109,False
+groundnut,110,0,Warm / humid,8,R7,2499,0.11869622170068027,beginning maturity,89,109,False
 groundnut,110,0,Warm / semiarid,0,SOW,17921,0.006798454792812901,sowing to emergence,0,7,False
 groundnut,110,0,Warm / semiarid,1,VE,17921,0.030168781023212993,emergence,8,30,False
 groundnut,110,0,Warm / semiarid,2,R1,17921,0.010841475710920149,beginning bloom,31,38,False
@@ -684,14 +684,14 @@ groundnut,110,0,Warm / subhumid,6,R5,12430,0.018667996130893,beginning seed,70,7
 groundnut,110,0,Warm / subhumid,7,R6,12430,0.03050285902107804,full seed,79,88,True
 groundnut,110,0,Warm / subhumid,8,R7,12430,0.0394830502842317,beginning maturity,89,109,False
 groundnut,110,10,ALL,0,SOW,32137,0.006768099612328468,sowing to emergence,0,7,False
-groundnut,110,10,ALL,1,VE,32137,0.016723160576687306,emergence,8,30,False
-groundnut,110,10,ALL,2,R1,32137,0.0070108083170831136,beginning bloom,31,38,False
-groundnut,110,10,ALL,3,R2,32137,0.00932040773483835,beginning peg,39,46,False
-groundnut,110,10,ALL,4,R3,32137,0.013263753879998133,beginning pod,47,57,True
-groundnut,110,10,ALL,5,R4,32137,0.01819692983374366,full pod,58,69,True
+groundnut,110,10,ALL,1,VE,32137,0.016723219631048326,emergence,8,30,False
+groundnut,110,10,ALL,2,R1,32137,0.007010896679904783,beginning bloom,31,38,False
+groundnut,110,10,ALL,3,R2,32137,0.009320525843560383,beginning peg,39,46,False
+groundnut,110,10,ALL,4,R3,32137,0.01326387177000031,beginning pod,47,57,True
+groundnut,110,10,ALL,5,R4,32137,0.018196959142204313,full pod,58,69,True
 groundnut,110,10,ALL,6,R5,32137,0.020144645961333665,beginning seed,70,78,True
-groundnut,110,10,ALL,7,R6,32137,0.03178904886215266,full seed,79,88,True
-groundnut,110,10,ALL,8,R7,32137,0.07338410454967793,beginning maturity,89,109,False
+groundnut,110,10,ALL,7,R6,32137,0.03178913722497433,full seed,79,88,True
+groundnut,110,10,ALL,8,R7,32137,0.0733842220022404,beginning maturity,89,109,False
 groundnut,110,10,Cool / humid,0,SOW,225,0.0008371851602666666,sowing to emergence,0,7,False
 groundnut,110,10,Cool / humid,1,VE,225,0.015301744133333333,emergence,8,30,False
 groundnut,110,10,Cool / humid,2,R1,225,0.02336638214666667,beginning bloom,31,38,False
@@ -720,14 +720,14 @@ groundnut,110,10,Warm / arid,6,R5,12,0.011748120708333332,beginning seed,70,78,T
 groundnut,110,10,Warm / arid,7,R6,12,0.20540907083333337,full seed,79,88,True
 groundnut,110,10,Warm / arid,8,R7,12,0.6647544058333333,beginning maturity,89,109,False
 groundnut,110,10,Warm / humid,0,SOW,2499,0.0013811380466666667,sowing to emergence,0,7,False
-groundnut,110,10,Warm / humid,1,VE,2499,0.018142727820408166,emergence,8,30,False
-groundnut,110,10,Warm / humid,2,R1,2499,0.025800335897959187,beginning bloom,31,38,False
-groundnut,110,10,Warm / humid,3,R2,2499,0.04161677678911564,beginning peg,39,46,False
-groundnut,110,10,Warm / humid,4,R3,2499,0.06096236146938776,beginning pod,47,57,True
-groundnut,110,10,Warm / humid,5,R4,2499,0.07528537489795918,full pod,58,69,True
+groundnut,110,10,Warm / humid,1,VE,2499,0.018143486534693876,emergence,8,30,False
+groundnut,110,10,Warm / humid,2,R1,2499,0.025801471278911567,beginning bloom,31,38,False
+groundnut,110,10,Warm / humid,3,R2,2499,0.04161829344897959,beginning peg,39,46,False
+groundnut,110,10,Warm / humid,4,R3,2499,0.06096387582312925,beginning pod,47,57,True
+groundnut,110,10,Warm / humid,5,R4,2499,0.07528575694557824,full pod,58,69,True
 groundnut,110,10,Warm / humid,6,R5,2499,0.0823964574829932,beginning seed,70,78,True
-groundnut,110,10,Warm / humid,7,R6,2499,0.10634963571428571,full seed,79,88,True
-groundnut,110,10,Warm / humid,8,R7,2499,0.09494621027210884,beginning maturity,89,109,False
+groundnut,110,10,Warm / humid,7,R6,2499,0.10635077340136054,full seed,79,88,True
+groundnut,110,10,Warm / humid,8,R7,2499,0.09494772462585033,beginning maturity,89,109,False
 groundnut,110,10,Warm / semiarid,0,SOW,16566,0.011506863966256187,sowing to emergence,0,7,False
 groundnut,110,10,Warm / semiarid,1,VE,16566,0.024090908658638173,emergence,8,30,False
 groundnut,110,10,Warm / semiarid,2,R1,16566,0.004194833108982252,beginning bloom,31,38,False
@@ -746,15 +746,15 @@ groundnut,110,10,Warm / subhumid,5,R4,12430,0.02341196214872084,full pod,58,69,T
 groundnut,110,10,Warm / subhumid,6,R5,12430,0.02910795610059534,beginning seed,70,78,True
 groundnut,110,10,Warm / subhumid,7,R6,12430,0.035802607971842315,full seed,79,88,True
 groundnut,110,10,Warm / subhumid,8,R7,12430,0.03128686373684634,beginning maturity,89,109,False
-groundnut,110,20,ALL,0,SOW,29847,0.004840983700338392,sowing to emergence,0,7,False
-groundnut,110,20,ALL,1,VE,29847,0.013319810171742554,emergence,8,30,False
-groundnut,110,20,ALL,2,R1,29847,0.009826268169430764,beginning bloom,31,38,False
-groundnut,110,20,ALL,3,R2,29847,0.012041325411096593,beginning peg,39,46,False
-groundnut,110,20,ALL,4,R3,29847,0.016549511509304116,beginning pod,47,57,True
+groundnut,110,20,ALL,0,SOW,29847,0.004841015432941334,sowing to emergence,0,7,False
+groundnut,110,20,ALL,1,VE,29847,0.013319937195899084,emergence,8,30,False
+groundnut,110,20,ALL,2,R1,29847,0.009826395193587295,beginning bloom,31,38,False
+groundnut,110,20,ALL,3,R2,29847,0.012041452435253123,beginning peg,39,46,False
+groundnut,110,20,ALL,4,R3,29847,0.01654954291380038,beginning pod,47,57,True
 groundnut,110,20,ALL,5,R4,29847,0.023583558653365498,full pod,58,69,True
-groundnut,110,20,ALL,6,R5,29847,0.024855011083559485,beginning seed,70,78,True
-groundnut,110,20,ALL,7,R6,29847,0.031814491415117094,full seed,79,88,True
-groundnut,110,20,ALL,8,R7,29847,0.07967934571427614,beginning maturity,89,109,False
+groundnut,110,20,ALL,6,R5,29847,0.024855106468857843,beginning seed,70,78,True
+groundnut,110,20,ALL,7,R6,29847,0.03181461890799745,full seed,79,88,True
+groundnut,110,20,ALL,8,R7,29847,0.07967937735313432,beginning maturity,89,109,False
 groundnut,110,20,Cool / humid,0,SOW,225,0.0012998966919999999,sowing to emergence,0,7,False
 groundnut,110,20,Cool / humid,1,VE,225,0.02934238893333333,emergence,8,30,False
 groundnut,110,20,Cool / humid,2,R1,225,0.02462002672,beginning bloom,31,38,False
@@ -773,15 +773,15 @@ groundnut,110,20,Cool / subhumid,5,R4,405,0.0040489833629629626,full pod,58,69,T
 groundnut,110,20,Cool / subhumid,6,R5,405,0.003298924913580247,beginning seed,70,78,True
 groundnut,110,20,Cool / subhumid,7,R6,405,0.000890395852839506,full seed,79,88,True
 groundnut,110,20,Cool / subhumid,8,R7,405,0.0007514654879012346,beginning maturity,89,109,False
-groundnut,110,20,Warm / humid,0,SOW,2499,0.004057615845578231,sowing to emergence,0,7,False
-groundnut,110,20,Warm / humid,1,VE,2499,0.03827376923129251,emergence,8,30,False
-groundnut,110,20,Warm / humid,2,R1,2499,0.03966544829251701,beginning bloom,31,38,False
-groundnut,110,20,Warm / humid,3,R2,2499,0.05423878223809524,beginning peg,39,46,False
-groundnut,110,20,Warm / humid,4,R3,2499,0.06819511510204081,beginning pod,47,57,True
+groundnut,110,20,Warm / humid,0,SOW,2499,0.004057995048979591,sowing to emergence,0,7,False
+groundnut,110,20,Warm / humid,1,VE,2499,0.03827528589115647,emergence,8,30,False
+groundnut,110,20,Warm / humid,2,R1,2499,0.039666962646258505,beginning bloom,31,38,False
+groundnut,110,20,Warm / humid,3,R2,2499,0.05424030043537415,beginning peg,39,46,False
+groundnut,110,20,Warm / humid,4,R3,2499,0.06819549176870747,beginning pod,47,57,True
 groundnut,110,20,Warm / humid,5,R4,2499,0.09144802810884355,full pod,58,69,True
-groundnut,110,20,Warm / humid,6,R5,2499,0.10127504495238096,beginning seed,70,78,True
-groundnut,110,20,Warm / humid,7,R6,2499,0.0901768756122449,full seed,79,88,True
-groundnut,110,20,Warm / humid,8,R7,2499,0.06377160245578231,beginning maturity,89,109,False
+groundnut,110,20,Warm / humid,6,R5,2499,0.10127618571428572,beginning seed,70,78,True
+groundnut,110,20,Warm / humid,7,R6,2499,0.09017840149659864,full seed,79,88,True
+groundnut,110,20,Warm / humid,8,R7,2499,0.06377198142857143,beginning maturity,89,109,False
 groundnut,110,20,Warm / semiarid,0,SOW,14289,0.007298244454923369,sowing to emergence,0,7,False
 groundnut,110,20,Warm / semiarid,1,VE,14289,0.011525797430582966,emergence,8,30,False
 groundnut,110,20,Warm / semiarid,2,R1,14289,0.0025830209509174894,beginning bloom,31,38,False
@@ -909,14 +909,14 @@ groundnut,110,40,Warm / subhumid,6,R5,12428,0.018266053561779853,beginning seed,
 groundnut,110,40,Warm / subhumid,7,R6,12428,0.012264337027084005,full seed,79,88,True
 groundnut,110,40,Warm / subhumid,8,R7,12428,0.018911423969021565,beginning maturity,89,109,False
 groundnut,130,0,ALL,0,SOW,29847,0.0020406969091044326,sowing to emergence,0,7,False
-groundnut,130,0,ALL,1,VE,29847,0.013847420945522163,emergence,8,32,False
-groundnut,130,0,ALL,2,R1,29847,0.006010563297446979,beginning bloom,33,40,False
-groundnut,130,0,ALL,3,R2,29847,0.00967018286477703,beginning peg,41,52,False
-groundnut,130,0,ALL,4,R3,29847,0.013974843014916073,beginning pod,53,65,True
-groundnut,130,0,ALL,5,R4,29847,0.02005127173106175,full pod,66,79,True
+groundnut,130,0,ALL,1,VE,29847,0.013847484363855663,emergence,8,32,False
+groundnut,130,0,ALL,2,R1,29847,0.006010626739216672,beginning bloom,33,40,False
+groundnut,130,0,ALL,3,R2,29847,0.009670277546989646,beginning peg,41,52,False
+groundnut,130,0,ALL,4,R3,29847,0.01397500144356887,beginning pod,53,65,True
+groundnut,130,0,ALL,5,R4,29847,0.020051303135558012,full pod,66,79,True
 groundnut,130,0,ALL,6,R5,29847,0.023701283921697326,beginning seed,80,90,True
-groundnut,130,0,ALL,7,R6,29847,0.03131662770405736,full seed,91,104,True
-groundnut,130,0,ALL,8,R7,29847,0.08402210723814789,beginning maturity,105,129,False
+groundnut,130,0,ALL,7,R6,29847,0.031316754259490064,full seed,91,104,True
+groundnut,130,0,ALL,8,R7,29847,0.08402220262344623,beginning maturity,105,129,False
 groundnut,130,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,7,False
 groundnut,130,0,Cool / humid,1,VE,225,0.004085616696,emergence,8,32,False
 groundnut,130,0,Cool / humid,2,R1,225,0.01402300216,beginning bloom,33,40,False
@@ -936,14 +936,14 @@ groundnut,130,0,Cool / subhumid,6,R5,405,0.0040489833629629626,beginning seed,80
 groundnut,130,0,Cool / subhumid,7,R6,405,0.0039148662617283945,full seed,91,104,True
 groundnut,130,0,Cool / subhumid,8,R7,405,0.0007514654879012346,beginning maturity,105,129,False
 groundnut,130,0,Warm / humid,0,SOW,2499,0.00011117796340136057,sowing to emergence,0,7,False
-groundnut,130,0,Warm / humid,1,VE,2499,0.008159735086394558,emergence,8,32,False
-groundnut,130,0,Warm / humid,2,R1,2499,0.01564968361904762,beginning bloom,33,40,False
-groundnut,130,0,Warm / humid,3,R2,2499,0.03936118812244898,beginning peg,41,52,False
-groundnut,130,0,Warm / humid,4,R3,2499,0.06339391782312925,beginning pod,53,65,True
-groundnut,130,0,Warm / humid,5,R4,2499,0.07700987153741495,full pod,66,79,True
+groundnut,130,0,Warm / humid,1,VE,2499,0.008160492647619047,emergence,8,32,False
+groundnut,130,0,Warm / humid,2,R1,2499,0.015650440795918368,beginning bloom,33,40,False
+groundnut,130,0,Warm / humid,3,R2,2499,0.039362321965986394,beginning peg,41,52,False
+groundnut,130,0,Warm / humid,4,R3,2499,0.06339581038095238,beginning pod,53,65,True
+groundnut,130,0,Warm / humid,5,R4,2499,0.0770102497414966,full pod,66,79,True
 groundnut,130,0,Warm / humid,6,R5,2499,0.0944130568027211,beginning seed,80,90,True
-groundnut,130,0,Warm / humid,7,R6,2499,0.11902569,full seed,91,104,True
-groundnut,130,0,Warm / humid,8,R7,2499,0.08466176979591836,beginning maturity,105,129,False
+groundnut,130,0,Warm / humid,7,R6,2499,0.11902720896598637,full seed,91,104,True
+groundnut,130,0,Warm / humid,8,R7,2499,0.08466290748299318,beginning maturity,105,129,False
 groundnut,130,0,Warm / semiarid,0,SOW,14289,0.004096256676149486,sowing to emergence,0,7,False
 groundnut,130,0,Warm / semiarid,1,VE,14289,0.023208743604520958,emergence,8,32,False
 groundnut,130,0,Warm / semiarid,2,R1,14289,0.006344225011743299,beginning bloom,33,40,False
@@ -1178,16 +1178,16 @@ groundnut,130,40,Warm / subhumid,5,R4,12415,0.026300908855416836,full pod,66,79,
 groundnut,130,40,Warm / subhumid,6,R5,12415,0.010828397165042287,beginning seed,80,90,True
 groundnut,130,40,Warm / subhumid,7,R6,12415,0.009608071766089408,full seed,91,104,True
 groundnut,130,40,Warm / subhumid,8,R7,12415,0.07722248210664519,beginning maturity,105,129,False
-pearl_millet,70,0,ALL,0,SOW,36670,0.0022833560698472866,sowing to emergence,0,3,False
-pearl_millet,70,0,ALL,1,P0,36670,0.006695947095467685,emergence,4,7,False
-pearl_millet,70,0,ALL,2,P1,36670,0.011522844862345241,3-leaf,8,12,False
-pearl_millet,70,0,ALL,3,P2,36670,0.020838457914098715,tillering,13,24,False
-pearl_millet,70,0,ALL,4,P3,36670,0.011376783452326154,panicle initiation,25,29,False
-pearl_millet,70,0,ALL,5,P4,36670,0.008256650324706846,flag leaf / boot,30,34,False
-pearl_millet,70,0,ALL,6,P5,36670,0.006489468016457595,panicle emergence (heading),35,39,False
-pearl_millet,70,0,ALL,7,P6,36670,0.01105398102057813,flowering (anthesis),40,50,True
-pearl_millet,70,0,ALL,8,P7,36670,0.015256440038860104,milk,51,59,True
-pearl_millet,70,0,ALL,9,P8,36670,0.011203907415028634,dough,60,69,False
+pearl_millet,70,0,ALL,0,SOW,36670,0.002283401894663213,sowing to emergence,0,3,False
+pearl_millet,70,0,ALL,1,P0,36670,0.006696107482323425,emergence,4,7,False
+pearl_millet,70,0,ALL,2,P1,36670,0.011523028177998364,3-leaf,8,12,False
+pearl_millet,70,0,ALL,3,P2,36670,0.020838644224843196,tillering,13,24,False
+pearl_millet,70,0,ALL,4,P3,36670,0.011376856680223615,panicle initiation,25,29,False
+pearl_millet,70,0,ALL,5,P4,36670,0.008256749166375784,flag leaf / boot,30,34,False
+pearl_millet,70,0,ALL,6,P5,36670,0.0064895898885601305,panicle emergence (heading),35,39,False
+pearl_millet,70,0,ALL,7,P6,36670,0.011053279375718572,flowering (anthesis),40,50,True
+pearl_millet,70,0,ALL,8,P7,36670,0.015255903320070902,milk,51,59,True
+pearl_millet,70,0,ALL,9,P8,36670,0.011204170782195256,dough,60,69,False
 pearl_millet,70,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,3,False
 pearl_millet,70,0,Cool / humid,1,P0,225,0.0,emergence,4,7,False
 pearl_millet,70,0,Cool / humid,2,P1,225,0.0006662449146666666,3-leaf,8,12,False
@@ -1208,26 +1208,26 @@ pearl_millet,70,0,Cool / subhumid,6,P5,405,0.000555126745382716,panicle emergenc
 pearl_millet,70,0,Cool / subhumid,7,P6,405,0.0005720643960987654,flowering (anthesis),40,50,True
 pearl_millet,70,0,Cool / subhumid,8,P7,405,0.000601516860617284,milk,51,59,True
 pearl_millet,70,0,Cool / subhumid,9,P8,405,0.0004038390207654321,dough,60,69,False
-pearl_millet,70,0,Warm / arid,0,SOW,2329,0.015373687979476169,sowing to emergence,0,3,False
-pearl_millet,70,0,Warm / arid,1,P0,2329,0.04483653534048948,emergence,4,7,False
-pearl_millet,70,0,Warm / arid,2,P1,2329,0.06892416353542292,3-leaf,8,12,False
-pearl_millet,70,0,Warm / arid,3,P2,2329,0.09077641279089738,tillering,13,24,False
-pearl_millet,70,0,Warm / arid,4,P3,2329,0.03269207888965221,panicle initiation,25,29,False
-pearl_millet,70,0,Warm / arid,5,P4,2329,0.01804049631172177,flag leaf / boot,30,34,False
-pearl_millet,70,0,Warm / arid,6,P5,2329,0.015003635480893085,panicle emergence (heading),35,39,False
-pearl_millet,70,0,Warm / arid,7,P6,2329,0.02597053735508802,flowering (anthesis),40,50,True
-pearl_millet,70,0,Warm / arid,8,P7,2329,0.050893169552597685,milk,51,59,True
-pearl_millet,70,0,Warm / arid,9,P8,2329,0.04816436568484328,dough,60,69,False
+pearl_millet,70,0,Warm / arid,0,SOW,2329,0.015374409641133535,sowing to emergence,0,3,False
+pearl_millet,70,0,Warm / arid,1,P0,2329,0.044839061832546157,emergence,4,7,False
+pearl_millet,70,0,Warm / arid,2,P1,2329,0.06892705114813225,3-leaf,8,12,False
+pearl_millet,70,0,Warm / arid,3,P2,2329,0.09077893715757836,tillering,13,24,False
+pearl_millet,70,0,Warm / arid,4,P3,2329,0.032692821590382136,panicle initiation,25,29,False
+pearl_millet,70,0,Warm / arid,5,P4,2329,0.01804123850794332,flag leaf / boot,30,34,False
+pearl_millet,70,0,Warm / arid,6,P5,2329,0.015004741084156288,panicle emergence (heading),35,39,False
+pearl_millet,70,0,Warm / arid,7,P6,2329,0.025958269203520824,flowering (anthesis),40,50,True
+pearl_millet,70,0,Warm / arid,8,P7,2329,0.050883091063975955,milk,51,59,True
+pearl_millet,70,0,Warm / arid,9,P8,2329,0.048167296889222846,dough,60,69,False
 pearl_millet,70,0,Warm / humid,0,SOW,2499,2.137607163265306e-05,sowing to emergence,0,3,False
 pearl_millet,70,0,Warm / humid,1,P0,2499,0.00011074768707482992,emergence,4,7,False
 pearl_millet,70,0,Warm / humid,2,P1,2499,0.0004467773244897959,3-leaf,8,12,False
-pearl_millet,70,0,Warm / humid,3,P2,2499,0.005054276394557824,tillering,13,24,False
-pearl_millet,70,0,Warm / humid,4,P3,2499,0.007189373789115647,panicle initiation,25,29,False
-pearl_millet,70,0,Warm / humid,5,P4,2499,0.008181959817006803,flag leaf / boot,30,34,False
-pearl_millet,70,0,Warm / humid,6,P5,2499,0.013529934982312926,panicle emergence (heading),35,39,False
-pearl_millet,70,0,Warm / humid,7,P6,2499,0.03707089805442177,flowering (anthesis),40,50,True
-pearl_millet,70,0,Warm / humid,8,P7,2499,0.04754098190476191,milk,51,59,True
-pearl_millet,70,0,Warm / humid,9,P8,2499,0.03143382134693877,dough,60,69,False
+pearl_millet,70,0,Warm / humid,3,P2,2499,0.005054655136734694,tillering,13,24,False
+pearl_millet,70,0,Warm / humid,4,P3,2499,0.007189752761904761,panicle initiation,25,29,False
+pearl_millet,70,0,Warm / humid,5,P4,2499,0.008182717378231293,flag leaf / boot,30,34,False
+pearl_millet,70,0,Warm / humid,6,P5,2499,0.013530694465306123,panicle emergence (heading),35,39,False
+pearl_millet,70,0,Warm / humid,7,P6,2499,0.03707203497278912,flowering (anthesis),40,50,True
+pearl_millet,70,0,Warm / humid,8,P7,2499,0.0475424962585034,milk,51,59,True
+pearl_millet,70,0,Warm / humid,9,P8,2499,0.03143495826530612,dough,60,69,False
 pearl_millet,70,0,Warm / semiarid,0,SOW,18780,0.002533447305480298,sowing to emergence,0,3,False
 pearl_millet,70,0,Warm / semiarid,1,P0,18780,0.007382934427374868,emergence,4,7,False
 pearl_millet,70,0,Warm / semiarid,2,P1,18780,0.013315648114930778,3-leaf,8,12,False
@@ -1248,16 +1248,16 @@ pearl_millet,70,0,Warm / subhumid,6,P5,12432,0.002825691178120978,panicle emerge
 pearl_millet,70,0,Warm / subhumid,7,P6,12432,0.00884431427927928,flowering (anthesis),40,50,True
 pearl_millet,70,0,Warm / subhumid,8,P7,12432,0.013939577210649935,milk,51,59,True
 pearl_millet,70,0,Warm / subhumid,9,P8,12432,0.008959994847586873,dough,60,69,False
-pearl_millet,70,10,ALL,0,SOW,36616,0.0052833409712693905,sowing to emergence,0,3,False
-pearl_millet,70,10,ALL,1,P0,36616,0.010025857788693467,emergence,4,7,False
-pearl_millet,70,10,ALL,2,P1,36616,0.013424678356920471,3-leaf,8,12,False
-pearl_millet,70,10,ALL,3,P2,36616,0.015262795121777365,tillering,13,24,False
-pearl_millet,70,10,ALL,4,P3,36616,0.006424359835634695,panicle initiation,25,29,False
-pearl_millet,70,10,ALL,5,P4,36616,0.006649900065119074,flag leaf / boot,30,34,False
-pearl_millet,70,10,ALL,6,P5,36616,0.00807207615367599,panicle emergence (heading),35,39,False
-pearl_millet,70,10,ALL,7,P6,36616,0.01539634562912388,flowering (anthesis),40,50,True
-pearl_millet,70,10,ALL,8,P7,36616,0.021545888192156436,milk,51,59,True
-pearl_millet,70,10,ALL,9,P8,36616,0.0151730313040201,dough,60,69,False
+pearl_millet,70,10,ALL,0,SOW,36616,0.0052833798811448545,sowing to emergence,0,3,False
+pearl_millet,70,10,ALL,1,P0,36616,0.01002589668251038,emergence,4,7,False
+pearl_millet,70,10,ALL,2,P1,36616,0.013424743054129343,3-leaf,8,12,False
+pearl_millet,70,10,ALL,3,P2,36616,0.015262910089250601,tillering,13,24,False
+pearl_millet,70,10,ALL,4,P3,36616,0.006424513538114486,panicle initiation,25,29,False
+pearl_millet,70,10,ALL,5,P4,36616,0.006649161702190299,flag leaf / boot,30,34,False
+pearl_millet,70,10,ALL,6,P5,36616,0.008071363301343674,panicle emergence (heading),35,39,False
+pearl_millet,70,10,ALL,7,P6,36616,0.015395732990823682,flowering (anthesis),40,50,True
+pearl_millet,70,10,ALL,8,P7,36616,0.021546342050196635,milk,51,59,True
+pearl_millet,70,10,ALL,9,P8,36616,0.015173447062704829,dough,60,69,False
 pearl_millet,70,10,Cool / humid,0,SOW,225,0.0008371851602666666,sowing to emergence,0,3,False
 pearl_millet,70,10,Cool / humid,1,P0,225,0.0008371851602666666,emergence,4,7,False
 pearl_millet,70,10,Cool / humid,2,P1,225,0.0012732701853333333,3-leaf,8,12,False
@@ -1278,26 +1278,26 @@ pearl_millet,70,10,Cool / subhumid,6,P5,405,0.00027483834232098765,panicle emerg
 pearl_millet,70,10,Cool / subhumid,7,P6,405,0.000601516860617284,flowering (anthesis),40,50,True
 pearl_millet,70,10,Cool / subhumid,8,P7,405,0.0004038390207654321,milk,51,59,True
 pearl_millet,70,10,Cool / subhumid,9,P8,405,0.0,dough,60,69,False
-pearl_millet,70,10,Warm / arid,0,SOW,2275,0.02905103634989011,sowing to emergence,0,3,False
-pearl_millet,70,10,Warm / arid,1,P0,2275,0.049195681982417576,emergence,4,7,False
-pearl_millet,70,10,Warm / arid,2,P1,2275,0.05605649397406593,3-leaf,8,12,False
-pearl_millet,70,10,Warm / arid,3,P2,2275,0.049169866903296715,tillering,13,24,False
-pearl_millet,70,10,Warm / arid,4,P3,2275,0.015311427803076922,panicle initiation,25,29,False
-pearl_millet,70,10,Warm / arid,5,P4,2275,0.011716740030989011,flag leaf / boot,30,34,False
-pearl_millet,70,10,Warm / arid,6,P5,2275,0.015582657389890111,panicle emergence (heading),35,39,False
-pearl_millet,70,10,Warm / arid,7,P6,2275,0.04034693524923077,flowering (anthesis),40,50,True
-pearl_millet,70,10,Warm / arid,8,P7,2275,0.10067443470769231,milk,51,59,True
-pearl_millet,70,10,Warm / arid,9,P8,2275,0.09239963259208792,dough,60,69,False
+pearl_millet,70,10,Warm / arid,0,SOW,2275,0.02905166255648351,sowing to emergence,0,3,False
+pearl_millet,70,10,Warm / arid,1,P0,2275,0.04919630914945055,emergence,4,7,False
+pearl_millet,70,10,Warm / arid,2,P1,2275,0.0560571194123077,3-leaf,8,12,False
+pearl_millet,70,10,Warm / arid,3,P2,2275,0.049170885978901104,tillering,13,24,False
+pearl_millet,70,10,Warm / arid,4,P3,2275,0.015313071763516484,panicle initiation,25,29,False
+pearl_millet,70,10,Warm / arid,5,P4,2275,0.011704437514505497,flag leaf / boot,30,34,False
+pearl_millet,70,10,Warm / arid,6,P5,2275,0.015570355257582415,panicle emergence (heading),35,39,False
+pearl_millet,70,10,Warm / arid,7,P6,2275,0.04033542039164835,flowering (anthesis),40,50,True
+pearl_millet,70,10,Warm / arid,8,P7,2275,0.10068006773186813,milk,51,59,True
+pearl_millet,70,10,Warm / arid,9,P8,2275,0.09240589955824176,dough,60,69,False
 pearl_millet,70,10,Warm / humid,0,SOW,2499,0.0004460533865306122,sowing to emergence,0,3,False
 pearl_millet,70,10,Warm / humid,1,P0,2499,0.0016278603374149658,emergence,4,7,False
-pearl_millet,70,10,Warm / humid,2,P1,2499,0.0039015872598639457,3-leaf,8,12,False
-pearl_millet,70,10,Warm / humid,3,P2,2499,0.009473288795918366,tillering,13,24,False
-pearl_millet,70,10,Warm / humid,4,P3,2499,0.012826154768707484,panicle initiation,25,29,False
-pearl_millet,70,10,Warm / humid,5,P4,2499,0.01778385904489796,flag leaf / boot,30,34,False
-pearl_millet,70,10,Warm / humid,6,P5,2499,0.02837326236734694,panicle emergence (heading),35,39,False
-pearl_millet,70,10,Warm / humid,7,P6,2499,0.05046518149659864,flowering (anthesis),40,50,True
-pearl_millet,70,10,Warm / humid,8,P7,2499,0.06143283224489797,milk,51,59,True
-pearl_millet,70,10,Warm / humid,9,P8,2499,0.04180066981632653,dough,60,69,False
+pearl_millet,70,10,Warm / humid,2,P1,2499,0.003901966232653061,3-leaf,8,12,False
+pearl_millet,70,10,Warm / humid,3,P2,2499,0.009474045972789114,tillering,13,24,False
+pearl_millet,70,10,Warm / humid,4,P3,2499,0.01282691194557823,panicle initiation,25,29,False
+pearl_millet,70,10,Warm / humid,5,P4,2499,0.017784238786394558,flag leaf / boot,30,34,False
+pearl_millet,70,10,Warm / humid,6,P5,2499,0.028374019544217692,panicle emergence (heading),35,39,False
+pearl_millet,70,10,Warm / humid,7,P6,2499,0.05046669585034014,flowering (anthesis),40,50,True
+pearl_millet,70,10,Warm / humid,8,P7,2499,0.061434349673469384,milk,51,59,True
+pearl_millet,70,10,Warm / humid,9,P8,2499,0.04180104802040816,dough,60,69,False
 pearl_millet,70,10,Warm / semiarid,0,SOW,18780,0.006231296967505325,sowing to emergence,0,3,False
 pearl_millet,70,10,Warm / semiarid,1,P0,18780,0.012192813444004259,emergence,4,7,False
 pearl_millet,70,10,Warm / semiarid,2,P1,18780,0.01665116977248669,3-leaf,8,12,False
@@ -1318,16 +1318,16 @@ pearl_millet,70,10,Warm / subhumid,6,P5,12432,0.007237510912660875,panicle emerg
 pearl_millet,70,10,Warm / subhumid,7,P6,12432,0.014369205204182754,flowering (anthesis),40,50,True
 pearl_millet,70,10,Warm / subhumid,8,P7,12432,0.016743207759636423,milk,51,59,True
 pearl_millet,70,10,Warm / subhumid,9,P8,12432,0.009661318817857142,dough,60,69,False
-pearl_millet,70,20,ALL,0,SOW,36557,0.004334293996411084,sowing to emergence,0,3,False
-pearl_millet,70,20,ALL,1,P0,36557,0.006599984822501847,emergence,4,7,False
-pearl_millet,70,20,ALL,2,P1,36557,0.00828224138374593,3-leaf,8,12,False
-pearl_millet,70,20,ALL,3,P2,36557,0.010306699449719615,tillering,13,24,False
-pearl_millet,70,20,ALL,4,P3,36557,0.007660460739065022,panicle initiation,25,29,False
-pearl_millet,70,20,ALL,5,P4,36557,0.00959153013923462,flag leaf / boot,30,34,False
-pearl_millet,70,20,ALL,6,P5,36557,0.010903391229531965,panicle emergence (heading),35,39,False
-pearl_millet,70,20,ALL,7,P6,36557,0.020438823461443774,flowering (anthesis),40,50,True
-pearl_millet,70,20,ALL,8,P7,36557,0.032189189892606065,milk,51,59,True
-pearl_millet,70,20,ALL,9,P8,36557,0.026317716135120496,dough,60,69,False
+pearl_millet,70,20,ALL,0,SOW,36557,0.004334319893328227,sowing to emergence,0,3,False
+pearl_millet,70,20,ALL,1,P0,36557,0.006600046825910222,emergence,4,7,False
+pearl_millet,70,20,ALL,2,P1,36557,0.00828232928407145,3-leaf,8,12,False
+pearl_millet,70,20,ALL,3,P2,36557,0.010306787505823782,tillering,13,24,False
+pearl_millet,70,20,ALL,4,P3,36557,0.007660512378750992,panicle initiation,25,29,False
+pearl_millet,70,20,ALL,5,P4,36557,0.00959163380397735,flag leaf / boot,30,34,False
+pearl_millet,70,20,ALL,6,P5,36557,0.01090353131069289,panicle emergence (heading),35,39,False
+pearl_millet,70,20,ALL,7,P6,36557,0.020439108240774682,flowering (anthesis),40,50,True
+pearl_millet,70,20,ALL,8,P7,36557,0.03218867334026315,milk,51,59,True
+pearl_millet,70,20,ALL,9,P8,36557,0.026317100930098203,dough,60,69,False
 pearl_millet,70,20,Cool / humid,0,SOW,225,0.0005948151544,sowing to emergence,0,3,False
 pearl_millet,70,20,Cool / humid,1,P0,225,0.0012998966919999999,emergence,4,7,False
 pearl_millet,70,20,Cool / humid,2,P1,225,0.0032484312826666665,3-leaf,8,12,False
@@ -1349,24 +1349,24 @@ pearl_millet,70,20,Cool / subhumid,7,P6,405,0.0004038390207654321,flowering (ant
 pearl_millet,70,20,Cool / subhumid,8,P7,405,0.0010245132271604939,milk,51,59,True
 pearl_millet,70,20,Cool / subhumid,9,P8,405,0.0010245132271604939,dough,60,69,False
 pearl_millet,70,20,Warm / arid,0,SOW,2230,0.01249496486852018,sowing to emergence,0,3,False
-pearl_millet,70,20,Warm / arid,1,P0,2230,0.019051591034080717,emergence,4,7,False
-pearl_millet,70,20,Warm / arid,2,P1,2230,0.0228031856896861,3-leaf,8,12,False
-pearl_millet,70,20,Warm / arid,3,P2,2230,0.021231357648430493,tillering,13,24,False
+pearl_millet,70,20,Warm / arid,1,P0,2230,0.01905218469147982,emergence,4,7,False
+pearl_millet,70,20,Warm / arid,2,P1,2230,0.0228037793470852,3-leaf,8,12,False
+pearl_millet,70,20,Warm / arid,3,P2,2230,0.021231951305829597,tillering,13,24,False
 pearl_millet,70,20,Warm / arid,4,P3,2230,0.011868389919282513,panicle initiation,25,29,False
 pearl_millet,70,20,Warm / arid,5,P4,2230,0.012477907289686098,flag leaf / boot,30,34,False
-pearl_millet,70,20,Warm / arid,6,P5,2230,0.02472018939013453,panicle emergence (heading),35,39,False
-pearl_millet,70,20,Warm / arid,7,P6,2230,0.075607577167713,flowering (anthesis),40,50,True
-pearl_millet,70,20,Warm / arid,8,P7,2230,0.1758251235515695,milk,51,59,True
-pearl_millet,70,20,Warm / arid,9,P8,2230,0.1649628158278027,dough,60,69,False
-pearl_millet,70,20,Warm / humid,0,SOW,2499,0.002129113276462585,sowing to emergence,0,3,False
-pearl_millet,70,20,Warm / humid,1,P0,2499,0.004111149693197279,emergence,4,7,False
-pearl_millet,70,20,Warm / humid,2,P1,2499,0.006492961431292517,3-leaf,8,12,False
-pearl_millet,70,20,Warm / humid,3,P2,2499,0.021263751312925173,tillering,13,24,False
-pearl_millet,70,20,Warm / humid,4,P3,2499,0.027811666775510203,panicle initiation,25,29,False
-pearl_millet,70,20,Warm / humid,5,P4,2499,0.0383419433877551,flag leaf / boot,30,34,False
-pearl_millet,70,20,Warm / humid,6,P5,2499,0.04056412501360545,panicle emergence (heading),35,39,False
-pearl_millet,70,20,Warm / humid,7,P6,2499,0.06701316769387755,flowering (anthesis),40,50,True
-pearl_millet,70,20,Warm / humid,8,P7,2499,0.07648752544217688,milk,51,59,True
+pearl_millet,70,20,Warm / arid,6,P5,2230,0.024720783743497756,panicle emergence (heading),35,39,False
+pearl_millet,70,20,Warm / arid,7,P6,2230,0.07561054475874439,flowering (anthesis),40,50,True
+pearl_millet,70,20,Warm / arid,8,P7,2230,0.1758162221704036,milk,51,59,True
+pearl_millet,70,20,Warm / arid,9,P8,2230,0.16495272434798208,dough,60,69,False
+pearl_millet,70,20,Warm / humid,0,SOW,2499,0.002129492402993197,sowing to emergence,0,3,False
+pearl_millet,70,20,Warm / humid,1,P0,2499,0.004111528281632653,emergence,4,7,False
+pearl_millet,70,20,Warm / humid,2,P1,2499,0.0064937193768707475,3-leaf,8,12,False
+pearl_millet,70,20,Warm / humid,3,P2,2499,0.021264507721088437,tillering,13,24,False
+pearl_millet,70,20,Warm / humid,4,P3,2499,0.02781242164625851,panicle initiation,25,29,False
+pearl_millet,70,20,Warm / humid,5,P4,2499,0.038343459278911564,flag leaf / boot,30,34,False
+pearl_millet,70,20,Warm / humid,6,P5,2499,0.04056564244217688,panicle emergence (heading),35,39,False
+pearl_millet,70,20,Warm / humid,7,P6,2499,0.06701468435374149,flowering (anthesis),40,50,True
+pearl_millet,70,20,Warm / humid,8,P7,2499,0.07648790595238095,milk,51,59,True
 pearl_millet,70,20,Warm / humid,9,P8,2499,0.05192130912244898,dough,60,69,False
 pearl_millet,70,20,Warm / semiarid,0,SOW,18766,0.005644613634924864,sowing to emergence,0,3,False
 pearl_millet,70,20,Warm / semiarid,1,P0,18766,0.008400069730496642,emergence,4,7,False
@@ -1388,16 +1388,16 @@ pearl_millet,70,20,Warm / subhumid,6,P5,12432,0.011062365314462676,panicle emerg
 pearl_millet,70,20,Warm / subhumid,7,P6,12432,0.017323253058896395,flowering (anthesis),40,50,True
 pearl_millet,70,20,Warm / subhumid,8,P7,12432,0.022845527103281853,milk,51,59,True
 pearl_millet,70,20,Warm / subhumid,9,P8,12432,0.017939403466264478,dough,60,69,False
-pearl_millet,70,30,ALL,0,SOW,35551,0.0018087403847655479,sowing to emergence,0,3,False
-pearl_millet,70,30,ALL,1,P0,35551,0.0031042113100841046,emergence,4,7,False
-pearl_millet,70,30,ALL,2,P1,35551,0.005566190308666423,3-leaf,8,12,False
-pearl_millet,70,30,ALL,3,P2,35551,0.010703706716941857,tillering,13,24,False
-pearl_millet,70,30,ALL,4,P3,35551,0.009585064986638912,panicle initiation,25,29,False
-pearl_millet,70,30,ALL,5,P4,35551,0.011291277380861298,flag leaf / boot,30,34,False
-pearl_millet,70,30,ALL,6,P5,35551,0.012218028584681163,panicle emergence (heading),35,39,False
-pearl_millet,70,30,ALL,7,P6,35551,0.025042264012432845,flowering (anthesis),40,50,True
-pearl_millet,70,30,ALL,8,P7,35551,0.04497406553790329,milk,51,59,True
-pearl_millet,70,30,ALL,9,P8,35551,0.03728557770858767,dough,60,69,False
+pearl_millet,70,30,ALL,0,SOW,35551,0.0018087670406683356,sowing to emergence,0,3,False
+pearl_millet,70,30,ALL,1,P0,35551,0.003104237965986892,emergence,4,7,False
+pearl_millet,70,30,ALL,2,P1,35551,0.005566216964569211,3-leaf,8,12,False
+pearl_millet,70,30,ALL,3,P2,35551,0.010703813498748277,tillering,13,24,False
+pearl_millet,70,30,ALL,4,P3,35551,0.009585253765632473,panicle initiation,25,29,False
+pearl_millet,70,30,ALL,5,P4,35551,0.011291548394756828,flag leaf / boot,30,34,False
+pearl_millet,70,30,ALL,6,P5,35551,0.012218219808838008,panicle emergence (heading),35,39,False
+pearl_millet,70,30,ALL,7,P6,35551,0.025041139642260415,flowering (anthesis),40,50,True
+pearl_millet,70,30,ALL,8,P7,35551,0.04497349072875587,milk,51,59,True
+pearl_millet,70,30,ALL,9,P8,35551,0.03728631774065427,dough,60,69,False
 pearl_millet,70,30,Cool / humid,0,SOW,225,0.0019685701706666668,sowing to emergence,0,3,False
 pearl_millet,70,30,Cool / humid,1,P0,225,0.003984505758666667,emergence,4,7,False
 pearl_millet,70,30,Cool / humid,2,P1,225,0.015076571253333332,3-leaf,8,12,False
@@ -1422,20 +1422,20 @@ pearl_millet,70,30,Warm / arid,0,SOW,1285,0.005244998248249027,sowing to emergen
 pearl_millet,70,30,Warm / arid,1,P0,1285,0.007553426030350196,emergence,4,7,False
 pearl_millet,70,30,Warm / arid,2,P1,1285,0.008299392699922178,3-leaf,8,12,False
 pearl_millet,70,30,Warm / arid,3,P2,1285,0.010018951284824903,tillering,13,24,False
-pearl_millet,70,30,Warm / arid,4,P3,1285,0.012769803701167317,panicle initiation,25,29,False
-pearl_millet,70,30,Warm / arid,5,P4,1285,0.023749863080933853,flag leaf / boot,30,34,False
-pearl_millet,70,30,Warm / arid,6,P5,1285,0.022512146966536962,panicle emergence (heading),35,39,False
-pearl_millet,70,30,Warm / arid,7,P6,1285,0.10454936492607005,flowering (anthesis),40,50,True
-pearl_millet,70,30,Warm / arid,8,P7,1285,0.2692118914241245,milk,51,59,True
-pearl_millet,70,30,Warm / arid,9,P8,1285,0.24651006508171203,dough,60,69,False
-pearl_millet,70,30,Warm / humid,0,SOW,2499,0.002495680678639456,sowing to emergence,0,3,False
-pearl_millet,70,30,Warm / humid,1,P0,2499,0.007068030599999999,emergence,4,7,False
-pearl_millet,70,30,Warm / humid,2,P1,2499,0.015253639447619047,3-leaf,8,12,False
-pearl_millet,70,30,Warm / humid,3,P2,2499,0.04358565372789116,tillering,13,24,False
-pearl_millet,70,30,Warm / humid,4,P3,2499,0.03944104809523809,panicle initiation,25,29,False
-pearl_millet,70,30,Warm / humid,5,P4,2499,0.04926370738095238,flag leaf / boot,30,34,False
-pearl_millet,70,30,Warm / humid,6,P5,2499,0.045501822115646254,panicle emergence (heading),35,39,False
-pearl_millet,70,30,Warm / humid,7,P6,2499,0.08212449715646258,flowering (anthesis),40,50,True
+pearl_millet,70,30,Warm / arid,4,P3,1285,0.01277207919066148,panicle initiation,25,29,False
+pearl_millet,70,30,Warm / arid,5,P4,1285,0.023754415357976653,flag leaf / boot,30,34,False
+pearl_millet,70,30,Warm / arid,6,P5,1285,0.022516697296498054,panicle emergence (heading),35,39,False
+pearl_millet,70,30,Warm / arid,7,P6,1285,0.10451750742412452,flowering (anthesis),40,50,True
+pearl_millet,70,30,Warm / arid,8,P7,1285,0.2691959707859922,milk,51,59,True
+pearl_millet,70,30,Warm / arid,9,P8,1285,0.2465305548715953,dough,60,69,False
+pearl_millet,70,30,Warm / humid,0,SOW,2499,0.0024960595745578233,sowing to emergence,0,3,False
+pearl_millet,70,30,Warm / humid,1,P0,2499,0.007068408804081634,emergence,4,7,False
+pearl_millet,70,30,Warm / humid,2,P1,2499,0.015254019189115647,3-leaf,8,12,False
+pearl_millet,70,30,Warm / humid,3,P2,2499,0.04358717115646259,tillering,13,24,False
+pearl_millet,70,30,Warm / humid,4,P3,2499,0.0394425624489796,panicle initiation,25,29,False
+pearl_millet,70,30,Warm / humid,5,P4,2499,0.04926522173469388,flag leaf / boot,30,34,False
+pearl_millet,70,30,Warm / humid,6,P5,2499,0.04550220108843537,panicle emergence (heading),35,39,False
+pearl_millet,70,30,Warm / humid,7,P6,2499,0.08212487536054423,flowering (anthesis),40,50,True
 pearl_millet,70,30,Warm / humid,8,P7,2499,0.09489946476190476,milk,51,59,True
 pearl_millet,70,30,Warm / humid,9,P8,2499,0.06988626035374149,dough,60,69,False
 pearl_millet,70,30,Warm / semiarid,0,SOW,18705,0.0023878151394386526,sowing to emergence,0,3,False
@@ -1459,15 +1459,15 @@ pearl_millet,70,30,Warm / subhumid,7,P6,12432,0.025047072009716863,flowering (an
 pearl_millet,70,30,Warm / subhumid,8,P7,12432,0.031160586868178894,milk,51,59,True
 pearl_millet,70,30,Warm / subhumid,9,P8,12432,0.021455720101914412,dough,60,69,False
 pearl_millet,70,40,ALL,0,SOW,33733,0.002819231385530489,sowing to emergence,0,3,False
-pearl_millet,70,40,ALL,1,P0,33733,0.004689650436284944,emergence,4,7,False
-pearl_millet,70,40,ALL,2,P1,33733,0.008215492136803722,3-leaf,8,12,False
-pearl_millet,70,40,ALL,3,P2,33733,0.013608069412207631,tillering,13,24,False
-pearl_millet,70,40,ALL,4,P3,33733,0.01146724605184834,panicle initiation,25,29,False
-pearl_millet,70,40,ALL,5,P4,33733,0.012104322651794978,flag leaf / boot,30,34,False
-pearl_millet,70,40,ALL,6,P5,33733,0.015277447529985475,panicle emergence (heading),35,39,False
+pearl_millet,70,40,ALL,1,P0,33733,0.004689706496226248,emergence,4,7,False
+pearl_millet,70,40,ALL,2,P1,33733,0.008215548613547565,3-leaf,8,12,False
+pearl_millet,70,40,ALL,3,P2,33733,0.013608209874662793,tillering,13,24,False
+pearl_millet,70,40,ALL,4,P3,33733,0.011467274186019625,panicle initiation,25,29,False
+pearl_millet,70,40,ALL,5,P4,33733,0.012104350994367533,flag leaf / boot,30,34,False
+pearl_millet,70,40,ALL,6,P5,33733,0.015277475664156761,panicle emergence (heading),35,39,False
 pearl_millet,70,40,ALL,7,P6,33733,0.030994971032401508,flowering (anthesis),40,50,True
-pearl_millet,70,40,ALL,8,P7,33733,0.05422375494468324,milk,51,59,True
-pearl_millet,70,40,ALL,9,P8,33733,0.04615152156277236,dough,60,69,False
+pearl_millet,70,40,ALL,8,P7,33733,0.054223867064565855,milk,51,59,True
+pearl_millet,70,40,ALL,9,P8,33733,0.046151633682654965,dough,60,69,False
 pearl_millet,70,40,Cool / humid,0,SOW,225,0.01220941644,sowing to emergence,0,3,False
 pearl_millet,70,40,Cool / humid,1,P0,225,0.017666601520000002,emergence,4,7,False
 pearl_millet,70,40,Cool / humid,2,P1,225,0.025462906133333334,3-leaf,8,12,False
@@ -1499,15 +1499,15 @@ pearl_millet,70,40,Warm / arid,7,P6,253,0.17385192363636362,flowering (anthesis)
 pearl_millet,70,40,Warm / arid,8,P7,253,0.5094420707114624,milk,51,59,True
 pearl_millet,70,40,Warm / arid,9,P8,253,0.4859898268774704,dough,60,69,False
 pearl_millet,70,40,Warm / humid,0,SOW,2499,0.009424159236734694,sowing to emergence,0,3,False
-pearl_millet,70,40,Warm / humid,1,P0,2499,0.01756535463265306,emergence,4,7,False
-pearl_millet,70,40,Warm / humid,2,P1,2499,0.033630537823129254,3-leaf,8,12,False
-pearl_millet,70,40,Warm / humid,3,P2,2499,0.0624967307414966,tillering,13,24,False
-pearl_millet,70,40,Warm / humid,4,P3,2499,0.0449672001292517,panicle initiation,25,29,False
-pearl_millet,70,40,Warm / humid,5,P4,2499,0.055073955136054425,flag leaf / boot,30,34,False
-pearl_millet,70,40,Warm / humid,6,P5,2499,0.06086752357142858,panicle emergence (heading),35,39,False
+pearl_millet,70,40,Warm / humid,1,P0,2499,0.017566113346938774,emergence,4,7,False
+pearl_millet,70,40,Warm / humid,2,P1,2499,0.03363129653741497,3-leaf,8,12,False
+pearl_millet,70,40,Warm / humid,3,P2,2499,0.06249862329931973,tillering,13,24,False
+pearl_millet,70,40,Warm / humid,4,P3,2499,0.044967582176870746,panicle initiation,25,29,False
+pearl_millet,70,40,Warm / humid,5,P4,2499,0.05507433718367347,flag leaf / boot,30,34,False
+pearl_millet,70,40,Warm / humid,6,P5,2499,0.0608679017755102,panicle emergence (heading),35,39,False
 pearl_millet,70,40,Warm / humid,7,P6,2499,0.10074793620408164,flowering (anthesis),40,50,True
-pearl_millet,70,40,Warm / humid,8,P7,2499,0.10689662795918367,milk,51,59,True
-pearl_millet,70,40,Warm / humid,9,P8,2499,0.06553851829931973,dough,60,69,False
+pearl_millet,70,40,Warm / humid,8,P7,2499,0.10689815000000001,milk,51,59,True
+pearl_millet,70,40,Warm / humid,9,P8,2499,0.06554002957823128,dough,60,69,False
 pearl_millet,70,40,Warm / semiarid,0,SOW,17921,0.0018890754747218344,sowing to emergence,0,3,False
 pearl_millet,70,40,Warm / semiarid,1,P0,17921,0.0026104621406411476,emergence,4,7,False
 pearl_millet,70,40,Warm / semiarid,2,P1,17921,0.0041588036033993634,3-leaf,8,12,False
@@ -1531,13 +1531,13 @@ pearl_millet,70,40,Warm / subhumid,9,P8,12430,0.020631560290233306,dough,60,69,F
 pearl_millet,90,0,ALL,0,SOW,36557,0.0021835294195311434,sowing to emergence,0,3,False
 pearl_millet,90,0,ALL,1,P0,36557,0.007818669261635254,emergence,4,9,False
 pearl_millet,90,0,ALL,2,P1,36557,0.01553203701674098,3-leaf,10,16,False
-pearl_millet,90,0,ALL,3,P2,36557,0.020212289781054243,tillering,17,33,False
-pearl_millet,90,0,ALL,4,P3,36557,0.00720796534020297,panicle initiation,34,40,False
-pearl_millet,90,0,ALL,5,P4,36557,0.007906918145958366,flag leaf / boot,41,48,False
-pearl_millet,90,0,ALL,6,P5,36557,0.009776046784172661,panicle emergence (heading),49,54,False
-pearl_millet,90,0,ALL,7,P6,36557,0.01820075455923626,flowering (anthesis),55,67,True
-pearl_millet,90,0,ALL,8,P7,36557,0.02558074646710616,milk,68,77,True
-pearl_millet,90,0,ALL,9,P8,36557,0.028352472336624995,dough,78,89,False
+pearl_millet,90,0,ALL,3,P2,36557,0.02021237861197582,tillering,17,33,False
+pearl_millet,90,0,ALL,4,P3,36557,0.007208053181907706,panicle initiation,34,40,False
+pearl_millet,90,0,ALL,5,P4,36557,0.007906995798172717,flag leaf / boot,41,48,False
+pearl_millet,90,0,ALL,6,P5,36557,0.00977615054525809,panicle emergence (heading),49,54,False
+pearl_millet,90,0,ALL,7,P6,36557,0.018200992903629948,flowering (anthesis),55,67,True
+pearl_millet,90,0,ALL,8,P7,36557,0.025580084094126977,milk,68,77,True
+pearl_millet,90,0,ALL,9,P8,36557,0.02835189432283831,dough,78,89,False
 pearl_millet,90,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,3,False
 pearl_millet,90,0,Cool / humid,1,P0,225,0.0,emergence,4,9,False
 pearl_millet,90,0,Cool / humid,2,P1,225,0.0008371851602666666,3-leaf,10,16,False
@@ -1561,22 +1561,22 @@ pearl_millet,90,0,Cool / subhumid,9,P8,405,0.0010245132271604939,dough,78,89,Fal
 pearl_millet,90,0,Warm / arid,0,SOW,2230,0.014391634381165919,sowing to emergence,0,3,False
 pearl_millet,90,0,Warm / arid,1,P0,2230,0.04792243915156951,emergence,4,9,False
 pearl_millet,90,0,Warm / arid,2,P1,2230,0.08644743942242153,3-leaf,10,16,False
-pearl_millet,90,0,Warm / arid,3,P2,2230,0.07751136409506726,tillering,17,33,False
-pearl_millet,90,0,Warm / arid,4,P3,2230,0.015008141609865473,panicle initiation,34,40,False
+pearl_millet,90,0,Warm / arid,3,P2,2230,0.07751195844843049,tillering,17,33,False
+pearl_millet,90,0,Warm / arid,4,P3,2230,0.015008734571300449,panicle initiation,34,40,False
 pearl_millet,90,0,Warm / arid,5,P4,2230,0.010648900011659194,flag leaf / boot,41,48,False
 pearl_millet,90,0,Warm / arid,6,P5,2230,0.012379849515695067,panicle emergence (heading),49,54,False
-pearl_millet,90,0,Warm / arid,7,P6,2230,0.050118720410762325,flowering (anthesis),55,67,True
-pearl_millet,90,0,Warm / arid,8,P7,2230,0.12404186948699551,milk,68,77,True
-pearl_millet,90,0,Warm / arid,9,P8,2230,0.17341484034977578,dough,78,89,False
+pearl_millet,90,0,Warm / arid,7,P6,2230,0.05012049999103139,flowering (anthesis),55,67,True
+pearl_millet,90,0,Warm / arid,8,P7,2230,0.12403060182780268,milk,68,77,True
+pearl_millet,90,0,Warm / arid,9,P8,2230,0.17340534739910315,dough,78,89,False
 pearl_millet,90,0,Warm / humid,0,SOW,2499,2.137607163265306e-05,sowing to emergence,0,3,False
 pearl_millet,90,0,Warm / humid,1,P0,2499,0.00013834493142857144,emergence,4,9,False
 pearl_millet,90,0,Warm / humid,2,P1,2499,0.001192955144217687,3-leaf,10,16,False
-pearl_millet,90,0,Warm / humid,3,P2,2499,0.008851531470748299,tillering,17,33,False
-pearl_millet,90,0,Warm / humid,4,P3,2499,0.01532370675510204,panicle initiation,34,40,False
-pearl_millet,90,0,Warm / humid,5,P4,2499,0.026612817387755103,flag leaf / boot,41,48,False
-pearl_millet,90,0,Warm / humid,6,P5,2499,0.03970964923809524,panicle emergence (heading),49,54,False
-pearl_millet,90,0,Warm / humid,7,P6,2499,0.06999271353741497,flowering (anthesis),55,67,True
-pearl_millet,90,0,Warm / humid,8,P7,2499,0.0728708097414966,milk,68,77,True
+pearl_millet,90,0,Warm / humid,3,P2,2499,0.008852289416326532,tillering,17,33,False
+pearl_millet,90,0,Warm / humid,4,P3,2499,0.015324465469387753,panicle initiation,34,40,False
+pearl_millet,90,0,Warm / humid,5,P4,2499,0.026613955843537415,flag leaf / boot,41,48,False
+pearl_millet,90,0,Warm / humid,6,P5,2499,0.039711160517006794,panicle emergence (heading),49,54,False
+pearl_millet,90,0,Warm / humid,7,P6,2499,0.06999460840136054,flowering (anthesis),55,67,True
+pearl_millet,90,0,Warm / humid,8,P7,2499,0.07287118717687074,milk,68,77,True
 pearl_millet,90,0,Warm / humid,9,P8,2499,0.056628691142857145,dough,78,89,False
 pearl_millet,90,0,Warm / semiarid,0,SOW,18766,0.0025249244590370883,sowing to emergence,0,3,False
 pearl_millet,90,0,Warm / semiarid,1,P0,18766,0.009365922050143877,emergence,4,9,False
@@ -1599,15 +1599,15 @@ pearl_millet,90,0,Warm / subhumid,7,P6,12432,0.016579677104745817,flowering (ant
 pearl_millet,90,0,Warm / subhumid,8,P7,12432,0.018566258461068214,milk,68,77,True
 pearl_millet,90,0,Warm / subhumid,9,P8,12432,0.01970496040207529,dough,78,89,False
 pearl_millet,90,10,ALL,0,SOW,35551,0.0047420436160951875,sowing to emergence,0,3,False
-pearl_millet,90,10,ALL,1,P0,35551,0.010483905977862787,emergence,4,9,False
-pearl_millet,90,10,ALL,2,P1,35551,0.014971337731906276,3-leaf,10,16,False
-pearl_millet,90,10,ALL,3,P2,35551,0.014142778422660403,tillering,17,33,False
-pearl_millet,90,10,ALL,4,P3,35551,0.0078025675700542875,panicle initiation,34,40,False
-pearl_millet,90,10,ALL,5,P4,35551,0.010764878098270092,flag leaf / boot,41,48,False
-pearl_millet,90,10,ALL,6,P5,35551,0.0116619539018593,panicle emergence (heading),49,54,False
-pearl_millet,90,10,ALL,7,P6,35551,0.021383853536946922,flowering (anthesis),55,67,True
-pearl_millet,90,10,ALL,8,P7,35551,0.0396016161681528,milk,68,77,True
-pearl_millet,90,10,ALL,9,P8,35551,0.040097526208770495,dough,78,89,False
+pearl_millet,90,10,ALL,1,P0,35551,0.010483932613991167,emergence,4,9,False
+pearl_millet,90,10,ALL,2,P1,35551,0.01497144658274029,3-leaf,10,16,False
+pearl_millet,90,10,ALL,3,P2,35551,0.014142914286180417,tillering,17,33,False
+pearl_millet,90,10,ALL,4,P3,35551,0.007802620862085454,panicle initiation,34,40,False
+pearl_millet,90,10,ALL,5,P4,35551,0.010765067075007736,flag leaf / boot,41,48,False
+pearl_millet,90,10,ALL,6,P5,35551,0.011662225014626873,panicle emergence (heading),49,54,False
+pearl_millet,90,10,ALL,7,P6,35551,0.021382728611403338,flowering (anthesis),55,67,True
+pearl_millet,90,10,ALL,8,P7,35551,0.039600794218840545,milk,68,77,True
+pearl_millet,90,10,ALL,9,P8,35551,0.04009834954651065,dough,78,89,False
 pearl_millet,90,10,Cool / humid,0,SOW,225,0.0008371851602666666,sowing to emergence,0,3,False
 pearl_millet,90,10,Cool / humid,1,P0,225,0.000971865352,emergence,4,9,False
 pearl_millet,90,10,Cool / humid,2,P1,225,0.002137081716,3-leaf,10,16,False
@@ -1630,22 +1630,22 @@ pearl_millet,90,10,Cool / subhumid,8,P7,405,0.00296849677382716,milk,68,77,True
 pearl_millet,90,10,Cool / subhumid,9,P8,405,0.0033724155901234567,dough,78,89,False
 pearl_millet,90,10,Warm / arid,0,SOW,1285,0.03143928579377432,sowing to emergence,0,3,False
 pearl_millet,90,10,Warm / arid,1,P0,1285,0.06319907899766537,emergence,4,9,False
-pearl_millet,90,10,Warm / arid,2,P1,1285,0.07199277914085603,3-leaf,10,16,False
-pearl_millet,90,10,Warm / arid,3,P2,1285,0.038625760035019455,tillering,17,33,False
+pearl_millet,90,10,Warm / arid,2,P1,1285,0.07199505463035019,3-leaf,10,16,False
+pearl_millet,90,10,Warm / arid,3,P2,1285,0.03862803552451362,tillering,17,33,False
 pearl_millet,90,10,Warm / arid,4,P3,1285,0.005910768715175097,panicle initiation,34,40,False
-pearl_millet,90,10,Warm / arid,5,P4,1285,0.011102726771984437,flag leaf / boot,41,48,False
-pearl_millet,90,10,Warm / arid,6,P5,1285,0.023222842143968872,panicle emergence (heading),49,54,False
-pearl_millet,90,10,Warm / arid,7,P6,1285,0.06514393959066148,flowering (anthesis),55,67,True
-pearl_millet,90,10,Warm / arid,8,P7,1285,0.20817725505058365,milk,68,77,True
-pearl_millet,90,10,Warm / arid,9,P8,1285,0.2518281479143969,dough,78,89,False
+pearl_millet,90,10,Warm / arid,5,P4,1285,0.011105001612451364,flag leaf / boot,41,48,False
+pearl_millet,90,10,Warm / arid,6,P5,1285,0.023227393771984434,panicle emergence (heading),49,54,False
+pearl_millet,90,10,Warm / arid,7,P6,1285,0.06511208143968872,flowering (anthesis),55,67,True
+pearl_millet,90,10,Warm / arid,8,P7,1285,0.2081545066459144,milk,68,77,True
+pearl_millet,90,10,Warm / arid,9,P8,1285,0.2518509092996109,dough,78,89,False
 pearl_millet,90,10,Warm / humid,0,SOW,2499,0.0004460533865306122,sowing to emergence,0,3,False
-pearl_millet,90,10,Warm / humid,1,P0,2499,0.0021214670477278912,emergence,4,9,False
-pearl_millet,90,10,Warm / humid,2,P1,2499,0.005457372586394558,3-leaf,10,16,False
-pearl_millet,90,10,Warm / humid,3,P2,2499,0.021416913542857144,tillering,17,33,False
-pearl_millet,90,10,Warm / humid,4,P3,2499,0.03290466240816327,panicle initiation,34,40,False
-pearl_millet,90,10,Warm / humid,5,P4,2499,0.04144999922448979,flag leaf / boot,41,48,False
-pearl_millet,90,10,Warm / humid,6,P5,2499,0.05265202320408163,panicle emergence (heading),49,54,False
-pearl_millet,90,10,Warm / humid,7,P6,2499,0.07709306993197279,flowering (anthesis),55,67,True
+pearl_millet,90,10,Warm / humid,1,P0,2499,0.0021218459436462586,emergence,4,9,False
+pearl_millet,90,10,Warm / humid,2,P1,2499,0.005457751559183674,3-leaf,10,16,False
+pearl_millet,90,10,Warm / humid,3,P2,2499,0.02141767071972789,tillering,17,33,False
+pearl_millet,90,10,Warm / humid,4,P3,2499,0.03290541881632653,panicle initiation,34,40,False
+pearl_millet,90,10,Warm / humid,5,P4,2499,0.04145151742176871,flag leaf / boot,41,48,False
+pearl_millet,90,10,Warm / humid,6,P5,2499,0.052653538326530615,panicle emergence (heading),49,54,False
+pearl_millet,90,10,Warm / humid,7,P6,2499,0.07709345044217686,flowering (anthesis),55,67,True
 pearl_millet,90,10,Warm / humid,8,P7,2499,0.09172028965986394,milk,68,77,True
 pearl_millet,90,10,Warm / humid,9,P8,2499,0.07785523925170068,dough,78,89,False
 pearl_millet,90,10,Warm / semiarid,0,SOW,18705,0.0063047720580272654,sowing to emergence,0,3,False
@@ -1668,16 +1668,16 @@ pearl_millet,90,10,Warm / subhumid,6,P5,12432,0.01191201160971686,panicle emerge
 pearl_millet,90,10,Warm / subhumid,7,P6,12432,0.02115955478901223,flowering (anthesis),55,67,True
 pearl_millet,90,10,Warm / subhumid,8,P7,12432,0.03111313078314028,milk,68,77,True
 pearl_millet,90,10,Warm / subhumid,9,P8,12432,0.02609856551238739,dough,78,89,False
-pearl_millet,90,20,ALL,0,SOW,33733,0.00401701208555124,sowing to emergence,0,3,False
-pearl_millet,90,20,ALL,1,P0,33733,0.006711954618527851,emergence,4,9,False
-pearl_millet,90,20,ALL,2,P1,33733,0.008469081888732102,3-leaf,10,16,False
-pearl_millet,90,20,ALL,3,P2,33733,0.012265878752438265,tillering,17,33,False
-pearl_millet,90,20,ALL,4,P3,33733,0.009805404800643288,panicle initiation,34,40,False
-pearl_millet,90,20,ALL,5,P4,33733,0.01269411310760976,flag leaf / boot,41,48,False
-pearl_millet,90,20,ALL,6,P5,33733,0.012472601845907568,panicle emergence (heading),49,54,False
-pearl_millet,90,20,ALL,7,P6,33733,0.027982692844217828,flowering (anthesis),55,67,True
-pearl_millet,90,20,ALL,8,P7,33733,0.04855462282699434,milk,68,77,True
-pearl_millet,90,20,ALL,9,P8,33733,0.0486124998034862,dough,78,89,False
+pearl_millet,90,20,ALL,0,SOW,33733,0.004017040178042273,sowing to emergence,0,3,False
+pearl_millet,90,20,ALL,1,P0,33733,0.006711982752699137,emergence,4,9,False
+pearl_millet,90,20,ALL,2,P1,33733,0.008469138073714166,3-leaf,10,16,False
+pearl_millet,90,20,ALL,3,P2,33733,0.01226599149752468,tillering,17,33,False
+pearl_millet,90,20,ALL,4,P3,33733,0.009805516920525895,panicle initiation,34,40,False
+pearl_millet,90,20,ALL,5,P4,33733,0.012694225227492367,flag leaf / boot,41,48,False
+pearl_millet,90,20,ALL,6,P5,33733,0.012472630084279488,panicle emergence (heading),49,54,False
+pearl_millet,90,20,ALL,7,P6,33733,0.027982720769987847,flowering (anthesis),55,67,True
+pearl_millet,90,20,ALL,8,P7,33733,0.04855470702110693,milk,68,77,True
+pearl_millet,90,20,ALL,9,P8,33733,0.04861261234017135,dough,78,89,False
 pearl_millet,90,20,Cool / humid,0,SOW,225,0.0005948151544,sowing to emergence,0,3,False
 pearl_millet,90,20,Cool / humid,1,P0,225,0.0031002831359999996,emergence,4,9,False
 pearl_millet,90,20,Cool / humid,2,P1,225,0.00481161104,3-leaf,10,16,False
@@ -1708,16 +1708,16 @@ pearl_millet,90,20,Warm / arid,6,P5,253,0.017764560375494072,panicle emergence (
 pearl_millet,90,20,Warm / arid,7,P6,253,0.1197357543083004,flowering (anthesis),55,67,True
 pearl_millet,90,20,Warm / arid,8,P7,253,0.4092690806324111,milk,68,77,True
 pearl_millet,90,20,Warm / arid,9,P8,253,0.49436575019762846,dough,78,89,False
-pearl_millet,90,20,Warm / humid,0,SOW,2499,0.0021166082707482995,sowing to emergence,0,3,False
-pearl_millet,90,20,Warm / humid,1,P0,2499,0.005329042752380952,emergence,4,9,False
-pearl_millet,90,20,Warm / humid,2,P1,2499,0.009760330560544218,3-leaf,10,16,False
-pearl_millet,90,20,Warm / humid,3,P2,2499,0.043447127401360544,tillering,17,33,False
-pearl_millet,90,20,Warm / humid,4,P3,2499,0.04097777565306122,panicle initiation,34,40,False
-pearl_millet,90,20,Warm / humid,5,P4,2499,0.05461351857142857,flag leaf / boot,41,48,False
-pearl_millet,90,20,Warm / humid,6,P5,2499,0.05528879421768707,panicle emergence (heading),49,54,False
-pearl_millet,90,20,Warm / humid,7,P6,2499,0.09799620021768708,flowering (anthesis),55,67,True
-pearl_millet,90,20,Warm / humid,8,P7,2499,0.11143733640816328,milk,68,77,True
-pearl_millet,90,20,Warm / humid,9,P8,2499,0.0747458431292517,dough,78,89,False
+pearl_millet,90,20,Warm / humid,0,SOW,2499,0.002116987397278912,sowing to emergence,0,3,False
+pearl_millet,90,20,Warm / humid,1,P0,2499,0.0053294218020408166,emergence,4,9,False
+pearl_millet,90,20,Warm / humid,2,P1,2499,0.00976108850612245,3-leaf,10,16,False
+pearl_millet,90,20,Warm / humid,3,P2,2499,0.04344864636734694,tillering,17,33,False
+pearl_millet,90,20,Warm / humid,4,P3,2499,0.040979292312925165,panicle initiation,34,40,False
+pearl_millet,90,20,Warm / humid,5,P4,2499,0.054615032925170066,flag leaf / boot,41,48,False
+pearl_millet,90,20,Warm / humid,6,P5,2499,0.05528917395918368,panicle emergence (heading),49,54,False
+pearl_millet,90,20,Warm / humid,7,P6,2499,0.09799658149659865,flowering (anthesis),55,67,True
+pearl_millet,90,20,Warm / humid,8,P7,2499,0.11143847102040816,milk,68,77,True
+pearl_millet,90,20,Warm / humid,9,P8,2499,0.07474736132653062,dough,78,89,False
 pearl_millet,90,20,Warm / semiarid,0,SOW,17921,0.005853223046777523,sowing to emergence,0,3,False
 pearl_millet,90,20,Warm / semiarid,1,P0,17921,0.009540198366396965,emergence,4,9,False
 pearl_millet,90,20,Warm / semiarid,2,P1,17921,0.01156974333406618,3-leaf,10,16,False
@@ -1738,16 +1738,16 @@ pearl_millet,90,20,Warm / subhumid,6,P5,12430,0.013336594590265486,panicle emerg
 pearl_millet,90,20,Warm / subhumid,7,P6,12430,0.03266673786846339,flowering (anthesis),55,67,True
 pearl_millet,90,20,Warm / subhumid,8,P7,12430,0.036754858765245375,milk,68,77,True
 pearl_millet,90,20,Warm / subhumid,9,P8,12430,0.022987594093475464,dough,78,89,False
-pearl_millet,90,30,ALL,0,SOW,32137,0.0013503425902013258,sowing to emergence,0,3,False
-pearl_millet,90,30,ALL,1,P0,32137,0.003303065978376949,emergence,4,9,False
-pearl_millet,90,30,ALL,2,P1,32137,0.006528522682633725,3-leaf,10,16,False
-pearl_millet,90,30,ALL,3,P2,32137,0.014318639185301055,tillering,17,33,False
-pearl_millet,90,30,ALL,4,P3,32137,0.011575688916824844,panicle initiation,34,40,False
-pearl_millet,90,30,ALL,5,P4,32137,0.015272587971373186,flag leaf / boot,41,48,False
+pearl_millet,90,30,ALL,0,SOW,32137,0.0013503720517658775,sowing to emergence,0,3,False
+pearl_millet,90,30,ALL,1,P0,32137,0.0033030953961975295,emergence,4,9,False
+pearl_millet,90,30,ALL,2,P1,32137,0.006528611045455394,3-leaf,10,16,False
+pearl_millet,90,30,ALL,3,P2,32137,0.014318786602483742,tillering,17,33,False
+pearl_millet,90,30,ALL,4,P3,32137,0.011575748080545789,panicle initiation,34,40,False
+pearl_millet,90,30,ALL,5,P4,32137,0.015272617498553692,flag leaf / boot,41,48,False
 pearl_millet,90,30,ALL,6,P5,32137,0.016630671879652115,panicle emergence (heading),49,54,False
-pearl_millet,90,30,ALL,7,P6,32137,0.03313475340031739,flowering (anthesis),55,67,True
-pearl_millet,90,30,ALL,8,P7,32137,0.058530302362354916,milk,68,77,True
-pearl_millet,90,30,ALL,9,P8,32137,0.061901298219248835,dough,78,89,False
+pearl_millet,90,30,ALL,7,P6,32137,0.033134842200578773,flowering (anthesis),55,67,True
+pearl_millet,90,30,ALL,8,P7,32137,0.05853041937747767,milk,68,77,True
+pearl_millet,90,30,ALL,9,P8,32137,0.061901386582070506,dough,78,89,False
 pearl_millet,90,30,Cool / humid,0,SOW,225,0.0019685701706666668,sowing to emergence,0,3,False
 pearl_millet,90,30,Cool / humid,1,P0,225,0.0051476903866666665,emergence,4,9,False
 pearl_millet,90,30,Cool / humid,2,P1,225,0.020611023426666666,3-leaf,10,16,False
@@ -1778,16 +1778,16 @@ pearl_millet,90,30,Warm / arid,6,P5,12,0.010338346416666666,panicle emergence (h
 pearl_millet,90,30,Warm / arid,7,P6,12,0.1457987875,flowering (anthesis),55,67,True
 pearl_millet,90,30,Warm / arid,8,P7,12,0.5849786475000001,milk,68,77,True
 pearl_millet,90,30,Warm / arid,9,P8,12,0.6930196391666666,dough,78,89,False
-pearl_millet,90,30,Warm / humid,0,SOW,2499,0.0024821262745578234,sowing to emergence,0,3,False
-pearl_millet,90,30,Warm / humid,1,P0,2499,0.009914191336054421,emergence,4,9,False
-pearl_millet,90,30,Warm / humid,2,P1,2499,0.022459015700680273,3-leaf,10,16,False
-pearl_millet,90,30,Warm / humid,3,P2,2499,0.06498476710884353,tillering,17,33,False
-pearl_millet,90,30,Warm / humid,4,P3,2499,0.04797037598639455,panicle initiation,34,40,False
-pearl_millet,90,30,Warm / humid,5,P4,2499,0.06762264531972789,flag leaf / boot,41,48,False
+pearl_millet,90,30,Warm / humid,0,SOW,2499,0.0024825050936054423,sowing to emergence,0,3,False
+pearl_millet,90,30,Warm / humid,1,P0,2499,0.009914570308843537,emergence,4,9,False
+pearl_millet,90,30,Warm / humid,2,P1,2499,0.02246015261904762,3-leaf,10,16,False
+pearl_millet,90,30,Warm / humid,3,P2,2499,0.06498665428571429,tillering,17,33,False
+pearl_millet,90,30,Warm / humid,4,P3,2499,0.04797113700680272,panicle initiation,34,40,False
+pearl_millet,90,30,Warm / humid,5,P4,2499,0.06762302352380951,flag leaf / boot,41,48,False
 pearl_millet,90,30,Warm / humid,6,P5,2499,0.066387853707483,panicle emergence (heading),49,54,False
-pearl_millet,90,30,Warm / humid,7,P6,2499,0.1177588618367347,flowering (anthesis),55,67,True
-pearl_millet,90,30,Warm / humid,8,P7,2499,0.09381765545578233,milk,68,77,True
-pearl_millet,90,30,Warm / humid,9,P8,2499,0.05404608489795918,dough,78,89,False
+pearl_millet,90,30,Warm / humid,7,P6,2499,0.11776000413605442,flowering (anthesis),55,67,True
+pearl_millet,90,30,Warm / humid,8,P7,2499,0.09381917442176871,milk,68,77,True
+pearl_millet,90,30,Warm / humid,9,P8,2499,0.054047222585034006,dough,78,89,False
 pearl_millet,90,30,Warm / semiarid,0,SOW,16566,0.0018545644055233612,sowing to emergence,0,3,False
 pearl_millet,90,30,Warm / semiarid,1,P0,16566,0.003142375359060727,emergence,4,9,False
 pearl_millet,90,30,Warm / semiarid,2,P1,16566,0.004289242812444767,3-leaf,10,16,False
@@ -1809,14 +1809,14 @@ pearl_millet,90,30,Warm / subhumid,7,P6,12430,0.038803780767256636,flowering (an
 pearl_millet,90,30,Warm / subhumid,8,P7,12430,0.03107418286371681,milk,68,77,True
 pearl_millet,90,30,Warm / subhumid,9,P8,12430,0.017808055857039422,dough,78,89,False
 pearl_millet,90,40,ALL,0,SOW,29847,0.0026221822009448188,sowing to emergence,0,3,False
-pearl_millet,90,40,ALL,1,P0,29847,0.005443529677987737,emergence,4,9,False
-pearl_millet,90,40,ALL,2,P1,29847,0.009341417952279963,3-leaf,10,16,False
-pearl_millet,90,40,ALL,3,P2,29847,0.018252441095486984,tillering,17,33,False
-pearl_millet,90,40,ALL,4,P3,29847,0.016949192106081014,panicle initiation,34,40,False
+pearl_millet,90,40,ALL,1,P0,29847,0.005443593190066004,emergence,4,9,False
+pearl_millet,90,40,ALL,2,P1,29847,0.009341544976436493,3-leaf,10,16,False
+pearl_millet,90,40,ALL,3,P2,29847,0.018252568119643514,tillering,17,33,False
+pearl_millet,90,40,ALL,4,P3,29847,0.0169492239793011,panicle initiation,34,40,False
 pearl_millet,90,40,ALL,5,P4,29847,0.02015189492197541,flag leaf / boot,41,48,False
-pearl_millet,90,40,ALL,6,P5,29847,0.021684669168844442,panicle emergence (heading),49,54,False
-pearl_millet,90,40,ALL,7,P6,29847,0.03347759026575536,flowering (anthesis),55,67,True
-pearl_millet,90,40,ALL,8,P7,29847,0.06023540543098268,milk,68,77,True
+pearl_millet,90,40,ALL,6,P5,29847,0.021684700573340703,panicle emergence (heading),49,54,False
+pearl_millet,90,40,ALL,7,P6,29847,0.03347771682118806,flowering (anthesis),55,67,True
+pearl_millet,90,40,ALL,8,P7,29847,0.06023550058191912,milk,68,77,True
 pearl_millet,90,40,ALL,9,P8,29847,0.06758899805049083,dough,78,89,False
 pearl_millet,90,40,Cool / humid,0,SOW,225,0.01220941644,sowing to emergence,0,3,False
 pearl_millet,90,40,Cool / humid,1,P0,225,0.0210880648,emergence,4,9,False
@@ -1839,14 +1839,14 @@ pearl_millet,90,40,Cool / subhumid,7,P6,405,0.002113020451358025,flowering (anth
 pearl_millet,90,40,Cool / subhumid,8,P7,405,0.0007514654879012346,milk,68,77,True
 pearl_millet,90,40,Cool / subhumid,9,P8,405,0.0001355239954074074,dough,78,89,False
 pearl_millet,90,40,Warm / humid,0,SOW,2499,0.009403078470748298,sowing to emergence,0,3,False
-pearl_millet,90,40,Warm / humid,1,P0,2499,0.02222897900680272,emergence,4,9,False
-pearl_millet,90,40,Warm / humid,2,P1,2499,0.04015894529931972,3-leaf,10,16,False
-pearl_millet,90,40,Warm / humid,3,P2,2499,0.07960443100680274,tillering,17,33,False
-pearl_millet,90,40,Warm / humid,4,P3,2499,0.0648447389047619,panicle initiation,34,40,False
+pearl_millet,90,40,Warm / humid,1,P0,2499,0.0222297346462585,emergence,4,9,False
+pearl_millet,90,40,Warm / humid,2,P1,2499,0.040160460421768705,3-leaf,10,16,False
+pearl_millet,90,40,Warm / humid,3,P2,2499,0.07960594074829933,tillering,17,33,False
+pearl_millet,90,40,Warm / humid,4,P3,2499,0.06484512095238097,panicle initiation,34,40,False
 pearl_millet,90,40,Warm / humid,5,P4,2499,0.0809118183265306,flag leaf / boot,41,48,False
-pearl_millet,90,40,Warm / humid,6,P5,2499,0.08442949806122449,panicle emergence (heading),49,54,False
-pearl_millet,90,40,Warm / humid,7,P6,2499,0.10493528421768708,flowering (anthesis),55,67,True
-pearl_millet,90,40,Warm / humid,8,P7,2499,0.06623408897959183,milk,68,77,True
+pearl_millet,90,40,Warm / humid,6,P5,2499,0.08442987626530613,panicle emergence (heading),49,54,False
+pearl_millet,90,40,Warm / humid,7,P6,2499,0.10493679857142858,flowering (anthesis),55,67,True
+pearl_millet,90,40,Warm / humid,8,P7,2499,0.0662352251292517,milk,68,77,True
 pearl_millet,90,40,Warm / humid,9,P8,2499,0.02842979726530612,dough,78,89,False
 pearl_millet,90,40,Warm / semiarid,0,SOW,14289,0.0012537340742858143,sowing to emergence,0,3,False
 pearl_millet,90,40,Warm / semiarid,1,P0,14289,0.002232615508703198,emergence,4,9,False
@@ -1870,14 +1870,14 @@ pearl_millet,90,40,Warm / subhumid,8,P7,12429,0.021735161710193903,milk,68,77,Tr
 pearl_millet,90,40,Warm / subhumid,9,P8,12429,0.009446337970456192,dough,78,89,False
 pearl_millet,110,0,ALL,0,SOW,33733,0.0014272698773435508,sowing to emergence,0,3,False
 pearl_millet,110,0,ALL,1,P0,33733,0.006342768910425992,emergence,4,11,False
-pearl_millet,110,0,ALL,2,P1,33733,0.012693665415616754,3-leaf,12,19,False
-pearl_millet,110,0,ALL,3,P2,33733,0.01918051537399579,tillering,20,42,False
-pearl_millet,110,0,ALL,4,P3,33733,0.008793594226804613,panicle initiation,43,51,False
-pearl_millet,110,0,ALL,5,P4,33733,0.011465153667714108,flag leaf / boot,52,61,False
-pearl_millet,110,0,ALL,6,P5,33733,0.01328121186820028,panicle emergence (heading),62,70,False
-pearl_millet,110,0,ALL,7,P6,33733,0.02625069350025198,flowering (anthesis),71,85,True
-pearl_millet,110,0,ALL,8,P7,33733,0.045174731291228176,milk,86,96,True
-pearl_millet,110,0,ALL,9,P8,33733,0.04927615292141227,dough,97,109,False
+pearl_millet,110,0,ALL,2,P1,33733,0.012693693445587406,3-leaf,12,19,False
+pearl_millet,110,0,ALL,3,P2,33733,0.01918057143393709,tillering,20,42,False
+pearl_millet,110,0,ALL,4,P3,33733,0.008793650390946551,panicle initiation,43,51,False
+pearl_millet,110,0,ALL,5,P4,33733,0.011465265995997984,flag leaf / boot,52,61,False
+pearl_millet,110,0,ALL,6,P5,33733,0.01328129606231287,panicle emergence (heading),62,70,False
+pearl_millet,110,0,ALL,7,P6,33733,0.026250721426021997,flowering (anthesis),71,85,True
+pearl_millet,110,0,ALL,8,P7,33733,0.04517478735116948,milk,86,96,True
+pearl_millet,110,0,ALL,9,P8,33733,0.04927626504129488,dough,97,109,False
 pearl_millet,110,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,3,False
 pearl_millet,110,0,Cool / humid,1,P0,225,0.0,emergence,4,11,False
 pearl_millet,110,0,Cool / humid,2,P1,225,0.000971865352,3-leaf,12,19,False
@@ -1910,14 +1910,14 @@ pearl_millet,110,0,Warm / arid,8,P7,253,0.35592021446640315,milk,86,96,True
 pearl_millet,110,0,Warm / arid,9,P8,253,0.48406688142292487,dough,97,109,False
 pearl_millet,110,0,Warm / humid,0,SOW,2499,2.137607163265306e-05,sowing to emergence,0,3,False
 pearl_millet,110,0,Warm / humid,1,P0,2499,0.0002170154238095238,emergence,4,11,False
-pearl_millet,110,0,Warm / humid,2,P1,2499,0.002180407232761905,3-leaf,12,19,False
-pearl_millet,110,0,Warm / humid,3,P2,2499,0.02123422276870748,tillering,20,42,False
-pearl_millet,110,0,Warm / humid,4,P3,2499,0.03597497775510204,panicle initiation,43,51,False
-pearl_millet,110,0,Warm / humid,5,P4,2499,0.04659330100680272,flag leaf / boot,52,61,False
-pearl_millet,110,0,Warm / humid,6,P5,2499,0.05667597031972789,panicle emergence (heading),62,70,False
-pearl_millet,110,0,Warm / humid,7,P6,2499,0.10256513976190476,flowering (anthesis),71,85,True
-pearl_millet,110,0,Warm / humid,8,P7,2499,0.11367152006802722,milk,86,96,True
-pearl_millet,110,0,Warm / humid,9,P8,2499,0.07807902644897959,dough,97,109,False
+pearl_millet,110,0,Warm / humid,2,P1,2499,0.0021807861286802723,3-leaf,12,19,False
+pearl_millet,110,0,Warm / humid,3,P2,2499,0.02123497994557823,tillering,20,42,False
+pearl_millet,110,0,Warm / humid,4,P3,2499,0.03597573339455782,panicle initiation,43,51,False
+pearl_millet,110,0,Warm / humid,5,P4,2499,0.0465948161292517,flag leaf / boot,52,61,False
+pearl_millet,110,0,Warm / humid,6,P5,2499,0.056677110312925175,panicle emergence (heading),62,70,False
+pearl_millet,110,0,Warm / humid,7,P6,2499,0.10256552027210886,flowering (anthesis),71,85,True
+pearl_millet,110,0,Warm / humid,8,P7,2499,0.11367227340136055,milk,86,96,True
+pearl_millet,110,0,Warm / humid,9,P8,2499,0.07808054157142857,dough,97,109,False
 pearl_millet,110,0,Warm / semiarid,0,SOW,17921,0.0024829296552474752,sowing to emergence,0,3,False
 pearl_millet,110,0,Warm / semiarid,1,P0,17921,0.010482690010730428,emergence,4,11,False
 pearl_millet,110,0,Warm / semiarid,2,P1,17921,0.020595230829222697,3-leaf,12,19,False
@@ -1939,15 +1939,15 @@ pearl_millet,110,0,Warm / subhumid,7,P6,12430,0.032465852659485116,flowering (an
 pearl_millet,110,0,Warm / subhumid,8,P7,12430,0.036330836732099754,milk,86,96,True
 pearl_millet,110,0,Warm / subhumid,9,P8,12430,0.02428262040265487,dough,97,109,False
 pearl_millet,110,10,ALL,0,SOW,32137,0.003436348343759529,sowing to emergence,0,3,False
-pearl_millet,110,10,ALL,1,P0,32137,0.009047622462666086,emergence,4,11,False
-pearl_millet,110,10,ALL,2,P1,32137,0.011921519729937456,3-leaf,12,19,False
-pearl_millet,110,10,ALL,3,P2,32137,0.01584060095136447,tillering,20,42,False
-pearl_millet,110,10,ALL,4,P3,32137,0.01025807134676541,panicle initiation,43,51,False
-pearl_millet,110,10,ALL,5,P4,32137,0.013301749124980552,flag leaf / boot,52,61,False
-pearl_millet,110,10,ALL,6,P5,32137,0.01727679468388524,panicle emergence (heading),62,70,False
-pearl_millet,110,10,ALL,7,P6,32137,0.030605864176805553,flowering (anthesis),71,85,True
-pearl_millet,110,10,ALL,8,P7,32137,0.056284747154245876,milk,86,96,True
-pearl_millet,110,10,ALL,9,P8,32137,0.06273491844546784,dough,97,109,False
+pearl_millet,110,10,ALL,1,P0,32137,0.009047651946102624,emergence,4,11,False
+pearl_millet,110,10,ALL,2,P1,32137,0.011921549257117964,3-leaf,12,19,False
+pearl_millet,110,10,ALL,3,P2,32137,0.015840718622646792,tillering,20,42,False
+pearl_millet,110,10,ALL,4,P3,32137,0.010258189236767589,panicle initiation,43,51,False
+pearl_millet,110,10,ALL,5,P4,32137,0.013301837269082368,flag leaf / boot,52,61,False
+pearl_millet,110,10,ALL,6,P5,32137,0.017276823992345893,panicle emergence (heading),62,70,False
+pearl_millet,110,10,ALL,7,P6,32137,0.030605893922705917,flowering (anthesis),71,85,True
+pearl_millet,110,10,ALL,8,P7,32137,0.056284865262967915,milk,86,96,True
+pearl_millet,110,10,ALL,9,P8,32137,0.06273500680828951,dough,97,109,False
 pearl_millet,110,10,Cool / humid,0,SOW,225,0.0008371851602666666,sowing to emergence,0,3,False
 pearl_millet,110,10,Cool / humid,1,P0,225,0.0012732701853333333,emergence,4,11,False
 pearl_millet,110,10,Cool / humid,2,P1,225,0.00393746816,3-leaf,12,19,False
@@ -1979,15 +1979,15 @@ pearl_millet,110,10,Warm / arid,7,P6,12,0.13865592833333332,flowering (anthesis)
 pearl_millet,110,10,Warm / arid,8,P7,12,0.5383349808333333,milk,86,96,True
 pearl_millet,110,10,Warm / arid,9,P8,12,0.6647544058333333,dough,97,109,False
 pearl_millet,110,10,Warm / humid,0,SOW,2499,0.0004221578991836735,sowing to emergence,0,3,False
-pearl_millet,110,10,Warm / humid,1,P0,2499,0.003293508893061224,emergence,4,11,False
-pearl_millet,110,10,Warm / humid,2,P1,2499,0.006921988989115647,3-leaf,12,19,False
-pearl_millet,110,10,Warm / humid,3,P2,2499,0.044204464088435376,tillering,20,42,False
-pearl_millet,110,10,Warm / humid,4,P3,2499,0.045613525693877555,panicle initiation,43,51,False
-pearl_millet,110,10,Warm / humid,5,P4,2499,0.058785052149659865,flag leaf / boot,52,61,False
-pearl_millet,110,10,Warm / humid,6,P5,2499,0.071044215707483,panicle emergence (heading),62,70,False
-pearl_millet,110,10,Warm / humid,7,P6,2499,0.11618002653061225,flowering (anthesis),71,85,True
-pearl_millet,110,10,Warm / humid,8,P7,2499,0.09977912013605442,milk,86,96,True
-pearl_millet,110,10,Warm / humid,9,P8,2499,0.05820265476190476,dough,97,109,False
+pearl_millet,110,10,Warm / humid,1,P0,2499,0.0032938876352380953,emergence,4,11,False
+pearl_millet,110,10,Warm / humid,2,P1,2499,0.006922367961904761,3-leaf,12,19,False
+pearl_millet,110,10,Warm / humid,3,P2,2499,0.044205981517006804,tillering,20,42,False
+pearl_millet,110,10,Warm / humid,4,P3,2499,0.04561504081632653,panicle initiation,43,51,False
+pearl_millet,110,10,Warm / humid,5,P4,2499,0.058786192142857144,flag leaf / boot,52,61,False
+pearl_millet,110,10,Warm / humid,6,P5,2499,0.07104459391156462,panicle emergence (heading),62,70,False
+pearl_millet,110,10,Warm / humid,7,P6,2499,0.11618041088435375,flowering (anthesis),71,85,True
+pearl_millet,110,10,Warm / humid,8,P7,2499,0.09978063448979592,milk,86,96,True
+pearl_millet,110,10,Warm / humid,9,P8,2499,0.058203795523809526,dough,97,109,False
 pearl_millet,110,10,Warm / semiarid,0,SOW,16566,0.005998191776253773,sowing to emergence,0,3,False
 pearl_millet,110,10,Warm / semiarid,1,P0,16566,0.014794844270385125,emergence,4,11,False
 pearl_millet,110,10,Warm / semiarid,2,P1,16566,0.018882096535373656,3-leaf,12,19,False
@@ -2008,15 +2008,15 @@ pearl_millet,110,10,Warm / subhumid,6,P5,12430,0.023252304099388575,panicle emer
 pearl_millet,110,10,Warm / subhumid,7,P6,12430,0.03860762430241352,flowering (anthesis),71,85,True
 pearl_millet,110,10,Warm / subhumid,8,P7,12430,0.032869174320756235,milk,86,96,True
 pearl_millet,110,10,Warm / subhumid,9,P8,12430,0.019130845477795654,dough,97,109,False
-pearl_millet,110,20,ALL,0,SOW,29847,0.003072820367722049,sowing to emergence,0,3,False
-pearl_millet,110,20,ALL,1,P0,29847,0.005481784171189735,emergence,4,11,False
-pearl_millet,110,20,ALL,2,P1,29847,0.006494674857590378,3-leaf,12,19,False
-pearl_millet,110,20,ALL,3,P2,29847,0.015255497356015679,tillering,20,42,False
-pearl_millet,110,20,ALL,4,P3,29847,0.013353795491107984,panicle initiation,43,51,False
-pearl_millet,110,20,ALL,5,P4,29847,0.019153733751047005,flag leaf / boot,52,61,False
+pearl_millet,110,20,ALL,0,SOW,29847,0.003072852100324991,sowing to emergence,0,3,False
+pearl_millet,110,20,ALL,1,P0,29847,0.005481847636395618,emergence,4,11,False
+pearl_millet,110,20,ALL,2,P1,29847,0.006494738369668643,3-leaf,12,19,False
+pearl_millet,110,20,ALL,3,P2,29847,0.01525565601903039,tillering,20,42,False
+pearl_millet,110,20,ALL,4,P3,29847,0.013353890642044427,panicle initiation,43,51,False
+pearl_millet,110,20,ALL,5,P4,29847,0.019153765155543272,flag leaf / boot,52,61,False
 pearl_millet,110,20,ALL,6,P5,29847,0.02224413936685429,panicle emergence (heading),62,70,False
-pearl_millet,110,20,ALL,7,P6,29847,0.03356945041943914,flowering (anthesis),71,85,True
-pearl_millet,110,20,ALL,8,P7,29847,0.05722887399345127,milk,86,96,True
+pearl_millet,110,20,ALL,7,P6,29847,0.03356957697487185,flowering (anthesis),71,85,True
+pearl_millet,110,20,ALL,8,P7,29847,0.057228969144387715,milk,86,96,True
 pearl_millet,110,20,ALL,9,P8,29847,0.06821363222330552,dough,97,109,False
 pearl_millet,110,20,Cool / humid,0,SOW,225,0.0005948151544,sowing to emergence,0,3,False
 pearl_millet,110,20,Cool / humid,1,P0,225,0.0031002831359999996,emergence,4,11,False
@@ -2038,15 +2038,15 @@ pearl_millet,110,20,Cool / subhumid,6,P5,405,0.003974161195061728,panicle emerge
 pearl_millet,110,20,Cool / subhumid,7,P6,405,0.0039148662617283945,flowering (anthesis),71,85,True
 pearl_millet,110,20,Cool / subhumid,8,P7,405,0.0007514654879012346,milk,86,96,True
 pearl_millet,110,20,Cool / subhumid,9,P8,405,0.0001355239954074074,dough,97,109,False
-pearl_millet,110,20,Warm / humid,0,SOW,2499,0.0021173124068027214,sowing to emergence,0,3,False
-pearl_millet,110,20,Warm / humid,1,P0,2499,0.005893384959183673,emergence,4,11,False
-pearl_millet,110,20,Warm / humid,2,P1,2499,0.013975855221768706,3-leaf,12,19,False
-pearl_millet,110,20,Warm / humid,3,P2,2499,0.06443255361904761,tillering,20,42,False
-pearl_millet,110,20,Warm / humid,4,P3,2499,0.05671524199999999,panicle initiation,43,51,False
-pearl_millet,110,20,Warm / humid,5,P4,2499,0.07443534024489797,flag leaf / boot,52,61,False
+pearl_millet,110,20,Warm / humid,0,SOW,2499,0.002117691379591837,sowing to emergence,0,3,False
+pearl_millet,110,20,Warm / humid,1,P0,2499,0.00589414267414966,emergence,4,11,False
+pearl_millet,110,20,Warm / humid,2,P1,2499,0.013976611629931973,3-leaf,12,19,False
+pearl_millet,110,20,Warm / humid,3,P2,2499,0.06443444463945579,tillering,20,42,False
+pearl_millet,110,20,Warm / humid,4,P3,2499,0.05671638122448979,panicle initiation,43,51,False
+pearl_millet,110,20,Warm / humid,5,P4,2499,0.07443572152380953,flag leaf / boot,52,61,False
 pearl_millet,110,20,Warm / humid,6,P5,2499,0.0909235812312925,panicle emergence (heading),62,70,False
-pearl_millet,110,20,Warm / humid,7,P6,2499,0.12142786605442178,flowering (anthesis),71,85,True
-pearl_millet,110,20,Warm / humid,8,P7,2499,0.07525141510204082,milk,86,96,True
+pearl_millet,110,20,Warm / humid,7,P6,2499,0.12142938040816327,flowering (anthesis),71,85,True
+pearl_millet,110,20,Warm / humid,8,P7,2499,0.07525254894557823,milk,86,96,True
 pearl_millet,110,20,Warm / humid,9,P8,2499,0.03054429650340136,dough,97,109,False
 pearl_millet,110,20,Warm / semiarid,0,SOW,14289,0.004738326311386381,sowing to emergence,0,3,False
 pearl_millet,110,20,Warm / semiarid,1,P0,14289,0.008002671855441248,emergence,4,11,False
@@ -2190,13 +2190,13 @@ pearl_millet,110,40,Warm / subhumid,8,P7,12428,0.015309990606292245,milk,86,96,T
 pearl_millet,110,40,Warm / subhumid,9,P8,12428,0.014011905776512713,dough,97,109,False
 pearl_millet,130,0,ALL,0,SOW,29847,0.00039209484083827515,sowing to emergence,0,3,False
 pearl_millet,130,0,ALL,1,P0,29847,0.00487221748582102,emergence,4,12,False
-pearl_millet,130,0,ALL,2,P1,29847,0.011146652923225114,3-leaf,13,23,False
-pearl_millet,130,0,ALL,3,P2,29847,0.018285945880524006,tillering,24,52,False
-pearl_millet,130,0,ALL,4,P3,29847,0.011656845161791805,panicle initiation,53,62,False
-pearl_millet,130,0,ALL,5,P4,29847,0.016117048492206923,flag leaf / boot,63,75,False
-pearl_millet,130,0,ALL,6,P5,29847,0.02195582364431936,panicle emergence (heading),76,86,False
-pearl_millet,130,0,ALL,7,P6,29847,0.033756277154186345,flowering (anthesis),87,102,True
-pearl_millet,130,0,ALL,8,P7,29847,0.05366429760197004,milk,103,114,True
+pearl_millet,130,0,ALL,2,P1,29847,0.011146684679264248,3-leaf,13,23,False
+pearl_millet,130,0,ALL,3,P2,29847,0.018286072904680536,tillering,24,52,False
+pearl_millet,130,0,ALL,4,P3,29847,0.011656971951586425,panicle initiation,53,62,False
+pearl_millet,130,0,ALL,5,P4,29847,0.016117143408781454,flag leaf / boot,63,75,False
+pearl_millet,130,0,ALL,6,P5,29847,0.021955855283177537,panicle emergence (heading),76,86,False
+pearl_millet,130,0,ALL,7,P6,29847,0.033756403709619055,flowering (anthesis),87,102,True
+pearl_millet,130,0,ALL,8,P7,29847,0.053664392752906485,milk,103,114,True
 pearl_millet,130,0,ALL,9,P8,29847,0.07143263123040841,dough,115,129,False
 pearl_millet,130,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,3,False
 pearl_millet,130,0,Cool / humid,1,P0,225,0.0006662449146666666,emergence,4,12,False
@@ -2220,13 +2220,13 @@ pearl_millet,130,0,Cool / subhumid,8,P7,405,0.0006159414651851851,milk,103,114,T
 pearl_millet,130,0,Cool / subhumid,9,P8,405,0.00031475859851851854,dough,115,129,False
 pearl_millet,130,0,Warm / humid,0,SOW,2499,2.137607163265306e-05,sowing to emergence,0,3,False
 pearl_millet,130,0,Warm / humid,1,P0,2499,0.0003924325496598639,emergence,4,12,False
-pearl_millet,130,0,Warm / humid,2,P1,2499,0.0038631917812244894,3-leaf,13,23,False
-pearl_millet,130,0,Warm / humid,3,P2,2499,0.04524832729251701,tillering,24,52,False
-pearl_millet,130,0,Warm / humid,4,P3,2499,0.053444362870748295,panicle initiation,53,62,False
-pearl_millet,130,0,Warm / humid,5,P4,2499,0.06959764251020407,flag leaf / boot,63,75,False
-pearl_millet,130,0,Warm / humid,6,P5,2499,0.08908758229931972,panicle emergence (heading),76,86,False
-pearl_millet,130,0,Warm / humid,7,P6,2499,0.1309964274489796,flowering (anthesis),87,102,True
-pearl_millet,130,0,Warm / humid,8,P7,2499,0.08479252129251702,milk,103,114,True
+pearl_millet,130,0,Warm / humid,2,P1,2499,0.0038635707540136052,3-leaf,13,23,False
+pearl_millet,130,0,Warm / humid,3,P2,2499,0.045249842414965984,tillering,24,52,False
+pearl_millet,130,0,Warm / humid,4,P3,2499,0.05344587799319728,panicle initiation,53,62,False
+pearl_millet,130,0,Warm / humid,5,P4,2499,0.06959878250340136,flag leaf / boot,63,75,False
+pearl_millet,130,0,Warm / humid,6,P5,2499,0.08908796204081633,panicle emergence (heading),76,86,False
+pearl_millet,130,0,Warm / humid,7,P6,2499,0.13099795333333333,flowering (anthesis),87,102,True
+pearl_millet,130,0,Warm / humid,8,P7,2499,0.0847936559047619,milk,103,114,True
 pearl_millet,130,0,Warm / humid,9,P8,2499,0.036608500163265306,dough,115,129,False
 pearl_millet,130,0,Warm / semiarid,0,SOW,14289,0.0007968331839743858,sowing to emergence,0,3,False
 pearl_millet,130,0,Warm / semiarid,1,P0,14289,0.009375019631016866,emergence,4,12,False
@@ -2488,16 +2488,16 @@ pearl_millet,130,40,Warm / subhumid,6,P5,12415,0.012970649192992349,panicle emer
 pearl_millet,130,40,Warm / subhumid,7,P6,12415,0.01030711079436166,flowering (anthesis),87,102,True
 pearl_millet,130,40,Warm / subhumid,8,P7,12415,0.039929144114377764,milk,103,114,True
 pearl_millet,130,40,Warm / subhumid,9,P8,12415,0.07429425127313732,dough,115,129,False
-sorghum,70,0,ALL,0,SOW,36670,0.0034399114388917367,sowing to emergence,0,4,False
-sorghum,70,0,ALL,1,S0,36670,0.008394062398658303,emergence,5,9,False
-sorghum,70,0,ALL,2,S1,36670,0.016009459774365967,3-leaf,10,16,False
-sorghum,70,0,ALL,3,S2,36670,0.016140394918789203,5-leaf,17,23,False
-sorghum,70,0,ALL,4,S3,36670,0.01225058537155713,growing point differentiation,24,28,True
-sorghum,70,0,ALL,5,S4,36670,0.008372891360021817,flag leaf visible,29,33,True
-sorghum,70,0,ALL,6,S5,36670,0.007059943816975728,boot,34,39,True
-sorghum,70,0,ALL,7,S6,36670,0.01105398102057813,half-bloom,40,50,True
-sorghum,70,0,ALL,8,S7,36670,0.014418701419443689,soft dough,51,58,True
-sorghum,70,0,ALL,9,S8,36670,0.011838936967193892,hard dough,59,69,False
+sorghum,70,0,ALL,0,SOW,36670,0.00344000305574475,sowing to emergence,0,4,False
+sorghum,70,0,ALL,1,S0,36670,0.008394245697922006,emergence,5,9,False
+sorghum,70,0,ALL,2,S1,36670,0.016009643171966185,3-leaf,10,16,False
+sorghum,70,0,ALL,3,S2,36670,0.01614048928993728,5-leaf,17,23,False
+sorghum,70,0,ALL,4,S3,36670,0.012250658052658849,growing point differentiation,24,28,True
+sorghum,70,0,ALL,5,S4,36670,0.0083729903253886,flag leaf visible,29,33,True
+sorghum,70,0,ALL,6,S5,36670,0.007060065598622852,boot,34,39,True
+sorghum,70,0,ALL,7,S6,36670,0.011053279375718572,half-bloom,40,50,True
+sorghum,70,0,ALL,8,S7,36670,0.014418142025252248,soft dough,51,58,True
+sorghum,70,0,ALL,9,S8,36670,0.01183920058775566,hard dough,59,69,False
 sorghum,70,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,4,False
 sorghum,70,0,Cool / humid,1,S0,225,0.0,emergence,5,9,False
 sorghum,70,0,Cool / humid,2,S1,225,0.0008371851602666666,3-leaf,10,16,False
@@ -2518,26 +2518,26 @@ sorghum,70,0,Cool / subhumid,6,S5,405,0.0006741384703209876,boot,34,39,True
 sorghum,70,0,Cool / subhumid,7,S6,405,0.0005720643960987654,half-bloom,40,50,True
 sorghum,70,0,Cool / subhumid,8,S7,405,0.000601516860617284,soft dough,51,58,True
 sorghum,70,0,Cool / subhumid,9,S8,405,0.0004038390207654321,hard dough,59,69,False
-sorghum,70,0,Warm / arid,0,SOW,2329,0.026409665437097468,sowing to emergence,0,4,False
-sorghum,70,0,Warm / arid,1,S0,2329,0.052207846208673254,emergence,5,9,False
-sorghum,70,0,Warm / arid,2,S1,2329,0.08736939018892229,3-leaf,10,16,False
-sorghum,70,0,Warm / arid,3,S2,2329,0.06578405311206525,5-leaf,17,23,False
-sorghum,70,0,Warm / arid,4,S3,2329,0.036908740610133106,growing point differentiation,24,28,True
-sorghum,70,0,Warm / arid,5,S4,2329,0.019004553434091884,flag leaf visible,29,33,True
-sorghum,70,0,Warm / arid,6,S5,2329,0.016248414218978106,boot,34,39,True
-sorghum,70,0,Warm / arid,7,S6,2329,0.02597053735508802,half-bloom,40,50,True
-sorghum,70,0,Warm / arid,8,S7,2329,0.047829482755689136,soft dough,51,58,True
-sorghum,70,0,Warm / arid,9,S8,2329,0.04963819528982396,hard dough,59,69,False
+sorghum,70,0,Warm / arid,0,SOW,2329,0.02641110953327608,sowing to emergence,0,4,False
+sorghum,70,0,Warm / arid,1,S0,2329,0.05221073285530271,emergence,5,9,False
+sorghum,70,0,Warm / arid,2,S1,2329,0.08737227606268785,3-leaf,10,16,False
+sorghum,70,0,Warm / arid,3,S2,2329,0.06578513589437526,5-leaf,17,23,False
+sorghum,70,0,Warm / arid,4,S3,2329,0.03690948679948476,growing point differentiation,24,28,True
+sorghum,70,0,Warm / arid,5,S4,2329,0.019005297723486476,flag leaf visible,29,33,True
+sorghum,70,0,Warm / arid,6,S5,2329,0.01624951823357664,boot,34,39,True
+sorghum,70,0,Warm / arid,7,S6,2329,0.025958269203520824,half-bloom,40,50,True
+sorghum,70,0,Warm / arid,8,S7,2329,0.04781904117131816,soft dough,51,58,True
+sorghum,70,0,Warm / arid,9,S8,2329,0.04964112440103049,hard dough,59,69,False
 sorghum,70,0,Warm / humid,0,SOW,2499,2.137607163265306e-05,sowing to emergence,0,4,False
 sorghum,70,0,Warm / humid,1,S0,2499,0.00013834493142857144,emergence,5,9,False
 sorghum,70,0,Warm / humid,2,S1,2499,0.0012326600454693878,3-leaf,10,16,False
-sorghum,70,0,Warm / humid,3,S2,2499,0.004424053102040817,5-leaf,17,23,False
-sorghum,70,0,Warm / humid,4,S3,2499,0.006608957722448979,growing point differentiation,24,28,True
-sorghum,70,0,Warm / humid,5,S4,2499,0.007613338372789116,flag leaf visible,29,33,True
-sorghum,70,0,Warm / humid,6,S5,2499,0.013991813887074829,boot,34,39,True
-sorghum,70,0,Warm / humid,7,S6,2499,0.03707089805442177,half-bloom,40,50,True
-sorghum,70,0,Warm / humid,8,S7,2499,0.04477544808843537,soft dough,51,58,True
-sorghum,70,0,Warm / humid,9,S8,2499,0.0355084985170068,hard dough,59,69,False
+sorghum,70,0,Warm / humid,3,S2,2499,0.004424432074829933,5-leaf,17,23,False
+sorghum,70,0,Warm / humid,4,S3,2499,0.006609336695238095,growing point differentiation,24,28,True
+sorghum,70,0,Warm / humid,5,S4,2499,0.007614095549659864,flag leaf visible,29,33,True
+sorghum,70,0,Warm / humid,6,S5,2499,0.013992571063945579,boot,34,39,True
+sorghum,70,0,Warm / humid,7,S6,2499,0.03707203497278912,half-bloom,40,50,True
+sorghum,70,0,Warm / humid,8,S7,2499,0.04477696013605442,soft dough,51,58,True
+sorghum,70,0,Warm / humid,9,S8,2499,0.03550963927891156,hard dough,59,69,False
 sorghum,70,0,Warm / semiarid,0,SOW,18780,0.0034216010975367415,sowing to emergence,0,4,False
 sorghum,70,0,Warm / semiarid,1,S0,18780,0.00973753550018637,emergence,5,9,False
 sorghum,70,0,Warm / semiarid,2,S1,18780,0.0190120307536049,3-leaf,10,16,False
@@ -2558,16 +2558,16 @@ sorghum,70,0,Warm / subhumid,6,S5,12432,0.00341441947632722,boot,34,39,True
 sorghum,70,0,Warm / subhumid,7,S6,12432,0.00884431427927928,half-bloom,40,50,True
 sorghum,70,0,Warm / subhumid,8,S7,12432,0.01316905726229086,soft dough,51,58,True
 sorghum,70,0,Warm / subhumid,9,S8,12432,0.00947505572097812,hard dough,59,69,False
-sorghum,70,10,ALL,0,SOW,36616,0.006412016883411624,sowing to emergence,0,4,False
-sorghum,70,10,ALL,1,S0,36616,0.011142488311754425,emergence,5,9,False
-sorghum,70,10,ALL,2,S1,36616,0.015523895172957176,3-leaf,10,16,False
-sorghum,70,10,ALL,3,S2,36616,0.010170043352468867,5-leaf,17,23,False
-sorghum,70,10,ALL,4,S3,36616,0.006721306712879615,growing point differentiation,24,28,True
-sorghum,70,10,ALL,5,S4,36616,0.0065310820253550355,flag leaf visible,29,33,True
-sorghum,70,10,ALL,6,S5,36616,0.008225594198727332,boot,34,39,True
-sorghum,70,10,ALL,7,S6,36616,0.01539634562912388,half-bloom,40,50,True
-sorghum,70,10,ALL,8,S7,36616,0.019204832236344768,soft dough,51,58,True
-sorghum,70,10,ALL,9,S8,36616,0.016011882575376883,hard dough,59,69,False
+sorghum,70,10,ALL,0,SOW,36616,0.0064120558254041945,sowing to emergence,0,4,False
+sorghum,70,10,ALL,1,S0,36616,0.011142553130959144,emergence,5,9,False
+sorghum,70,10,ALL,2,S1,36616,0.015523984292058117,3-leaf,10,16,False
+sorghum,70,10,ALL,3,S2,36616,0.01017015855576797,5-leaf,17,23,False
+sorghum,70,10,ALL,4,S3,36616,0.006721460585448984,growing point differentiation,24,28,True
+sorghum,70,10,ALL,5,S4,36616,0.00653034343457505,flag leaf visible,29,33,True
+sorghum,70,10,ALL,6,S5,36616,0.008224881518068604,boot,34,39,True
+sorghum,70,10,ALL,7,S6,36616,0.015395732990823682,half-bloom,40,50,True
+sorghum,70,10,ALL,8,S7,36616,0.019205198653484815,soft dough,51,58,True
+sorghum,70,10,ALL,9,S8,36616,0.016012297427681888,hard dough,59,69,False
 sorghum,70,10,Cool / humid,0,SOW,225,0.0008371851602666666,sowing to emergence,0,4,False
 sorghum,70,10,Cool / humid,1,S0,225,0.000971865352,emergence,5,9,False
 sorghum,70,10,Cool / humid,2,S1,225,0.002137081716,3-leaf,10,16,False
@@ -2588,26 +2588,26 @@ sorghum,70,10,Cool / subhumid,6,S5,405,0.00027483834232098765,boot,34,39,True
 sorghum,70,10,Cool / subhumid,7,S6,405,0.000601516860617284,half-bloom,40,50,True
 sorghum,70,10,Cool / subhumid,8,S7,405,0.0004038390207654321,soft dough,51,58,True
 sorghum,70,10,Cool / subhumid,9,S8,405,0.0,hard dough,59,69,False
-sorghum,70,10,Warm / arid,0,SOW,2275,0.03859587958505494,sowing to emergence,0,4,False
-sorghum,70,10,Warm / arid,1,S0,2275,0.05178438692615385,emergence,5,9,False
-sorghum,70,10,Warm / arid,2,S1,2275,0.05738409104175824,3-leaf,10,16,False
-sorghum,70,10,Warm / arid,3,S2,2275,0.02797606309934066,5-leaf,17,23,False
-sorghum,70,10,Warm / arid,4,S3,2275,0.016234580534065932,growing point differentiation,24,28,True
-sorghum,70,10,Warm / arid,5,S4,2275,0.011070382288791208,flag leaf visible,29,33,True
-sorghum,70,10,Warm / arid,6,S5,2275,0.01599588816967033,boot,34,39,True
-sorghum,70,10,Warm / arid,7,S6,2275,0.04034693524923077,half-bloom,40,50,True
-sorghum,70,10,Warm / arid,8,S7,2275,0.08510888681230769,soft dough,51,58,True
-sorghum,70,10,Warm / arid,9,S8,2275,0.0969795345120879,hard dough,59,69,False
+sorghum,70,10,Warm / arid,0,SOW,2275,0.0385965050232967,sowing to emergence,0,4,False
+sorghum,70,10,Warm / arid,1,S0,2275,0.0517850139010989,emergence,5,9,False
+sorghum,70,10,Warm / arid,2,S1,2275,0.057385110189010984,3-leaf,10,16,False
+sorghum,70,10,Warm / arid,3,S2,2275,0.027977082943296705,5-leaf,17,23,False
+sorghum,70,10,Warm / arid,4,S3,2275,0.01623622430241758,growing point differentiation,24,28,True
+sorghum,70,10,Warm / arid,5,S4,2275,0.011058079806153845,flag leaf visible,29,33,True
+sorghum,70,10,Warm / arid,6,S5,2275,0.015983586037362635,boot,34,39,True
+sorghum,70,10,Warm / arid,7,S6,2275,0.04033542039164835,half-bloom,40,50,True
+sorghum,70,10,Warm / arid,8,S7,2275,0.08511312115516483,soft dough,51,58,True
+sorghum,70,10,Warm / arid,9,S8,2275,0.09698579914725275,hard dough,59,69,False
 sorghum,70,10,Warm / humid,0,SOW,2499,0.0007265924060544217,sowing to emergence,0,4,False
-sorghum,70,10,Warm / humid,1,S0,2499,0.002300333913741497,emergence,5,9,False
-sorghum,70,10,Warm / humid,2,S1,2499,0.0058180367428571425,3-leaf,10,16,False
-sorghum,70,10,Warm / humid,3,S2,2499,0.007793577378911566,5-leaf,17,23,False
-sorghum,70,10,Warm / humid,4,S3,2499,0.011969870970068028,growing point differentiation,24,28,True
-sorghum,70,10,Warm / humid,5,S4,2499,0.016897806141496597,flag leaf visible,29,33,True
-sorghum,70,10,Warm / humid,6,S5,2499,0.02914191619047619,boot,34,39,True
-sorghum,70,10,Warm / humid,7,S6,2499,0.05046518149659864,half-bloom,40,50,True
-sorghum,70,10,Warm / humid,8,S7,2499,0.05880580486394557,soft dough,51,58,True
-sorghum,70,10,Warm / humid,9,S8,2499,0.04307690884353742,hard dough,59,69,False
+sorghum,70,10,Warm / humid,1,S0,2499,0.0023007128096598642,emergence,5,9,False
+sorghum,70,10,Warm / humid,2,S1,2499,0.005818415869387755,3-leaf,10,16,False
+sorghum,70,10,Warm / humid,3,S2,2499,0.007794335708843537,5-leaf,17,23,False
+sorghum,70,10,Warm / humid,4,S3,2499,0.011970628915646257,growing point differentiation,24,28,True
+sorghum,70,10,Warm / humid,5,S4,2499,0.016898185114285716,flag leaf visible,29,33,True
+sorghum,70,10,Warm / humid,6,S5,2499,0.02914267413605442,boot,34,39,True
+sorghum,70,10,Warm / humid,7,S6,2499,0.05046669585034014,half-bloom,40,50,True
+sorghum,70,10,Warm / humid,8,S7,2499,0.058807322292517006,soft dough,51,58,True
+sorghum,70,10,Warm / humid,9,S8,2499,0.04307728704761905,hard dough,59,69,False
 sorghum,70,10,Warm / semiarid,0,SOW,18780,0.0071508830666027695,sowing to emergence,0,4,False
 sorghum,70,10,Warm / semiarid,1,S0,18780,0.013833853471618742,emergence,5,9,False
 sorghum,70,10,Warm / semiarid,2,S1,18780,0.019790029214749733,3-leaf,10,16,False
@@ -2628,16 +2628,16 @@ sorghum,70,10,Warm / subhumid,6,S5,12432,0.007317056038368726,boot,34,39,True
 sorghum,70,10,Warm / subhumid,7,S6,12432,0.014369205204182754,half-bloom,40,50,True
 sorghum,70,10,Warm / subhumid,8,S7,12432,0.014789569584202059,soft dough,51,58,True
 sorghum,70,10,Warm / subhumid,9,S8,12432,0.010303501433011583,hard dough,59,69,False
-sorghum,70,20,ALL,0,SOW,36557,0.005143614232661323,sowing to emergence,0,4,False
-sorghum,70,20,ALL,1,S0,36557,0.007331471792149246,emergence,5,9,False
-sorghum,70,20,ALL,2,S1,36557,0.009282102258101046,3-leaf,10,16,False
-sorghum,70,20,ALL,3,S2,36557,0.007120838719057909,5-leaf,17,23,False
-sorghum,70,20,ALL,4,S3,36557,0.007082009576743168,growing point differentiation,24,28,True
-sorghum,70,20,ALL,5,S4,36557,0.009511169394375907,flag leaf visible,29,33,True
-sorghum,70,20,ALL,6,S5,36557,0.011224891541866126,boot,34,39,True
-sorghum,70,20,ALL,7,S6,36557,0.020438823461443774,half-bloom,40,50,True
-sorghum,70,20,ALL,8,S7,36557,0.027151468011899226,soft dough,51,58,True
-sorghum,70,20,ALL,9,S8,36557,0.027217255669830673,hard dough,59,69,False
+sorghum,70,20,ALL,0,SOW,36557,0.0051436401488470064,sowing to emergence,0,4,False
+sorghum,70,20,ALL,1,S0,36557,0.007331534086216045,emergence,5,9,False
+sorghum,70,20,ALL,2,S1,36557,0.009282190119889488,3-leaf,10,16,False
+sorghum,70,20,ALL,3,S2,36557,0.007120864731586289,5-leaf,17,23,False
+sorghum,70,20,ALL,4,S3,36557,0.007082061216429137,growing point differentiation,24,28,True
+sorghum,70,20,ALL,5,S4,36557,0.009511247046590256,flag leaf visible,29,33,True
+sorghum,70,20,ALL,6,S5,36557,0.011225031468063572,boot,34,39,True
+sorghum,70,20,ALL,7,S6,36557,0.020439108240774682,half-bloom,40,50,True
+sorghum,70,20,ALL,8,S7,36557,0.027150878316792953,soft dough,51,58,True
+sorghum,70,20,ALL,9,S8,36557,0.02721664046480838,hard dough,59,69,False
 sorghum,70,20,Cool / humid,0,SOW,225,0.0009046441877333333,sowing to emergence,0,4,False
 sorghum,70,20,Cool / humid,1,S0,225,0.0031002831359999996,emergence,5,9,False
 sorghum,70,20,Cool / humid,2,S1,225,0.00481161104,3-leaf,10,16,False
@@ -2659,24 +2659,24 @@ sorghum,70,20,Cool / subhumid,7,S6,405,0.0004038390207654321,half-bloom,40,50,Tr
 sorghum,70,20,Cool / subhumid,8,S7,405,0.0006765680069135802,soft dough,51,58,True
 sorghum,70,20,Cool / subhumid,9,S8,405,0.0010245132271604939,hard dough,59,69,False
 sorghum,70,20,Warm / arid,0,SOW,2230,0.013831611806995516,sowing to emergence,0,4,False
-sorghum,70,20,Warm / arid,1,S0,2230,0.021531889343497757,emergence,5,9,False
-sorghum,70,20,Warm / arid,2,S1,2230,0.025205304582959637,3-leaf,10,16,False
+sorghum,70,20,Warm / arid,1,S0,2230,0.02153248160896861,emergence,5,9,False
+sorghum,70,20,Warm / arid,2,S1,2230,0.025205895456502238,3-leaf,10,16,False
 sorghum,70,20,Warm / arid,3,S2,2230,0.012415754780269059,5-leaf,17,23,False
 sorghum,70,20,Warm / arid,4,S3,2230,0.009828193669596414,growing point differentiation,24,28,True
 sorghum,70,20,Warm / arid,5,S4,2230,0.012088850796053813,flag leaf visible,29,33,True
-sorghum,70,20,Warm / arid,6,S5,2230,0.02485284432825112,boot,34,39,True
-sorghum,70,20,Warm / arid,7,S6,2230,0.075607577167713,half-bloom,40,50,True
-sorghum,70,20,Warm / arid,8,S7,2230,0.1386565627174888,soft dough,51,58,True
-sorghum,70,20,Warm / arid,9,S8,2230,0.16869406279103139,hard dough,59,69,False
-sorghum,70,20,Warm / humid,0,SOW,2499,0.0027243645295238097,sowing to emergence,0,4,False
-sorghum,70,20,Warm / humid,1,S0,2499,0.005383954331292517,emergence,5,9,False
-sorghum,70,20,Warm / humid,2,S1,2499,0.009915285836734695,3-leaf,10,16,False
-sorghum,70,20,Warm / humid,3,S2,2499,0.018039152850340134,5-leaf,17,23,False
-sorghum,70,20,Warm / humid,4,S3,2499,0.025420275700680273,growing point differentiation,24,28,True
-sorghum,70,20,Warm / humid,5,S4,2499,0.037892508068027214,flag leaf visible,29,33,True
-sorghum,70,20,Warm / humid,6,S5,2499,0.042145075510204084,boot,34,39,True
-sorghum,70,20,Warm / humid,7,S6,2499,0.06701316769387755,half-bloom,40,50,True
-sorghum,70,20,Warm / humid,8,S7,2499,0.07248491706802722,soft dough,51,58,True
+sorghum,70,20,Warm / arid,6,S5,2230,0.024853438681614347,boot,34,39,True
+sorghum,70,20,Warm / arid,7,S6,2230,0.07561054475874439,half-bloom,40,50,True
+sorghum,70,20,Warm / arid,8,S7,2230,0.1386464781973094,soft dough,51,58,True
+sorghum,70,20,Warm / arid,9,S8,2230,0.16868397131121074,hard dough,59,69,False
+sorghum,70,20,Warm / humid,0,SOW,2499,0.0027247435791836736,sowing to emergence,0,4,False
+sorghum,70,20,Warm / humid,1,S0,2499,0.00538433345782313,emergence,5,9,False
+sorghum,70,20,Warm / humid,2,S1,2499,0.009916043782312926,3-leaf,10,16,False
+sorghum,70,20,Warm / humid,3,S2,2499,0.018039534129251703,5-leaf,17,23,False
+sorghum,70,20,Warm / humid,4,S3,2499,0.0254210336462585,growing point differentiation,24,28,True
+sorghum,70,20,Warm / humid,5,S4,2499,0.037893644217687074,flag leaf visible,29,33,True
+sorghum,70,20,Warm / humid,6,S5,2499,0.04214659447619047,boot,34,39,True
+sorghum,70,20,Warm / humid,7,S6,2499,0.06701468435374149,half-bloom,40,50,True
+sorghum,70,20,Warm / humid,8,S7,2499,0.07248529527210885,soft dough,51,58,True
 sorghum,70,20,Warm / humid,9,S8,2499,0.0548375993537415,hard dough,59,69,False
 sorghum,70,20,Warm / semiarid,0,SOW,18766,0.006805541829654693,sowing to emergence,0,4,False
 sorghum,70,20,Warm / semiarid,1,S0,18766,0.009210758124070127,emergence,5,9,False
@@ -2698,16 +2698,16 @@ sorghum,70,20,Warm / subhumid,6,S5,12432,0.011343722473246462,boot,34,39,True
 sorghum,70,20,Warm / subhumid,7,S6,12432,0.017323253058896395,half-bloom,40,50,True
 sorghum,70,20,Warm / subhumid,8,S7,12432,0.018916851742245815,soft dough,51,58,True
 sorghum,70,20,Warm / subhumid,9,S8,12432,0.018694545625337837,hard dough,59,69,False
-sorghum,70,30,ALL,0,SOW,35551,0.002081582538679643,sowing to emergence,0,4,False
-sorghum,70,30,ALL,1,S0,35551,0.0038761106053894407,emergence,5,9,False
-sorghum,70,30,ALL,2,S1,35551,0.007225082884503952,3-leaf,10,16,False
-sorghum,70,30,ALL,3,S2,35551,0.009616336877218643,5-leaf,17,23,False
-sorghum,70,30,ALL,4,S3,35551,0.00920008067320188,growing point differentiation,24,28,True
-sorghum,70,30,ALL,5,S4,35551,0.010821054154707323,flag leaf visible,29,33,True
-sorghum,70,30,ALL,6,S5,35551,0.012750545317009367,boot,34,39,True
-sorghum,70,30,ALL,7,S6,35551,0.025042264012432845,half-bloom,40,50,True
-sorghum,70,30,ALL,8,S7,35551,0.04012889453871902,soft dough,51,58,True
-sorghum,70,30,ALL,9,S8,35551,0.03895587921538072,hard dough,59,69,False
+sorghum,70,30,ALL,0,SOW,35551,0.002081609174808022,sowing to emergence,0,4,False
+sorghum,70,30,ALL,1,S0,35551,0.0038761372019690023,emergence,5,9,False
+sorghum,70,30,ALL,2,S1,35551,0.007225162575370594,3-leaf,10,16,False
+sorghum,70,30,ALL,3,S2,35551,0.009616416963573458,5-leaf,17,23,False
+sorghum,70,30,ALL,4,S3,35551,0.009200269452195438,growing point differentiation,24,28,True
+sorghum,70,30,ALL,5,S4,35551,0.010821325366346939,flag leaf visible,29,33,True
+sorghum,70,30,ALL,6,S5,35551,0.012750762761188153,boot,34,39,True
+sorghum,70,30,ALL,7,S6,35551,0.025041139642260415,half-bloom,40,50,True
+sorghum,70,30,ALL,8,S7,35551,0.040128154506652414,soft dough,51,58,True
+sorghum,70,30,ALL,9,S8,35551,0.03895670116469298,hard dough,59,69,False
 sorghum,70,30,Cool / humid,0,SOW,225,0.0021167183173333333,sowing to emergence,0,4,False
 sorghum,70,30,Cool / humid,1,S0,225,0.005295838533333334,emergence,5,9,False
 sorghum,70,30,Cool / humid,2,S1,225,0.020759172546666666,3-leaf,10,16,False
@@ -2732,20 +2732,20 @@ sorghum,70,30,Warm / arid,0,SOW,1285,0.0057965376854474705,sowing to emergence,0
 sorghum,70,30,Warm / arid,1,S0,1285,0.007888670929805447,emergence,5,9,False
 sorghum,70,30,Warm / arid,2,S1,1285,0.008725657113463034,3-leaf,10,16,False
 sorghum,70,30,Warm / arid,3,S2,1285,0.00862638522996109,5-leaf,17,23,False
-sorghum,70,30,Warm / arid,4,S3,1285,0.012373538289494165,growing point differentiation,24,28,True
-sorghum,70,30,Warm / arid,5,S4,1285,0.022624313252918287,flag leaf visible,29,33,True
-sorghum,70,30,Warm / arid,6,S5,1285,0.025895664109727625,boot,34,39,True
-sorghum,70,30,Warm / arid,7,S6,1285,0.10454936492607005,half-bloom,40,50,True
-sorghum,70,30,Warm / arid,8,S7,1285,0.22966627431906617,soft dough,51,58,True
-sorghum,70,30,Warm / arid,9,S8,1285,0.2511162356186771,hard dough,59,69,False
-sorghum,70,30,Warm / humid,0,SOW,2499,0.0032922858877551023,sowing to emergence,0,4,False
-sorghum,70,30,Warm / humid,1,S0,2499,0.009979097311564628,emergence,5,9,False
-sorghum,70,30,Warm / humid,2,S1,2499,0.022710105224489796,3-leaf,10,16,False
-sorghum,70,30,Warm / humid,3,S2,2499,0.03905910524489796,5-leaf,17,23,False
-sorghum,70,30,Warm / humid,4,S3,2499,0.03821035166666667,growing point differentiation,24,28,True
-sorghum,70,30,Warm / humid,5,S4,2499,0.049345048190476186,flag leaf visible,29,33,True
-sorghum,70,30,Warm / humid,6,S5,2499,0.04746964603401361,boot,34,39,True
-sorghum,70,30,Warm / humid,7,S6,2499,0.08212449715646258,half-bloom,40,50,True
+sorghum,70,30,Warm / arid,4,S3,1285,0.012375814428015565,growing point differentiation,24,28,True
+sorghum,70,30,Warm / arid,5,S4,1285,0.022628863582879376,flag leaf visible,29,33,True
+sorghum,70,30,Warm / arid,6,S5,1285,0.025900214439688717,boot,34,39,True
+sorghum,70,30,Warm / arid,7,S6,1285,0.10451750742412452,half-bloom,40,50,True
+sorghum,70,30,Warm / arid,8,S7,1285,0.22964579101945526,soft dough,51,58,True
+sorghum,70,30,Warm / arid,9,S8,1285,0.2511389970038911,hard dough,59,69,False
+sorghum,70,30,Warm / humid,0,SOW,2499,0.0032926650911564623,sowing to emergence,0,4,False
+sorghum,70,30,Warm / humid,1,S0,2499,0.009979477053061226,emergence,5,9,False
+sorghum,70,30,Warm / humid,2,S1,2499,0.022711242142857142,3-leaf,10,16,False
+sorghum,70,30,Warm / humid,3,S2,2499,0.039060242163265306,5-leaf,17,23,False
+sorghum,70,30,Warm / humid,4,S3,2499,0.038211866789115645,growing point differentiation,24,28,True
+sorghum,70,30,Warm / humid,5,S4,2499,0.04934656408163265,flag leaf visible,29,33,True
+sorghum,70,30,Warm / humid,6,S5,2499,0.04747040167346939,boot,34,39,True
+sorghum,70,30,Warm / humid,7,S6,2499,0.08212487536054423,half-bloom,40,50,True
 sorghum,70,30,Warm / humid,8,S7,2499,0.0884549957414966,soft dough,51,58,True
 sorghum,70,30,Warm / humid,9,S8,2499,0.07328301525170068,hard dough,59,69,False
 sorghum,70,30,Warm / semiarid,0,SOW,18705,0.002702217424196739,sowing to emergence,0,4,False
@@ -2769,15 +2769,15 @@ sorghum,70,30,Warm / subhumid,7,S6,12432,0.025047072009716863,half-bloom,40,50,T
 sorghum,70,30,Warm / subhumid,8,S7,12432,0.029473407450611326,soft dough,51,58,True
 sorghum,70,30,Warm / subhumid,9,S8,12432,0.02407256317012548,hard dough,59,69,False
 sorghum,70,40,ALL,0,SOW,33733,0.0031299357774523463,sowing to emergence,0,4,False
-sorghum,70,40,ALL,1,S0,33733,0.005622566382954377,emergence,5,9,False
-sorghum,70,40,ALL,2,S1,33733,0.009948478178996828,3-leaf,10,16,False
-sorghum,70,40,ALL,3,S2,33733,0.011084718932617912,5-leaf,17,23,False
-sorghum,70,40,ALL,4,S3,33733,0.010490790724868823,growing point differentiation,24,28,True
-sorghum,70,40,ALL,5,S4,33733,0.011512727251845375,flag leaf visible,29,33,True
-sorghum,70,40,ALL,6,S5,33733,0.016037924461239736,boot,34,39,True
+sorghum,70,40,ALL,1,S0,33733,0.005622622547096315,emergence,5,9,False
+sorghum,70,40,ALL,2,S1,33733,0.009948590715681974,3-leaf,10,16,False
+sorghum,70,40,ALL,3,S2,33733,0.011084831469303058,5-leaf,17,23,False
+sorghum,70,40,ALL,4,S3,33733,0.010490846784810126,growing point differentiation,24,28,True
+sorghum,70,40,ALL,5,S4,33733,0.01151275538601666,flag leaf visible,29,33,True
+sorghum,70,40,ALL,6,S5,33733,0.016037952595411024,boot,34,39,True
 sorghum,70,40,ALL,7,S6,33733,0.030994971032401508,half-bloom,40,50,True
-sorghum,70,40,ALL,8,S7,33733,0.04962145659603356,soft dough,51,58,True
-sorghum,70,40,ALL,9,S8,33733,0.04777107855696203,hard dough,59,69,False
+sorghum,70,40,ALL,8,S7,33733,0.049621541206948686,soft dough,51,58,True
+sorghum,70,40,ALL,9,S8,33733,0.047771190468443366,hard dough,59,69,False
 sorghum,70,40,Cool / humid,0,SOW,225,0.013360578746666667,sowing to emergence,0,4,False
 sorghum,70,40,Cool / humid,1,S0,225,0.0210880648,emergence,5,9,False
 sorghum,70,40,Cool / humid,2,S1,225,0.02923122453333333,3-leaf,10,16,False
@@ -2809,15 +2809,15 @@ sorghum,70,40,Warm / arid,7,S6,253,0.17385192363636362,half-bloom,40,50,True
 sorghum,70,40,Warm / arid,8,S7,253,0.4654420374703557,soft dough,51,58,True
 sorghum,70,40,Warm / arid,9,S8,253,0.48916653833992096,hard dough,59,69,False
 sorghum,70,40,Warm / humid,0,SOW,2499,0.010434648205442178,sowing to emergence,0,4,False
-sorghum,70,40,Warm / humid,1,S0,2499,0.022436689857142856,emergence,5,9,False
-sorghum,70,40,Warm / humid,2,S1,2499,0.04056597989115646,3-leaf,10,16,False
-sorghum,70,40,Warm / humid,3,S2,2499,0.05206937598639456,5-leaf,17,23,False
-sorghum,70,40,Warm / humid,4,S3,2499,0.04414563176870748,growing point differentiation,24,28,True
-sorghum,70,40,Warm / humid,5,S4,2499,0.0519704888707483,flag leaf visible,29,33,True
-sorghum,70,40,Warm / humid,6,S5,2499,0.06273792921768707,boot,34,39,True
+sorghum,70,40,Warm / humid,1,S0,2499,0.022437448571428573,emergence,5,9,False
+sorghum,70,40,Warm / humid,2,S1,2499,0.04056749424489796,3-leaf,10,16,False
+sorghum,70,40,Warm / humid,3,S2,2499,0.05207088880272109,5-leaf,17,23,False
+sorghum,70,40,Warm / humid,4,S3,2499,0.04414639278911565,growing point differentiation,24,28,True
+sorghum,70,40,Warm / humid,5,S4,2499,0.051970869380952384,flag leaf visible,29,33,True
+sorghum,70,40,Warm / humid,6,S5,2499,0.06273830742176871,boot,34,39,True
 sorghum,70,40,Warm / humid,7,S6,2499,0.10074793620408164,half-bloom,40,50,True
-sorghum,70,40,Warm / humid,8,S7,2499,0.10288995591836735,soft dough,51,58,True
-sorghum,70,40,Warm / humid,9,S8,2499,0.07084273334013605,hard dough,59,69,False
+sorghum,70,40,Warm / humid,8,S7,2499,0.10289109668027212,soft dough,51,58,True
+sorghum,70,40,Warm / humid,9,S8,2499,0.07084425,hard dough,59,69,False
 sorghum,70,40,Warm / semiarid,0,SOW,17921,0.002034879031088109,sowing to emergence,0,4,False
 sorghum,70,40,Warm / semiarid,1,S0,17921,0.0031880817610523966,emergence,5,9,False
 sorghum,70,40,Warm / semiarid,2,S1,17921,0.005077377391812956,3-leaf,10,16,False
@@ -2840,14 +2840,14 @@ sorghum,70,40,Warm / subhumid,8,S7,12430,0.03134072053201931,soft dough,51,58,Tr
 sorghum,70,40,Warm / subhumid,9,S8,12430,0.0218843237985358,hard dough,59,69,False
 sorghum,90,0,ALL,0,SOW,36557,0.0033007438291570972,sowing to emergence,0,4,False
 sorghum,90,0,ALL,1,S0,36557,0.01106858988521487,emergence,5,12,False
-sorghum,90,0,ALL,2,S1,36557,0.017933813169964712,3-leaf,13,21,False
-sorghum,90,0,ALL,3,S2,36557,0.015193961653062341,5-leaf,22,31,False
-sorghum,90,0,ALL,4,S3,36557,0.008351511490959323,growing point differentiation,32,38,False
-sorghum,90,0,ALL,5,S4,36557,0.007754271785513034,flag leaf visible,39,46,True
-sorghum,90,0,ALL,6,S5,36557,0.010777353159176082,boot,47,54,True
-sorghum,90,0,ALL,7,S6,36557,0.01820075455923626,half-bloom,55,67,True
-sorghum,90,0,ALL,8,S7,36557,0.022733969813606147,soft dough,68,76,True
-sorghum,90,0,ALL,9,S8,36557,0.029072586993516975,hard dough,77,89,False
+sorghum,90,0,ALL,2,S1,36557,0.017933839086150392,3-leaf,13,21,False
+sorghum,90,0,ALL,3,S2,36557,0.01519404974688842,5-leaf,22,31,False
+sorghum,90,0,ALL,4,S3,36557,0.008351599392100008,growing point differentiation,32,38,False
+sorghum,90,0,ALL,5,S4,36557,0.00775434963041278,flag leaf visible,39,46,True
+sorghum,90,0,ALL,6,S5,36557,0.010777456823918811,boot,47,54,True
+sorghum,90,0,ALL,7,S6,36557,0.018200992903629948,half-bloom,55,67,True
+sorghum,90,0,ALL,8,S7,36557,0.022733308215444375,soft dough,68,76,True
+sorghum,90,0,ALL,9,S8,36557,0.029072033442623844,hard dough,77,89,False
 sorghum,90,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,4,False
 sorghum,90,0,Cool / humid,1,S0,225,0.0006662449146666666,emergence,5,12,False
 sorghum,90,0,Cool / humid,2,S1,225,0.0012732701853333333,3-leaf,13,21,False
@@ -2871,23 +2871,23 @@ sorghum,90,0,Cool / subhumid,9,S8,405,0.0010245132271604939,hard dough,77,89,Fal
 sorghum,90,0,Warm / arid,0,SOW,2230,0.025137985441255607,sowing to emergence,0,4,False
 sorghum,90,0,Warm / arid,1,S0,2230,0.06728598039013454,emergence,5,12,False
 sorghum,90,0,Warm / arid,2,S1,2230,0.08927271495246636,3-leaf,13,21,False
-sorghum,90,0,Warm / arid,3,S2,2230,0.051057234157847534,5-leaf,22,31,False
-sorghum,90,0,Warm / arid,4,S3,2230,0.017519195958744394,growing point differentiation,32,38,False
+sorghum,90,0,Warm / arid,3,S2,2230,0.05105782920717489,5-leaf,22,31,False
+sorghum,90,0,Warm / arid,4,S3,2230,0.017519788224215245,growing point differentiation,32,38,False
 sorghum,90,0,Warm / arid,5,S4,2230,0.010472069191928252,flag leaf visible,39,46,True
 sorghum,90,0,Warm / arid,6,S5,2230,0.015770426130941706,boot,47,54,True
-sorghum,90,0,Warm / arid,7,S6,2230,0.050118720410762325,half-bloom,55,67,True
-sorghum,90,0,Warm / arid,8,S7,2230,0.10788118604304932,soft dough,68,76,True
-sorghum,90,0,Warm / arid,9,S8,2230,0.1746382904663677,hard dough,77,89,False
+sorghum,90,0,Warm / arid,7,S6,2230,0.05012049999103139,half-bloom,55,67,True
+sorghum,90,0,Warm / arid,8,S7,2230,0.10786991838385651,soft dough,68,76,True
+sorghum,90,0,Warm / arid,9,S8,2230,0.17462879751569504,hard dough,77,89,False
 sorghum,90,0,Warm / humid,0,SOW,2499,2.137607163265306e-05,sowing to emergence,0,4,False
 sorghum,90,0,Warm / humid,1,S0,2499,0.0004467773244897959,emergence,5,12,False
-sorghum,90,0,Warm / humid,2,S1,2499,0.0035574066813605443,3-leaf,13,21,False
-sorghum,90,0,Warm / humid,3,S2,2499,0.007675319493877551,5-leaf,22,31,False
-sorghum,90,0,Warm / humid,4,S3,2499,0.012830148013605443,growing point differentiation,32,38,False
-sorghum,90,0,Warm / humid,5,S4,2499,0.02328794706122449,flag leaf visible,39,46,True
-sorghum,90,0,Warm / humid,6,S5,2499,0.0419027773877551,boot,47,54,True
-sorghum,90,0,Warm / humid,7,S6,2499,0.06999271353741497,half-bloom,55,67,True
-sorghum,90,0,Warm / humid,8,S7,2499,0.06728843793197278,soft dough,68,76,True
-sorghum,90,0,Warm / humid,9,S8,2499,0.06064111538095239,hard dough,77,89,False
+sorghum,90,0,Warm / humid,2,S1,2499,0.003557785731020408,3-leaf,13,21,False
+sorghum,90,0,Warm / humid,3,S2,2499,0.007676077439455782,5-leaf,22,31,False
+sorghum,90,0,Warm / humid,4,S3,2499,0.012830905959183672,growing point differentiation,32,38,False
+sorghum,90,0,Warm / humid,5,S4,2499,0.023289083979591837,flag leaf visible,39,46,True
+sorghum,90,0,Warm / humid,6,S5,2499,0.04190429481632653,boot,47,54,True
+sorghum,90,0,Warm / humid,7,S6,2499,0.06999460840136054,half-bloom,55,67,True
+sorghum,90,0,Warm / humid,8,S7,2499,0.06728881613605442,soft dough,68,76,True
+sorghum,90,0,Warm / humid,9,S8,2499,0.06064149435374149,hard dough,77,89,False
 sorghum,90,0,Warm / semiarid,0,SOW,18766,0.003422775852596185,sowing to emergence,0,4,False
 sorghum,90,0,Warm / semiarid,1,S0,18766,0.012937457889273153,emergence,5,12,False
 sorghum,90,0,Warm / semiarid,2,S1,18766,0.021824638118512204,3-leaf,13,21,False
@@ -2909,15 +2909,15 @@ sorghum,90,0,Warm / subhumid,7,S6,12432,0.016579677104745817,half-bloom,55,67,Tr
 sorghum,90,0,Warm / subhumid,8,S7,12432,0.01587798429908301,soft dough,68,76,True
 sorghum,90,0,Warm / subhumid,9,S8,12432,0.020370324177927928,hard dough,77,89,False
 sorghum,90,10,ALL,0,SOW,35551,0.005669870289929961,sowing to emergence,0,4,False
-sorghum,90,10,ALL,1,S0,35551,0.012872896907214987,emergence,5,12,False
-sorghum,90,10,ALL,2,S1,35551,0.01408229179668645,3-leaf,13,21,False
-sorghum,90,10,ALL,3,S2,35551,0.009419850982897809,5-leaf,22,31,False
-sorghum,90,10,ALL,4,S3,35551,0.00714028562864617,growing point differentiation,32,38,False
-sorghum,90,10,ALL,5,S4,35551,0.010468295874014795,flag leaf visible,39,46,True
-sorghum,90,10,ALL,6,S5,35551,0.012735721731343703,boot,47,54,True
-sorghum,90,10,ALL,7,S6,35551,0.021383853536946922,half-bloom,55,67,True
-sorghum,90,10,ALL,8,S7,35551,0.0355226103265731,soft dough,68,76,True
-sorghum,90,10,ALL,9,S8,35551,0.041175371556805715,hard dough,77,89,False
+sorghum,90,10,ALL,1,S0,35551,0.012872923523568957,emergence,5,12,False
+sorghum,90,10,ALL,2,S1,35551,0.014082427343393995,3-leaf,13,21,False
+sorghum,90,10,ALL,3,S2,35551,0.009419986232145367,5-leaf,22,31,False
+sorghum,90,10,ALL,4,S3,35551,0.007140339019549379,growing point differentiation,32,38,False
+sorghum,90,10,ALL,5,S4,35551,0.010468484850752439,flag leaf visible,39,46,True
+sorghum,90,10,ALL,6,S5,35551,0.012735992705268488,boot,47,54,True
+sorghum,90,10,ALL,7,S6,35551,0.021382728611403338,half-bloom,55,67,True
+sorghum,90,10,ALL,8,S7,35551,0.035521705210430084,soft dough,68,76,True
+sorghum,90,10,ALL,9,S8,35551,0.04117619420033192,hard dough,77,89,False
 sorghum,90,10,Cool / humid,0,SOW,225,0.0008371851602666666,sowing to emergence,0,4,False
 sorghum,90,10,Cool / humid,1,S0,225,0.0012732701853333333,emergence,5,12,False
 sorghum,90,10,Cool / humid,2,S1,225,0.003231001997333333,3-leaf,13,21,False
@@ -2940,22 +2940,22 @@ sorghum,90,10,Cool / subhumid,8,S7,405,0.00282635907654321,soft dough,68,76,True
 sorghum,90,10,Cool / subhumid,9,S8,405,0.0036091920493827156,hard dough,77,89,False
 sorghum,90,10,Warm / arid,0,SOW,1285,0.041700873562645915,sowing to emergence,0,4,False
 sorghum,90,10,Warm / arid,1,S0,1285,0.07175642154396887,emergence,5,12,False
-sorghum,90,10,Warm / arid,2,S1,1285,0.06276404763424125,3-leaf,13,21,False
-sorghum,90,10,Warm / arid,3,S2,1285,0.018759072302723737,5-leaf,22,31,False
+sorghum,90,10,Warm / arid,2,S1,1285,0.06276632571984436,3-leaf,13,21,False
+sorghum,90,10,Warm / arid,3,S2,1285,0.01876134811673152,5-leaf,22,31,False
 sorghum,90,10,Warm / arid,4,S3,1285,0.0046642820513618675,growing point differentiation,32,38,False
-sorghum,90,10,Warm / arid,5,S4,1285,0.011173991843968872,flag leaf visible,39,46,True
-sorghum,90,10,Warm / arid,6,S5,1285,0.024690440606225682,boot,47,54,True
-sorghum,90,10,Warm / arid,7,S6,1285,0.06514393959066148,half-bloom,55,67,True
-sorghum,90,10,Warm / arid,8,S7,1285,0.18735799695719846,soft dough,68,76,True
-sorghum,90,10,Warm / arid,9,S8,1285,0.25209569290272377,hard dough,77,89,False
+sorghum,90,10,Warm / arid,5,S4,1285,0.011176267657976652,flag leaf visible,39,46,True
+sorghum,90,10,Warm / arid,6,S5,1285,0.02469499093618677,boot,47,54,True
+sorghum,90,10,Warm / arid,7,S6,1285,0.06511208143968872,half-bloom,55,67,True
+sorghum,90,10,Warm / arid,8,S7,1285,0.18733297046692607,soft dough,68,76,True
+sorghum,90,10,Warm / arid,9,S8,1285,0.25211847375875485,hard dough,77,89,False
 sorghum,90,10,Warm / humid,0,SOW,2499,0.0007265924060544217,sowing to emergence,0,4,False
-sorghum,90,10,Warm / humid,1,S0,2499,0.003572799539319728,emergence,5,12,False
-sorghum,90,10,Warm / humid,2,S1,2499,0.0072583521210884345,3-leaf,13,21,False
-sorghum,90,10,Warm / humid,3,S2,2499,0.01800627643945578,5-leaf,22,31,False
-sorghum,90,10,Warm / humid,4,S3,2499,0.025523631340136056,growing point differentiation,32,38,False
-sorghum,90,10,Warm / humid,5,S4,2499,0.0432672272585034,flag leaf visible,39,46,True
-sorghum,90,10,Warm / humid,6,S5,2499,0.05636379870748299,boot,47,54,True
-sorghum,90,10,Warm / humid,7,S6,2499,0.07709306993197279,half-bloom,55,67,True
+sorghum,90,10,Warm / humid,1,S0,2499,0.0035731785121088434,emergence,5,12,False
+sorghum,90,10,Warm / humid,2,S1,2499,0.007259109297959182,3-leaf,13,21,False
+sorghum,90,10,Warm / humid,3,S2,2499,0.018007032078911567,5-leaf,22,31,False
+sorghum,90,10,Warm / humid,4,S3,2499,0.02552438774829932,growing point differentiation,32,38,False
+sorghum,90,10,Warm / humid,5,S4,2499,0.0432687416122449,flag leaf visible,39,46,True
+sorghum,90,10,Warm / humid,6,S5,2499,0.05636531306122449,boot,47,54,True
+sorghum,90,10,Warm / humid,7,S6,2499,0.07709345044217686,half-bloom,55,67,True
 sorghum,90,10,Warm / humid,8,S7,2499,0.08886649292517007,soft dough,68,76,True
 sorghum,90,10,Warm / humid,9,S8,2499,0.08303112564625849,hard dough,77,89,False
 sorghum,90,10,Warm / semiarid,0,SOW,18705,0.007237987103170275,sowing to emergence,0,4,False
@@ -2978,16 +2978,16 @@ sorghum,90,10,Warm / subhumid,6,S5,12432,0.013369945131644143,boot,47,54,True
 sorghum,90,10,Warm / subhumid,7,S6,12432,0.02115955478901223,half-bloom,55,67,True
 sorghum,90,10,Warm / subhumid,8,S7,12432,0.029432150067084942,soft dough,68,76,True
 sorghum,90,10,Warm / subhumid,9,S8,12432,0.02728169406587838,hard dough,77,89,False
-sorghum,90,20,ALL,0,SOW,33733,0.004866336717380607,sowing to emergence,0,4,False
-sorghum,90,20,ALL,1,S0,33733,0.007677212875018527,emergence,5,12,False
-sorghum,90,20,ALL,2,S1,33733,0.008116169038861054,3-leaf,13,21,False
-sorghum,90,20,ALL,3,S2,33733,0.009325716587703436,5-leaf,22,31,False
-sorghum,90,20,ALL,4,S3,33733,0.009794112448255416,growing point differentiation,32,38,False
-sorghum,90,20,ALL,5,S4,33733,0.01240200839759286,flag leaf visible,39,46,True
-sorghum,90,20,ALL,6,S5,33733,0.013606456779192483,boot,47,54,True
-sorghum,90,20,ALL,7,S6,33733,0.027982692844217828,half-bloom,55,67,True
-sorghum,90,20,ALL,8,S7,33733,0.04338962495657072,soft dough,68,76,True
-sorghum,90,20,ALL,9,S8,33733,0.0496741214173065,hard dough,77,89,False
+sorghum,90,20,ALL,0,SOW,33733,0.004866364789031512,sowing to emergence,0,4,False
+sorghum,90,20,ALL,1,S0,33733,0.007677269018320339,emergence,5,12,False
+sorghum,90,20,ALL,2,S1,33733,0.008116225098802358,3-leaf,13,21,False
+sorghum,90,20,ALL,3,S2,33733,0.009325772751845374,5-leaf,22,31,False
+sorghum,90,20,ALL,4,S3,33733,0.009794224568138025,growing point differentiation,32,38,False
+sorghum,90,20,ALL,5,S4,33733,0.012402120517475468,flag leaf visible,39,46,True
+sorghum,90,20,ALL,6,S5,33733,0.013606484913363769,boot,47,54,True
+sorghum,90,20,ALL,7,S6,33733,0.027982720769987847,half-bloom,55,67,True
+sorghum,90,20,ALL,8,S7,33733,0.0433896818501171,soft dough,68,76,True
+sorghum,90,20,ALL,9,S8,33733,0.0496742335371891,hard dough,77,89,False
 sorghum,90,20,Cool / humid,0,SOW,225,0.0009046441877333333,sowing to emergence,0,4,False
 sorghum,90,20,Cool / humid,1,S0,225,0.0032484312826666665,emergence,5,12,False
 sorghum,90,20,Cool / humid,2,S1,225,0.015304596,3-leaf,13,21,False
@@ -3018,16 +3018,16 @@ sorghum,90,20,Warm / arid,6,S5,253,0.017764560375494072,boot,47,54,True
 sorghum,90,20,Warm / arid,7,S6,253,0.1197357543083004,half-bloom,55,67,True
 sorghum,90,20,Warm / arid,8,S7,253,0.3623908102766798,soft dough,68,76,True
 sorghum,90,20,Warm / arid,9,S8,253,0.49950828498023714,hard dough,77,89,False
-sorghum,90,20,Warm / humid,0,SOW,2499,0.002711859523809524,sowing to emergence,0,4,False
-sorghum,90,20,Warm / humid,1,S0,2499,0.006424251272108844,emergence,5,12,False
-sorghum,90,20,Warm / humid,2,S1,2499,0.017482119227210886,3-leaf,13,21,False
-sorghum,90,20,Warm / humid,3,S2,2499,0.03621495285714285,5-leaf,22,31,False
-sorghum,90,20,Warm / humid,4,S3,2499,0.03892141946258503,growing point differentiation,32,38,False
-sorghum,90,20,Warm / humid,5,S4,2499,0.055392909292517,flag leaf visible,39,46,True
-sorghum,90,20,Warm / humid,6,S5,2499,0.05716467157823129,boot,47,54,True
-sorghum,90,20,Warm / humid,7,S6,2499,0.09799620021768708,half-bloom,55,67,True
-sorghum,90,20,Warm / humid,8,S7,2499,0.10443224816326531,soft dough,68,76,True
-sorghum,90,20,Warm / humid,9,S8,2499,0.07809193304761905,hard dough,77,89,False
+sorghum,90,20,Warm / humid,0,SOW,2499,0.002712238573469388,sowing to emergence,0,4,False
+sorghum,90,20,Warm / humid,1,S0,2499,0.006425009217687076,emergence,5,12,False
+sorghum,90,20,Warm / humid,2,S1,2499,0.017482877172789117,3-leaf,13,21,False
+sorghum,90,20,Warm / humid,3,S2,2499,0.03621571080272109,5-leaf,22,31,False
+sorghum,90,20,Warm / humid,4,S3,2499,0.038922936891156466,growing point differentiation,32,38,False
+sorghum,90,20,Warm / humid,5,S4,2499,0.0553944282585034,flag leaf visible,39,46,True
+sorghum,90,20,Warm / humid,6,S5,2499,0.057165049782312925,boot,47,54,True
+sorghum,90,20,Warm / humid,7,S6,2499,0.09799658149659865,half-bloom,55,67,True
+sorghum,90,20,Warm / humid,8,S7,2499,0.10443300918367349,soft dough,68,76,True
+sorghum,90,20,Warm / humid,9,S8,2499,0.07809345047619048,hard dough,77,89,False
 sorghum,90,20,Warm / semiarid,0,SOW,17921,0.007180194060638359,sowing to emergence,0,4,False
 sorghum,90,20,Warm / semiarid,1,S0,17921,0.011014690800373863,emergence,5,12,False
 sorghum,90,20,Warm / semiarid,2,S1,17921,0.008884695600234362,3-leaf,13,21,False
@@ -3048,16 +3048,16 @@ sorghum,90,20,Warm / subhumid,6,S5,12430,0.015175106957280771,boot,47,54,True
 sorghum,90,20,Warm / subhumid,7,S6,12430,0.03266673786846339,half-bloom,55,67,True
 sorghum,90,20,Warm / subhumid,8,S7,12430,0.03411865489227675,soft dough,68,76,True
 sorghum,90,20,Warm / subhumid,9,S8,12430,0.024296445121440063,hard dough,77,89,False
-sorghum,90,30,ALL,0,SOW,32137,0.0015892589615303233,sowing to emergence,0,4,False
-sorghum,90,30,ALL,1,S0,32137,0.004936693843821763,emergence,5,12,False
-sorghum,90,30,ALL,2,S1,32137,0.008414590481252761,3-leaf,13,21,False
-sorghum,90,30,ALL,3,S2,32137,0.010817924890500047,5-leaf,22,31,False
-sorghum,90,30,ALL,4,S3,32137,0.011155107320129446,growing point differentiation,32,38,False
-sorghum,90,30,ALL,5,S4,32137,0.01334379216445219,flag leaf visible,39,46,True
-sorghum,90,30,ALL,6,S5,32137,0.017985713096753897,boot,47,54,True
-sorghum,90,30,ALL,7,S6,32137,0.03313475340031739,half-bloom,55,67,True
-sorghum,90,30,ALL,8,S7,32137,0.05467775194302517,soft dough,68,76,True
-sorghum,90,30,ALL,9,S8,32137,0.06311325315107198,hard dough,77,89,False
+sorghum,90,30,ALL,0,SOW,32137,0.001589288423094875,sowing to emergence,0,4,False
+sorghum,90,30,ALL,1,S0,32137,0.004936723239770358,emergence,5,12,False
+sorghum,90,30,ALL,2,S1,32137,0.008414649535613779,3-leaf,13,21,False
+sorghum,90,30,ALL,3,S2,32137,0.01081804256178237,5-leaf,22,31,False
+sorghum,90,30,ALL,4,S3,32137,0.011155195901670972,growing point differentiation,32,38,False
+sorghum,90,30,ALL,5,S4,32137,0.013343821691632698,flag leaf visible,39,46,True
+sorghum,90,30,ALL,6,S5,32137,0.017985743061374116,boot,47,54,True
+sorghum,90,30,ALL,7,S6,32137,0.033134842200578773,half-bloom,55,67,True
+sorghum,90,30,ALL,8,S7,32137,0.054677869395587636,soft dough,68,76,True
+sorghum,90,30,ALL,9,S8,32137,0.06311334151389365,hard dough,77,89,False
 sorghum,90,30,Cool / humid,0,SOW,225,0.0021167183173333333,sowing to emergence,0,4,False
 sorghum,90,30,Cool / humid,1,S0,225,0.014928423106666667,emergence,5,12,False
 sorghum,90,30,Cool / humid,2,S1,225,0.027145898746666664,3-leaf,13,21,False
@@ -3088,16 +3088,16 @@ sorghum,90,30,Warm / arid,6,S5,12,0.010338346416666666,boot,47,54,True
 sorghum,90,30,Warm / arid,7,S6,12,0.1457987875,half-bloom,55,67,True
 sorghum,90,30,Warm / arid,8,S7,12,0.5505107891666666,soft dough,68,76,True
 sorghum,90,30,Warm / arid,9,S8,12,0.6930196391666666,hard dough,77,89,False
-sorghum,90,30,Warm / humid,0,SOW,2499,0.0032666052692517005,sowing to emergence,0,4,False
-sorghum,90,30,Warm / humid,1,S0,2499,0.01512815088979592,emergence,5,12,False
-sorghum,90,30,Warm / humid,2,S1,2499,0.03583199089795918,3-leaf,13,21,False
-sorghum,90,30,Warm / humid,3,S2,2499,0.04628108993197279,5-leaf,22,31,False
-sorghum,90,30,Warm / humid,4,S3,2499,0.05028956959183674,growing point differentiation,32,38,False
-sorghum,90,30,Warm / humid,5,S4,2499,0.06185714125850339,flag leaf visible,39,46,True
-sorghum,90,30,Warm / humid,6,S5,2499,0.07167953646938775,boot,47,54,True
-sorghum,90,30,Warm / humid,7,S6,2499,0.1177588618367347,half-bloom,55,67,True
-sorghum,90,30,Warm / humid,8,S7,2499,0.09228144034013606,soft dough,68,76,True
-sorghum,90,30,Warm / humid,9,S8,2499,0.058257955578231296,hard dough,77,89,False
+sorghum,90,30,Warm / humid,0,SOW,2499,0.0032669843957823124,sowing to emergence,0,4,False
+sorghum,90,30,Warm / humid,1,S0,2499,0.015128529862585035,emergence,5,12,False
+sorghum,90,30,Warm / humid,2,S1,2499,0.035832747306122445,3-leaf,13,21,False
+sorghum,90,30,Warm / humid,3,S2,2499,0.04628260582312925,5-leaf,22,31,False
+sorghum,90,30,Warm / humid,4,S3,2499,0.050290703435374146,growing point differentiation,32,38,False
+sorghum,90,30,Warm / humid,5,S4,2499,0.06185752176870748,flag leaf visible,39,46,True
+sorghum,90,30,Warm / humid,6,S5,2499,0.07167991544217689,boot,47,54,True
+sorghum,90,30,Warm / humid,7,S6,2499,0.11776000413605442,half-bloom,55,67,True
+sorghum,90,30,Warm / humid,8,S7,2499,0.09228296238095239,soft dough,68,76,True
+sorghum,90,30,Warm / humid,9,S8,2499,0.05825909019047619,hard dough,77,89,False
 sorghum,90,30,Warm / semiarid,0,SOW,16566,0.002134212223417844,sowing to emergence,0,4,False
 sorghum,90,30,Warm / semiarid,1,S0,16566,0.003979507402070506,emergence,5,12,False
 sorghum,90,30,Warm / semiarid,2,S1,16566,0.0037522963409127126,3-leaf,13,21,False
@@ -3119,14 +3119,14 @@ sorghum,90,30,Warm / subhumid,7,S6,12430,0.038803780767256636,half-bloom,55,67,T
 sorghum,90,30,Warm / subhumid,8,S7,12430,0.030509408441029763,soft dough,68,76,True
 sorghum,90,30,Warm / subhumid,9,S8,12430,0.019251647989460982,hard dough,77,89,False
 sorghum,90,40,ALL,0,SOW,29847,0.002939082037873153,sowing to emergence,0,4,False
-sorghum,90,40,ALL,1,S0,29847,0.007829898092598922,emergence,5,12,False
-sorghum,90,40,ALL,2,S1,29847,0.010786663210975976,3-leaf,13,21,False
-sorghum,90,40,ALL,3,S2,29847,0.013906410478111704,5-leaf,22,31,False
-sorghum,90,40,ALL,4,S3,29847,0.015137184324458068,growing point differentiation,32,38,False
+sorghum,90,40,ALL,1,S0,29847,0.007829961370315275,emergence,5,12,False
+sorghum,90,40,ALL,2,S1,29847,0.010786790235132508,3-leaf,13,21,False
+sorghum,90,40,ALL,3,S2,29847,0.013906505863410058,5-leaf,22,31,False
+sorghum,90,40,ALL,4,S3,29847,0.015137215963316245,growing point differentiation,32,38,False
 sorghum,90,40,ALL,5,S4,29847,0.019820023868462495,flag leaf visible,39,46,True
-sorghum,90,40,ALL,6,S5,29847,0.02385884203454284,boot,47,54,True
-sorghum,90,40,ALL,7,S6,29847,0.03347759026575536,half-bloom,55,67,True
-sorghum,90,40,ALL,8,S7,29847,0.05468038048515898,soft dough,68,76,True
+sorghum,90,40,ALL,6,S5,29847,0.023858873439039103,boot,47,54,True
+sorghum,90,40,ALL,7,S6,29847,0.03347771682118806,half-bloom,55,67,True
+sorghum,90,40,ALL,8,S7,29847,0.054680475636095426,soft dough,68,76,True
 sorghum,90,40,ALL,9,S8,29847,0.06865471166592958,hard dough,77,89,False
 sorghum,90,40,Cool / humid,0,SOW,225,0.013360578746666667,sowing to emergence,0,4,False
 sorghum,90,40,Cool / humid,1,S0,225,0.025462906133333334,emergence,5,12,False
@@ -3149,14 +3149,14 @@ sorghum,90,40,Cool / subhumid,7,S6,405,0.002113020451358025,half-bloom,55,67,Tru
 sorghum,90,40,Cool / subhumid,8,S7,405,0.0007514654879012346,soft dough,68,76,True
 sorghum,90,40,Cool / subhumid,9,S8,405,0.0001355239954074074,hard dough,77,89,False
 sorghum,90,40,Warm / humid,0,SOW,2499,0.010413568231292516,sowing to emergence,0,4,False
-sorghum,90,40,Warm / humid,1,S0,2499,0.033374002768707486,emergence,5,12,False
-sorghum,90,40,Warm / humid,2,S1,2499,0.04632512810884354,3-leaf,13,21,False
-sorghum,90,40,Warm / humid,3,S2,2499,0.05966266707482992,5-leaf,22,31,False
-sorghum,90,40,Warm / humid,4,S3,2499,0.06377948876870748,growing point differentiation,32,38,False
+sorghum,90,40,Warm / humid,1,S0,2499,0.03337475840816327,emergence,5,12,False
+sorghum,90,40,Warm / humid,2,S1,2499,0.046326642462585034,3-leaf,13,21,False
+sorghum,90,40,Warm / humid,3,S2,2499,0.05966380476190475,5-leaf,22,31,False
+sorghum,90,40,Warm / humid,4,S3,2499,0.06377986620408163,growing point differentiation,32,38,False
 sorghum,90,40,Warm / humid,5,S4,2499,0.08010605121768709,flag leaf visible,39,46,True
-sorghum,90,40,Warm / humid,6,S5,2499,0.0939387556462585,boot,47,54,True
-sorghum,90,40,Warm / humid,7,S6,2499,0.10493528421768708,half-bloom,55,67,True
-sorghum,90,40,Warm / humid,8,S7,2499,0.0646955156462585,soft dough,68,76,True
+sorghum,90,40,Warm / humid,6,S5,2499,0.09393913385034014,boot,47,54,True
+sorghum,90,40,Warm / humid,7,S6,2499,0.10493679857142858,half-bloom,55,67,True
+sorghum,90,40,Warm / humid,8,S7,2499,0.06469665025850341,soft dough,68,76,True
 sorghum,90,40,Warm / humid,9,S8,2499,0.030555729489795916,hard dough,77,89,False
 sorghum,90,40,Warm / semiarid,0,SOW,14289,0.0013750993045671498,sowing to emergence,0,4,False
 sorghum,90,40,Warm / semiarid,1,S0,14289,0.002447894287239135,emergence,5,12,False
@@ -3180,14 +3180,14 @@ sorghum,90,40,Warm / subhumid,8,S7,12429,0.02127806868018344,soft dough,68,76,Tr
 sorghum,90,40,Warm / subhumid,9,S8,12429,0.010353615391841662,hard dough,77,89,False
 sorghum,110,0,ALL,0,SOW,33733,0.0019846760614513977,sowing to emergence,0,4,False
 sorghum,110,0,ALL,1,S0,33733,0.008842303082180654,emergence,5,14,False
-sorghum,110,0,ALL,2,S1,33733,0.01627857151148727,3-leaf,15,26,False
-sorghum,110,0,ALL,3,S2,33733,0.011438114476648978,5-leaf,27,39,False
-sorghum,110,0,ALL,4,S3,33733,0.00838798976077135,growing point differentiation,40,49,False
-sorghum,110,0,ALL,5,S4,33733,0.011541259277591675,flag leaf visible,50,59,True
-sorghum,110,0,ALL,6,S5,33733,0.014323307715975455,boot,60,69,True
-sorghum,110,0,ALL,7,S6,33733,0.02496471457356298,half-bloom,70,84,True
-sorghum,110,0,ALL,8,S7,33733,0.039658059745946106,soft dough,85,94,False
-sorghum,110,0,ALL,9,S8,33733,0.05202680026021996,hard dough,95,109,False
+sorghum,110,0,ALL,2,S1,33733,0.016278599645658552,3-leaf,15,26,False
+sorghum,110,0,ALL,3,S2,33733,0.011438170599110661,5-leaf,27,39,False
+sorghum,110,0,ALL,4,S3,33733,0.008388073746482672,growing point differentiation,40,49,False
+sorghum,110,0,ALL,5,S4,33733,0.011541371397474283,flag leaf visible,50,59,True
+sorghum,110,0,ALL,6,S5,33733,0.014323419835858062,boot,60,69,True
+sorghum,110,0,ALL,7,S6,33733,0.024964742499333,half-bloom,70,84,True
+sorghum,110,0,ALL,8,S7,33733,0.03965808767171612,soft dough,85,94,False
+sorghum,110,0,ALL,9,S8,33733,0.052026912796905106,hard dough,95,109,False
 sorghum,110,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,4,False
 sorghum,110,0,Cool / humid,1,S0,225,0.0008371851602666666,emergence,5,14,False
 sorghum,110,0,Cool / humid,2,S1,225,0.002137081716,3-leaf,15,26,False
@@ -3220,14 +3220,14 @@ sorghum,110,0,Warm / arid,8,S7,253,0.29301636893280636,soft dough,85,94,False
 sorghum,110,0,Warm / arid,9,S8,253,0.509000251778656,hard dough,95,109,False
 sorghum,110,0,Warm / humid,0,SOW,2499,2.137607163265306e-05,sowing to emergence,0,4,False
 sorghum,110,0,Warm / humid,1,S0,2499,0.0007855326448979592,emergence,5,14,False
-sorghum,110,0,Warm / humid,2,S1,2499,0.005505782692517006,3-leaf,15,26,False
-sorghum,110,0,Warm / humid,3,S2,2499,0.014962434612244897,5-leaf,27,39,False
-sorghum,110,0,Warm / humid,4,S3,2499,0.028914084530612245,growing point differentiation,40,49,False
-sorghum,110,0,Warm / humid,5,S4,2499,0.0449116268367347,flag leaf visible,50,59,True
-sorghum,110,0,Warm / humid,6,S5,2499,0.05971447787755102,boot,60,69,True
-sorghum,110,0,Warm / humid,7,S6,2499,0.09519060529931973,half-bloom,70,84,True
-sorghum,110,0,Warm / humid,8,S7,2499,0.10581998733333334,soft dough,85,94,False
-sorghum,110,0,Warm / humid,9,S8,2499,0.08807747326530613,hard dough,95,109,False
+sorghum,110,0,Warm / humid,2,S1,2499,0.00550616128095238,3-leaf,15,26,False
+sorghum,110,0,Warm / humid,3,S2,2499,0.014963193326530611,5-leaf,27,39,False
+sorghum,110,0,Warm / humid,4,S3,2499,0.02891521991156463,growing point differentiation,40,49,False
+sorghum,110,0,Warm / humid,5,S4,2499,0.044913141959183674,flag leaf visible,50,59,True
+sorghum,110,0,Warm / humid,6,S5,2499,0.05971599530612245,boot,60,69,True
+sorghum,110,0,Warm / humid,7,S6,2499,0.0951909858095238,half-bloom,70,84,True
+sorghum,110,0,Warm / humid,8,S7,2499,0.10582036707482993,soft dough,85,94,False
+sorghum,110,0,Warm / humid,9,S8,2499,0.08807899530612245,hard dough,95,109,False
 sorghum,110,0,Warm / semiarid,0,SOW,17921,0.0034458402483209644,sowing to emergence,0,4,False
 sorghum,110,0,Warm / semiarid,1,S0,17921,0.014560560835198928,emergence,5,14,False
 sorghum,110,0,Warm / semiarid,2,S1,17921,0.025192143847497347,3-leaf,15,26,False
@@ -3249,15 +3249,15 @@ sorghum,110,0,Warm / subhumid,7,S6,12430,0.031246950681834272,half-bloom,70,84,T
 sorghum,110,0,Warm / subhumid,8,S7,12430,0.03490844071786002,soft dough,85,94,False
 sorghum,110,0,Warm / subhumid,9,S8,12430,0.026951934062670956,hard dough,95,109,False
 sorghum,110,10,ALL,0,SOW,32137,0.004050244619818278,sowing to emergence,0,4,False
-sorghum,110,10,ALL,1,S0,32137,0.011778266432146748,emergence,5,14,False
-sorghum,110,10,ALL,2,S1,32137,0.011348305095239132,3-leaf,15,26,False
-sorghum,110,10,ALL,3,S2,32137,0.008589132559473505,5-leaf,27,39,False
-sorghum,110,10,ALL,4,S3,32137,0.010823753780720043,growing point differentiation,40,49,False
-sorghum,110,10,ALL,5,S4,32137,0.01369739057606497,flag leaf visible,50,59,True
-sorghum,110,10,ALL,6,S5,32137,0.01729701640917074,boot,60,69,True
-sorghum,110,10,ALL,7,S6,32137,0.029992678874630488,half-bloom,70,84,True
-sorghum,110,10,ALL,8,S7,32137,0.045639542292497746,soft dough,85,94,False
-sorghum,110,10,ALL,9,S8,32137,0.06631294554080965,hard dough,95,109,False
+sorghum,110,10,ALL,1,S0,32137,0.011778295871839314,emergence,5,14,False
+sorghum,110,10,ALL,2,S1,32137,0.01134836395275228,3-leaf,15,26,False
+sorghum,110,10,ALL,3,S2,32137,0.008589220922295174,5-leaf,27,39,False
+sorghum,110,10,ALL,4,S3,32137,0.010823871889442076,growing point differentiation,40,49,False
+sorghum,110,10,ALL,5,S4,32137,0.013697508684787004,flag leaf visible,50,59,True
+sorghum,110,10,ALL,6,S5,32137,0.017297045498911538,boot,60,69,True
+sorghum,110,10,ALL,7,S6,32137,0.02999270818309114,half-bloom,70,84,True
+sorghum,110,10,ALL,8,S7,32137,0.04563966040121978,soft dough,85,94,False
+sorghum,110,10,ALL,9,S8,32137,0.06631303390363132,hard dough,95,109,False
 sorghum,110,10,Cool / humid,0,SOW,225,0.0008371851602666666,sowing to emergence,0,4,False
 sorghum,110,10,Cool / humid,1,S0,225,0.0017418294453333334,emergence,5,14,False
 sorghum,110,10,Cool / humid,2,S1,225,0.004959759186666667,3-leaf,15,26,False
@@ -3289,15 +3289,15 @@ sorghum,110,10,Warm / arid,7,S6,12,0.11116340833333332,half-bloom,70,84,True
 sorghum,110,10,Warm / arid,8,S7,12,0.50028571,soft dough,85,94,False
 sorghum,110,10,Warm / arid,9,S8,12,0.6647544058333333,hard dough,95,109,False
 sorghum,110,10,Warm / humid,0,SOW,2499,0.000658466958367347,sowing to emergence,0,4,False
-sorghum,110,10,Warm / humid,1,S0,2499,0.004385506223401361,emergence,5,14,False
-sorghum,110,10,Warm / humid,2,S1,2499,0.010876517346938775,3-leaf,15,26,False
-sorghum,110,10,Warm / humid,3,S2,2499,0.03048360819047619,5-leaf,27,39,False
-sorghum,110,10,Warm / humid,4,S3,2499,0.04451502993877551,growing point differentiation,40,49,False
-sorghum,110,10,Warm / humid,5,S4,2499,0.05864285891156463,flag leaf visible,50,59,True
-sorghum,110,10,Warm / humid,6,S5,2499,0.073087265585034,boot,60,69,True
-sorghum,110,10,Warm / humid,7,S6,2499,0.11283222088435373,half-bloom,70,84,True
-sorghum,110,10,Warm / humid,8,S7,2499,0.10032211217687075,soft dough,85,94,False
-sorghum,110,10,Warm / humid,9,S8,2499,0.06925312849659863,hard dough,95,109,False
+sorghum,110,10,Warm / humid,1,S0,2499,0.004385884965578232,emergence,5,14,False
+sorghum,110,10,Warm / humid,2,S1,2499,0.010877276061224489,3-leaf,15,26,False
+sorghum,110,10,Warm / humid,3,S2,2499,0.03048474357142857,5-leaf,27,39,False
+sorghum,110,10,Warm / humid,4,S3,2499,0.04451654044897959,growing point differentiation,40,49,False
+sorghum,110,10,Warm / humid,5,S4,2499,0.058644373265306124,flag leaf visible,50,59,True
+sorghum,110,10,Warm / humid,6,S5,2499,0.07308764609523809,boot,60,69,True
+sorghum,110,10,Warm / humid,7,S6,2499,0.11283260139455782,half-bloom,70,84,True
+sorghum,110,10,Warm / humid,8,S7,2499,0.10032363421768707,soft dough,85,94,False
+sorghum,110,10,Warm / humid,9,S8,2499,0.06925426387755103,hard dough,95,109,False
 sorghum,110,10,Warm / semiarid,0,SOW,16566,0.007052178661209707,sowing to emergence,0,4,False
 sorghum,110,10,Warm / semiarid,1,S0,16566,0.019292904103947846,emergence,5,14,False
 sorghum,110,10,Warm / semiarid,2,S1,16566,0.017063675573825907,3-leaf,15,26,False
@@ -3318,15 +3318,15 @@ sorghum,110,10,Warm / subhumid,6,S5,12430,0.022251977934062753,boot,60,69,True
 sorghum,110,10,Warm / subhumid,7,S6,12430,0.03873302925261465,half-bloom,70,84,True
 sorghum,110,10,Warm / subhumid,8,S7,12430,0.03216825631174578,soft dough,85,94,False
 sorghum,110,10,Warm / subhumid,9,S8,12430,0.022947259021721643,hard dough,95,109,False
-sorghum,110,20,ALL,0,SOW,29847,0.0038656931860354474,sowing to emergence,0,4,False
-sorghum,110,20,ALL,1,S0,29847,0.006171431596642879,emergence,5,14,False
-sorghum,110,20,ALL,2,S1,29847,0.007872188854008779,3-leaf,15,26,False
-sorghum,110,20,ALL,3,S2,29847,0.012149194554729119,5-leaf,27,39,False
-sorghum,110,20,ALL,4,S3,29847,0.014152771525721178,growing point differentiation,40,49,False
-sorghum,110,20,ALL,5,S4,29847,0.017972082569437463,flag leaf visible,50,59,True
+sorghum,110,20,ALL,0,SOW,29847,0.003865724918638389,sowing to emergence,0,4,False
+sorghum,110,20,ALL,1,S0,29847,0.006171495061848763,emergence,5,14,False
+sorghum,110,20,ALL,2,S1,29847,0.007872315878165309,3-leaf,15,26,False
+sorghum,110,20,ALL,3,S2,29847,0.012149321110161827,5-leaf,27,39,False
+sorghum,110,20,ALL,4,S3,29847,0.014152898081153886,growing point differentiation,40,49,False
+sorghum,110,20,ALL,5,S4,29847,0.017972114677019462,flag leaf visible,50,59,True
 sorghum,110,20,ALL,6,S5,29847,0.02209766510057962,boot,60,69,True
-sorghum,110,20,ALL,7,S6,29847,0.03282913027309277,half-bloom,70,84,True
-sorghum,110,20,ALL,8,S7,29847,0.05135260366847187,soft dough,85,94,False
+sorghum,110,20,ALL,7,S6,29847,0.03282925800033504,half-bloom,70,84,True
+sorghum,110,20,ALL,8,S7,29847,0.051352699053770226,soft dough,85,94,False
 sorghum,110,20,ALL,9,S8,29847,0.07208308895915838,hard dough,95,109,False
 sorghum,110,20,Cool / humid,0,SOW,225,0.0009046441877333333,sowing to emergence,0,4,False
 sorghum,110,20,Cool / humid,1,S0,225,0.0043153950000000005,emergence,5,14,False
@@ -3348,15 +3348,15 @@ sorghum,110,20,Cool / subhumid,6,S5,405,0.0040489833629629626,boot,60,69,True
 sorghum,110,20,Cool / subhumid,7,S6,405,0.0039148662617283945,half-bloom,70,84,True
 sorghum,110,20,Cool / subhumid,8,S7,405,0.0006159414651851851,soft dough,85,94,False
 sorghum,110,20,Cool / subhumid,9,S8,405,0.00031475859851851854,hard dough,95,109,False
-sorghum,110,20,Warm / humid,0,SOW,2499,0.0027128075707482996,sowing to emergence,0,4,False
-sorghum,110,20,Warm / humid,1,S0,2499,0.00769150759319728,emergence,5,14,False
-sorghum,110,20,Warm / humid,2,S1,2499,0.025227682870748298,3-leaf,15,26,False
-sorghum,110,20,Warm / humid,3,S2,2499,0.0480128306122449,5-leaf,27,39,False
-sorghum,110,20,Warm / humid,4,S3,2499,0.058427978326530614,growing point differentiation,40,49,False
-sorghum,110,20,Warm / humid,5,S4,2499,0.07281692666666667,flag leaf visible,50,59,True
+sorghum,110,20,Warm / humid,0,SOW,2499,0.002713186466666667,sowing to emergence,0,4,False
+sorghum,110,20,Warm / humid,1,S0,2499,0.0076922647700680274,emergence,5,14,False
+sorghum,110,20,Warm / humid,2,S1,2499,0.02522919799319728,3-leaf,15,26,False
+sorghum,110,20,Warm / humid,3,S2,2499,0.048014344965986396,5-leaf,27,39,False
+sorghum,110,20,Warm / humid,4,S3,2499,0.05842949268027211,growing point differentiation,40,49,False
+sorghum,110,20,Warm / humid,5,S4,2499,0.07281730717687075,flag leaf visible,50,59,True
 sorghum,110,20,Warm / humid,6,S5,2499,0.08761014462585033,boot,60,69,True
-sorghum,110,20,Warm / humid,7,S6,2499,0.12368616176870748,half-bloom,70,84,True
-sorghum,110,20,Warm / humid,8,S7,2499,0.0755096206802721,soft dough,85,94,False
+sorghum,110,20,Warm / humid,7,S6,2499,0.1236876791972789,half-bloom,70,84,True
+sorghum,110,20,Warm / humid,8,S7,2499,0.07551075298639456,soft dough,85,94,False
 sorghum,110,20,Warm / humid,9,S8,2499,0.03662987484353741,hard dough,95,109,False
 sorghum,110,20,Warm / semiarid,0,SOW,14289,0.006056982852711877,sowing to emergence,0,4,False
 sorghum,110,20,Warm / semiarid,1,S0,14289,0.008886034549317657,emergence,5,14,False
@@ -3500,13 +3500,13 @@ sorghum,110,40,Warm / subhumid,8,S7,12428,0.01447947612777599,soft dough,85,94,F
 sorghum,110,40,Warm / subhumid,9,S8,12428,0.01488546558167042,hard dough,95,109,False
 sorghum,130,0,ALL,0,SOW,29847,0.0005757847304013804,sowing to emergence,0,4,False
 sorghum,130,0,ALL,1,S0,29847,0.00777320617043589,emergence,5,16,False
-sorghum,130,0,ALL,2,S1,29847,0.012406679704191376,3-leaf,17,31,False
-sorghum,130,0,ALL,3,S2,29847,0.010362904451134117,5-leaf,32,47,False
-sorghum,130,0,ALL,4,S3,29847,0.012295143150735417,growing point differentiation,48,60,False
-sorghum,130,0,ALL,5,S4,29847,0.015259720360066337,flag leaf visible,61,72,True
-sorghum,130,0,ALL,6,S5,29847,0.022766260914758606,boot,73,85,True
-sorghum,130,0,ALL,7,S6,29847,0.03323986124484872,half-bloom,86,101,True
-sorghum,130,0,ALL,8,S7,29847,0.04304877981271149,soft dough,102,112,False
+sorghum,130,0,ALL,2,S1,29847,0.01240674321626964,3-leaf,17,31,False
+sorghum,130,0,ALL,3,S2,29847,0.010363031475290649,5-leaf,32,47,False
+sorghum,130,0,ALL,4,S3,29847,0.012295269940530037,growing point differentiation,48,60,False
+sorghum,130,0,ALL,5,S4,29847,0.015259847384222869,flag leaf visible,61,72,True
+sorghum,130,0,ALL,6,S5,29847,0.022766292319254866,boot,73,85,True
+sorghum,130,0,ALL,7,S6,29847,0.033239988737729084,half-bloom,86,101,True
+sorghum,130,0,ALL,8,S7,29847,0.04304890683686803,soft dough,102,112,False
 sorghum,130,0,ALL,9,S8,29847,0.07304696232984889,hard dough,113,129,False
 sorghum,130,0,Cool / humid,0,SOW,225,0.0,sowing to emergence,0,4,False
 sorghum,130,0,Cool / humid,1,S0,225,0.0008371851602666666,emergence,5,16,False
@@ -3530,13 +3530,13 @@ sorghum,130,0,Cool / subhumid,8,S7,405,0.0006159414651851851,soft dough,102,112,
 sorghum,130,0,Cool / subhumid,9,S8,405,0.00031475859851851854,hard dough,113,129,False
 sorghum,130,0,Warm / humid,0,SOW,2499,2.137607163265306e-05,sowing to emergence,0,4,False
 sorghum,130,0,Warm / humid,1,S0,2499,0.0010946504482993197,emergence,5,16,False
-sorghum,130,0,Warm / humid,2,S1,2499,0.007604292810884354,3-leaf,17,31,False
-sorghum,130,0,Warm / humid,3,S2,2499,0.0281961597414966,5-leaf,32,47,False
-sorghum,130,0,Warm / humid,4,S3,2499,0.04866618422448979,growing point differentiation,48,60,False
-sorghum,130,0,Warm / humid,5,S4,2499,0.06412815481632654,flag leaf visible,61,72,True
-sorghum,130,0,Warm / humid,6,S5,2499,0.09038288680952382,boot,73,85,True
-sorghum,130,0,Warm / humid,7,S6,2499,0.13286343292517006,half-bloom,86,101,True
-sorghum,130,0,Warm / humid,8,S7,2499,0.0860129250340136,soft dough,102,112,False
+sorghum,130,0,Warm / humid,2,S1,2499,0.007605050756462586,3-leaf,17,31,False
+sorghum,130,0,Warm / humid,3,S2,2499,0.02819767563265306,5-leaf,32,47,False
+sorghum,130,0,Warm / humid,4,S3,2499,0.04866769857823129,growing point differentiation,48,60,False
+sorghum,130,0,Warm / humid,5,S4,2499,0.06412966917006803,flag leaf visible,61,72,True
+sorghum,130,0,Warm / humid,6,S5,2499,0.09038326578231293,boot,73,85,True
+sorghum,130,0,Warm / humid,7,S6,2499,0.13286494727891157,half-bloom,86,101,True
+sorghum,130,0,Warm / humid,8,S7,2499,0.0860144393877551,soft dough,102,112,False
 sorghum,130,0,Warm / humid,9,S8,2499,0.04457398605442177,hard dough,113,129,False
 sorghum,130,0,Warm / semiarid,0,SOW,14289,0.0011785268871019666,sowing to emergence,0,4,False
 sorghum,130,0,Warm / semiarid,1,S0,14289,0.01443610693925397,emergence,5,16,False

@@ -1,13 +1,13 @@
 unit,zone_scheme,zone,metric,label,metric_unit,n_cells,n_seasons,n_defined,mean,p10,p25,median,p75,p90,scenario
-ci_nga,aez8,Warm / arid,n_spells,Number of dry spells per season,spells,2342,87012,87012,0.1220176527375534,0.0,0.0,0.0,0.0,1.0,base
-ci_nga,aez8,Warm / arid,spell_len,Median duration of the dry spells of the season,days,2342,87012,9432,12.16274385072095,10.0,10.0,11.0,13.0,15.0,base
-ci_nga,aez8,Warm / arid,first_start,Start of the 1st dry spell,days after onset,2342,87012,9432,32.28350296861747,10.0,13.0,21.0,54.0,63.0,base
-ci_nga,aez8,Warm / arid,first_len,Duration of the 1st dry spell,days,2342,87012,9432,12.224448685326548,10.0,10.0,11.0,13.0,15.0,base
-ci_nga,aez8,Warm / arid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,2342,87012,1154,59.09792027729636,28.0,40.0,55.0,73.0,89.0,base
-ci_nga,aez8,Warm / arid,last_len,Duration of the last dry spell (seasons with >= 2),days,2342,87012,1154,12.244367417677642,10.0,10.0,12.0,13.0,16.0,base
-ci_nga,aez8,Warm / arid,longest_start,Start of the longest dry spell,days after onset,2342,87012,9432,33.81053859202714,10.0,13.0,25.0,55.0,69.0,base
-ci_nga,aez8,Warm / arid,longest_len,Duration of the longest dry spell,days,2342,87012,9432,12.331849024597116,10.0,10.0,11.0,13.0,16.0,base
-ci_nga,aez8,Warm / arid,dry_frac,Share of the season in dry spells,fraction,2342,87012,87012,0.0222764676136624,0.0,0.0,0.0,0.0,0.12,base
+ci_nga,aez8,Warm / arid,n_spells,Number of dry spells per season,spells,2342,87010,87010,0.1219859786231467,0.0,0.0,0.0,0.0,1.0,base
+ci_nga,aez8,Warm / arid,spell_len,Median duration of the dry spells of the season,days,2342,87010,9430,12.16256627783669,10.0,10.0,11.0,13.0,15.0,base
+ci_nga,aez8,Warm / arid,first_start,Start of the 1st dry spell,days after onset,2342,87010,9430,32.27815482502651,10.0,13.0,21.0,54.0,63.0,base
+ci_nga,aez8,Warm / arid,first_len,Duration of the 1st dry spell,days,2342,87010,9430,12.22439024390244,10.0,10.0,11.0,13.0,15.0,base
+ci_nga,aez8,Warm / arid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,2342,87010,1153,59.06591500433651,28.0,40.0,55.0,73.0,89.0,base
+ci_nga,aez8,Warm / arid,last_len,Duration of the last dry spell (seasons with >= 2),days,2342,87010,1153,12.241977450130095,10.0,10.0,12.0,13.0,16.0,base
+ci_nga,aez8,Warm / arid,longest_start,Start of the longest dry spell,days after onset,2342,87010,9430,33.80318133616119,10.0,13.0,25.0,55.0,69.0,base
+ci_nga,aez8,Warm / arid,longest_len,Duration of the longest dry spell,days,2342,87010,9430,12.331601272534463,10.0,10.0,11.0,13.0,16.0,base
+ci_nga,aez8,Warm / arid,dry_frac,Share of the season in dry spells,fraction,2342,87010,87010,0.022271692908861,0.0,0.0,0.0,0.0,0.12,base
 ci_nga,aez8,Warm / semiarid,n_spells,Number of dry spells per season,spells,19154,734925,734925,0.0501819913596625,0.0,0.0,0.0,0.0,0.0,base
 ci_nga,aez8,Warm / semiarid,spell_len,Median duration of the dry spells of the season,days,19154,734925,34197,11.302848203058748,10.0,10.0,11.0,12.0,14.0,base
 ci_nga,aez8,Warm / semiarid,first_start,Start of the 1st dry spell,days after onset,19154,734925,34197,43.97830219025061,12.0,17.0,30.0,67.0,94.0,base
@@ -26,15 +26,15 @@ ci_nga,aez8,Warm / subhumid,last_len,Duration of the last dry spell (seasons wit
 ci_nga,aez8,Warm / subhumid,longest_start,Start of the longest dry spell,days after onset,19697,714283,153136,93.76375901159751,59.0,79.0,94.0,111.0,125.0,base
 ci_nga,aez8,Warm / subhumid,longest_len,Duration of the longest dry spell,days,19697,714283,153136,14.34773665238742,10.0,11.0,13.0,16.0,21.0,base
 ci_nga,aez8,Warm / subhumid,dry_frac,Share of the season in dry spells,fraction,19697,714283,714283,0.0236167037434742,0.0,0.0,0.0,0.0,0.09,base
-ci_nga,aez8,Warm / humid,n_spells,Number of dry spells per season,spells,3784,130577,130577,0.3667644378412737,0.0,0.0,0.0,1.0,1.0,base
-ci_nga,aez8,Warm / humid,spell_len,Median duration of the dry spells of the season,days,3784,130577,37950,13.34026350461133,10.0,11.0,12.0,15.0,18.0,base
-ci_nga,aez8,Warm / humid,first_start,Start of the 1st dry spell,days after onset,3784,130577,37950,83.19857707509881,48.0,64.0,84.0,99.0,120.0,base
-ci_nga,aez8,Warm / humid,first_len,Duration of the 1st dry spell,days,3784,130577,37950,13.342503293807642,10.0,11.0,12.0,15.0,18.0,base
-ci_nga,aez8,Warm / humid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,3784,130577,8604,103.70002324500231,74.0,86.0,101.0,120.0,136.0,base
-ci_nga,aez8,Warm / humid,last_len,Duration of the last dry spell (seasons with >= 2),days,3784,130577,8604,12.98512319851232,10.0,11.0,12.0,14.0,18.0,base
-ci_nga,aez8,Warm / humid,longest_start,Start of the longest dry spell,days after onset,3784,130577,37950,85.90579710144928,50.0,67.0,86.0,101.0,125.0,base
-ci_nga,aez8,Warm / humid,longest_len,Duration of the longest dry spell,days,3784,130577,37950,13.7867720685112,10.0,11.0,13.0,15.0,19.0,base
-ci_nga,aez8,Warm / humid,dry_frac,Share of the season in dry spells,fraction,3784,130577,130577,0.029457025356686,0.0,0.0,0.0,0.06,0.1,base
+ci_nga,aez8,Warm / humid,n_spells,Number of dry spells per season,spells,3784,130576,130576,0.3667672466609484,0.0,0.0,0.0,1.0,1.0,base
+ci_nga,aez8,Warm / humid,spell_len,Median duration of the dry spells of the season,days,3784,130576,37950,13.34026350461133,10.0,11.0,12.0,15.0,18.0,base
+ci_nga,aez8,Warm / humid,first_start,Start of the 1st dry spell,days after onset,3784,130576,37950,83.19857707509881,48.0,64.0,84.0,99.0,120.0,base
+ci_nga,aez8,Warm / humid,first_len,Duration of the 1st dry spell,days,3784,130576,37950,13.342503293807642,10.0,11.0,12.0,15.0,18.0,base
+ci_nga,aez8,Warm / humid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,3784,130576,8604,103.70002324500231,74.0,86.0,101.0,120.0,136.0,base
+ci_nga,aez8,Warm / humid,last_len,Duration of the last dry spell (seasons with >= 2),days,3784,130576,8604,12.98512319851232,10.0,11.0,12.0,14.0,18.0,base
+ci_nga,aez8,Warm / humid,longest_start,Start of the longest dry spell,days after onset,3784,130576,37950,85.90579710144928,50.0,67.0,86.0,101.0,125.0,base
+ci_nga,aez8,Warm / humid,longest_len,Duration of the longest dry spell,days,3784,130576,37950,13.7867720685112,10.0,11.0,13.0,15.0,19.0,base
+ci_nga,aez8,Warm / humid,dry_frac,Share of the season in dry spells,fraction,3784,130576,130576,0.0294572509496385,0.0,0.0,0.0,0.06,0.1,base
 ci_nga,aez8,Cool / subhumid,n_spells,Number of dry spells per season,spells,556,20519,20519,0.0094059164676641,0.0,0.0,0.0,0.0,0.0,base
 ci_nga,aez8,Cool / subhumid,spell_len,Median duration of the dry spells of the season,days,556,20519,193,10.870466321243525,10.0,10.0,10.0,12.0,12.0,base
 ci_nga,aez8,Cool / subhumid,first_start,Start of the 1st dry spell,days after onset,556,20519,193,70.44559585492227,15.0,24.0,83.0,88.0,134.0,base
@@ -53,15 +53,15 @@ ci_nga,aez8,Cool / humid,last_len,Duration of the last dry spell (seasons with >
 ci_nga,aez8,Cool / humid,longest_start,Start of the longest dry spell,days after onset,402,14281,872,77.81422018348624,40.0,46.0,70.0,105.0,131.0,base
 ci_nga,aez8,Cool / humid,longest_len,Duration of the longest dry spell,days,402,14281,872,11.716743119266056,10.0,10.0,11.0,13.0,14.0,base
 ci_nga,aez8,Cool / humid,dry_frac,Share of the season in dry spells,fraction,402,14281,14281,0.0048617043624396,0.0,0.0,0.0,0.0,0.0,base
-ci_nga,aez8,ALL,n_spells,Number of dry spells per season,spells,45935,1701597,1701597,0.1745971578464231,0.0,0.0,0.0,0.0,1.0,base
-ci_nga,aez8,ALL,spell_len,Median duration of the dry spells of the season,days,45935,1701597,235780,13.215539910085672,10.0,10.5,12.0,14.0,18.0,base
-ci_nga,aez8,ALL,first_start,Start of the 1st dry spell,days after onset,45935,1701597,235780,80.1797395877513,26.0,60.0,85.0,102.0,119.0,base
-ci_nga,aez8,ALL,first_len,Duration of the 1st dry spell,days,45935,1701597,235780,13.243146153193656,10.0,10.0,12.0,14.0,18.0,base
-ci_nga,aez8,ALL,last_start,Start of the last dry spell (seasons with >= 2),days after onset,45935,1701597,50818,111.31059860679288,79.0,95.0,110.0,131.0,147.0,base
-ci_nga,aez8,ALL,last_len,Duration of the last dry spell (seasons with >= 2),days,45935,1701597,50818,13.408634735723563,10.0,11.0,12.0,15.0,19.0,base
-ci_nga,aez8,ALL,longest_start,Start of the longest dry spell,days after onset,45935,1701597,235780,82.94423615234541,28.0,63.0,88.0,105.0,122.0,base
-ci_nga,aez8,ALL,longest_len,Duration of the longest dry spell,days,45935,1701597,235780,13.73740351174824,10.0,11.0,12.0,15.0,20.0,base
-ci_nga,aez8,ALL,dry_frac,Share of the season in dry spells,fraction,45935,1701597,1701597,0.0160015032936705,0.0,0.0,0.0,0.0,0.07,base
+ci_nga,aez8,ALL,n_spells,Number of dry spells per season,spells,45935,1701594,1701594,0.1745957026176632,0.0,0.0,0.0,0.0,1.0,base
+ci_nga,aez8,ALL,spell_len,Median duration of the dry spells of the season,days,45935,1701594,235778,13.21554173841495,10.0,10.5,12.0,14.0,18.0,base
+ci_nga,aez8,ALL,first_start,Start of the 1st dry spell,days after onset,45935,1701594,235778,80.17993196990389,26.0,60.0,85.0,102.0,119.0,base
+ci_nga,aez8,ALL,first_len,Duration of the 1st dry spell,days,45935,1701594,235778,13.243152456972236,10.0,10.0,12.0,14.0,18.0,base
+ci_nga,aez8,ALL,last_start,Start of the last dry spell (seasons with >= 2),days after onset,45935,1701594,50817,111.3108998957042,79.0,95.0,110.0,131.0,147.0,base
+ci_nga,aez8,ALL,last_len,Duration of the last dry spell (seasons with >= 2),days,45935,1701594,50817,13.408603420115316,10.0,11.0,12.0,15.0,19.0,base
+ci_nga,aez8,ALL,longest_start,Start of the longest dry spell,days after onset,45935,1701594,235778,82.94435867638202,28.0,63.0,88.0,105.0,122.0,base
+ci_nga,aez8,ALL,longest_len,Duration of the longest dry spell,days,45935,1701594,235778,13.737405525536731,10.0,11.0,12.0,15.0,20.0,base
+ci_nga,aez8,ALL,dry_frac,Share of the season in dry spells,fraction,45935,1701594,1701594,0.0160012611704084,0.0,0.0,0.0,0.0,0.07,base
 ci_nga,aez8,Warm / arid,n_spells,Number of dry spells per season,spells,2328,97467,97467,0.1357895492833472,0.0,0.0,0.0,0.0,1.0,chirps
 ci_nga,aez8,Warm / arid,spell_len,Median duration of the dry spells of the season,days,2328,97467,11712,11.870432035519126,10.0,10.0,11.0,13.0,15.0,chirps
 ci_nga,aez8,Warm / arid,first_start,Start of the 1st dry spell,days after onset,2328,97467,11712,35.99940232240437,10.0,12.0,25.0,55.0,74.0,chirps
@@ -125,15 +125,15 @@ ci_nga,aez8,ALL,last_len,Duration of the last dry spell (seasons with >= 2),days
 ci_nga,aez8,ALL,longest_start,Start of the longest dry spell,days after onset,45920,1972935,159812,68.9185668160088,17.0,41.0,72.0,94.0,112.0,chirps
 ci_nga,aez8,ALL,longest_len,Duration of the longest dry spell,days,45920,1972935,159812,12.201649438089756,10.0,10.0,11.0,13.0,16.0,chirps
 ci_nga,aez8,ALL,dry_frac,Share of the season in dry spells,fraction,45920,1972935,1972935,0.0091536568614779,0.0,0.0,0.0,0.0,0.0,chirps
-ci_nga,aez8,Warm / arid,n_spells,Number of dry spells per season,spells,2329,86466,86466,0.1220942335715772,0.0,0.0,0.0,0.0,1.0,mask_bimodal
-ci_nga,aez8,Warm / arid,spell_len,Median duration of the dry spells of the season,days,2329,86466,9378,12.16464064832587,10.0,10.0,11.0,13.0,15.0,mask_bimodal
-ci_nga,aez8,Warm / arid,first_start,Start of the 1st dry spell,days after onset,2329,86466,9378,32.22670078908083,10.0,13.0,21.0,54.0,63.0,mask_bimodal
-ci_nga,aez8,Warm / arid,first_len,Duration of the 1st dry spell,days,2329,86466,9378,12.227020686713583,10.0,10.0,11.0,13.0,15.0,mask_bimodal
-ci_nga,aez8,Warm / arid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,2329,86466,1148,59.07752613240418,28.0,40.0,55.0,73.0,89.0,mask_bimodal
-ci_nga,aez8,Warm / arid,last_len,Duration of the last dry spell (seasons with >= 2),days,2329,86466,1148,12.242160278745644,10.0,10.0,12.0,13.0,16.0,mask_bimodal
-ci_nga,aez8,Warm / arid,longest_start,Start of the longest dry spell,days after onset,2329,86466,9378,33.744508423971,10.0,13.0,25.0,55.0,69.0,mask_bimodal
-ci_nga,aez8,Warm / arid,longest_len,Duration of the longest dry spell,days,2329,86466,9378,12.334399658775858,10.0,10.0,11.0,13.0,16.0,mask_bimodal
-ci_nga,aez8,Warm / arid,dry_frac,Share of the season in dry spells,fraction,2329,86466,86466,0.0223047209307704,0.0,0.0,0.0,0.0,0.12,mask_bimodal
+ci_nga,aez8,Warm / arid,n_spells,Number of dry spells per season,spells,2329,86464,86464,0.1220623612139156,0.0,0.0,0.0,0.0,1.0,mask_bimodal
+ci_nga,aez8,Warm / arid,spell_len,Median duration of the dry spells of the season,days,2329,86464,9376,12.164462457337883,10.0,10.0,11.0,13.0,15.0,mask_bimodal
+ci_nga,aez8,Warm / arid,first_start,Start of the 1st dry spell,days after onset,2329,86464,9376,32.22130972696246,10.0,13.0,21.0,54.0,63.0,mask_bimodal
+ci_nga,aez8,Warm / arid,first_len,Duration of the 1st dry spell,days,2329,86464,9376,12.226962457337883,10.0,10.0,11.0,13.0,15.0,mask_bimodal
+ci_nga,aez8,Warm / arid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,2329,86464,1147,59.04533565823888,28.0,40.0,55.0,73.0,89.0,mask_bimodal
+ci_nga,aez8,Warm / arid,last_len,Duration of the last dry spell (seasons with >= 2),days,2329,86464,1147,12.239755884917177,10.0,10.0,12.0,13.0,16.0,mask_bimodal
+ci_nga,aez8,Warm / arid,longest_start,Start of the longest dry spell,days after onset,2329,86464,9376,33.73709470989761,10.0,13.0,25.0,55.0,69.0,mask_bimodal
+ci_nga,aez8,Warm / arid,longest_len,Duration of the longest dry spell,days,2329,86464,9376,12.334151023890785,10.0,10.0,11.0,13.0,16.0,mask_bimodal
+ci_nga,aez8,Warm / arid,dry_frac,Share of the season in dry spells,fraction,2329,86464,86464,0.0222999167283493,0.0,0.0,0.0,0.0,0.12,mask_bimodal
 ci_nga,aez8,Warm / semiarid,n_spells,Number of dry spells per season,spells,18780,718634,718634,0.050260633368307,0.0,0.0,0.0,0.0,0.0,mask_bimodal
 ci_nga,aez8,Warm / semiarid,spell_len,Median duration of the dry spells of the season,days,18780,718634,33494,11.303218486893176,10.0,10.0,11.0,12.0,14.0,mask_bimodal
 ci_nga,aez8,Warm / semiarid,first_start,Start of the 1st dry spell,days after onset,18780,718634,33494,43.97408491073029,12.0,17.0,30.0,67.0,94.0,mask_bimodal
@@ -152,15 +152,15 @@ ci_nga,aez8,Warm / subhumid,last_len,Duration of the last dry spell (seasons wit
 ci_nga,aez8,Warm / subhumid,longest_start,Start of the longest dry spell,days after onset,12445,454006,42480,82.39790489642185,45.0,66.0,83.0,99.0,116.0,mask_bimodal
 ci_nga,aez8,Warm / subhumid,longest_len,Duration of the longest dry spell,days,12445,454006,42480,12.558356873822976,10.0,10.0,12.0,13.0,16.0,mask_bimodal
 ci_nga,aez8,Warm / subhumid,dry_frac,Share of the season in dry spells,fraction,12445,454006,454006,0.0086501720241582,0.0,0.0,0.0,0.0,0.0,mask_bimodal
-ci_nga,aez8,Warm / humid,n_spells,Number of dry spells per season,spells,2539,84024,84024,0.3703465676473388,0.0,0.0,0.0,1.0,1.0,mask_bimodal
-ci_nga,aez8,Warm / humid,spell_len,Median duration of the dry spells of the season,days,2539,84024,24610,13.350406338886632,10.0,11.0,12.0,15.0,18.0,mask_bimodal
-ci_nga,aez8,Warm / humid,first_start,Start of the 1st dry spell,days after onset,2539,84024,24610,80.9635107679805,46.0,62.0,81.0,97.0,120.0,mask_bimodal
-ci_nga,aez8,Warm / humid,first_len,Duration of the 1st dry spell,days,2539,84024,24610,13.36964648516863,10.0,11.0,12.0,15.0,18.0,mask_bimodal
-ci_nga,aez8,Warm / humid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,2539,84024,5535,101.2959349593496,72.0,85.0,100.0,117.0,131.0,mask_bimodal
-ci_nga,aez8,Warm / humid,last_len,Duration of the last dry spell (seasons with >= 2),days,2539,84024,5535,12.950135501355014,10.0,11.0,12.0,14.0,18.0,mask_bimodal
-ci_nga,aez8,Warm / humid,longest_start,Start of the longest dry spell,days after onset,2539,84024,24610,83.63206013815523,47.0,63.0,84.0,100.0,124.0,mask_bimodal
-ci_nga,aez8,Warm / humid,longest_len,Duration of the longest dry spell,days,2539,84024,24610,13.799796830556684,10.0,11.0,13.0,15.0,19.0,mask_bimodal
-ci_nga,aez8,Warm / humid,dry_frac,Share of the season in dry spells,fraction,2539,84024,84024,0.0300593877939636,0.0,0.0,0.0,0.06,0.11,mask_bimodal
+ci_nga,aez8,Warm / humid,n_spells,Number of dry spells per season,spells,2539,84023,84023,0.3703509753281839,0.0,0.0,0.0,1.0,1.0,mask_bimodal
+ci_nga,aez8,Warm / humid,spell_len,Median duration of the dry spells of the season,days,2539,84023,24610,13.350406338886632,10.0,11.0,12.0,15.0,18.0,mask_bimodal
+ci_nga,aez8,Warm / humid,first_start,Start of the 1st dry spell,days after onset,2539,84023,24610,80.9635107679805,46.0,62.0,81.0,97.0,120.0,mask_bimodal
+ci_nga,aez8,Warm / humid,first_len,Duration of the 1st dry spell,days,2539,84023,24610,13.36964648516863,10.0,11.0,12.0,15.0,18.0,mask_bimodal
+ci_nga,aez8,Warm / humid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,2539,84023,5535,101.2959349593496,72.0,85.0,100.0,117.0,131.0,mask_bimodal
+ci_nga,aez8,Warm / humid,last_len,Duration of the last dry spell (seasons with >= 2),days,2539,84023,5535,12.950135501355014,10.0,11.0,12.0,14.0,18.0,mask_bimodal
+ci_nga,aez8,Warm / humid,longest_start,Start of the longest dry spell,days after onset,2539,84023,24610,83.63206013815523,47.0,63.0,84.0,100.0,124.0,mask_bimodal
+ci_nga,aez8,Warm / humid,longest_len,Duration of the longest dry spell,days,2539,84023,24610,13.799796830556684,10.0,11.0,13.0,15.0,19.0,mask_bimodal
+ci_nga,aez8,Warm / humid,dry_frac,Share of the season in dry spells,fraction,2539,84023,84023,0.0300597455458624,0.0,0.0,0.0,0.06,0.11,mask_bimodal
 ci_nga,aez8,Cool / subhumid,n_spells,Number of dry spells per season,spells,405,14915,14915,0.0097888032182366,0.0,0.0,0.0,0.0,0.0,mask_bimodal
 ci_nga,aez8,Cool / subhumid,spell_len,Median duration of the dry spells of the season,days,405,14915,146,10.76027397260274,10.0,10.0,10.0,11.0,12.0,mask_bimodal
 ci_nga,aez8,Cool / subhumid,first_start,Start of the 1st dry spell,days after onset,405,14915,146,70.78082191780823,16.0,24.0,82.0,88.0,134.0,mask_bimodal
@@ -179,24 +179,24 @@ ci_nga,aez8,Cool / humid,last_len,Duration of the last dry spell (seasons with >
 ci_nga,aez8,Cool / humid,longest_start,Start of the longest dry spell,days after onset,225,7670,744,77.77553763440861,40.0,48.0,70.0,103.0,131.0,mask_bimodal
 ci_nga,aez8,Cool / humid,longest_len,Duration of the longest dry spell,days,225,7670,744,11.786290322580646,10.0,10.0,11.0,13.0,14.0,mask_bimodal
 ci_nga,aez8,Cool / humid,dry_frac,Share of the season in dry spells,fraction,225,7670,7670,0.0077588005215123,0.0,0.0,0.0,0.0,0.0,mask_bimodal
-ci_nga,aez8,ALL,n_spells,Number of dry spells per season,spells,36723,1365715,1365715,0.0929073781865176,0.0,0.0,0.0,0.0,0.0,mask_bimodal
-ci_nga,aez8,ALL,spell_len,Median duration of the dry spells of the season,days,36723,1365715,110852,12.235070183668316,10.0,10.0,11.0,13.0,16.0,mask_bimodal
-ci_nga,aez8,ALL,first_start,Start of the 1st dry spell,days after onset,36723,1365715,110852,65.6840020928806,16.0,35.0,69.0,92.0,106.0,mask_bimodal
-ci_nga,aez8,ALL,first_len,Duration of the 1st dry spell,days,36723,1365715,110852,12.249512863998843,10.0,10.0,11.0,13.0,16.0,mask_bimodal
-ci_nga,aez8,ALL,last_start,Start of the last dry spell (seasons with >= 2),days after onset,36723,1365715,14085,94.0697195598154,51.0,76.0,96.0,113.0,131.0,mask_bimodal
-ci_nga,aez8,ALL,last_len,Duration of the last dry spell (seasons with >= 2),days,36723,1365715,14085,12.621441249556266,10.0,10.0,12.0,14.0,16.0,mask_bimodal
-ci_nga,aez8,ALL,longest_start,Start of the longest dry spell,days after onset,36723,1365715,110852,67.18943275718976,16.0,38.0,71.0,94.0,110.0,mask_bimodal
-ci_nga,aez8,ALL,longest_len,Duration of the longest dry spell,days,36723,1365715,110852,12.458972323458305,10.0,10.0,11.0,13.0,16.0,mask_bimodal
-ci_nga,aez8,ALL,dry_frac,Share of the season in dry spells,fraction,36723,1365715,1365715,0.0094088957066445,0.0,0.0,0.0,0.0,0.0,mask_bimodal
-ci_nga,aez8,Warm / arid,n_spells,Number of dry spells per season,spells,2342,87012,87012,0.2131774927596193,0.0,0.0,0.0,0.0,1.0,excl0
-ci_nga,aez8,Warm / arid,spell_len,Median duration of the dry spells of the season,days,2342,87012,15817,12.087184674717076,10.0,10.0,11.0,13.0,15.0,excl0
-ci_nga,aez8,Warm / arid,first_start,Start of the 1st dry spell,days after onset,2342,87012,15817,31.34399696529051,4.0,7.0,17.0,55.0,72.0,excl0
-ci_nga,aez8,Warm / arid,first_len,Duration of the 1st dry spell,days,2342,87012,15817,12.11241069735095,10.0,10.0,11.0,13.0,15.0,excl0
-ci_nga,aez8,Warm / arid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,2342,87012,2406,65.54447215295096,27.0,55.0,70.0,79.0,98.0,excl0
-ci_nga,aez8,Warm / arid,last_len,Duration of the last dry spell (seasons with >= 2),days,2342,87012,2406,12.396924355777225,10.0,10.0,11.0,13.0,16.0,excl0
-ci_nga,aez8,Warm / arid,longest_start,Start of the longest dry spell,days after onset,2342,87012,15817,34.02332932920276,4.0,9.0,23.0,60.0,73.0,excl0
-ci_nga,aez8,Warm / arid,longest_len,Duration of the longest dry spell,days,2342,87012,15817,12.31105772270342,10.0,10.0,11.0,13.0,15.0,excl0
-ci_nga,aez8,Warm / arid,dry_frac,Share of the season in dry spells,fraction,2342,87012,87012,0.030660943318163,0.0,0.0,0.0,0.0,0.14,excl0
+ci_nga,aez8,ALL,n_spells,Number of dry spells per season,spells,36723,1365712,1365712,0.0929053856157081,0.0,0.0,0.0,0.0,0.0,mask_bimodal
+ci_nga,aez8,ALL,spell_len,Median duration of the dry spells of the season,days,36723,1365712,110850,12.235056382498872,10.0,10.0,11.0,13.0,16.0,mask_bimodal
+ci_nga,aez8,ALL,first_start,Start of the 1st dry spell,days after onset,36723,1365712,110850,65.684149751917,16.0,35.0,69.0,92.0,106.0,mask_bimodal
+ci_nga,aez8,ALL,first_len,Duration of the 1st dry spell,days,36723,1365712,110850,12.249508344609833,10.0,10.0,11.0,13.0,16.0,mask_bimodal
+ci_nga,aez8,ALL,last_start,Start of the last dry spell (seasons with >= 2),days after onset,36723,1365712,14084,94.0695825049702,51.0,76.0,96.0,113.0,131.0,mask_bimodal
+ci_nga,aez8,ALL,last_len,Duration of the last dry spell (seasons with >= 2),days,36723,1365712,14084,12.621272365805169,10.0,10.0,12.0,14.0,16.0,mask_bimodal
+ci_nga,aez8,ALL,longest_start,Start of the longest dry spell,days after onset,36723,1365712,110850,67.18940911141182,16.0,38.0,71.0,94.0,110.0,mask_bimodal
+ci_nga,aez8,ALL,longest_len,Duration of the longest dry spell,days,36723,1365712,110850,12.458953540820929,10.0,10.0,11.0,13.0,16.0,mask_bimodal
+ci_nga,aez8,ALL,dry_frac,Share of the season in dry spells,fraction,36723,1365712,1365712,0.009408579554108,0.0,0.0,0.0,0.0,0.0,mask_bimodal
+ci_nga,aez8,Warm / arid,n_spells,Number of dry spells per season,spells,2342,87010,87010,0.2131364211010228,0.0,0.0,0.0,0.0,1.0,excl0
+ci_nga,aez8,Warm / arid,spell_len,Median duration of the dry spells of the season,days,2342,87010,15815,12.086721466961745,10.0,10.0,11.0,13.0,15.0,excl0
+ci_nga,aez8,Warm / arid,first_start,Start of the 1st dry spell,days after onset,2342,87010,15815,31.3406892190958,4.0,7.0,17.0,55.0,72.0,excl0
+ci_nga,aez8,Warm / arid,first_len,Duration of the 1st dry spell,days,2342,87010,15815,12.11236168194752,10.0,10.0,11.0,13.0,15.0,excl0
+ci_nga,aez8,Warm / arid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,2342,87010,2404,65.52911813643927,27.0,55.0,70.0,79.0,98.0,excl0
+ci_nga,aez8,Warm / arid,last_len,Duration of the last dry spell (seasons with >= 2),days,2342,87010,2404,12.391430948419302,10.0,10.0,11.0,13.0,16.0,excl0
+ci_nga,aez8,Warm / arid,longest_start,Start of the longest dry spell,days after onset,2342,87010,15815,34.01700916851091,4.0,9.0,23.0,60.0,73.0,excl0
+ci_nga,aez8,Warm / arid,longest_len,Duration of the longest dry spell,days,2342,87010,15815,12.310211824217514,10.0,10.0,11.0,13.0,15.0,excl0
+ci_nga,aez8,Warm / arid,dry_frac,Share of the season in dry spells,fraction,2342,87010,87010,0.0306547523273187,0.0,0.0,0.0,0.0,0.14,excl0
 ci_nga,aez8,Warm / semiarid,n_spells,Number of dry spells per season,spells,19154,734925,734925,0.0754798108650542,0.0,0.0,0.0,0.0,0.0,excl0
 ci_nga,aez8,Warm / semiarid,spell_len,Median duration of the dry spells of the season,days,19154,734925,50164,11.231899370066182,10.0,10.0,11.0,12.0,13.0,excl0
 ci_nga,aez8,Warm / semiarid,first_start,Start of the 1st dry spell,days after onset,19154,734925,50164,49.85055019535922,7.0,15.0,39.0,84.0,106.0,excl0
@@ -215,15 +215,15 @@ ci_nga,aez8,Warm / subhumid,last_len,Duration of the last dry spell (seasons wit
 ci_nga,aez8,Warm / subhumid,longest_start,Start of the longest dry spell,days after onset,19697,714283,155115,94.35995874028946,59.0,79.0,94.0,111.0,127.0,excl0
 ci_nga,aez8,Warm / subhumid,longest_len,Duration of the longest dry spell,days,19697,714283,155115,14.31141411211037,10.0,11.0,13.0,16.0,21.0,excl0
 ci_nga,aez8,Warm / subhumid,dry_frac,Share of the season in dry spells,fraction,19697,714283,714283,0.0212647228059466,0.0,0.0,0.0,0.0,0.08,excl0
-ci_nga,aez8,Warm / humid,n_spells,Number of dry spells per season,spells,3784,130577,130577,0.3675226111796105,0.0,0.0,0.0,1.0,1.0,excl0
-ci_nga,aez8,Warm / humid,spell_len,Median duration of the dry spells of the season,days,3784,130577,38028,13.336344272641211,10.0,11.0,12.0,15.0,18.0,excl0
-ci_nga,aez8,Warm / humid,first_start,Start of the 1st dry spell,days after onset,3784,130577,38028,83.12927316714,48.0,64.0,83.0,99.0,120.0,excl0
-ci_nga,aez8,Warm / humid,first_len,Duration of the 1st dry spell,days,3784,130577,38028,13.338566319554014,10.0,11.0,12.0,15.0,18.0,excl0
-ci_nga,aez8,Warm / humid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,3784,130577,8613,103.7161267850923,74.0,86.0,101.0,120.0,136.0,excl0
-ci_nga,aez8,Warm / humid,last_len,Duration of the last dry spell (seasons with >= 2),days,3784,130577,8613,12.980262394055496,10.0,11.0,12.0,14.0,18.0,excl0
-ci_nga,aez8,Warm / humid,longest_start,Start of the longest dry spell,days after onset,3784,130577,38028,85.83980225097297,50.0,67.0,86.0,101.0,124.0,excl0
-ci_nga,aez8,Warm / humid,longest_len,Duration of the longest dry spell,days,3784,130577,38028,13.782607552329862,10.0,11.0,13.0,15.0,19.0,excl0
-ci_nga,aez8,Warm / humid,dry_frac,Share of the season in dry spells,fraction,3784,130577,130577,0.0262963615338076,0.0,0.0,0.0,0.05,0.09,excl0
+ci_nga,aez8,Warm / humid,n_spells,Number of dry spells per season,spells,3784,130576,130576,0.367525425805661,0.0,0.0,0.0,1.0,1.0,excl0
+ci_nga,aez8,Warm / humid,spell_len,Median duration of the dry spells of the season,days,3784,130576,38028,13.336344272641211,10.0,11.0,12.0,15.0,18.0,excl0
+ci_nga,aez8,Warm / humid,first_start,Start of the 1st dry spell,days after onset,3784,130576,38028,83.12927316714,48.0,64.0,83.0,99.0,120.0,excl0
+ci_nga,aez8,Warm / humid,first_len,Duration of the 1st dry spell,days,3784,130576,38028,13.338566319554014,10.0,11.0,12.0,15.0,18.0,excl0
+ci_nga,aez8,Warm / humid,last_start,Start of the last dry spell (seasons with >= 2),days after onset,3784,130576,8613,103.7161267850923,74.0,86.0,101.0,120.0,136.0,excl0
+ci_nga,aez8,Warm / humid,last_len,Duration of the last dry spell (seasons with >= 2),days,3784,130576,8613,12.980262394055496,10.0,11.0,12.0,14.0,18.0,excl0
+ci_nga,aez8,Warm / humid,longest_start,Start of the longest dry spell,days after onset,3784,130576,38028,85.83980225097297,50.0,67.0,86.0,101.0,124.0,excl0
+ci_nga,aez8,Warm / humid,longest_len,Duration of the longest dry spell,days,3784,130576,38028,13.782607552329862,10.0,11.0,13.0,15.0,19.0,excl0
+ci_nga,aez8,Warm / humid,dry_frac,Share of the season in dry spells,fraction,3784,130576,130576,0.0262965629212106,0.0,0.0,0.0,0.05,0.09,excl0
 ci_nga,aez8,Cool / subhumid,n_spells,Number of dry spells per season,spells,556,20519,20519,0.0103318875188849,0.0,0.0,0.0,0.0,0.0,excl0
 ci_nga,aez8,Cool / subhumid,spell_len,Median duration of the dry spells of the season,days,556,20519,212,10.924528301886792,10.0,10.0,10.0,12.0,12.0,excl0
 ci_nga,aez8,Cool / subhumid,first_start,Start of the 1st dry spell,days after onset,556,20519,212,77.99528301886792,15.0,25.0,84.0,102.0,151.0,excl0
@@ -242,12 +242,12 @@ ci_nga,aez8,Cool / humid,last_len,Duration of the last dry spell (seasons with >
 ci_nga,aez8,Cool / humid,longest_start,Start of the longest dry spell,days after onset,402,14281,874,78.13272311212815,40.0,46.0,70.0,105.0,132.0,excl0
 ci_nga,aez8,Cool / humid,longest_len,Duration of the longest dry spell,days,402,14281,874,11.712814645308924,10.0,10.0,11.0,13.0,14.0,excl0
 ci_nga,aez8,Cool / humid,dry_frac,Share of the season in dry spells,fraction,402,14281,14281,0.0042847139556053,0.0,0.0,0.0,0.0,0.0,excl0
-ci_nga,aez8,ALL,n_spells,Number of dry spells per season,spells,45935,1701597,1701597,0.1917292990055812,0.0,0.0,0.0,0.0,1.0,excl0
-ci_nga,aez8,ALL,spell_len,Median duration of the dry spells of the season,days,45935,1701597,260210,13.037606164251953,10.0,10.0,12.0,14.0,17.0,excl0
-ci_nga,aez8,ALL,first_start,Start of the 1st dry spell,days after onset,45935,1701597,260210,78.2755582029899,19.0,56.0,84.0,102.0,119.0,excl0
-ci_nga,aez8,ALL,first_len,Duration of the 1st dry spell,days,45935,1701597,260210,13.06533184735406,10.0,10.0,12.0,14.0,18.0,excl0
-ci_nga,aez8,ALL,last_start,Start of the last dry spell (seasons with >= 2),days after onset,45935,1701597,54163,109.8821335598102,73.0,93.0,109.0,130.0,147.0,excl0
-ci_nga,aez8,ALL,last_len,Duration of the last dry spell (seasons with >= 2),days,45935,1701597,54163,13.327474475195244,10.0,11.0,12.0,15.0,18.0,excl0
-ci_nga,aez8,ALL,longest_start,Start of the longest dry spell,days after onset,45935,1701597,260210,81.12943776180776,21.0,61.0,87.0,105.0,122.0,excl0
-ci_nga,aez8,ALL,longest_len,Duration of the longest dry spell,days,45935,1701597,260210,13.533365358748703,10.0,10.0,12.0,15.0,19.0,excl0
-ci_nga,aez8,ALL,dry_frac,Share of the season in dry spells,fraction,45935,1701597,1701597,0.0158899257579791,0.0,0.0,0.0,0.0,0.07,excl0
+ci_nga,aez8,ALL,n_spells,Number of dry spells per season,spells,45935,1701594,1701594,0.1917272862974364,0.0,0.0,0.0,0.0,1.0,excl0
+ci_nga,aez8,ALL,spell_len,Median duration of the dry spells of the season,days,45935,1701594,260208,13.037585316362296,10.0,10.0,12.0,14.0,17.0,excl0
+ci_nga,aez8,ALL,first_start,Start of the 1st dry spell,days after onset,45935,1701594,260208,78.27571788722868,19.0,56.0,84.0,102.0,119.0,excl0
+ci_nga,aez8,ALL,first_len,Duration of the 1st dry spell,days,45935,1701594,260208,13.065336192584391,10.0,10.0,12.0,14.0,18.0,excl0
+ci_nga,aez8,ALL,last_start,Start of the last dry spell (seasons with >= 2),days after onset,45935,1701594,54161,109.88308930780452,73.0,93.0,109.0,130.0,147.0,excl0
+ci_nga,aez8,ALL,last_len,Duration of the last dry spell (seasons with >= 2),days,45935,1701594,54161,13.327265006185264,10.0,11.0,12.0,15.0,18.0,excl0
+ci_nga,aez8,ALL,longest_start,Start of the longest dry spell,days after onset,45935,1701594,260208,81.12941569821066,21.0,61.0,87.0,105.0,122.0,excl0
+ci_nga,aez8,ALL,longest_len,Duration of the longest dry spell,days,45935,1701594,260208,13.533323341326938,10.0,10.0,12.0,15.0,19.0,excl0
+ci_nga,aez8,ALL,dry_frac,Share of the season in dry spells,fraction,45935,1701594,1701594,0.0158896011622043,0.0,0.0,0.0,0.0,0.07,excl0
