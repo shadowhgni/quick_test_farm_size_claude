@@ -1,0 +1,153 @@
+name: Dry-spell v10 - scenarios (CHIRPS or RADS seasons, dry-spell exclusion windows) + comparison
+
+# The same run_all.py as on the HPC, on the ci_nga box (Nigeria, 2.5-14.5E, 4.5-14.5N), with real CHIRPS
+# v2.0 and PKU GIMMS NDVI downloads. The official RADS files live in a Dropbox folder CI cannot reach, so
+# CI builds RADS-format files from the same CHIRPS with the RADS algorithm (tests/make_rads_from_chirps.py,
+# in the HPC file layout: file Y = onset of season Y+1, demise of season ending in Y) at ../chirps_africa,
+# the path the HPC uses. Four scenarios run side by side and are compared (step 7).
+on:
+  push:
+    branches: ['claude/**']
+    paths:
+      - 'dry_spell_v10/**'
+      - '.github/workflows/dry_spell_v10.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: dry-spell-v10-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci_nga:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    permissions:
+      contents: write
+    env:
+      W: ${{ github.workspace }}/work
+      CODE: ${{ github.workspace }}/dry_spell_v10
+      SCEN: base rads rads_excl0 rads_excl20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'dry_spell_v10/requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          pip install -r dry_spell_v10/requirements.txt
+          python --version; nproc; free -g; df -h .
+
+      - name: Cache CHIRPS download
+        uses: actions/cache@v4
+        with:
+          path: work/dryspell_v9_data/chirps/ci_nga
+          key: v10-chirps-v2-ci_nga-1981-2025-r1
+
+      - name: Cache cropped NDVI
+        uses: actions/cache@v4
+        with:
+          path: work/dryspell_v9_data/ndvi/ci_nga
+          key: v10-pku-gimms-ndvi-avhrr-ci_nga-1982-2015-r1
+
+      - name: Settings checks (JSON override, scenarios, unknown names)
+        run: |
+          mkdir -p "$W" && cd "$W"
+          python "$CODE/run_all.py" --region ci_nga --scenarios $SCEN --countries NGA --dry_run | tee dry.txt
+          grep -q "\[rads_excl20\] SEASON_SOURCE=rads" dry.txt && grep -q "spell stats exclude 20/20" dry.txt
+          echo '{"NOT_A_SETTING": 1}' > bad.json
+          ! python "$CODE/run_all.py" --region ci_nga --config bad.json --dry_run 2>/dev/null
+          ! python "$CODE/run_all.py" --region ci_nga --scenarios no_such_scenario --dry_run 2>/dev/null
+
+      - name: Step 1 - downloads (shared by all scenarios)
+        run: |
+          cd "$W"
+          python "$CODE/run_all.py" --region ci_nga --steps 1 --threads 32
+
+      - name: RADS-format files from CHIRPS (stand-in for the Dropbox RADS files)
+        run: |
+          cd "$W"
+          python "$CODE/tests/make_rads_from_chirps.py" dryspell_v9_data/chirps/ci_nga ../chirps_africa --hpc_layout
+          ls ../chirps_africa | head -3
+          python "$CODE/v10_rads.py" --region ci_nga --workers 4 | tail -2
+
+      - name: run_all.py steps 2-7, four scenarios, 5 countries
+        run: |
+          cd "$W"
+          python "$CODE/run_all.py" --region ci_nga --steps 2 3 4 5 6 7 --scenarios $SCEN \
+            --countries NGA BEN NER CMR TCD --workers 4 --country_jobs 2
+          cat dryspell_v10/ci_nga/run_all_status.csv
+
+      - name: Independent checks, every scenario
+        run: |
+          cd "$W"
+          for s in $SCEN; do
+            echo "=== $s"; export DRYSPELL_V10_SCENARIO=$s
+            python "$CODE/tests/check_seasons.py" --region ci_nga --cells 8
+            for c in sorghum pearl_millet groundnut; do
+              python "$CODE/tests/check_sowing.py" --region ci_nga --iso3 NGA --crop $c --cells 5
+            done
+            python "$CODE/tests/check_aggregate.py" --region ci_nga
+            python "$CODE/tests/check_spell_stats.py" --region ci_nga --cells 12
+          done
+
+      - name: Compare with the previous reference (information only)
+        if: always()
+        run: |
+          cd "$W"
+          for s in $SCEN; do
+            DRYSPELL_V10_SCENARIO=$s python "$CODE/tests/compare_reference.py" --region ci_nga \
+              || echo "::notice::$s differs from the committed reference (expected after a method change)"
+          done
+
+      - name: Summary
+        if: always()
+        run: |
+          cd "$W"
+          C=$(ls -d dryspell_v10/ci_nga/compare/*/ | head -1)
+          { echo '## What changes between scenarios'; echo '```';
+            grep -E "SEASON_SOURCE|EXCLUDE|DEMISE_ADJUST|difference|medians over|^ +[a-z_]+ +[0-9.-]" "$C/step07.log" | sed 's/^.*INFO - //' | head -40;
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Collect reference fingerprints and small results
+        if: always()
+        run: |
+          cd "$W"
+          for s in $SCEN; do
+            DRYSPELL_V10_SCENARIO=$s python "$CODE/tests/compare_reference.py" --region ci_nga \
+              --write "$CODE/reference/ci_nga/$s" || true
+          done
+          R="$CODE/ci_results"; rm -rf "$R"; mkdir -p "$R"
+          cp dryspell_v9_data/download_ci_nga.log "$R/" 2>/dev/null || true
+          cd dryspell_v10/ci_nga || exit 0
+          cp run_all.log run_all_status.csv "$R/" 2>/dev/null || true
+          if [ -d compare ]; then mkdir -p "$R/compare" && cp -r compare/* "$R/compare/" && find "$R/compare" -name "*.nc" -delete; fi
+          for s in $SCEN; do
+            [ -d "$s" ] || continue
+            mkdir -p "$R/$s"; cp "$s"/run_all_settings.json "$R/$s/" 2>/dev/null || true
+            for st in step02 step03; do
+              mkdir -p "$R/$s/$st" && cp $s/$st/*.log $s/$st/*.csv "$R/$s/$st/" 2>/dev/null || true
+              cp $s/$st/diagnostics/*.png "$R/$s/$st/" 2>/dev/null || true
+            done
+            for d in $s/step04/NGA/ $s/step04/SSA/ $s/step06/*/; do
+              [ -d "$d" ] || continue
+              n="${d%/}"; mkdir -p "$R/$n"
+              cp "$d"/*.json "$d"/*.log "$R/$n/" 2>/dev/null || true
+              for f in "$d"/*.csv; do [ -f "$f" ] && [ "$(stat -c%s "$f")" -lt 3000000 ] && cp "$f" "$R/$n/"; done
+              [ -d "$d/png" ] && cp -r "$d/png" "$R/$n/"
+            done
+          done
+          du -sh "$R"
+
+      - name: Commit reference and results
+        if: always() && github.event_name == 'push'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dry_spell_v10/reference dry_spell_v10/ci_results || true
+          git diff --cached --quiet && exit 0
+          git commit -m "ci: dry_spell_v10 ci_nga reference and results [skip ci]"
+          for i in 1 2 3; do git pull --rebase origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && break; sleep 5; done
