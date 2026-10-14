@@ -1,7 +1,7 @@
 zone,metric,value,count
 Warm / arid,n_spells,0.0,71195
 Warm / arid,n_spells,1.0,13411
-Warm / arid,n_spells,2.0,2116
+Warm / arid,n_spells,2.0,2118
 Warm / arid,n_spells,3.0,250
 Warm / arid,n_spells,4.0,38
 Warm / semiarid,n_spells,0.0,684761
@@ -16,7 +16,7 @@ Warm / subhumid,n_spells,2.0,30829
 Warm / subhumid,n_spells,3.0,7023
 Warm / subhumid,n_spells,4.0,920
 Warm / subhumid,n_spells,5.0,83
-Warm / humid,n_spells,0.0,92548
+Warm / humid,n_spells,0.0,92549
 Warm / humid,n_spells,1.0,29415
 Warm / humid,n_spells,2.0,7397
 Warm / humid,n_spells,3.0,1096
@@ -35,7 +35,7 @@ Warm / arid,spell_len,10.5,293
 Warm / arid,spell_len,11.0,4007
 Warm / arid,spell_len,11.5,282
 Warm / arid,spell_len,12.0,2411
-Warm / arid,spell_len,12.5,188
+Warm / arid,spell_len,12.5,189
 Warm / arid,spell_len,13.0,1471
 Warm / arid,spell_len,13.5,191
 Warm / arid,spell_len,14.0,1088
@@ -48,7 +48,7 @@ Warm / arid,spell_len,17.0,161
 Warm / arid,spell_len,17.5,13
 Warm / arid,spell_len,18.0,124
 Warm / arid,spell_len,18.5,27
-Warm / arid,spell_len,19.0,114
+Warm / arid,spell_len,19.0,115
 Warm / arid,spell_len,20.0,16
 Warm / arid,spell_len,20.5,2
 Warm / arid,spell_len,21.0,30
@@ -264,7 +264,7 @@ Warm / arid,first_start,37.0,72
 Warm / arid,first_start,38.0,55
 Warm / arid,first_start,39.0,63
 Warm / arid,first_start,40.0,38
-Warm / arid,first_start,41.0,119
+Warm / arid,first_start,41.0,120
 Warm / arid,first_start,42.0,43
 Warm / arid,first_start,43.0,83
 Warm / arid,first_start,44.0,270
@@ -297,7 +297,7 @@ Warm / arid,first_start,70.0,227
 Warm / arid,first_start,71.0,78
 Warm / arid,first_start,72.0,106
 Warm / arid,first_start,73.0,251
-Warm / arid,first_start,74.0,59
+Warm / arid,first_start,74.0,60
 Warm / arid,first_start,75.0,91
 Warm / arid,first_start,76.0,44
 Warm / arid,first_start,77.0,151
@@ -1049,8 +1049,8 @@ Cool / humid,first_start,203.0,1
 Cool / humid,first_start,231.0,1
 Warm / arid,first_len,10.0,4314
 Warm / arid,first_len,11.0,4395
-Warm / arid,first_len,12.0,2193
-Warm / arid,first_len,13.0,1697
+Warm / arid,first_len,12.0,2194
+Warm / arid,first_len,13.0,1698
 Warm / arid,first_len,14.0,1400
 Warm / arid,first_len,15.0,641
 Warm / arid,first_len,16.0,425
@@ -1241,7 +1241,7 @@ Warm / arid,last_start,68.0,40
 Warm / arid,last_start,69.0,38
 Warm / arid,last_start,70.0,229
 Warm / arid,last_start,71.0,154
-Warm / arid,last_start,72.0,41
+Warm / arid,last_start,72.0,42
 Warm / arid,last_start,73.0,104
 Warm / arid,last_start,74.0,16
 Warm / arid,last_start,75.0,40
@@ -1262,7 +1262,7 @@ Warm / arid,last_start,89.0,65
 Warm / arid,last_start,91.0,6
 Warm / arid,last_start,92.0,1
 Warm / arid,last_start,93.0,3
-Warm / arid,last_start,96.0,13
+Warm / arid,last_start,96.0,14
 Warm / arid,last_start,98.0,15
 Warm / arid,last_start,99.0,6
 Warm / arid,last_start,101.0,8
@@ -1731,7 +1731,7 @@ Cool / humid,last_start,157.0,2
 Warm / arid,last_len,10.0,694
 Warm / arid,last_len,11.0,517
 Warm / arid,last_len,12.0,263
-Warm / arid,last_len,13.0,373
+Warm / arid,last_len,13.0,374
 Warm / arid,last_len,14.0,109
 Warm / arid,last_len,15.0,105
 Warm / arid,last_len,16.0,217
@@ -1740,7 +1740,7 @@ Warm / arid,last_len,18.0,37
 Warm / arid,last_len,19.0,38
 Warm / arid,last_len,22.0,15
 Warm / arid,last_len,24.0,16
-Warm / arid,last_len,25.0,9
+Warm / arid,last_len,25.0,10
 Warm / arid,last_len,26.0,4
 Warm / arid,last_len,34.0,2
 Warm / semiarid,last_len,10.0,1365
@@ -1891,7 +1891,7 @@ Warm / arid,longest_start,68.0,236
 Warm / arid,longest_start,69.0,108
 Warm / arid,longest_start,70.0,372
 Warm / arid,longest_start,71.0,99
-Warm / arid,longest_start,72.0,125
+Warm / arid,longest_start,72.0,126
 Warm / arid,longest_start,73.0,307
 Warm / arid,longest_start,74.0,49
 Warm / arid,longest_start,75.0,116
@@ -1913,7 +1913,7 @@ Warm / arid,longest_start,90.0,4
 Warm / arid,longest_start,91.0,70
 Warm / arid,longest_start,92.0,24
 Warm / arid,longest_start,93.0,69
-Warm / arid,longest_start,96.0,29
+Warm / arid,longest_start,96.0,30
 Warm / arid,longest_start,97.0,30
 Warm / arid,longest_start,98.0,22
 Warm / arid,longest_start,99.0,9
@@ -2649,7 +2649,7 @@ Cool / humid,longest_start,231.0,1
 Warm / arid,longest_len,10.0,3964
 Warm / arid,longest_len,11.0,4158
 Warm / arid,longest_len,12.0,2221
-Warm / arid,longest_len,13.0,1946
+Warm / arid,longest_len,13.0,1947
 Warm / arid,longest_len,14.0,1310
 Warm / arid,longest_len,15.0,695
 Warm / arid,longest_len,16.0,651
@@ -2661,7 +2661,7 @@ Warm / arid,longest_len,21.0,40
 Warm / arid,longest_len,22.0,54
 Warm / arid,longest_len,23.0,82
 Warm / arid,longest_len,24.0,21
-Warm / arid,longest_len,25.0,32
+Warm / arid,longest_len,25.0,33
 Warm / arid,longest_len,26.0,11
 Warm / arid,longest_len,27.0,30
 Warm / arid,longest_len,28.0,7
@@ -2809,9 +2809,9 @@ Warm / arid,dry_frac,0.25,349
 Warm / arid,dry_frac,0.26,242
 Warm / arid,dry_frac,0.27,221
 Warm / arid,dry_frac,0.28,159
-Warm / arid,dry_frac,0.29,86
+Warm / arid,dry_frac,0.29,87
 Warm / arid,dry_frac,0.3,177
-Warm / arid,dry_frac,0.31,228
+Warm / arid,dry_frac,0.31,229
 Warm / arid,dry_frac,0.32,70
 Warm / arid,dry_frac,0.33,64
 Warm / arid,dry_frac,0.34,68
@@ -2953,7 +2953,7 @@ Warm / subhumid,dry_frac,0.43,1
 Warm / subhumid,dry_frac,0.44,1
 Warm / subhumid,dry_frac,0.45,1
 Warm / subhumid,dry_frac,0.52,1
-Warm / humid,dry_frac,0.0,92548
+Warm / humid,dry_frac,0.0,92549
 Warm / humid,dry_frac,0.04,929
 Warm / humid,dry_frac,0.05,5105
 Warm / humid,dry_frac,0.06,7607

@@ -1,5 +1,5 @@
 latitude_band,metric,value,count
-4 to 5,n_spells,0.0,37046
+4 to 5,n_spells,0.0,37047
 4 to 5,n_spells,1.0,17955
 4 to 5,n_spells,2.0,5218
 4 to 5,n_spells,3.0,881
@@ -49,12 +49,12 @@ latitude_band,metric,value,count
 12 to 13,n_spells,2.0,697
 12 to 13,n_spells,3.0,88
 13 to 14,n_spells,0.0,169753
-13 to 14,n_spells,1.0,12818
+13 to 14,n_spells,1.0,12819
 13 to 14,n_spells,2.0,1154
 13 to 14,n_spells,3.0,37
 14 to 15,n_spells,0.0,80216
 14 to 15,n_spells,1.0,9678
-14 to 15,n_spells,2.0,1148
+14 to 15,n_spells,2.0,1149
 14 to 15,n_spells,3.0,101
 14 to 15,n_spells,4.0,9
 4 to 5,spell_len,10.0,4413
@@ -379,7 +379,7 @@ latitude_band,metric,value,count
 13 to 14,spell_len,10.5,93
 13 to 14,spell_len,11.0,3055
 13 to 14,spell_len,11.5,55
-13 to 14,spell_len,12.0,1961
+13 to 14,spell_len,12.0,1962
 13 to 14,spell_len,12.5,198
 13 to 14,spell_len,13.0,1057
 13 to 14,spell_len,13.5,103
@@ -413,7 +413,7 @@ latitude_band,metric,value,count
 14 to 15,spell_len,12.5,177
 14 to 15,spell_len,13.0,1073
 14 to 15,spell_len,13.5,99
-14 to 15,spell_len,14.0,579
+14 to 15,spell_len,14.0,580
 14 to 15,spell_len,14.5,36
 14 to 15,spell_len,15.0,480
 14 to 15,spell_len,15.5,14
@@ -1756,7 +1756,7 @@ latitude_band,metric,value,count
 13 to 14,first_start,38.0,42
 13 to 14,first_start,39.0,12
 13 to 14,first_start,40.0,60
-13 to 14,first_start,41.0,40
+13 to 14,first_start,41.0,41
 13 to 14,first_start,42.0,217
 13 to 14,first_start,43.0,70
 13 to 14,first_start,44.0,33
@@ -1898,7 +1898,7 @@ latitude_band,metric,value,count
 14 to 15,first_start,71.0,29
 14 to 15,first_start,72.0,17
 14 to 15,first_start,73.0,26
-14 to 15,first_start,74.0,41
+14 to 15,first_start,74.0,42
 14 to 15,first_start,75.0,28
 14 to 15,first_start,76.0,60
 14 to 15,first_start,77.0,27
@@ -2151,7 +2151,7 @@ latitude_band,metric,value,count
 12 to 13,first_len,22.0,2
 13 to 14,first_len,10.0,5360
 13 to 14,first_len,11.0,3041
-13 to 14,first_len,12.0,2032
+13 to 14,first_len,12.0,2033
 13 to 14,first_len,13.0,1151
 13 to 14,first_len,14.0,1286
 13 to 14,first_len,15.0,361
@@ -2173,7 +2173,7 @@ latitude_band,metric,value,count
 14 to 15,first_len,10.0,3786
 14 to 15,first_len,11.0,2603
 14 to 15,first_len,12.0,1373
-14 to 15,first_len,13.0,1093
+14 to 15,first_len,13.0,1094
 14 to 15,first_len,14.0,824
 14 to 15,first_len,15.0,430
 14 to 15,first_len,16.0,384
@@ -3133,7 +3133,7 @@ latitude_band,metric,value,count
 14 to 15,last_start,90.0,6
 14 to 15,last_start,92.0,6
 14 to 15,last_start,93.0,5
-14 to 15,last_start,96.0,13
+14 to 15,last_start,96.0,14
 14 to 15,last_start,97.0,8
 14 to 15,last_start,98.0,20
 14 to 15,last_start,100.0,11
@@ -3319,7 +3319,7 @@ latitude_band,metric,value,count
 14 to 15,last_len,12.0,189
 14 to 15,last_len,13.0,118
 14 to 15,last_len,14.0,60
-14 to 15,last_len,15.0,104
+14 to 15,last_len,15.0,105
 14 to 15,last_len,16.0,152
 14 to 15,last_len,17.0,16
 14 to 15,last_len,19.0,4
@@ -4650,7 +4650,7 @@ latitude_band,metric,value,count
 13 to 14,longest_start,38.0,44
 13 to 14,longest_start,39.0,33
 13 to 14,longest_start,40.0,70
-13 to 14,longest_start,41.0,39
+13 to 14,longest_start,41.0,40
 13 to 14,longest_start,42.0,194
 13 to 14,longest_start,43.0,85
 13 to 14,longest_start,44.0,81
@@ -4811,7 +4811,7 @@ latitude_band,metric,value,count
 14 to 15,longest_start,91.0,4
 14 to 15,longest_start,93.0,20
 14 to 15,longest_start,95.0,19
-14 to 15,longest_start,96.0,125
+14 to 15,longest_start,96.0,126
 14 to 15,longest_start,97.0,7
 14 to 15,longest_start,98.0,15
 14 to 15,longest_start,101.0,12
@@ -5050,7 +5050,7 @@ latitude_band,metric,value,count
 12 to 13,longest_len,22.0,2
 13 to 14,longest_len,10.0,5199
 13 to 14,longest_len,11.0,3041
-13 to 14,longest_len,12.0,2001
+13 to 14,longest_len,12.0,2002
 13 to 14,longest_len,13.0,1191
 13 to 14,longest_len,14.0,1205
 13 to 14,longest_len,15.0,401
@@ -5074,7 +5074,7 @@ latitude_band,metric,value,count
 14 to 15,longest_len,12.0,1443
 14 to 15,longest_len,13.0,1151
 14 to 15,longest_len,14.0,802
-14 to 15,longest_len,15.0,500
+14 to 15,longest_len,15.0,501
 14 to 15,longest_len,16.0,536
 14 to 15,longest_len,17.0,170
 14 to 15,longest_len,18.0,66
@@ -5093,7 +5093,7 @@ latitude_band,metric,value,count
 14 to 15,longest_len,34.0,5
 14 to 15,longest_len,37.0,1
 14 to 15,longest_len,40.0,1
-4 to 5,dry_frac,0.0,37046
+4 to 5,dry_frac,0.0,37047
 4 to 5,dry_frac,0.04,88
 4 to 5,dry_frac,0.05,2105
 4 to 5,dry_frac,0.06,3408
@@ -5463,7 +5463,7 @@ latitude_band,metric,value,count
 13 to 14,dry_frac,0.15,916
 13 to 14,dry_frac,0.16,643
 13 to 14,dry_frac,0.17,501
-13 to 14,dry_frac,0.18,598
+13 to 14,dry_frac,0.18,599
 13 to 14,dry_frac,0.19,184
 13 to 14,dry_frac,0.2,568
 13 to 14,dry_frac,0.21,348
@@ -5531,7 +5531,7 @@ latitude_band,metric,value,count
 14 to 15,dry_frac,0.25,169
 14 to 15,dry_frac,0.26,102
 14 to 15,dry_frac,0.27,118
-14 to 15,dry_frac,0.28,51
+14 to 15,dry_frac,0.28,52
 14 to 15,dry_frac,0.29,47
 14 to 15,dry_frac,0.3,52
 14 to 15,dry_frac,0.31,90

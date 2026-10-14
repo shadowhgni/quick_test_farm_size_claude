@@ -1,32 +1,32 @@
-15:44:44 [MainProcess] INFO - ======================================================================
-15:44:44 [MainProcess] INFO - v9 STEP3  region=ci_nga grid 240x200  days with data 16,436/16,436
-15:44:44 [MainProcess] INFO -   bimodal cells: wettest season analysed
-15:44:44 [MainProcess] INFO -   regime: 31-d smoothed cycle 1981-2024, bimodal if trough/peak <= 0.8, transition <= 0.95; arid < 150.0 mm
-15:44:44 [MainProcess] INFO - ======================================================================
-15:44:44 [MainProcess] INFO -   NDVI: 10,467 cells with two seasons, 35,562 with one, 1,971 without signal; regime source consensus, demise adjustment median_offset (max 30 d)
-15:44:44 [MainProcess] INFO -   false start / demise: >= 10 dry days (spell) in the first / last 20 d; excluded: start False, demise False
-15:44:44 [MainProcess] INFO - RADS: 44 files 1981-2024 (../chirps_africa/africa_RainyAndDrySeason.pentad.CHIRPS.{year}.nc)
-15:44:44 [MainProcess] INFO -   RADS onset_var: ['onset_date']
-15:44:44 [MainProcess] INFO -   RADS demise_var: ['demise_date']
-15:44:44 [MainProcess] INFO -   RADS rads_grid: ['240x200 step 0.0500']
-15:44:44 [MainProcess] INFO -   RADS within-file order (cells with both dates): onset before demise in 0% of cells (median over files), demise before onset in 100% - every onset is re-paired with the next demise
-15:44:44 [MainProcess] INFO -   RADS pairing: demise from the file before / same / after the onset file 0 / 0 / 1,636,273; onsets without a plausible demise 0
-15:44:44 [MainProcess] WARNING -   RADS: season 1981 has 0 cells vs a median of 38,937 - with the cross-year layout its onsets sit in the file of 1980, which is missing
-15:44:44 [MainProcess] INFO -   RADS seasons after pairing: 1,636,273, of which 0 cross 31 December (onset year < demise year; named by the onset year)
-15:44:45 [MainProcess] INFO -   RADS onset day of year (0 = 1 Jan), most frequent: 120 (10%), 150 (6%), 115 (5%), 125 (5%), 145 (5%)
-15:44:45 [MainProcess] INFO -   RADS cells whose onset day never changes (sd < 1 d over >= 5 seasons): 0 of 44,421
-15:44:45 [MainProcess] INFO -   season source: RADS files; cells without any RADS season: CHIRPS major season used (BIMODAL_SEASON = major)
-15:45:02 [MainProcess] INFO -   20/25 chunks, 12,020,617 spells, 1,330,310 valid seasons
-15:45:07 [MainProcess] INFO -   25/25 chunks, 14,868,520 spells, 1,701,594 valid seasons
-15:45:13 [MainProcess] INFO -   regime no season (arid / no data)        2,080 cells (rainfall alone: 2,080)
-15:45:13 [MainProcess] INFO -   regime unimodal                         34,358 cells (rainfall alone: 34,358)
-15:45:13 [MainProcess] INFO -   regime transition                        3,527 cells (rainfall alone: 5,745)
-15:45:13 [MainProcess] INFO -   regime bimodal                           8,035 cells (rainfall alone: 5,817)
-15:45:13 [MainProcess] INFO -   cells ok                                45,935
-15:45:13 [MainProcess] INFO -   cells no CHIRPS data                     2,065
-15:45:13 [MainProcess] INFO -   cells missing rainfall days                  0
-15:45:13 [MainProcess] INFO -   cells arid (no season)                       0
-15:45:13 [MainProcess] INFO -   cells too few valid seasons                  0
-15:45:13 [MainProcess] INFO -   cells bimodal (masked)                       0
-15:45:13 [MainProcess] INFO -   NDVI end of season - rainfall demise, cell medians: p10 20, median 38, p90 52 d; cells clipped to DEMISE_SHIFT_MAX=30: 67.8%, to 0: 0.5%; seasons matched 75%
-15:45:13 [MainProcess] INFO - STEP3 done in 0.5 min -> dryspell_v9/ci_nga/excl0/step03
+18:05:02 [MainProcess] INFO - ======================================================================
+18:05:02 [MainProcess] INFO - v9 STEP3  region=ci_nga grid 240x200  days with data 16,436/16,436
+18:05:02 [MainProcess] INFO -   bimodal cells: wettest season analysed
+18:05:02 [MainProcess] INFO -   regime: 31-d smoothed cycle 1981-2024, bimodal if trough/peak <= 0.8, transition <= 0.95; arid < 150.0 mm
+18:05:02 [MainProcess] INFO - ======================================================================
+18:05:02 [MainProcess] INFO -   NDVI: 10,467 cells with two seasons, 35,562 with one, 1,971 without signal; regime source consensus, demise adjustment median_offset (max 30 d)
+18:05:02 [MainProcess] INFO -   false start / demise: >= 10 dry days (spell) in the first / last 20 d; excluded: start False, demise False
+18:05:02 [MainProcess] INFO - RADS: 44 files 1981-2024 (../chirps_africa/africa_RainyAndDrySeason.pentad.CHIRPS.{year}.nc)
+18:05:02 [MainProcess] INFO -   RADS onset_var: ['onset_date']
+18:05:02 [MainProcess] INFO -   RADS demise_var: ['demise_date']
+18:05:02 [MainProcess] INFO -   RADS rads_grid: ['240x200 step 0.0500']
+18:05:02 [MainProcess] INFO -   RADS within-file order (cells with both dates): onset before demise in 0% of cells (median over files), demise before onset in 100% - every onset is re-paired with the next demise
+18:05:02 [MainProcess] INFO -   RADS pairing: demise from the file before / same / after the onset file 0 / 0 / 1,636,276; onsets without a plausible demise 0
+18:05:02 [MainProcess] WARNING -   RADS: season 1981 has 0 cells vs a median of 38,937 - with the cross-year layout its onsets sit in the file of 1980, which is missing
+18:05:02 [MainProcess] INFO -   RADS seasons after pairing: 1,636,276, of which 0 cross 31 December (onset year < demise year; named by the onset year)
+18:05:02 [MainProcess] INFO -   RADS onset day of year (0 = 1 Jan), most frequent: 120 (10%), 150 (6%), 115 (5%), 125 (5%), 145 (5%)
+18:05:02 [MainProcess] INFO -   RADS cells whose onset day never changes (sd < 1 d over >= 5 seasons): 0 of 44,421
+18:05:02 [MainProcess] INFO -   season source: RADS files; cells without any RADS season: CHIRPS major season used (BIMODAL_SEASON = major)
+18:05:13 [MainProcess] INFO -   20/25 chunks, 12,020,617 spells, 1,330,311 valid seasons
+18:05:15 [MainProcess] INFO -   25/25 chunks, 14,868,520 spells, 1,701,597 valid seasons
+18:05:18 [MainProcess] INFO -   regime no season (arid / no data)        2,080 cells (rainfall alone: 2,080)
+18:05:18 [MainProcess] INFO -   regime unimodal                         34,358 cells (rainfall alone: 34,358)
+18:05:18 [MainProcess] INFO -   regime transition                        3,527 cells (rainfall alone: 5,745)
+18:05:18 [MainProcess] INFO -   regime bimodal                           8,035 cells (rainfall alone: 5,817)
+18:05:18 [MainProcess] INFO -   cells ok                                45,935
+18:05:18 [MainProcess] INFO -   cells no CHIRPS data                     2,065
+18:05:18 [MainProcess] INFO -   cells missing rainfall days                  0
+18:05:18 [MainProcess] INFO -   cells arid (no season)                       0
+18:05:18 [MainProcess] INFO -   cells too few valid seasons                  0
+18:05:18 [MainProcess] INFO -   cells bimodal (masked)                       0
+18:05:18 [MainProcess] INFO -   NDVI end of season - rainfall demise, cell medians: p10 20, median 38, p90 52 d; cells clipped to DEMISE_SHIFT_MAX=30: 67.8%, to 0: 0.5%; seasons matched 75%
+18:05:18 [MainProcess] INFO - STEP3 done in 0.3 min -> dryspell_v9/ci_nga/excl0/step03

@@ -1,10 +1,10 @@
 other,variable,n_seasons,share_identical,p10,p25,median,p75,p90,mean
-chirps,"onset difference (other - base), days",1673154,0.23802172424056603,-3.0,-1.0,0.0,2.0,4.0,1.3477653581200535
-chirps,"demise difference (other - base), days",1673154,0.08583549392345236,-81.0,0.0,3.0,4.0,6.0,-9.881718000853478
-chirps,"length difference (other - base), days",1673154,0.10455522922576165,-80.0,-3.0,1.0,4.0,7.0,-11.229483358973532
-mask_bimodal,"onset difference (other - base), days",1365712,1.0,0.0,0.0,0.0,0.0,0.0,0.0
-mask_bimodal,"demise difference (other - base), days",1365712,1.0,0.0,0.0,0.0,0.0,0.0,0.0
-mask_bimodal,"length difference (other - base), days",1365712,1.0,0.0,0.0,0.0,0.0,0.0,0.0
-excl0,"onset difference (other - base), days",1701594,1.0,0.0,0.0,0.0,0.0,0.0,0.0
-excl0,"demise difference (other - base), days",1701594,1.0,0.0,0.0,0.0,0.0,0.0,0.0
-excl0,"length difference (other - base), days",1701594,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+chirps,"onset difference (other - base), days",1673157,0.23802129746341796,-3.0,-1.0,0.0,2.0,4.0,1.347746206721784
+chirps,"demise difference (other - base), days",1673157,0.0858353400188984,-81.0,0.0,3.0,4.0,6.0,-9.881711040864666
+chirps,"length difference (other - base), days",1673157,0.10455504175639226,-80.0,-3.0,1.0,4.0,7.0,-11.22945724758645
+mask_bimodal,"onset difference (other - base), days",1365715,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+mask_bimodal,"demise difference (other - base), days",1365715,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+mask_bimodal,"length difference (other - base), days",1365715,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+excl0,"onset difference (other - base), days",1701597,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+excl0,"demise difference (other - base), days",1701597,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+excl0,"length difference (other - base), days",1701597,1.0,0.0,0.0,0.0,0.0,0.0,0.0
