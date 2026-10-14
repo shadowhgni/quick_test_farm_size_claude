@@ -65,6 +65,7 @@ logger = logging.getLogger("dryspell_v9")
 NODATA = 65535
 SCALE = 100.0
 _G = {}
+RADS_SENT = np.iinfo(np.int32).min          # missing date in the RADS arrays
 
 
 # =============================================================================
@@ -340,6 +341,40 @@ def process_rows(r0, r1):
             o, d, r = seasons_for_window(Xu, mu, has, ref[cu], s, w_len[cu].astype(np.int64), T)
             on[cu, yi], de[cu, yi], rs[cu, yi] = o, d, r
         del Xu, mu
+    # ---- 3b. RADS files (SEASON_SOURCE = "rads"): onset / demise by season year SEASON_YEAR_MIN..MAX
+    source = np.where((rs == C.S_OK).any(1), 1, 0).astype(np.int8)        # 0 none, 1 CHIRPS, 2 RADS
+    if g.get("rads_on") is not None:
+        Yr = g["rads_on"].shape[0]
+        R_on = g["rads_on"][:, r0:r1].reshape(Yr, n).T.astype(np.int64)
+        R_de = g["rads_de"][:, r0:r1].reshape(Yr, n).T.astype(np.int64)
+        none = (R_on == RADS_SENT) | (R_de == RADS_SENT)
+        ln = R_de - R_on + 1
+        rr = np.full((n, Yr), C.S_OK, np.uint8)
+        rr[none] = C.S_NO_ONSET
+        rr[~none & ((ln < C.SEASON_LEN_MIN) | (ln > C.SEASON_LEN_MAX))] = C.S_BAD_LENGTH
+        o_, e_ = np.clip(R_on, 0, T - 1), np.clip(R_de, 0, T - 1)
+        cover = (g["cum_has"][e_ + 1] - g["cum_has"][o_]) / np.maximum(ln, 1)
+        rr[(rr == C.S_OK) & ((R_on < 0) | (R_de >= T) | (cover < C.WINDOW_MIN_COVER))] = C.S_NO_DATA
+        rr[(rr == C.S_OK) & ~valid_q[:, None]] = C.S_CELL_INVALID
+        for y in range(1, Yr):                                         # overlapping consecutive seasons
+            ov = (rr[:, y] == C.S_OK) & (rr[:, y - 1] == C.S_OK) & (R_on[:, y] <= R_de[:, y - 1])
+            rr[ov, y] = C.S_DUPLICATE
+        has_r = (rr == C.S_OK).any(1)
+        # BIMODAL_SEASON = "major": cells where RADS has no season at all keep the CHIRPS major season
+        take = has_r | (C.BIMODAL_SEASON == "mask")
+        j = np.arange(Yr) + (C.SEASON_YEAR_MIN - years[0])             # RADS year -> column of `years`
+        ok_r = rr == C.S_OK
+        on[take], de[take], rs[take] = -1, -1, C.S_NO_ONSET
+        on[np.ix_(take, j)] = np.where(ok_r[take], R_on[take], -1)
+        de[np.ix_(take, j)] = np.where(ok_r[take], R_de[take], -1)
+        rs[np.ix_(take, j)] = rr[take]
+        source[take] = np.where(has_r[take], 2, 0)
+    # ---- BIMODAL_SEASON = "mask": bimodal cells (regime of section F / H) get no season at all
+    bimask = np.zeros(n, bool)
+    if C.BIMODAL_SEASON == "mask":
+        bimask = regime == C.REGIME_BI
+        on[bimask], de[bimask], rs[bimask] = -1, -1, C.S_BIMODAL
+        source[bimask] = 0
     # season year = calendar year of onset; a second onset in the same year is a duplicate
     o_year = np.where(on >= 0, (C.index_to_date(np.maximum(on, 0)).astype("datetime64[Y]").astype(int) + 1970), -1)
     year_col = np.where(on >= 0, o_year, years[None, :])
@@ -425,6 +460,8 @@ def process_rows(r0, r1):
     rel_de = np.where(ok, (de - doy_to_index(year_col.clip(1900), 0) - w_start[:, None]) % 365, np.nan)
     on_med = (np.nanmedian(rel_on, 1) + w_start) % 365
     de_med = (np.nanmedian(rel_de, 1) + w_start) % 365
+    rel_dr = np.where(ok, (de_rain - doy_to_index(year_col.clip(1900), 0) - w_start[:, None]) % 365, np.nan)
+    dr_med = (np.nanmedian(rel_dr, 1) + w_start) % 365
     on_iqr = np.nanpercentile(rel_on, 75, 1) - np.nanpercentile(rel_on, 25, 1)
     len_med = np.nanmedian(np.where(ok, slen, np.nan), 1)
     base_ok = (rs == C.S_OK) | (rs == C.S_FALSE_START) | (rs == C.S_FALSE_DEMISE)
@@ -437,10 +474,10 @@ def process_rows(r0, r1):
     eos_share = eos_ok.sum(1) / np.maximum(ok.sum(1), 1)
     res = dict(valid=valid, valid_q=valid_q, n_missing=n_missing, mean_annual=mean_annual,
                regime=regime, ratio=ratio, t_dry=t_dry, trough=trough, w_start=w_start, w_len=w_len,
-               major=major, ref_mm_day=ref, n_valid_seasons=nv, onset_doy_median=on_med, demise_doy_median=de_med,
+               major=major, ref_mm_day=ref, n_valid_seasons=nv, onset_doy_median=on_med, demise_doy_median=de_med, demise_rain_doy_median=dr_med,
                onset_iqr_days=on_iqr, season_len_median=len_med, rain_regime=rain_reg, ndvi_n=ndvi_n,
                false_start_share=fs_share, false_demise_share=fd_share, demise_shift_median=shift_med,
-               eos_offset_median=eos_off, eos_match_share=eos_share)
+               eos_offset_median=eos_off, eos_match_share=eos_share, season_source=source, bimodal_masked=bimask)
     res = {k: np.asarray(v).reshape(nr, nlon) for k, v in res.items()}
     gc.collect()
     return r0, r1, res, n_spells, int(ok.sum())
@@ -499,7 +536,21 @@ def main():
                     f"demise adjustment {C.DEMISE_ADJUST} (max {C.DEMISE_SHIFT_MAX} d)")
     logger.info(f"  false start / demise: >= {C.FALSE_DRY_DAYS} dry days ({C.FALSE_DRY_MODE}) in the first / last "
                 f"{C.FALSE_WINDOW_DAYS} d; excluded: start {C.FALSE_START_EXCLUDE}, demise {C.FALSE_DEMISE_EXCLUDE}")
-    _G.update(ndvi_n=ndvi_n, eos=eos)
+    _G.update(ndvi_n=ndvi_n, eos=eos, rads_on=None, rads_de=None, cum_has=np.r_[0, np.cumsum(has)])
+    rads_sd = None
+    if C.SEASON_SOURCE == "rads":
+        import v9_rads as RADS
+        _, r_on, r_de, r_info, r_diag = RADS.load_rads(lon, lat, a.workers)
+        out.mkdir(parents=True, exist_ok=True)
+        r_info.to_csv(out / "rads_files.csv", index=False)
+        _G.update(rads_on=r_on, rads_de=r_de)
+        rads_sd = r_diag.get("onset_sd_days")
+        logger.info(f"  season source: RADS files; cells without any RADS season: "
+                    f"{'CHIRPS major season used' if C.BIMODAL_SEASON == 'major' else 'not analysed'} "
+                    f"(BIMODAL_SEASON = {C.BIMODAL_SEASON})")
+    else:
+        logger.info(f"  season source: computed from CHIRPS (RADS method, daily); bimodal cells: "
+                    f"{'major season' if C.BIMODAL_SEASON == 'major' else 'masked'}")
     _G.update(cache=str(cdir / "rain_u16.dat"), shape=shape, has=has, lat=lat, lon=lon,
               doy=noleap_doy(dates), clim_days=has & (years >= C.CLIM_YEAR_MIN) & (years <= C.CLIM_YEAR_MAX),
               spell_dir=str(out / "spells"), season_dir=str(out / "seasons"))
@@ -524,7 +575,8 @@ def main():
     reason = np.full((nlat, nlon), C.REASON_OK, np.uint8)
     reason[valid & ~valid_q] = C.REASON_MISSING
     reason[~valid] = C.REASON_NO_CHIRPS
-    reason[valid_q & (regime == C.REGIME_NONE)] = C.REASON_ARID
+    reason[valid_q & (regime == C.REGIME_NONE) & (grids["n_valid_seasons"] == 0)] = C.REASON_ARID
+    reason[valid_q & (grids["bimodal_masked"] > 0)] = C.REASON_BIMODAL
     reason[(reason == C.REASON_OK) & (grids["n_valid_seasons"] < C.MIN_VALID_SEASONS)] = C.REASON_FEW_SEASONS
     f32 = lambda k: (("lat", "lon"), grids[k].astype(np.float32))
     ds = xr.Dataset({
@@ -536,18 +588,23 @@ def main():
         "reference_mm_day": f32("ref_mm_day"),
         "n_valid_seasons": f32("n_valid_seasons"), "onset_doy_median": f32("onset_doy_median"),
         "demise_doy_median": f32("demise_doy_median"), "onset_iqr_days": f32("onset_iqr_days"),
+        "demise_rain_doy_median": f32("demise_rain_doy_median"),
         "season_len_median": f32("season_len_median"),
         "rain_regime": (("lat", "lon"), grids["rain_regime"].astype(np.int8)),
         "ndvi_n_seasons": (("lat", "lon"), np.nan_to_num(grids["ndvi_n"]).astype(np.int8)),
         "false_start_share": f32("false_start_share"), "false_demise_share": f32("false_demise_share"),
         "demise_shift_median": f32("demise_shift_median"),
         "ndvi_eos_offset_median": f32("eos_offset_median"), "ndvi_eos_match_share": f32("eos_match_share"),
+        "season_source": (("lat", "lon"), np.nan_to_num(grids["season_source"]).astype(np.int8)),
+        **({"rads_onset_sd_days": (("lat", "lon"), rads_sd)} if rads_sd is not None else {}),
     }, coords={"lat": lat, "lon": lon},
         attrs={"region": name, "bbox": list(bbox), "regime_codes": str(C.REGIME_LABELS),
                "reason_codes": str(C.REASON_LABELS),
                "major_season": "0 one season (unimodal or transition), 1 bimodal: season after the driest point, "
                                "2 bimodal: season after the mid-season trough",
-               "doy": "0-based day of year, 29 Feb folded into 28 Feb"})
+               "doy": "0-based day of year, 29 Feb folded into 28 Feb",
+               "season_source": f"{C.SEASON_SOURCE} - layer season_source: 0 no season, 1 CHIRPS, 2 RADS files",
+               "scenario": C.SCENARIO})
     ds.to_netcdf(out / "grid_meta.nc")
     np.save(out / "day_has_data.npy", has)
     last = C.index_to_date(np.nonzero(has)[0].max())

@@ -8,7 +8,10 @@ v9_common.py - settings loader, fixed codes and helpers of the v9 dry-spell work
   v9_02_ndvi_phenology.py   NDVI seasons (number, start, end) -> CHIRPS grid
   v9_03_spells_seasons.py   dry spells, regime (rain + NDVI), major-season onset / demise
   v9_04_sowing_risk.py      a country, bbox, polygon or single cell: sowing x crop x cycle risk
-  v9_05_aggregate.py        all units -> SSA folder, summaries by AEZ8 / Koppen
+  v9_05_spell_stats.py      dry spells inside the season: maps, PDFs, latitude / zone summaries
+  v9_06_aggregate.py        all countries of step 4 -> SSA folder, summaries by AEZ8 / Koppen
+  v9_07_compare.py          what changes between scenarios
+  v9_rads.py                reader of the downloaded RADS files
   run_all.py                everything, resumable
 
 All tunable settings are in v9_config.py (overridable with a JSON file, see there).
@@ -37,13 +40,46 @@ if CONFIG_FILE:
     SETTINGS.update(_over)
     if "REGIONS" in _over:
         SETTINGS["REGIONS"] = {k: tuple(v) for k, v in SETTINGS["REGIONS"].items()}
+# ---- scenario: named overrides from SCENARIOS, chosen by $DRYSPELL_V9_SCENARIO ---------------
+SCENARIO = os.environ.get("DRYSPELL_V9_SCENARIO") or SETTINGS["SCENARIO_DEFAULT"]
+if SCENARIO not in SETTINGS["SCENARIOS"]:
+    raise KeyError(f"scenario {SCENARIO!r} not in SCENARIOS {sorted(SETTINGS['SCENARIOS'])} (v9_config.py section L)")
+_bad = sorted(set(SETTINGS["SCENARIOS"][SCENARIO]) - set(SETTINGS))
+if _bad:
+    raise KeyError(f"scenario {SCENARIO}: unknown settings {_bad}")
+_BASE_SETTINGS = dict(SETTINGS)                 # before the scenario (for scenario_settings)
+SETTINGS.update(SETTINGS["SCENARIOS"][SCENARIO])
+def _derive(s):
+    """Settings defined from others (None = follow DRY_SPELL_MIN_DAYS)."""
+    if s.get("SPELL_STATS_MIN") is None:
+        s["SPELL_STATS_MIN"] = s["DRY_SPELL_MIN_DAYS"]
+    s["MIN_SPELL_CROP"] = {k: (s["DRY_SPELL_MIN_DAYS"] if v is None else v) for k, v in s["MIN_SPELL_CROP"].items()}
+    return s
+
+
+_derive(SETTINGS)
+for _k, _ok in (("SEASON_SOURCE", ("chirps", "rads")), ("BIMODAL_SEASON", ("major", "mask")),
+                ("SPELL_STATS_EDGE_POLICY", ("clip", "exclude")), ("CROP_SPELL_EDGE_POLICY", ("clip", "exclude"))):
+    if SETTINGS[_k] not in _ok:
+        raise ValueError(f"{_k} = {SETTINGS[_k]!r}, expected one of {_ok}")
 globals().update(SETTINGS)
 ORIGIN = np.datetime64(f"{DATA_YEAR_MIN}-01-01", "D")   # day index 0  # noqa: F821
 
 
+def scenario_settings(name):
+    """Settings of another scenario (v9_config.py + JSON + that scenario's overrides)."""
+    if name not in _BASE_SETTINGS["SCENARIOS"]:
+        raise KeyError(f"scenario {name!r} not in SCENARIOS {sorted(_BASE_SETTINGS['SCENARIOS'])}")
+    d = dict(_BASE_SETTINGS)
+    d.update(_BASE_SETTINGS["SCENARIOS"][name])
+    return _derive(d)
+
+
 def settings_json():
     """The settings actually in use (for settings_used.json)."""
-    return {k: (list(v) if isinstance(v, tuple) else v) for k, v in SETTINGS.items()}
+    out = {k: (list(v) if isinstance(v, tuple) else v) for k, v in SETTINGS.items()}
+    out["SCENARIO"] = SCENARIO
+    return out
 
 
 # ---- fixed codes (not settings) -------------------------------------------------------------
@@ -55,8 +91,9 @@ REASON_NO_CHIRPS = 1          # no rainfall data (ocean / outside CHIRPS)
 REASON_MISSING = 2            # too many missing rainfall days
 REASON_ARID = 3               # mean annual rain < ARID_MM
 REASON_FEW_SEASONS = 4        # too few valid seasons
+REASON_BIMODAL = 5            # bimodal cell left out (BIMODAL_SEASON = "mask")
 REASON_LABELS = {0: "ok", 1: "no CHIRPS data", 2: "missing rainfall days", 3: "arid (no season)",
-                 4: "too few valid seasons"}
+                 4: "too few valid seasons", 5: "bimodal (masked)"}
 
 # season reason codes (seasons table)
 S_OK = 0
@@ -68,8 +105,10 @@ S_DUPLICATE = 5               # second season with an onset in the same calendar
 S_OUT_OF_PERIOD = 6           # onset outside SEASON_YEAR_MIN..SEASON_YEAR_MAX
 S_FALSE_START = 7             # excluded false start (FALSE_START_EXCLUDE)
 S_FALSE_DEMISE = 8            # excluded false demise (FALSE_DEMISE_EXCLUDE)
+S_BIMODAL = 9                 # bimodal cell left out (BIMODAL_SEASON = "mask")
 S_LABELS = {0: "ok", 1: "no onset", 2: "bad length", 3: "no rainfall data", 4: "cell invalid",
-            5: "duplicate", 6: "out of period", 7: "false start (excluded)", 8: "false demise (excluded)"}
+            5: "duplicate", 6: "out of period", 7: "false start (excluded)", 8: "false demise (excluded)",
+            9: "bimodal (masked)"}
 
 # ---- zones ------------------------------------------------------------------------------------
 HARVESTCHOICE_AEZ = {
@@ -118,8 +157,9 @@ def setup_logging(log_file=None):
                         handlers=handlers, force=True)
 
 
-def region_dir(region):
-    return Path(OUT_ROOT) / region
+def region_dir(region, scenario=None):
+    """Results of one region and scenario: dryspell_v9/<region>/<scenario>/."""
+    return Path(OUT_ROOT) / region / (scenario or SCENARIO)  # noqa: F821
 
 
 def data_dir(*parts):
@@ -307,7 +347,8 @@ def plot_map(path, grid, lons, lats, title, clabel="", cmap="brand_risk", vmin=N
     if reason is not None:
         greys = {REASON_ARID: (NODATA_GREYS[0], REASON_LABELS[REASON_ARID]),
                  REASON_FEW_SEASONS: (NODATA_GREYS[1], REASON_LABELS[REASON_FEW_SEASONS]),
-                 REASON_MISSING: (NODATA_GREYS[2], REASON_LABELS[REASON_MISSING])}
+                 REASON_MISSING: (NODATA_GREYS[2], REASON_LABELS[REASON_MISSING]),
+                 REASON_BIMODAL: ("#d9ded9", REASON_LABELS[REASON_BIMODAL])}
         shown = set()
         for code, (col, lab) in greys.items():
             m = (reason == code) & np.isnan(grid)

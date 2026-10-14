@@ -13,7 +13,11 @@ v9 STEP 1 - download the inputs (resumable; all open data, no login)
 3. Natural Earth countries, HarvestChoice AEZ (damaged ASCII grid read tolerantly), and the
    Koppen-Geiger 1991-2020 map + legend (Beck et al. 2023).
 
-Re-running continues where it stopped (--retry_missing retries failed CHIRPS days).
+Re-running continues where it stopped; CHIRPS days that failed before are tried again (--skip_failed
+to leave them). The CHIRPS download stops early when the server cannot be read at all (first day fails,
+or almost every day fails), and step 1 exits with an error when more than CHIRPS_MAX_MISSING_SHARE of
+the days are missing, so the later steps never run on an empty rainfall record. The most frequent
+errors are summarised at the end of the download log.
 
 Usage
 -----
@@ -38,6 +42,7 @@ import threading
 import time
 import urllib.request
 import zipfile
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -84,15 +89,80 @@ def encode(a):
     return out
 
 
-def download_chirps(region, bbox, threads, retry_missing=False):
+def import_v7_cache(out, bbox):
+    """CHIRPS_V7_CACHE: start the v9 cache from the v7 one (same encoding: uint16 mm*100, 65535 = no data,
+    day 0 = 1 Jan 1981, ascending lon / lat). Its grid becomes the v9 grid; the days v7 holds are marked
+    done, the others are downloaded by download_chirps as usual."""
+    import os as _os
+    import rasterio
+    from rasterio.windows import from_bounds
+    src = Path(C.CHIRPS_V7_CACHE)
+    info_f, dat_v7 = src / "cache_info.json", src / "rain_u16.dat"
+    if not (info_f.exists() and dat_v7.exists()):
+        sys.exit(f"CHIRPS_V7_CACHE = {src}: rain_u16.dat / cache_info.json not found (v7 writes them to "
+                 f"dryspell_v7/<region>/cache/)")
+    if C.ORIGIN != np.datetime64("1981-01-01", "D"):
+        sys.exit("CHIRPS_V7_CACHE needs DATA_YEAR_MIN = 1981 (the v7 cache starts on 1 Jan 1981)")
+    info = C.read_json(info_f)
+    n7, nlat, nlon = info["shape"]
+    step = 0.05
+    lon = np.round(info["lon0"] + np.arange(nlon) * step, 4)
+    lat = np.round(info["lat0"] + np.arange(nlat) * step, 4)
+    days = pd.date_range(f"{C.DATA_YEAR_MIN}-01-01", f"{C.DATA_YEAR_MAX}-12-31", freq="D")
+    has = np.zeros(len(days), bool)
+    for w in info.get("done", {}).values():
+        w = np.asarray(w, dtype=int)
+        has[w[(w >= 0) & (w < len(days))]] = True
+    logger.info(f"CHIRPS from the v7 cache {src}: grid {nlon}x{nlat} lon {lon[0]}..{lon[-1]} lat {lat[0]}..{lat[-1]}, "
+                f"{has.sum():,} days with data")
+    if not (lon[0] <= bbox[0] + step and lon[-1] >= bbox[2] - step and lat[0] <= bbox[1] + step
+            and lat[-1] >= bbox[3] - step):
+        logger.warning(f"  the v7 grid does not cover the whole region bbox {list(bbox)} - the v9 grid is the v7 grid")
+    # window of the CHIRPS COG matching the v7 grid (for the days v7 lacks)
+    with rasterio.open(cog_url(pd.Timestamp(f"{C.DATA_YEAR_MIN}-01-01"))) as cog:
+        win = from_bounds(lon[0] - step / 2, lat[0] - step / 2, lon[-1] + step / 2, lat[-1] + step / 2,
+                          transform=cog.transform).round_offsets().round_lengths()
+        tr = cog.window_transform(win)
+    lon_c = np.round(tr.c + (np.arange(int(win.width)) + 0.5) * tr.a, 4)
+    lat_c = np.round(tr.f + (np.arange(int(win.height)) + 0.5) * tr.e, 4)[::-1]
+    if len(lon_c) != nlon or len(lat_c) != nlat or np.abs(lon_c - lon).max() > 1e-3 or np.abs(lat_c - lat).max() > 1e-3:
+        sys.exit("the v7 cache grid is not aligned on the CHIRPS COG grid - download instead (CHIRPS_V7_CACHE = None)")
+    dat_f = out / "rain_u16.dat"
+    shape = (len(days), nlat, nlon)
+    if C.CHIRPS_V7_CACHE_MODE == "link" and n7 == len(days):
+        _os.symlink(dat_v7.resolve(), dat_f)
+        logger.info(f"  linked {dat_f} -> {dat_v7.resolve()}")
+    else:
+        logger.info(f"  copying {min(n7, len(days)):,} days into {dat_f} ({np.prod(shape) * 2 / 1e9:.1f} GB)")
+        a7 = np.memmap(dat_v7, dtype=np.uint16, mode="r", shape=(n7, nlat, nlon))
+        mm = np.memmap(dat_f, dtype=np.uint16, mode="w+", shape=shape)
+        for t0 in range(0, len(days), 366):
+            t1 = min(t0 + 366, len(days))
+            mm[t0:t1] = a7[t0:t1] if t1 <= n7 else NODATA
+            if t0 < n7 < t1:
+                mm[t0:n7] = a7[t0:n7]
+        mm.flush()
+        del mm, a7
+    meta = {"bbox": list(bbox), "lon": lon.tolist(), "lat": lat.tolist(), "n_days": len(days),
+            "origin": str(C.ORIGIN), "window": [int(win.col_off), int(win.row_off), int(win.width), int(win.height)],
+            "source": f"v7 cache {src.resolve()} ({C.CHIRPS_V7_CACHE_MODE}) + {C.CHIRPS_COG_URL}",
+            "nodata": NODATA, "scale": SCALE, "failed_days": []}
+    np.save(out / "day_done.npy", has)
+    C.write_json(out / "meta.json", meta)
+
+
+def download_chirps(region, bbox, threads, retry_missing=True):
+    """Fill the region's CHIRPS memmap; returns the share of days still missing."""
     import rasterio
     out = C.data_dir("chirps", region)
     out.mkdir(parents=True, exist_ok=True)
     meta_f, done_f, dat_f = out / "meta.json", out / "day_done.npy", out / "rain_u16.dat"
     days = pd.date_range(f"{C.DATA_YEAR_MIN}-01-01", f"{C.DATA_YEAR_MAX}-12-31", freq="D")
+    if C.CHIRPS_V7_CACHE and not meta_f.exists():
+        import_v7_cache(out, bbox)
     if meta_f.exists():
         meta = C.read_json(meta_f)
-        if list(meta["bbox"]) != list(bbox):
+        if list(meta["bbox"]) != list(bbox) and not str(meta.get("source", "")).startswith("v7 cache"):
             sys.exit(f"{out} was built for bbox {meta['bbox']}, not {list(bbox)} - use another region name")
         lon, lat = np.array(meta["lon"]), np.array(meta["lat"])
         win = rasterio.windows.Window(*meta["window"])
@@ -117,15 +187,18 @@ def download_chirps(region, bbox, threads, retry_missing=False):
                 f"{len(failed)} known failures")
     C.write_json(meta_f, meta)
     if not todo:
-        return
+        return missing_share(done, failed, len(days))
     mm = np.memmap(dat_f, dtype=np.uint16, mode="r+", shape=shape)
     lock = threading.Lock()
+    stop = threading.Event()
     t0 = time.time()
 
     def one(i):
         day = days[i]
         err = None
         for attempt in range(4):
+            if stop.is_set():
+                return i, "not tried (download stopped)"
             try:
                 with rasterio.open(cog_url(day)) as src:
                     a = src.read(1, window=win)
@@ -138,7 +211,17 @@ def download_chirps(region, bbox, threads, retry_missing=False):
                 time.sleep(2 * (attempt + 1))
         return i, str(err)
 
-    n_new = 0
+    # preflight: one day read on its own, so a server or network problem shows up in seconds, not hours
+    i, err = one(todo[0])
+    if err is not None:
+        logger.error(f"CHIRPS: the first day ({days[todo[0]].date()}) could not be read: {err}\n"
+                     f"  url: {cog_url(days[todo[0]])}\n  check the network / proxy of this node "
+                     f"(GDAL reads it through curl: https_proxy / GDAL_HTTP_PROXY), or set CHIRPS_V7_CACHE")
+        sys.exit(2)
+    done[i] = True
+    failed.discard(str(days[i].date()))
+    todo = todo[1:]
+    n_new, n_fail, errors = 1, 0, Counter()
     with ThreadPoolExecutor(threads) as pool:
         futs = [pool.submit(one, i) for i in todo]
         for k, f in enumerate(as_completed(futs), 1):
@@ -149,8 +232,19 @@ def download_chirps(region, bbox, threads, retry_missing=False):
                     n_new += 1
                     failed.discard(str(days[i].date()))
                 else:
+                    n_fail += 1
                     failed.add(str(days[i].date()))
+                    errors[err[:160]] += 1
                     logger.warning(f"  {days[i].date()}: {err}")
+                # circuit breaker: the server stopped answering (blocked, throttled, network down)
+                if k >= getattr(C, "CHIRPS_ABORT_AFTER", 300) and n_fail / k > 0.9:
+                    stop.set()
+                    for g in futs:
+                        g.cancel()
+                    logger.error(f"CHIRPS: {n_fail:,} of the {k:,} days tried failed - download stopped. "
+                                 f"Rerun later (failed days are retried), use fewer --threads, "
+                                 f"or set CHIRPS_V7_CACHE")
+                    break
                 if k % 500 == 0 or k == len(todo):
                     mm.flush()
                     np.save(done_f, done)
@@ -164,6 +258,16 @@ def download_chirps(region, bbox, threads, retry_missing=False):
     C.write_json(meta_f, meta)
     logger.info(f"CHIRPS {region}: {done.sum():,}/{len(days):,} days cached ({n_new:,} new); "
                 f"failed {len(failed)}: {sorted(failed)[:10]}{' ...' if len(failed) > 10 else ''}")
+    for msg, n in errors.most_common(5):
+        logger.info(f"  error x {n:,}: {msg}")
+    return missing_share(done, failed, len(days))
+
+
+def missing_share(done, failed, n_days):
+    share = 1 - done.sum() / n_days
+    if share > 0:
+        logger.info(f"CHIRPS: {share:.1%} of the days missing ({len(failed):,} failed downloads)")
+    return share
 
 
 # =============================================================================
@@ -262,8 +366,10 @@ def download_aez():
 # NDVI (PKU GIMMS NDVI v1.2)
 # =============================================================================
 
-def fetch_resumable(url, dst, tries=6):
-    """HTTP download with resume (Range) and retries."""
+def fetch_resumable(url, dst, tries=8):
+    """HTTP download with resume (Range) and retries. A transfer shorter than the size the server
+    announced is resumed, and a .zip that is not a valid zip archive is discarded and fetched again,
+    so a cut connection can never leave a truncated file behind."""
     dst = Path(dst)
     tmp = dst.with_suffix(dst.suffix + ".part")
     for attempt in range(tries):
@@ -273,9 +379,21 @@ def fetch_resumable(url, dst, tries=6):
             hdr["Range"] = f"bytes={have}-"
         try:
             with urllib.request.urlopen(urllib.request.Request(url, headers=hdr), timeout=300) as r:
-                mode = "ab" if (have and r.status == 206) else "wb"
-                with open(tmp, mode) as f:
+                resumed = bool(have) and r.status == 206
+                total = None
+                cr, cl = r.headers.get("Content-Range"), r.headers.get("Content-Length")
+                if resumed and cr and "/" in cr and cr.split("/")[-1].strip().isdigit():
+                    total = int(cr.split("/")[-1])
+                elif cl and cl.isdigit():
+                    total = (have if resumed else 0) + int(cl)
+                with open(tmp, "ab" if resumed else "wb") as f:
                     shutil.copyfileobj(r, f, length=8 << 20)
+            size = tmp.stat().st_size
+            if total is not None and size < total:
+                raise IOError(f"incomplete transfer: {size:,} of {total:,} bytes - resuming")
+            if dst.suffix.lower() == ".zip" and not zipfile.is_zipfile(tmp):
+                tmp.unlink()
+                raise IOError("downloaded file is not a valid zip archive - fetching again")
             tmp.rename(dst)
             return dst
         except Exception as e:                             # noqa: BLE001 - resumed on the next attempt
@@ -341,6 +459,9 @@ def download_ndvi(region, bbox, keep_zips=False):
         if all(done[i] for i in need):
             continue
         z = raw / f"PKU_GIMMS_NDVI_{C.NDVI_PRODUCT}_{period}.zip"
+        if z.exists() and not zipfile.is_zipfile(z):         # left over from an interrupted run
+            logger.warning(f"NDVI: {z.name} is not a valid zip - downloading it again")
+            z.unlink()
         if not z.exists():
             url = ndvi_zip_url(period)
             logger.info(f"NDVI: downloading {url}")
@@ -437,7 +558,8 @@ def main():
     ap.add_argument("--region", default="ci_nga", help=f"one of {list(C.REGIONS)} or a name for --bbox")
     ap.add_argument("--bbox", nargs=4, type=float, metavar=("LON_MIN", "LAT_MIN", "LON_MAX", "LAT_MAX"))
     ap.add_argument("--threads", type=int, default=32)
-    ap.add_argument("--retry_missing", action="store_true", help="try the CHIRPS days that failed before again")
+    ap.add_argument("--skip_failed", action="store_true", help="do not try the CHIRPS days that failed before again")
+    ap.add_argument("--retry_missing", action="store_true", help=argparse.SUPPRESS)   # old flag, now the default
     ap.add_argument("--keep_zips", action="store_true", help="keep the NDVI zips (~2.5 GB) after cropping")
     ap.add_argument("--only", nargs="+", choices=["chirps", "ndvi", "boundaries", "aez", "koppen"],
                     default=["boundaries", "aez", "koppen", "ndvi", "chirps"])
@@ -455,7 +577,12 @@ def main():
     if "ndvi" in a.only and C.USE_NDVI:
         download_ndvi(name, bbox, a.keep_zips)
     if "chirps" in a.only:
-        download_chirps(name, bbox, a.threads, a.retry_missing)
+        share = download_chirps(name, bbox, a.threads, not a.skip_failed)
+        max_missing = getattr(C, "CHIRPS_MAX_MISSING_SHARE", 0.01)   # default when an older v9_config.py lacks it
+        if share > max_missing:
+            logger.error(f"CHIRPS: {share:.1%} of the days are missing (> CHIRPS_MAX_MISSING_SHARE = "
+                         f"{max_missing:.1%}) - stopping here; rerun step 1 to retry them")
+            sys.exit(2)
 
 
 if __name__ == "__main__":

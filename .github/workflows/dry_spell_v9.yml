@@ -1,10 +1,10 @@
-name: Dry-spell v9 - CHIRPS + PKU GIMMS NDVI -> seasons -> sowing risk (country / bbox / polygon / cell) -> aggregate
+name: Dry-spell v9 - RADS or CHIRPS seasons, bimodal major/mask, dry-spell exclusion windows, scenarios + comparison
 
-# The same run_all.py as on the HPC, on the ci_nga box (Nigeria, 2.5-14.5E, 4.5-14.5N), with REAL data:
-# CHIRPS v2.0 daily 1981-2025 (~45 years of COG windows), PKU GIMMS NDVI v1.2 1982-2015 (4 zips,
-# ~2.6 GB from Zenodo, cropped then deleted), Natural Earth, HarvestChoice AEZ, Koppen-Geiger 1991-2020.
-# Then: NDVI phenology, regime (rain + NDVI), onset / NDVI-adjusted demise, 5 countries + aggregate,
-# single-target runs (bbox / polygon / cell), independent checks, and a committed fingerprint.
+# The same run_all.py as on the HPC, on the ci_nga box (Nigeria, 2.5-14.5E, 4.5-14.5N), with real CHIRPS
+# v2.0 and PKU GIMMS NDVI downloads. The official RADS files live in a Dropbox folder CI cannot reach, so
+# CI builds RADS-format files from the same CHIRPS with the RADS algorithm (tests/make_rads_from_chirps.py,
+# in the HPC file layout: file Y = onset of season Y+1, demise of season ending in Y) at ../chirps_africa,
+# the path the HPC uses. Four scenarios run side by side and are compared (step 7).
 on:
   push:
     branches: ['claude/**']
@@ -20,12 +20,13 @@ concurrency:
 jobs:
   ci_nga:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 240
     permissions:
       contents: write
     env:
       W: ${{ github.workspace }}/work
       CODE: ${{ github.workspace }}/dry_spell_v9
+      SCEN: base chirps mask_bimodal excl0
     steps:
       - uses: actions/checkout@v4
 
@@ -52,27 +53,44 @@ jobs:
           path: work/dryspell_v9_data/ndvi/ci_nga
           key: v9-pku-gimms-ndvi-avhrr-ci_nga-1982-2015-r1
 
-      - name: JSON settings override (dry run)
+      - name: Settings checks (JSON override, scenarios, unknown names)
         run: |
           mkdir -p "$W" && cd "$W"
-          echo '{"FALSE_START_EXCLUDE": true, "SUMMARY_ZONES": "koppen"}' > override.json
-          python "$CODE/run_all.py" --region ci_nga --config override.json --countries NGA --dry_run | tee dry.txt
-          grep -q "FALSE_START_EXCLUDE=True" dry.txt && grep -q "SUMMARY_ZONES=koppen" dry.txt
+          python "$CODE/run_all.py" --region ci_nga --scenarios $SCEN --countries NGA --dry_run | tee dry.txt
+          grep -q "\[base\] SEASON_SOURCE=rads" dry.txt && grep -q "\[chirps\] SEASON_SOURCE=chirps" dry.txt
+          grep -q "spell stats exclude 0/0" dry.txt && grep -q "BIMODAL_SEASON=mask" dry.txt
           echo '{"NOT_A_SETTING": 1}' > bad.json
           ! python "$CODE/run_all.py" --region ci_nga --config bad.json --dry_run 2>/dev/null
+          ! python "$CODE/run_all.py" --region ci_nga --scenarios no_such_scenario --dry_run 2>/dev/null
 
-      - name: run_all.py (steps 1-6, 5 countries)
+      - name: Step 1 - downloads (shared by all scenarios)
         run: |
           cd "$W"
-          python "$CODE/run_all.py" --region ci_nga --countries NGA BEN NER CMR TCD \
-            --workers 4 --country_jobs 2 --threads 32
+          python "$CODE/run_all.py" --region ci_nga --steps 1 --threads 32
+
+      - name: RADS-format files from CHIRPS (stand-in for the Dropbox RADS files)
+        run: |
+          cd "$W"
+          python "$CODE/tests/make_rads_from_chirps.py" dryspell_v9_data/chirps/ci_nga ../chirps_africa --hpc_layout \
+            --also_same ../chirps_africa_same
+          ls ../chirps_africa | head -3
+          python "$CODE/v9_rads.py" --region ci_nga --workers 4 | tail -2
+          # cross-year alignment: both file layouts must pair into the same seasons (+ synthetic southern seasons)
+          python "$CODE/tests/check_rads_pairing.py" --region ci_nga \
+            --a "../chirps_africa/africa_RainyAndDrySeason.pentad.CHIRPS.{year}.nc" \
+            --b "../chirps_africa_same/africa_RainyAndDrySeason.pentad.CHIRPS.{year}.nc"
+
+      - name: run_all.py steps 2-7, four scenarios, 5 countries
+        run: |
+          cd "$W"
+          python "$CODE/run_all.py" --region ci_nga --steps 2 3 4 5 6 7 --scenarios $SCEN \
+            --countries NGA BEN NER CMR TCD --workers 4 --country_jobs 2
           cat dryspell_v9/ci_nga/run_all_status.csv
-          python "$CODE/run_all.py" --region ci_nga --countries NGA BEN NER CMR TCD --resume --dry_run
 
-      - name: Single targets (bbox with Koppen zones, polygon, one cell)
+      - name: Single targets (bbox with Koppen zones, polygon, one cell) - base scenario
         run: |
           cd "$W"
-          python "$CODE/run_all.py" --region ci_nga --steps 4 --target_bbox 7 10.5 9.5 12.5 \
+          python "$CODE/run_all.py" --region ci_nga --steps 4 5 --target_bbox 7 10.5 9.5 12.5 \
             --target_name kano_box --step4_args "--zones koppen" --workers 4
           python - <<'EOF'
           import geopandas as gpd
@@ -83,61 +101,68 @@ jobs:
           python "$CODE/run_all.py" --region ci_nga --steps 4 --target_polygon zones_demo.gpkg \
             --polygon_field NAME --polygon_value sahel --workers 4
           python "$CODE/run_all.py" --region ci_nga --steps 4 --target_point 12.0 8.52 --target_name kano_cell --workers 2
-          ls dryspell_v9/ci_nga/step04/
-          head -5 dryspell_v9/ci_nga/step04/kano_cell/season_detail.csv
           for d in kano_box zones_demo_sahel kano_cell; do
-            python -c "import json,sys; s=json.load(open('dryspell_v9/ci_nga/step04/$d/status.json')); print(s); sys.exit(s['status']!='ok')"
+            python -c "import json,sys; s=json.load(open('dryspell_v9/ci_nga/base/step04/$d/status.json')); print(s['unit'], s['status']); sys.exit(s['status']!='ok')"
           done
 
-      - name: Independent checks (seasons, sowing risk, aggregation)
+      - name: Independent checks, every scenario
         run: |
           cd "$W"
-          python "$CODE/tests/check_seasons.py" --region ci_nga --cells 8
-          for c in sorghum pearl_millet groundnut; do
-            python "$CODE/tests/check_sowing.py" --region ci_nga --iso3 NGA --crop $c --cells 6
+          for s in $SCEN; do
+            echo "=== $s"; export DRYSPELL_V9_SCENARIO=$s
+            python "$CODE/tests/check_seasons.py" --region ci_nga --cells 8
+            for c in sorghum pearl_millet groundnut; do
+              python "$CODE/tests/check_sowing.py" --region ci_nga --iso3 NGA --crop $c --cells 5
+            done
+            python "$CODE/tests/check_aggregate.py" --region ci_nga
+            python "$CODE/tests/check_spell_stats.py" --region ci_nga --cells 12
           done
-          python "$CODE/tests/check_aggregate.py" --region ci_nga
-          python "$CODE/tests/check_spell_stats.py" --region ci_nga --cells 15
 
       - name: Compare with the previous reference (information only)
         if: always()
         run: |
           cd "$W"
-          python "$CODE/tests/compare_reference.py" --region ci_nga || echo "::notice::results differ from the committed reference (expected after a method change)"
+          for s in $SCEN; do
+            DRYSPELL_V9_SCENARIO=$s python "$CODE/tests/compare_reference.py" --region ci_nga \
+              || echo "::notice::$s differs from the committed reference (expected after a method change)"
+          done
 
       - name: Summary
         if: always()
         run: |
           cd "$W"
-          python - <<'EOF' >> "$GITHUB_STEP_SUMMARY" || true
-          import pandas as pd
-          print("## Countries\n\n```\n" + pd.read_csv("dryspell_v9/ci_nga/step04/SSA/countries.csv").to_string(index=False) + "\n```\n")
-          s = pd.read_csv("dryspell_v9/ci_nga/step04/SSA/ssa_summary.csv")
-          n = s[s.zone == "ALL"]
-          cols = ["crop", "cycle", "sow", "pct_cells_impossible", "p_hit_window_mean", "most_hit_stage", "most_hit_p"]
-          print("## All countries pooled\n\n```\n" + n[cols].round(3).to_string(index=False) + "\n```\n")
-          EOF
-          { echo '```'; grep -E "regime|cells |NDVI end of season" dryspell_v9/ci_nga/step03/step03.log | tail -14;
-            grep -E "seasons|amplitude|cells" dryspell_v9/ci_nga/step02/step02.log | tail -8; echo '```'; } >> "$GITHUB_STEP_SUMMARY" || true
+          C=$(ls -d dryspell_v9/ci_nga/compare/*/ | head -1)
+          { echo '## What changes between scenarios'; echo '```';
+            grep -E "SEASON_SOURCE|EXCLUDE|DEMISE_ADJUST|difference|medians over|^ +[a-z_]+ +[0-9.-]" "$C/step07.log" | sed 's/^.*INFO - //' | head -40;
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY" || true
 
-      - name: Collect reference fingerprint and small results
+      - name: Collect reference fingerprints and small results
         if: always()
         run: |
           cd "$W"
-          python "$CODE/tests/compare_reference.py" --region ci_nga --write "$CODE/reference/ci_nga" || true
+          for s in $SCEN; do
+            DRYSPELL_V9_SCENARIO=$s python "$CODE/tests/compare_reference.py" --region ci_nga \
+              --write "$CODE/reference/ci_nga/$s" || true
+          done
           R="$CODE/ci_results"; rm -rf "$R"; mkdir -p "$R"
           cp dryspell_v9_data/download_ci_nga.log "$R/" 2>/dev/null || true
           cd dryspell_v9/ci_nga || exit 0
-          cp run_all.log run_all_status.csv run_all_settings.json "$R/" 2>/dev/null || true
-          for s in step02 step03; do
-            mkdir -p "$R/$s" && cp $s/*.log "$R/$s/" 2>/dev/null || true
-            cp $s/diagnostics/*.png "$R/$s/" 2>/dev/null || true
-          done
-          for d in step04/*/ step06/*/; do
-            n="${d%/}"; mkdir -p "$R/$n"
-            cp "$d"/*.json "$d"/*.log "$R/$n/" 2>/dev/null || true
-            for f in "$d"/*.csv; do [ -f "$f" ] && [ "$(stat -c%s "$f")" -lt 3000000 ] && cp "$f" "$R/$n/"; done
-            [ -d "$d/png" ] && cp -r "$d/png" "$R/$n/"
+          cp run_all.log run_all_status.csv "$R/" 2>/dev/null || true
+          if [ -d compare ]; then mkdir -p "$R/compare" && cp -r compare/* "$R/compare/" && find "$R/compare" -name "*.nc" -delete; fi
+          for s in $SCEN; do
+            [ -d "$s" ] || continue
+            mkdir -p "$R/$s"; cp "$s"/run_all_settings.json "$R/$s/" 2>/dev/null || true
+            for st in step02 step03; do
+              mkdir -p "$R/$s/$st" && cp $s/$st/*.log $s/$st/*.csv "$R/$s/$st/" 2>/dev/null || true
+              cp $s/$st/diagnostics/*.png "$R/$s/$st/" 2>/dev/null || true
+            done
+            for d in $s/step04/NGA/ $s/step05/*/ $s/step06/*/; do
+              [ -d "$d" ] || continue
+              n="${d%/}"; mkdir -p "$R/$n"
+              cp "$d"/*.json "$d"/*.log "$R/$n/" 2>/dev/null || true
+              for f in "$d"/*.csv; do [ -f "$f" ] && [ "$(stat -c%s "$f")" -lt 3000000 ] && cp "$f" "$R/$n/"; done
+              [ -d "$d/png" ] && cp -r "$d/png" "$R/$n/"
+            done
           done
           du -sh "$R"
 

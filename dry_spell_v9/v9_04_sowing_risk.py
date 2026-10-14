@@ -163,6 +163,24 @@ def _date_to_index(col):
     return np.where(v == np.iinfo(np.int32).min, np.iinfo(np.int64).min, v - epoch)
 
 
+def edge_clip(ps, pe, cs, ce, on, de, first, last, policy):
+    """Apply CROP_SPELL_EXCLUDE_FIRST / _LAST: spells (already clipped to the crop cycle as cs..ce)
+    lose their part before onset + first / after demise - last; with policy "exclude", a spell crossing
+    one of those edges is dropped instead (returned with ce < cs). first / last = 0 -> no change."""
+    cs, ce = np.array(cs, copy=True), np.array(ce, copy=True)
+    if first > 0:
+        lo = on + first
+        if policy == "exclude":
+            ce = np.where(ps < lo, cs - 1, ce)
+        cs = np.maximum(cs, lo)
+    if last > 0:
+        hi = de - last
+        if policy == "exclude":
+            ce = np.where(pe > hi, cs - 1, ce)
+        ce = np.minimum(ce, hi)
+    return cs, ce
+
+
 def _pair_spells(sp_cell, sp_s, sp_e, se_cell, on, span_end):
     """(spell index, season index) for every spell overlapping [onset, span_end] of a season."""
     if len(sp_cell) == 0 or len(on) == 0:
@@ -259,6 +277,8 @@ def process_rows(r0, r1):
                 # clip spells to [S, M] of their season, keep >= crop minimum
                 cs = np.maximum(ps, S[qi])
                 ce = np.minimum(pe, M[qi])
+                cs, ce = edge_clip(ps, pe, cs, ce, on[qi], de[qi], g["excl_first"], g["excl_last"],
+                                   g["excl_policy"])
                 cl = ce - cs + 1
                 kk = (cl >= minc) & feas[qi]
                 q_k, cs_k, ce_k, cl_k = qi[kk], cs[kk], ce[kk], cl[kk]
@@ -554,6 +574,8 @@ def season_detail(cells, a, cycles, sows, stages, min_spell, has, s3, lat, lon):
                                  hits_window=False, window_overlap_days=0, stages_hit="")
                         if feas and len(sps):
                             cs, ce = np.maximum(sps, S), np.minimum(spe, M)
+                            cs, ce = edge_clip(sps, spe, cs, ce, on, de, C.CROP_SPELL_EXCLUDE_FIRST,
+                                               C.CROP_SPELL_EXCLUDE_LAST, C.CROP_SPELL_EDGE_POLICY)
                             cl = ce - cs + 1
                             k = np.nonzero(cl >= min_spell[crop])[0]
                             if len(k):
@@ -797,6 +819,8 @@ def main():
     logger.info("=" * 70)
     logger.info(f"v9 STEP4  region={a.region} target={name} crops={a.crops} zones={a.zones}")
     logger.info(f"  sowing = onset + {a.day0} + {sows}   cycles = {cycles} d   grace = {a.grace} d")
+    logger.info(f"  season source {C.SEASON_SOURCE}; spells ignored within {C.CROP_SPELL_EXCLUDE_FIRST} d after onset / "
+                f"{C.CROP_SPELL_EXCLUDE_LAST} d before demise ({C.CROP_SPELL_EDGE_POLICY}); scenario {C.SCENARIO}")
     logger.info(f"  min spell (d) = { {c: min_spell[c] for c in a.crops} }   impossible if "
                 f"P(feasible) < {a.feasible_min_frac}")
     logger.info("=" * 70)
@@ -824,6 +848,8 @@ def main():
               day0=a.day0, grace=a.grace, feasible_min_frac=a.feasible_min_frac,
               min_feasible_seasons=a.min_feasible_seasons, min_spell=min_spell,
               min_spell_all=min(min_spell[c] for c in a.crops), stages=stages,
+              excl_first=C.CROP_SPELL_EXCLUDE_FIRST, excl_last=C.CROP_SPELL_EXCLUDE_LAST,
+              excl_policy=C.CROP_SPELL_EDGE_POLICY,
               gaps=np.r_[0, np.cumsum(~has)], spell_dir=str(s3 / "spells"), season_dir=str(s3 / "seasons"))
 
     chunks = [tuple(c) for c in meta["chunks"] if c[1] > i0 and c[0] < i1]
@@ -871,8 +897,10 @@ def main():
         det.to_csv(out / "season_detail.csv", index=False)
         logger.info(f"Written season_detail.csv ({len(det):,} rows)")
     if not analysed.any():
-        skip(out, name, target, "no cell with enough valid seasons (arid, no CHIRPS)",
-             n_cells=int(cm_c.sum()), n_few_seasons=n_few)
+        n_nodata = int((cm_c & ~cell_ok[sl]).sum())
+        skip(out, name, target, f"no cell with enough valid seasons ({n_few:,} cells with too few seasons, "
+             f"{n_nodata:,} without usable CHIRPS)", n_cells=int(cm_c.sum()), n_few_seasons=n_few,
+             n_no_chirps=n_nodata)
 
     regime_c = gm["regime"].values[sl].astype(np.int8)
     for code, lab in C.REGIME_LABELS.items():

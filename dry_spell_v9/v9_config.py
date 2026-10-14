@@ -21,7 +21,16 @@ Sections
   C. Time periods                 H. NDVI phenology and its use (regime refinement, demise)
   D. Dry spells                   I. Crops, stages, sowing dates, cycles (step 4)
   E. Data quality                 J. Spatial summaries (zones), figures, performance
-                                  K. Dry spells inside the season: maps, PDFs (step 6)
+  G2. Season source (RADS / CHIRPS), bimodal  K. Dry spells inside the season: maps, PDFs (step 5)
+                                  L. Scenarios (named sets of settings run side by side)
+
+SCENARIOS (section L) are named sets of overrides; run_all.py --scenarios base chirps ... runs each one
+into its own folder dryspell_v9/<region>/<scenario>/ (downloads are shared) and v9_07_compare.py
+(step 7) maps what changes between them. Order of precedence: this file < JSON (--config) < scenario.
+
+DEFAULT RUN (scenario "base" = this file): seasons from the downloaded RADS files, major season in
+bimodal cells (CHIRPS major season where RADS has none), NDVI demise adjustment, dry spell = 10 days
+< 1 mm, spells in the first / last 10 days of the season not counted in the step 5 statistics.
 """
 
 # =============================================================================
@@ -42,6 +51,16 @@ OUT_ROOT = "dryspell_v9"           # results
 # =============================================================================
 
 # CHIRPS v2.0 daily, 0.05 deg (Funk et al. 2015). Only the region's tiles of each daily COG are read.
+# CHIRPS_V7_CACHE: reuse the CHIRPS cache built by v7 instead of downloading (folder holding
+# rain_u16.dat + cache_info.json, e.g. "../dryspell_v7/ssa/cache"); its grid becomes the v9 grid and
+# only the days it lacks are downloaded. "copy" copies the file (safe); "link" uses it in place (no extra
+# disk; days v7 lacked are then written into the v7 file too).
+CHIRPS_V7_CACHE = None
+CHIRPS_V7_CACHE_MODE = "copy"
+# step 1 fails (and run_all stops) when more than this share of the CHIRPS days could not be downloaded
+CHIRPS_MAX_MISSING_SHARE = 0.01
+# the download is stopped when more than 90% of the first CHIRPS_ABORT_AFTER days tried (or more) failed
+CHIRPS_ABORT_AFTER = 300
 CHIRPS_COG_URL = ("https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/cogs/p05/"
                   "{y}/chirps-v2.0.{y}.{m:02d}.{d:02d}.cog")
 
@@ -86,6 +105,8 @@ NDVI_YEAR_MIN, NDVI_YEAR_MAX = 1982, 2015     # NDVI years used (product limits:
 # D. DRY SPELLS
 # =============================================================================
 DRY_MM = 1.0              # a day is dry if rain < DRY_MM; a missing day is never dry and breaks a spell
+DRY_SPELL_MIN_DAYS = 10   # a DRY SPELL = at least this many consecutive dry days. Used by step 5
+                          # (SPELL_STATS_MIN) and step 4 (MIN_SPELL_CROP) unless those are set explicitly
 STEP1_MIN_SPELL = 5       # shortest spell stored by step 3 (days); step 4 minimum must be >= this
 
 # =============================================================================
@@ -140,6 +161,31 @@ FALSE_START_EXCLUDE = False
 FALSE_DEMISE_EXCLUDE = False
 
 # =============================================================================
+# G2. SEASON SOURCE - where onset and demise come from
+# =============================================================================
+#   "chirps" seasons computed here from CHIRPS daily with the RADS cumulative-anomaly method (v8 / v9:
+#            daily data, a one-year window from the driest period, major season in bimodal cells)
+#   "rads"   the downloaded RADS files (Bombardi et al. 2019 code, on CHIRPS pentads). One season per
+#            year; RADS masks cells with two or three rainy seasons (see BIMODAL_SEASON).
+#            Within a yearly file the onset may come before the demise (season inside the calendar
+#            year) or after it (the demise belongs to the season that started the year before, e.g.
+#            seasons crossing 31 December). Onsets and demises are therefore re-paired by date: every
+#            onset takes the EARLIEST demise after it, from the same, previous or next file, that gives
+#            a season of SEASON_LEN_MIN..SEASON_LEN_MAX days; the season is named by its onset year.
+SEASON_SOURCE = "rads"
+RADS_FILE_PATTERN = "../chirps_africa/africa_RainyAndDrySeason.pentad.CHIRPS.{year}.nc"   # {year} = 4 digits
+RADS_PLACEHOLDER_DAYS = 366      # dates more than this before 1 Jan DATA_YEAR_MIN (e.g. 1970-01-01) = missing
+
+# Bimodal cells (two rainy seasons a year; regime = bimodal in section F/H):
+#   "major" analyse the most important (MAJOR_SEASON_RULE) season. With SEASON_SOURCE = "rads", cells where
+#           RADS has no season at all (RADS masks two- and three-season cells) get the CHIRPS major
+#           season (layer season_source in grid_meta.nc: 1 CHIRPS, 2 RADS)
+#   "mask"  bimodal cells are not analysed at all (nor the cells RADS masks)
+BIMODAL_SEASON = "major"
+# RADS seasons are kept when SEASON_LEN_MIN <= length <= SEASON_LEN_MAX and >= WINDOW_MIN_COVER of
+# their days have rainfall data (same rules as CHIRPS seasons).
+
+# =============================================================================
 # H. NDVI PHENOLOGY (Vrieling et al. 2013 approach) AND ITS USE
 # =============================================================================
 USE_NDVI = True                # False -> v8 behaviour (no NDVI download, regime from rain only)
@@ -178,7 +224,13 @@ DEMISE_GRACE = 0                    # extra days maturity may exceed the (NDVI-a
                                     # offset replaces it. Use 10 with DEMISE_ADJUST = "none".
 FEASIBLE_MIN_FRAC = 0.5             # a cell is IMPOSSIBLE if fewer seasons than this are feasible
 MIN_FEASIBLE_SEASONS = 5            # probabilities need at least this many feasible seasons
-MIN_SPELL_CROP = {"sorghum": 10, "pearl_millet": 10, "groundnut": 10}   # days, per crop
+MIN_SPELL_CROP = {"sorghum": None, "pearl_millet": None, "groundnut": None}   # days per crop; None = DRY_SPELL_MIN_DAYS
+# Dry spells near the season edges, for the crop analysis: spells (or their parts) within the first
+# CROP_SPELL_EXCLUDE_FIRST days after onset / the last CROP_SPELL_EXCLUDE_LAST days before demise are
+# not counted (0 = count everything, v9 behaviour). The crop cycle itself is unchanged.
+CROP_SPELL_EXCLUDE_FIRST = 0
+CROP_SPELL_EXCLUDE_LAST = 0
+CROP_SPELL_EDGE_POLICY = "clip"  # "clip" or "exclude", as SPELL_STATS_EDGE_POLICY
 
 # STAGES - onset of each stage in days after sowing (DAS) for a REFERENCE cultivar, from published
 # stage keys with typical timings, then rescaled to every cycle length in CYCLES:
@@ -237,25 +289,28 @@ CROPS = {
 # =============================================================================
 # J. SPATIAL SUMMARIES, FIGURES, PERFORMANCE
 # =============================================================================
-# Zones used to summarise step 4 and step 5 results:
+# Zones used to summarise step 4, 5 and 6 results:
 #   "aez8"   HarvestChoice AEZ, 8 classes: tropic-warm / tropic-cool x arid / semiarid / subhumid /
 #            humid (subtropic classes folded into warm / cool by their 2nd digit)
 #   "aez"    HarvestChoice AEZ, all classes (3-digit codes)
 #   "koppen" Koppen-Geiger 1991-2020 (Beck et al. 2023), 30 classes, labels from legend.txt
 #   "regime" rainfall regime only (unimodal / transition / bimodal)
 SUMMARY_ZONES = "aez8"
-SSA_NAME = "SSA"                 # folder of the aggregate (step 5)
+SSA_NAME = "SSA"                 # folder of the aggregate (step 6: step06/<SSA_NAME>)
 ROWS_PER_TASK = 8                # grid rows per worker task (steps 3-4)
 FIG_DPI = 170
 
 # =============================================================================
-# K. DRY SPELLS INSIDE THE SEASON: MAPS, PDFs, LATITUDE / ZONE SUMMARIES (step 6)
+# K. DRY SPELLS INSIDE THE SEASON: MAPS, PDFs, LATITUDE / ZONE SUMMARIES (step 5)
 # =============================================================================
-# Crop-independent statistics of every valid (major) season, as in v7: spells are clipped to the
+# Crop-independent statistics of every valid (major) season: spells are clipped to the
 # window [onset + EXCLUDE_FIRST, demise - EXCLUDE_LAST] and kept if >= SPELL_STATS_MIN days long.
-SPELL_STATS_MIN = 10             # days (< DRY_MM each); must be >= STEP1_MIN_SPELL
-SPELL_STATS_EXCLUDE_FIRST = 10   # v7 default: ignore the first 10 days after onset (onset = day 0)
-SPELL_STATS_EXCLUDE_LAST = 10    # ... and the last 10 days before the demise
+SPELL_STATS_MIN = None           # days (< DRY_MM each); None = DRY_SPELL_MIN_DAYS; must be >= STEP1_MIN_SPELL
+SPELL_STATS_EXCLUDE_FIRST = 10   # default: spells in the very first 10 days after onset are not counted
+SPELL_STATS_EXCLUDE_LAST = 10    # ... and the last 10 days before the demise (0 = count every spell;
+                                 # 20 = ignore spells in the first / last 20 days)
+SPELL_STATS_EDGE_POLICY = "clip" # spell crossing a window edge: "clip" = keep its part inside the window
+                                 # (if still >= SPELL_STATS_MIN); "exclude" = drop it entirely
 SPELL_STATS_DEMISE = "rain"      # "rain": rainfall demise (spells are about the RAINY season);
                                  # "adjusted": NDVI-adjusted demise (section H) - adds the dry-down
 SPELL_STATS_MIN_COND = 3         # a cell median of first / last / longest needs >= 3 seasons with it
@@ -263,3 +318,17 @@ LAT_BAND_DEG = 1.0               # latitude bands of the tables and the latitude
 PDF_LAT_BAND_DEG = 2.0           # coarser bands for the PDF curves (one curve each)
 PDF_SMOOTH_DAYS = 3              # Gaussian smoothing (sd, days) of the PDF curves; 0 = raw histogram
 
+# =============================================================================
+# L. SCENARIOS - named sets of overrides (run_all.py --scenarios NAME ...; output per scenario)
+# =============================================================================
+SCENARIO_DEFAULT = "base"        # used when no scenario is named
+SCENARIOS = {
+    "base": {},                                                  # this file as is (see the top)
+    "chirps": {"SEASON_SOURCE": "chirps"},                       # seasons computed from CHIRPS (v8 method)
+    "mask_bimodal": {"BIMODAL_SEASON": "mask"},                  # bimodal cells left out
+    "excl0": {"SPELL_STATS_EXCLUDE_FIRST": 0, "SPELL_STATS_EXCLUDE_LAST": 0},     # every spell counts
+    "excl20": {"SPELL_STATS_EXCLUDE_FIRST": 20, "SPELL_STATS_EXCLUDE_LAST": 20,   # first / last 20 days
+               "CROP_SPELL_EXCLUDE_FIRST": 20, "CROP_SPELL_EXCLUDE_LAST": 20},    # ignored (also crops)
+    "rads_no_ndvi": {"DEMISE_ADJUST": "none"},                   # RADS demise as is
+    "chirps_mask_bimodal": {"SEASON_SOURCE": "chirps", "BIMODAL_SEASON": "mask"},
+}

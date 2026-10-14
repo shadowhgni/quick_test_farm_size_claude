@@ -1,0 +1,37 @@
+unit,latitude_band,metric,label,metric_unit,n_cells,n_seasons,n_defined,mean,p10,p25,median,p75,p90
+kano_box,10 to 11,n_spells,Number of dry spells per season,spells,500,17564,17564,0.016340241402869507,0.0,0.0,0.0,0.0,0.0
+kano_box,10 to 11,spell_len,Median duration of the dry spells of the season,days,500,17564,287,10.787456445993032,10.0,10.0,11.0,11.0,11.0
+kano_box,10 to 11,first_start,Start of the 1st dry spell,days after onset,500,17564,287,35.491289198606275,15.0,16.0,26.0,26.0,108.0
+kano_box,10 to 11,first_len,Duration of the 1st dry spell,days,500,17564,287,10.787456445993032,10.0,10.0,11.0,11.0,11.0
+kano_box,10 to 11,last_start,Start of the last dry spell (seasons with >= 2),days after onset,500,17564,0,,,,,,
+kano_box,10 to 11,last_len,Duration of the last dry spell (seasons with >= 2),days,500,17564,0,,,,,,
+kano_box,10 to 11,longest_start,Start of the longest dry spell,days after onset,500,17564,287,35.491289198606275,15.0,16.0,26.0,26.0,108.0
+kano_box,10 to 11,longest_len,Duration of the longest dry spell,days,500,17564,287,10.787456445993032,10.0,10.0,11.0,11.0,11.0
+kano_box,10 to 11,dry_frac,Share of the season in dry spells,fraction,500,17564,17564,0.001314620815304031,0.0,0.0,0.0,0.0,0.0
+kano_box,11 to 12,n_spells,Number of dry spells per season,spells,1000,35283,35283,0.031176487260153617,0.0,0.0,0.0,0.0,0.0
+kano_box,11 to 12,spell_len,Median duration of the dry spells of the season,days,1000,35283,968,10.964359504132231,10.0,10.0,11.0,11.0,13.0
+kano_box,11 to 12,first_start,Start of the 1st dry spell,days after onset,1000,35283,968,52.553719008264466,13.0,15.0,36.0,87.0,106.0
+kano_box,11 to 12,first_len,Duration of the 1st dry spell,days,1000,35283,968,10.99586776859504,10.0,10.0,11.0,11.0,13.0
+kano_box,11 to 12,last_start,Start of the last dry spell (seasons with >= 2),days after onset,1000,35283,129,99.47286821705427,70.0,105.0,105.0,105.0,106.0
+kano_box,11 to 12,last_len,Duration of the last dry spell (seasons with >= 2),days,1000,35283,129,10.922480620155039,10.0,11.0,11.0,11.0,11.0
+kano_box,11 to 12,longest_start,Start of the longest dry spell,days after onset,1000,35283,968,53.11363636363637,13.0,15.0,51.0,87.0,106.0
+kano_box,11 to 12,longest_len,Duration of the longest dry spell,days,1000,35283,968,11.009297520661157,10.0,10.0,11.0,11.0,13.0
+kano_box,11 to 12,dry_frac,Share of the season in dry spells,fraction,1000,35283,35283,0.003188220956267891,0.0,0.0,0.0,0.0,0.0
+kano_box,12 to 13,n_spells,Number of dry spells per season,spells,500,19243,19243,0.04276879904380814,0.0,0.0,0.0,0.0,0.0
+kano_box,12 to 13,spell_len,Median duration of the dry spells of the season,days,500,19243,685,11.577372262773723,10.0,10.0,11.0,13.0,15.0
+kano_box,12 to 13,first_start,Start of the 1st dry spell,days after onset,500,19243,685,40.783941605839416,12.0,15.0,28.0,52.0,106.0
+kano_box,12 to 13,first_len,Duration of the 1st dry spell,days,500,19243,685,11.651094890510949,10.0,10.0,11.0,13.0,15.0
+kano_box,12 to 13,last_start,Start of the last dry spell (seasons with >= 2),days after onset,500,19243,135,75.42962962962963,69.0,70.0,77.0,77.0,77.0
+kano_box,12 to 13,last_len,Duration of the last dry spell (seasons with >= 2),days,500,19243,135,11.28888888888889,10.0,10.0,10.0,12.0,14.0
+kano_box,12 to 13,longest_start,Start of the longest dry spell,days after onset,500,19243,685,43.575182481751824,12.0,15.0,31.0,67.0,106.0
+kano_box,12 to 13,longest_len,Duration of the longest dry spell,days,500,19243,685,11.801459854014599,10.0,10.0,11.0,14.0,15.0
+kano_box,12 to 13,dry_frac,Share of the season in dry spells,fraction,500,19243,19243,0.005408200384555422,0.0,0.0,0.0,0.0,0.0
+kano_box,ALL,n_spells,Number of dry spells per season,spells,2000,72090,72090,0.03065612428908309,0.0,0.0,0.0,0.0,0.0
+kano_box,ALL,spell_len,Median duration of the dry spells of the season,days,2000,72090,1940,11.154639175257731,10.0,10.0,11.0,12.0,13.0
+kano_box,ALL,first_start,Start of the 1st dry spell,days after onset,2000,72090,1940,45.873711340206185,13.0,15.0,26.0,86.0,106.0
+kano_box,ALL,first_len,Duration of the 1st dry spell,days,2000,72090,1940,11.19639175257732,10.0,10.0,11.0,12.0,13.0
+kano_box,ALL,last_start,Start of the last dry spell (seasons with >= 2),days after onset,2000,72090,264,87.1780303030303,70.0,76.0,77.0,105.0,105.0
+kano_box,ALL,last_len,Duration of the last dry spell (seasons with >= 2),days,2000,72090,264,11.109848484848484,10.0,10.0,11.0,11.0,14.0
+kano_box,ALL,longest_start,Start of the longest dry spell,days after onset,2000,72090,1940,47.13865979381443,13.0,15.0,26.0,86.0,106.0
+kano_box,ALL,longest_len,Duration of the longest dry spell,days,2000,72090,1940,11.25618556701031,10.0,10.0,11.0,12.0,14.0
+kano_box,ALL,dry_frac,Share of the season in dry spells,fraction,2000,72090,72090,0.0033243168261894852,0.0,0.0,0.0,0.0,0.0

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CI check of v9 step 5 pooling: the SSA ("ALL" and per zone) means in ssa_summary.csv and
+CI check of v9 step 6 pooling: the SSA ("ALL" and per zone) means in ssa_summary.csv and
 ssa_stage_hits.csv must equal the means computed directly over the pooled cell tables of all
 countries. Exits 1 on any difference.
 
@@ -19,14 +19,17 @@ ap.add_argument("--region", required=True)
 ap.add_argument("--name", default="SSA")
 a = ap.parse_args()
 
-sdir = Path("dryspell_v9") / a.region / "step04"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import v9_common as C   # noqa: E402  (scenario from $DRYSPELL_V9_SCENARIO)
+
+sdir = C.region_dir(a.region) / "step04"
 ok = [p.name for p in sorted(sdir.iterdir()) if p.is_dir() and p.name != a.name
       and (p / "status.json").exists() and json.loads((p / "status.json").read_text())["status"] == "ok"
       and json.loads((p / "status.json").read_text())["target"]["kind"] == "country"]
 cells = pd.concat([pd.read_parquet(sdir / c / "cell_summary.parquet") for c in ok], ignore_index=True)
 cells["zone"] = cells["zone"].astype(str)
-ssa = pd.read_csv(sdir / a.name / "ssa_summary.csv")
-ssh = pd.read_csv(sdir / a.name / "ssa_stage_hits.csv")
+ssa = pd.read_csv(C.region_dir(a.region) / "step06" / a.name / "ssa_summary.csv")
+ssh = pd.read_csv(C.region_dir(a.region) / "step06" / a.name / "ssa_stage_hits.csv")
 keys = ["crop", "cycle", "sow"]
 bad = 0
 
