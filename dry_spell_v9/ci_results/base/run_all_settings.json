@@ -7,7 +7,9 @@
     "https://naciscdn.org/naturalearth/50m/cultural/ne_50m_admin_0_countries.zip",
     "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson"
   ],
+  "CHIRPS_ABORT_AFTER": 300,
   "CHIRPS_COG_URL": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/cogs/p05/{y}/chirps-v2.0.{y}.{m:02d}.{d:02d}.cog",
+  "CHIRPS_MAX_MISSING_SHARE": 0.01,
   "CHIRPS_V7_CACHE": null,
   "CHIRPS_V7_CACHE_MODE": "copy",
   "CLIM_YEAR_MAX": 2024,
