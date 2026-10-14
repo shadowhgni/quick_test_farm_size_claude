@@ -237,7 +237,7 @@ def download_chirps(region, bbox, threads, retry_missing=True):
                     errors[err[:160]] += 1
                     logger.warning(f"  {days[i].date()}: {err}")
                 # circuit breaker: the server stopped answering (blocked, throttled, network down)
-                if k >= C.CHIRPS_ABORT_AFTER and n_fail / k > 0.9:
+                if k >= getattr(C, "CHIRPS_ABORT_AFTER", 300) and n_fail / k > 0.9:
                     stop.set()
                     for g in futs:
                         g.cancel()
@@ -578,9 +578,10 @@ def main():
         download_ndvi(name, bbox, a.keep_zips)
     if "chirps" in a.only:
         share = download_chirps(name, bbox, a.threads, not a.skip_failed)
-        if share > C.CHIRPS_MAX_MISSING_SHARE:
+        max_missing = getattr(C, "CHIRPS_MAX_MISSING_SHARE", 0.01)   # default when an older v9_config.py lacks it
+        if share > max_missing:
             logger.error(f"CHIRPS: {share:.1%} of the days are missing (> CHIRPS_MAX_MISSING_SHARE = "
-                         f"{C.CHIRPS_MAX_MISSING_SHARE:.1%}) - stopping here; rerun step 1 to retry them")
+                         f"{max_missing:.1%}) - stopping here; rerun step 1 to retry them")
             sys.exit(2)
 
 
