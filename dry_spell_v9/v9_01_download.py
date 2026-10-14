@@ -13,7 +13,11 @@ v9 STEP 1 - download the inputs (resumable; all open data, no login)
 3. Natural Earth countries, HarvestChoice AEZ (damaged ASCII grid read tolerantly), and the
    Koppen-Geiger 1991-2020 map + legend (Beck et al. 2023).
 
-Re-running continues where it stopped (--retry_missing retries failed CHIRPS days).
+Re-running continues where it stopped; CHIRPS days that failed before are tried again (--skip_failed
+to leave them). The CHIRPS download stops early when the server cannot be read at all (first day fails,
+or almost every day fails), and step 1 exits with an error when more than CHIRPS_MAX_MISSING_SHARE of
+the days are missing, so the later steps never run on an empty rainfall record. The most frequent
+errors are summarised at the end of the download log.
 
 Usage
 -----
@@ -38,6 +42,7 @@ import threading
 import time
 import urllib.request
 import zipfile
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -146,7 +151,8 @@ def import_v7_cache(out, bbox):
     C.write_json(out / "meta.json", meta)
 
 
-def download_chirps(region, bbox, threads, retry_missing=False):
+def download_chirps(region, bbox, threads, retry_missing=True):
+    """Fill the region's CHIRPS memmap; returns the share of days still missing."""
     import rasterio
     out = C.data_dir("chirps", region)
     out.mkdir(parents=True, exist_ok=True)
@@ -181,15 +187,18 @@ def download_chirps(region, bbox, threads, retry_missing=False):
                 f"{len(failed)} known failures")
     C.write_json(meta_f, meta)
     if not todo:
-        return
+        return missing_share(done, failed, len(days))
     mm = np.memmap(dat_f, dtype=np.uint16, mode="r+", shape=shape)
     lock = threading.Lock()
+    stop = threading.Event()
     t0 = time.time()
 
     def one(i):
         day = days[i]
         err = None
         for attempt in range(4):
+            if stop.is_set():
+                return i, "not tried (download stopped)"
             try:
                 with rasterio.open(cog_url(day)) as src:
                     a = src.read(1, window=win)
@@ -202,7 +211,17 @@ def download_chirps(region, bbox, threads, retry_missing=False):
                 time.sleep(2 * (attempt + 1))
         return i, str(err)
 
-    n_new = 0
+    # preflight: one day read on its own, so a server or network problem shows up in seconds, not hours
+    i, err = one(todo[0])
+    if err is not None:
+        logger.error(f"CHIRPS: the first day ({days[todo[0]].date()}) could not be read: {err}\n"
+                     f"  url: {cog_url(days[todo[0]])}\n  check the network / proxy of this node "
+                     f"(GDAL reads it through curl: https_proxy / GDAL_HTTP_PROXY), or set CHIRPS_V7_CACHE")
+        sys.exit(2)
+    done[i] = True
+    failed.discard(str(days[i].date()))
+    todo = todo[1:]
+    n_new, n_fail, errors = 1, 0, Counter()
     with ThreadPoolExecutor(threads) as pool:
         futs = [pool.submit(one, i) for i in todo]
         for k, f in enumerate(as_completed(futs), 1):
@@ -213,8 +232,19 @@ def download_chirps(region, bbox, threads, retry_missing=False):
                     n_new += 1
                     failed.discard(str(days[i].date()))
                 else:
+                    n_fail += 1
                     failed.add(str(days[i].date()))
+                    errors[err[:160]] += 1
                     logger.warning(f"  {days[i].date()}: {err}")
+                # circuit breaker: the server stopped answering (blocked, throttled, network down)
+                if k >= C.CHIRPS_ABORT_AFTER and n_fail / k > 0.9:
+                    stop.set()
+                    for g in futs:
+                        g.cancel()
+                    logger.error(f"CHIRPS: {n_fail:,} of the {k:,} days tried failed - download stopped. "
+                                 f"Rerun later (failed days are retried), use fewer --threads, "
+                                 f"or set CHIRPS_V7_CACHE")
+                    break
                 if k % 500 == 0 or k == len(todo):
                     mm.flush()
                     np.save(done_f, done)
@@ -228,6 +258,16 @@ def download_chirps(region, bbox, threads, retry_missing=False):
     C.write_json(meta_f, meta)
     logger.info(f"CHIRPS {region}: {done.sum():,}/{len(days):,} days cached ({n_new:,} new); "
                 f"failed {len(failed)}: {sorted(failed)[:10]}{' ...' if len(failed) > 10 else ''}")
+    for msg, n in errors.most_common(5):
+        logger.info(f"  error x {n:,}: {msg}")
+    return missing_share(done, failed, len(days))
+
+
+def missing_share(done, failed, n_days):
+    share = 1 - done.sum() / n_days
+    if share > 0:
+        logger.info(f"CHIRPS: {share:.1%} of the days missing ({len(failed):,} failed downloads)")
+    return share
 
 
 # =============================================================================
@@ -518,7 +558,8 @@ def main():
     ap.add_argument("--region", default="ci_nga", help=f"one of {list(C.REGIONS)} or a name for --bbox")
     ap.add_argument("--bbox", nargs=4, type=float, metavar=("LON_MIN", "LAT_MIN", "LON_MAX", "LAT_MAX"))
     ap.add_argument("--threads", type=int, default=32)
-    ap.add_argument("--retry_missing", action="store_true", help="try the CHIRPS days that failed before again")
+    ap.add_argument("--skip_failed", action="store_true", help="do not try the CHIRPS days that failed before again")
+    ap.add_argument("--retry_missing", action="store_true", help=argparse.SUPPRESS)   # old flag, now the default
     ap.add_argument("--keep_zips", action="store_true", help="keep the NDVI zips (~2.5 GB) after cropping")
     ap.add_argument("--only", nargs="+", choices=["chirps", "ndvi", "boundaries", "aez", "koppen"],
                     default=["boundaries", "aez", "koppen", "ndvi", "chirps"])
@@ -536,7 +577,11 @@ def main():
     if "ndvi" in a.only and C.USE_NDVI:
         download_ndvi(name, bbox, a.keep_zips)
     if "chirps" in a.only:
-        download_chirps(name, bbox, a.threads, a.retry_missing)
+        share = download_chirps(name, bbox, a.threads, not a.skip_failed)
+        if share > C.CHIRPS_MAX_MISSING_SHARE:
+            logger.error(f"CHIRPS: {share:.1%} of the days are missing (> CHIRPS_MAX_MISSING_SHARE = "
+                         f"{C.CHIRPS_MAX_MISSING_SHARE:.1%}) - stopping here; rerun step 1 to retry them")
+            sys.exit(2)
 
 
 if __name__ == "__main__":

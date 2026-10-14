@@ -57,6 +57,10 @@ OUT_ROOT = "dryspell_v9"           # results
 # disk; days v7 lacked are then written into the v7 file too).
 CHIRPS_V7_CACHE = None
 CHIRPS_V7_CACHE_MODE = "copy"
+# step 1 fails (and run_all stops) when more than this share of the CHIRPS days could not be downloaded
+CHIRPS_MAX_MISSING_SHARE = 0.01
+# the download is stopped when more than 90% of the first CHIRPS_ABORT_AFTER days tried (or more) failed
+CHIRPS_ABORT_AFTER = 300
 CHIRPS_COG_URL = ("https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/cogs/p05/"
                   "{y}/chirps-v2.0.{y}.{m:02d}.{d:02d}.cog")
 

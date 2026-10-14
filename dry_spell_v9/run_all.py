@@ -220,7 +220,7 @@ def main():
             meta = C.read_json(C.data_dir("chirps", name, "meta.json"))
             if meta.get("failed_days"):
                 logger.warning(f"step 1: {len(meta['failed_days'])} days could not be downloaded (they count as "
-                               f"missing): {meta['failed_days'][:10]} - rerun to retry them")
+                               f"missing): {meta['failed_days'][:10]} - rerun step 1 to retry them")
 
     # ================================================================ steps 2-6, per scenario
     for scen in scenarios:

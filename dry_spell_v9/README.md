@@ -19,6 +19,7 @@ Each set of choices can run as a **named scenario** next to others, and step 7 m
 | **Scenarios.** `run_all.py --scenarios base chirps mask_bimodal excl0 excl20` runs steps 2-6 once per scenario into `dryspell_v9/<region>/<scenario>/`. Downloads are shared. | section L |
 | **Step 7: comparison** (`v9_07_compare.py`). It lists the settings that differ and compares onset and rainfall demise season by season (same cell, same year). It draws maps of each key layer per scenario, with difference maps, and gathers the step 5 tables of every scenario into one file. | - |
 | **CHIRPS from the v7 cache.** The v7 cache (`dryspell_v7/<region>/cache/`) can replace the download. Its grid is reused and only the days it lacks are downloaded. | `CHIRPS_V7_CACHE`, `CHIRPS_V7_CACHE_MODE` |
+| **Download guard.** Step 1 now stops early when the CHIRPS server cannot be read: the first day fails, or more than 90% of the first 300 days fail. It exits with an error when more than 1% of the days are missing, so run_all never runs steps 2-6 on an empty record. Failed days are retried on every rerun (`--skip_failed` to leave them), and the 5 most frequent errors are written at the end of `dryspell_v9_data/download_<region>.log`. | `CHIRPS_MAX_MISSING_SHARE`, `CHIRPS_ABORT_AFTER` |
 | **R back-up for the figures.** `R/plot_results.R` redraws the step 5 maps (from the GeoTIFFs), the PDFs (from the histogram CSVs) and the latitude profile. It can also map any folder of GeoTIFFs. | - |
 
 Scenarios shipped (add your own in section L, or use `--config my.json` for one-off changes):

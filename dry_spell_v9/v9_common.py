@@ -28,6 +28,30 @@ import v9_config as _cfg
 
 logger = logging.getLogger("dryspell_v9")
 
+
+def _proj_data_fallback():
+    """GDAL/PROJ print 'proj_create_from_database: Open of <dir> failed' when the PROJ data folder it
+    was given (PROJ_DATA / PROJ_LIB, or the conda default) has no readable proj.db. Point both variables
+    to the first folder that has one: the current setting, the conda env, then the copy shipped with
+    pyproj. Nothing changes when the current setting works."""
+    import sys
+    cands = [os.environ.get("PROJ_DATA"), os.environ.get("PROJ_LIB"),
+             os.path.join(sys.prefix, "share", "proj")]
+    try:
+        import pyproj.datadir
+        cands.append(pyproj.datadir.get_data_dir())
+    except Exception:                                      # noqa: BLE001 - pyproj is optional here
+        pass
+    for d in cands:
+        if d and os.access(os.path.join(d, "proj.db"), os.R_OK):
+            if d != cands[0] or d != cands[1]:
+                os.environ["PROJ_DATA"] = os.environ["PROJ_LIB"] = d
+            return d
+    return None
+
+
+PROJ_DATA_DIR = _proj_data_fallback()
+
 # ---- settings: v9_config.py, then the JSON overrides named by $DRYSPELL_V9_CONFIG ----------
 SETTINGS = {k: getattr(_cfg, k) for k in dir(_cfg) if k.isupper()}
 CONFIG_FILE = os.environ.get("DRYSPELL_V9_CONFIG")

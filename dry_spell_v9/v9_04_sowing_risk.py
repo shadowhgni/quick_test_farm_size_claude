@@ -897,8 +897,10 @@ def main():
         det.to_csv(out / "season_detail.csv", index=False)
         logger.info(f"Written season_detail.csv ({len(det):,} rows)")
     if not analysed.any():
-        skip(out, name, target, "no cell with enough valid seasons (arid, no CHIRPS)",
-             n_cells=int(cm_c.sum()), n_few_seasons=n_few)
+        n_nodata = int((cm_c & ~cell_ok[sl]).sum())
+        skip(out, name, target, f"no cell with enough valid seasons ({n_few:,} cells with too few seasons, "
+             f"{n_nodata:,} without usable CHIRPS)", n_cells=int(cm_c.sum()), n_few_seasons=n_few,
+             n_no_chirps=n_nodata)
 
     regime_c = gm["regime"].values[sl].astype(np.int8)
     for code, lab in C.REGIME_LABELS.items():
