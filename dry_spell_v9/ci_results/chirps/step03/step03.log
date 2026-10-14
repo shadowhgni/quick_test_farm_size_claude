@@ -1,0 +1,22 @@
+15:38:17 [MainProcess] INFO - ======================================================================
+15:38:17 [MainProcess] INFO - v9 STEP3  region=ci_nga grid 240x200  days with data 16,436/16,436
+15:38:17 [MainProcess] INFO -   bimodal cells: wettest season analysed
+15:38:17 [MainProcess] INFO -   regime: 31-d smoothed cycle 1981-2024, bimodal if trough/peak <= 0.8, transition <= 0.95; arid < 150.0 mm
+15:38:17 [MainProcess] INFO - ======================================================================
+15:38:17 [MainProcess] INFO -   NDVI: 10,467 cells with two seasons, 35,562 with one, 1,971 without signal; regime source consensus, demise adjustment median_offset (max 30 d)
+15:38:17 [MainProcess] INFO -   false start / demise: >= 10 dry days (spell) in the first / last 20 d; excluded: start False, demise False
+15:38:17 [MainProcess] INFO -   season source: computed from CHIRPS (RADS method, daily); bimodal cells: major season
+15:38:35 [MainProcess] INFO -   20/25 chunks, 12,020,617 spells, 1,563,076 valid seasons
+15:38:39 [MainProcess] INFO -   25/25 chunks, 14,868,520 spells, 1,972,935 valid seasons
+15:38:46 [MainProcess] INFO -   regime no season (arid / no data)        2,080 cells (rainfall alone: 2,080)
+15:38:46 [MainProcess] INFO -   regime unimodal                         34,358 cells (rainfall alone: 34,358)
+15:38:46 [MainProcess] INFO -   regime transition                        3,527 cells (rainfall alone: 5,745)
+15:38:46 [MainProcess] INFO -   regime bimodal                           8,035 cells (rainfall alone: 5,817)
+15:38:46 [MainProcess] INFO -   cells ok                                45,920
+15:38:46 [MainProcess] INFO -   cells no CHIRPS data                     2,065
+15:38:46 [MainProcess] INFO -   cells missing rainfall days                  0
+15:38:46 [MainProcess] INFO -   cells arid (no season)                      15
+15:38:46 [MainProcess] INFO -   cells too few valid seasons                  0
+15:38:46 [MainProcess] INFO -   cells bimodal (masked)                       0
+15:38:46 [MainProcess] INFO -   NDVI end of season - rainfall demise, cell medians: p10 -6, median 30, p90 47 d; cells clipped to DEMISE_SHIFT_MAX=30: 48.0%, to 0: 13.1%; seasons matched 71%
+15:38:46 [MainProcess] INFO - STEP3 done in 0.5 min -> dryspell_v9/ci_nga/chirps/step03

@@ -40,6 +40,6 @@ year,file,onset_var,rads_grid,outside_rads_grid,demise_var,share_with_onset,onse
 2019,africa_RainyAndDrySeason.pentad.CHIRPS.2019.nc,onset_date,240x200 step 0.0500,0,demise_date,0.8502916666666667,0.0,1.0
 2020,africa_RainyAndDrySeason.pentad.CHIRPS.2020.nc,onset_date,240x200 step 0.0500,0,demise_date,0.8417083333333333,0.0,1.0
 2021,africa_RainyAndDrySeason.pentad.CHIRPS.2021.nc,onset_date,240x200 step 0.0500,0,demise_date,0.8295833333333333,0.0,1.0
-2022,africa_RainyAndDrySeason.pentad.CHIRPS.2022.nc,onset_date,240x200 step 0.0500,0,demise_date,0.8247083333333334,0.0,1.0
+2022,africa_RainyAndDrySeason.pentad.CHIRPS.2022.nc,onset_date,240x200 step 0.0500,0,demise_date,0.8246458333333333,0.0,1.0
 2023,africa_RainyAndDrySeason.pentad.CHIRPS.2023.nc,onset_date,240x200 step 0.0500,0,demise_date,0.804875,0.0,1.0
 2024,africa_RainyAndDrySeason.pentad.CHIRPS.2024.nc,onset_date,240x200 step 0.0500,0,demise_date,0.0,0.0,0.0

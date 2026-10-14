@@ -1,0 +1,12 @@
+{
+  "unit": "ci_nga",
+  "target": {
+    "kind": "region"
+  },
+  "status": "ok",
+  "n_cells": 45935,
+  "n_seasons": 1701594,
+  "n_spells": 326242,
+  "zone_source": "HarvestChoice AEZ (Sebastian 2009), 8 classes, majority per cell",
+  "minutes": 0.17
+}

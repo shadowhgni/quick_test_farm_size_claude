@@ -1,0 +1,5 @@
+setting,base,chirps,mask_bimodal,excl0
+BIMODAL_SEASON,major,major,mask,major
+SEASON_SOURCE,rads,chirps,rads,rads
+SPELL_STATS_EXCLUDE_FIRST,10,10,10,0
+SPELL_STATS_EXCLUDE_LAST,10,10,10,0

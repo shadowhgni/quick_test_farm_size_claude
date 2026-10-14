@@ -1,0 +1,70 @@
+15:43:54 [MainProcess] INFO - ======================================================================
+15:43:54 [MainProcess] INFO - v9 STEP6  region=ci_nga  countries ok 5, skipped 0, missing/incomplete 0
+15:43:54 [MainProcess] INFO - ======================================================================
+15:43:55 [MainProcess] INFO -   zones: aez8
+15:43:58 [MainProcess] INFO - Written countries.csv, country_summary.csv, country_zone_summary.csv, ssa_summary.csv, ssa_stage_hits.csv
+15:44:38 [MainProcess] INFO - Written ssa_cells_<crop>.nc and maps
+15:44:38 [MainProcess] INFO - --- groundnut (SSA, possible cells, 5 countries) ---
+15:44:38 [MainProcess] INFO -    70 d  sow +0   impossible   0.0%  P(hit window) 0.02  most hit: VE (emergence) p=0.02
+15:44:38 [MainProcess] INFO -    70 d  sow +10  impossible   0.1%  P(hit window) 0.03  most hit: VE (emergence) p=0.02
+15:44:38 [MainProcess] INFO -    70 d  sow +20  impossible   0.3%  P(hit window) 0.04  most hit: R7 (beginning maturity) p=0.03
+15:44:38 [MainProcess] INFO -    70 d  sow +30  impossible   3.1%  P(hit window) 0.05  most hit: R7 (beginning maturity) p=0.04
+15:44:38 [MainProcess] INFO -    70 d  sow +40  impossible   8.0%  P(hit window) 0.06  most hit: R7 (beginning maturity) p=0.05
+15:44:38 [MainProcess] INFO -    90 d  sow +0   impossible   0.3%  P(hit window) 0.03  most hit: R7 (beginning maturity) p=0.03
+15:44:38 [MainProcess] INFO -    90 d  sow +10  impossible   3.1%  P(hit window) 0.04  most hit: R7 (beginning maturity) p=0.04
+15:44:38 [MainProcess] INFO -    90 d  sow +20  impossible   8.0%  P(hit window) 0.05  most hit: R7 (beginning maturity) p=0.05
+15:44:38 [MainProcess] INFO -    90 d  sow +30  impossible  12.4%  P(hit window) 0.06  most hit: R7 (beginning maturity) p=0.07
+15:44:38 [MainProcess] INFO -    90 d  sow +40  impossible  18.6%  P(hit window) 0.07  most hit: R7 (beginning maturity) p=0.07
+15:44:38 [MainProcess] INFO -   110 d  sow +0   impossible   8.0%  P(hit window) 0.04  most hit: R7 (beginning maturity) p=0.06
+15:44:38 [MainProcess] INFO -   110 d  sow +10  impossible  12.4%  P(hit window) 0.05  most hit: R7 (beginning maturity) p=0.07
+15:44:38 [MainProcess] INFO -   110 d  sow +20  impossible  18.6%  P(hit window) 0.06  most hit: R7 (beginning maturity) p=0.08
+15:44:38 [MainProcess] INFO -   110 d  sow +30  impossible  25.2%  P(hit window) 0.06  most hit: R7 (beginning maturity) p=0.08
+15:44:38 [MainProcess] INFO -   110 d  sow +40  impossible  32.7%  P(hit window) 0.06  most hit: R7 (beginning maturity) p=0.07
+15:44:38 [MainProcess] INFO -   130 d  sow +0   impossible  18.6%  P(hit window) 0.06  most hit: R7 (beginning maturity) p=0.08
+15:44:38 [MainProcess] INFO -   130 d  sow +10  impossible  25.2%  P(hit window) 0.06  most hit: R7 (beginning maturity) p=0.09
+15:44:38 [MainProcess] INFO -   130 d  sow +20  impossible  32.7%  P(hit window) 0.06  most hit: R7 (beginning maturity) p=0.08
+15:44:38 [MainProcess] INFO -   130 d  sow +30  impossible  40.9%  P(hit window) 0.07  most hit: R7 (beginning maturity) p=0.08
+15:44:38 [MainProcess] INFO -   130 d  sow +40  impossible  46.9%  P(hit window) 0.06  most hit: R7 (beginning maturity) p=0.10
+15:44:38 [MainProcess] INFO - --- pearl_millet (SSA, possible cells, 5 countries) ---
+15:44:38 [MainProcess] INFO -    70 d  sow +0   impossible   0.0%  P(hit window) 0.02  most hit: P2 (tillering) p=0.02
+15:44:38 [MainProcess] INFO -    70 d  sow +10  impossible   0.1%  P(hit window) 0.03  most hit: P7 (milk) p=0.02
+15:44:38 [MainProcess] INFO -    70 d  sow +20  impossible   0.3%  P(hit window) 0.04  most hit: P7 (milk) p=0.03
+15:44:38 [MainProcess] INFO -    70 d  sow +30  impossible   3.1%  P(hit window) 0.05  most hit: P7 (milk) p=0.04
+15:44:38 [MainProcess] INFO -    70 d  sow +40  impossible   8.0%  P(hit window) 0.06  most hit: P7 (milk) p=0.05
+15:44:38 [MainProcess] INFO -    90 d  sow +0   impossible   0.3%  P(hit window) 0.03  most hit: P8 (dough) p=0.03
+15:44:38 [MainProcess] INFO -    90 d  sow +10  impossible   3.1%  P(hit window) 0.05  most hit: P8 (dough) p=0.04
+15:44:38 [MainProcess] INFO -    90 d  sow +20  impossible   8.0%  P(hit window) 0.06  most hit: P8 (dough) p=0.05
+15:44:38 [MainProcess] INFO -    90 d  sow +30  impossible  12.4%  P(hit window) 0.07  most hit: P8 (dough) p=0.06
+15:44:38 [MainProcess] INFO -    90 d  sow +40  impossible  18.6%  P(hit window) 0.07  most hit: P8 (dough) p=0.07
+15:44:38 [MainProcess] INFO -   110 d  sow +0   impossible   8.0%  P(hit window) 0.06  most hit: P8 (dough) p=0.05
+15:44:38 [MainProcess] INFO -   110 d  sow +10  impossible  12.4%  P(hit window) 0.07  most hit: P8 (dough) p=0.06
+15:44:38 [MainProcess] INFO -   110 d  sow +20  impossible  18.6%  P(hit window) 0.07  most hit: P8 (dough) p=0.07
+15:44:38 [MainProcess] INFO -   110 d  sow +30  impossible  25.2%  P(hit window) 0.08  most hit: P8 (dough) p=0.08
+15:44:38 [MainProcess] INFO -   110 d  sow +40  impossible  32.7%  P(hit window) 0.06  most hit: P8 (dough) p=0.07
+15:44:38 [MainProcess] INFO -   130 d  sow +0   impossible  18.6%  P(hit window) 0.07  most hit: P8 (dough) p=0.07
+15:44:38 [MainProcess] INFO -   130 d  sow +10  impossible  25.2%  P(hit window) 0.07  most hit: P8 (dough) p=0.08
+15:44:38 [MainProcess] INFO -   130 d  sow +20  impossible  32.7%  P(hit window) 0.06  most hit: P8 (dough) p=0.07
+15:44:38 [MainProcess] INFO -   130 d  sow +30  impossible  40.9%  P(hit window) 0.04  most hit: P8 (dough) p=0.08
+15:44:38 [MainProcess] INFO -   130 d  sow +40  impossible  46.9%  P(hit window) 0.06  most hit: P8 (dough) p=0.10
+15:44:38 [MainProcess] INFO - --- sorghum (SSA, possible cells, 5 countries) ---
+15:44:38 [MainProcess] INFO -    70 d  sow +0   impossible   0.0%  P(hit window) 0.02  most hit: S2 (5-leaf) p=0.02
+15:44:38 [MainProcess] INFO -    70 d  sow +10  impossible   0.1%  P(hit window) 0.02  most hit: S7 (soft dough) p=0.02
+15:44:38 [MainProcess] INFO -    70 d  sow +20  impossible   0.3%  P(hit window) 0.03  most hit: S8 (hard dough) p=0.03
+15:44:38 [MainProcess] INFO -    70 d  sow +30  impossible   3.1%  P(hit window) 0.04  most hit: S7 (soft dough) p=0.04
+15:44:38 [MainProcess] INFO -    70 d  sow +40  impossible   8.0%  P(hit window) 0.05  most hit: S7 (soft dough) p=0.05
+15:44:38 [MainProcess] INFO -    90 d  sow +0   impossible   0.3%  P(hit window) 0.03  most hit: S8 (hard dough) p=0.03
+15:44:38 [MainProcess] INFO -    90 d  sow +10  impossible   3.1%  P(hit window) 0.03  most hit: S8 (hard dough) p=0.04
+15:44:38 [MainProcess] INFO -    90 d  sow +20  impossible   8.0%  P(hit window) 0.04  most hit: S8 (hard dough) p=0.05
+15:44:38 [MainProcess] INFO -    90 d  sow +30  impossible  12.4%  P(hit window) 0.05  most hit: S8 (hard dough) p=0.06
+15:44:38 [MainProcess] INFO -    90 d  sow +40  impossible  18.6%  P(hit window) 0.05  most hit: S8 (hard dough) p=0.07
+15:44:38 [MainProcess] INFO -   110 d  sow +0   impossible   8.0%  P(hit window) 0.03  most hit: S8 (hard dough) p=0.05
+15:44:38 [MainProcess] INFO -   110 d  sow +10  impossible  12.4%  P(hit window) 0.04  most hit: S8 (hard dough) p=0.07
+15:44:38 [MainProcess] INFO -   110 d  sow +20  impossible  18.6%  P(hit window) 0.05  most hit: S8 (hard dough) p=0.07
+15:44:38 [MainProcess] INFO -   110 d  sow +30  impossible  25.2%  P(hit window) 0.05  most hit: S8 (hard dough) p=0.08
+15:44:38 [MainProcess] INFO -   110 d  sow +40  impossible  32.7%  P(hit window) 0.04  most hit: S8 (hard dough) p=0.07
+15:44:38 [MainProcess] INFO -   130 d  sow +0   impossible  18.6%  P(hit window) 0.04  most hit: S8 (hard dough) p=0.07
+15:44:38 [MainProcess] INFO -   130 d  sow +10  impossible  25.2%  P(hit window) 0.05  most hit: S8 (hard dough) p=0.08
+15:44:38 [MainProcess] INFO -   130 d  sow +20  impossible  32.7%  P(hit window) 0.05  most hit: S8 (hard dough) p=0.07
+15:44:38 [MainProcess] INFO -   130 d  sow +30  impossible  40.9%  P(hit window) 0.04  most hit: S8 (hard dough) p=0.08
+15:44:38 [MainProcess] INFO -   130 d  sow +40  impossible  46.9%  P(hit window) 0.04  most hit: S8 (hard dough) p=0.10
+15:44:38 [MainProcess] INFO - STEP6 done in 0.7 min -> dryspell_v9/ci_nga/mask_bimodal/step06/SSA

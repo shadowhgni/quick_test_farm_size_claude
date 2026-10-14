@@ -1,82 +1,204 @@
-15:28:22 INFO - ======================================================================
-15:28:22 INFO - run_all v9  region=ci_nga bbox=(2.5, 4.5, 14.5, 14.5) scenarios=['base', 'chirps', 'mask_bimodal', 'excl0'] steps=[1, 2, 3, 4, 5, 6, 7] workers=16 country_jobs=1 resume=False config=v9_config.py
-15:28:22 INFO -   [base] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
-15:28:22 INFO -   [chirps] SEASON_SOURCE=chirps BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
-15:28:22 INFO -   [mask_bimodal] SEASON_SOURCE=rads BIMODAL_SEASON=mask DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
-15:28:22 INFO -   [excl0] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 0/0 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
-15:28:22 INFO - ======================================================================
-15:28:23 INFO - step 1: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_01_download.py --region ci_nga --threads 32 --only boundaries aez koppen chirps ndvi
-15:28:23 INFO - ---------------- scenario base -> dryspell_v9/ci_nga/base
-15:28:23 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 16
-15:28:23 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 16
-15:28:23 WARNING - dryspell_v9_data/boundaries/ne_50m_admin_0_countries.gpkg not found - run v8_01_download.py (boundaries)
-15:28:23 INFO - step 4: 1 countries, 1 at a time, 16 workers each
-15:28:23 INFO - step 4 [1/1] NGA: planned
-15:28:23 INFO - step 4: ok 0, skipped 0, failed 0, not in region 0
-15:28:23 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 16
-15:28:23 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA
-15:28:23 INFO - ---------------- scenario chirps -> dryspell_v9/ci_nga/chirps
-15:28:23 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 16
-15:28:23 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 16
-15:28:23 WARNING - dryspell_v9_data/boundaries/ne_50m_admin_0_countries.gpkg not found - run v8_01_download.py (boundaries)
-15:28:23 INFO - step 4: 1 countries, 1 at a time, 16 workers each
-15:28:23 INFO - step 4 [1/1] NGA: planned
-15:28:23 INFO - step 4: ok 0, skipped 0, failed 0, not in region 0
-15:28:23 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 16
-15:28:23 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA
-15:28:23 INFO - ---------------- scenario mask_bimodal -> dryspell_v9/ci_nga/mask_bimodal
-15:28:23 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 16
-15:28:23 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 16
-15:28:23 WARNING - dryspell_v9_data/boundaries/ne_50m_admin_0_countries.gpkg not found - run v8_01_download.py (boundaries)
-15:28:23 INFO - step 4: 1 countries, 1 at a time, 16 workers each
-15:28:23 INFO - step 4 [1/1] NGA: planned
-15:28:23 INFO - step 4: ok 0, skipped 0, failed 0, not in region 0
-15:28:23 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 16
-15:28:23 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA
-15:28:23 INFO - ---------------- scenario excl0 -> dryspell_v9/ci_nga/excl0
-15:28:23 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 16
-15:28:23 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 16
-15:28:23 WARNING - dryspell_v9_data/boundaries/ne_50m_admin_0_countries.gpkg not found - run v8_01_download.py (boundaries)
-15:28:23 INFO - step 4: 1 countries, 1 at a time, 16 workers each
-15:28:23 INFO - step 4 [1/1] NGA: planned
-15:28:23 INFO - step 4: ok 0, skipped 0, failed 0, not in region 0
-15:28:23 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 16
-15:28:23 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA
-15:28:23 INFO - step 7: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_07_compare.py --region ci_nga --scenarios base chirps mask_bimodal excl0
-15:28:23 INFO - run_all finished in 0.0 min - status: dryspell_v9/ci_nga/run_all_status.csv
-15:28:23 INFO - ======================================================================
-15:28:23 INFO - run_all v9  region=ci_nga bbox=(2.5, 4.5, 14.5, 14.5) scenarios=['base'] steps=[1] workers=16 country_jobs=1 resume=False config=v9_config.py
-15:28:23 INFO -   [base] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
-15:28:23 INFO - ======================================================================
-15:28:24 INFO - step 1: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_01_download.py --region ci_nga --threads 32 --only boundaries aez koppen chirps ndvi
-15:28:33 INFO - step 1: done in 0.16 min
-15:28:33 INFO - ---------------- scenario base -> dryspell_v9/ci_nga/base
-15:28:33 INFO - run_all finished in 0.2 min - status: dryspell_v9/ci_nga/run_all_status.csv
-15:29:01 INFO - ======================================================================
-15:29:01 INFO - run_all v9  region=ci_nga bbox=(2.5, 4.5, 14.5, 14.5) scenarios=['base', 'chirps', 'mask_bimodal', 'excl0'] steps=[2, 3, 4, 5, 6, 7] workers=4 country_jobs=2 resume=False config=v9_config.py
-15:29:01 INFO -   [base] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
-15:29:01 INFO -   [chirps] SEASON_SOURCE=chirps BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
-15:29:01 INFO -   [mask_bimodal] SEASON_SOURCE=rads BIMODAL_SEASON=mask DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
-15:29:01 INFO -   [excl0] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 0/0 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
-15:29:01 INFO - ======================================================================
-15:29:01 INFO - ---------------- scenario base -> dryspell_v9/ci_nga/base
-15:29:01 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 4
-15:29:04 INFO - step 2: done in 0.05 min
-15:29:04 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 4
-15:29:19 ERROR - step 3 FAILED (exit 1) after 0.26 min - last lines of dryspell_v9/ci_nga/base/run_all_logs/step3.log:
-  File "/home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_common.py", line 281, in save_geotiff
-    with rasterio.open(path, "w", **profile) as dst:
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/rasterio/env.py", line 463, in wrapper
-    return f(*args, **kwds)
-           ^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/rasterio/__init__.py", line 366, in open
-    dataset = writer(
-              ^^^^^^^
-  File "rasterio/_io.pyx", line 1619, in rasterio._io.DatasetWriterBase.__init__
-  File "rasterio/_io.pyx", line 1648, in rasterio._io.DatasetWriterBase._set_crs
-  File "rasterio/crs.pyx", line 790, in rasterio.crs.CRS.from_user_input
-  File "rasterio/crs.pyx", line 852, in rasterio.crs.CRS.from_string
-  File "rasterio/crs.pyx", line 596, in rasterio.crs.CRS.from_epsg
-rasterio.errors.CRSError: The EPSG code is unknown. PROJ: internal_proj_create_from_database: /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/pyproj/proj_dir/share/proj/proj.db contains DATABASE.LAYOUT.VERSION.MINOR = 4 whereas a number >= 6 is expected. It comes from another PROJ installation.
+15:33:52 INFO - ======================================================================
+15:33:52 INFO - run_all v9  region=ci_nga bbox=(2.5, 4.5, 14.5, 14.5) scenarios=['base', 'chirps', 'mask_bimodal', 'excl0'] steps=[1, 2, 3, 4, 5, 6, 7] workers=16 country_jobs=1 resume=False config=v9_config.py
+15:33:52 INFO -   [base] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:33:52 INFO -   [chirps] SEASON_SOURCE=chirps BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:33:52 INFO -   [mask_bimodal] SEASON_SOURCE=rads BIMODAL_SEASON=mask DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:33:52 INFO -   [excl0] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 0/0 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:33:52 INFO - ======================================================================
+15:33:52 INFO - step 1: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_01_download.py --region ci_nga --threads 32 --only boundaries aez koppen chirps ndvi
+15:33:52 INFO - ---------------- scenario base -> dryspell_v9/ci_nga/base
+15:33:52 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 16
+15:33:52 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 16
+15:33:52 WARNING - dryspell_v9_data/boundaries/ne_50m_admin_0_countries.gpkg not found - run v8_01_download.py (boundaries)
+15:33:52 INFO - step 4: 1 countries, 1 at a time, 16 workers each
+15:33:52 INFO - step 4 [1/1] NGA: planned
+15:33:52 INFO - step 4: ok 0, skipped 0, failed 0, not in region 0
+15:33:52 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 16
+15:33:52 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA
+15:33:52 INFO - ---------------- scenario chirps -> dryspell_v9/ci_nga/chirps
+15:33:52 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 16
+15:33:52 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 16
+15:33:52 WARNING - dryspell_v9_data/boundaries/ne_50m_admin_0_countries.gpkg not found - run v8_01_download.py (boundaries)
+15:33:52 INFO - step 4: 1 countries, 1 at a time, 16 workers each
+15:33:52 INFO - step 4 [1/1] NGA: planned
+15:33:52 INFO - step 4: ok 0, skipped 0, failed 0, not in region 0
+15:33:52 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 16
+15:33:52 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA
+15:33:52 INFO - ---------------- scenario mask_bimodal -> dryspell_v9/ci_nga/mask_bimodal
+15:33:52 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 16
+15:33:52 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 16
+15:33:52 WARNING - dryspell_v9_data/boundaries/ne_50m_admin_0_countries.gpkg not found - run v8_01_download.py (boundaries)
+15:33:52 INFO - step 4: 1 countries, 1 at a time, 16 workers each
+15:33:52 INFO - step 4 [1/1] NGA: planned
+15:33:52 INFO - step 4: ok 0, skipped 0, failed 0, not in region 0
+15:33:52 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 16
+15:33:52 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA
+15:33:52 INFO - ---------------- scenario excl0 -> dryspell_v9/ci_nga/excl0
+15:33:52 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 16
+15:33:52 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 16
+15:33:52 WARNING - dryspell_v9_data/boundaries/ne_50m_admin_0_countries.gpkg not found - run v8_01_download.py (boundaries)
+15:33:52 INFO - step 4: 1 countries, 1 at a time, 16 workers each
+15:33:52 INFO - step 4 [1/1] NGA: planned
+15:33:52 INFO - step 4: ok 0, skipped 0, failed 0, not in region 0
+15:33:52 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 16
+15:33:52 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA
+15:33:52 INFO - step 7: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_07_compare.py --region ci_nga --scenarios base chirps mask_bimodal excl0
+15:33:52 INFO - run_all finished in 0.0 min - status: dryspell_v9/ci_nga/run_all_status.csv
+15:33:53 INFO - ======================================================================
+15:33:53 INFO - run_all v9  region=ci_nga bbox=(2.5, 4.5, 14.5, 14.5) scenarios=['base'] steps=[1] workers=16 country_jobs=1 resume=False config=v9_config.py
+15:33:53 INFO -   [base] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:33:53 INFO - ======================================================================
+15:33:53 INFO - step 1: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_01_download.py --region ci_nga --threads 32 --only boundaries aez koppen chirps ndvi
+15:34:07 INFO - step 1: done in 0.23 min
+15:34:07 INFO - ---------------- scenario base -> dryspell_v9/ci_nga/base
+15:34:07 INFO - run_all finished in 0.2 min - status: dryspell_v9/ci_nga/run_all_status.csv
+15:34:58 INFO - ======================================================================
+15:34:58 INFO - run_all v9  region=ci_nga bbox=(2.5, 4.5, 14.5, 14.5) scenarios=['base', 'chirps', 'mask_bimodal', 'excl0'] steps=[2, 3, 4, 5, 6, 7] workers=4 country_jobs=2 resume=False config=v9_config.py
+15:34:58 INFO -   [base] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:34:58 INFO -   [chirps] SEASON_SOURCE=chirps BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:34:58 INFO -   [mask_bimodal] SEASON_SOURCE=rads BIMODAL_SEASON=mask DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:34:58 INFO -   [excl0] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 0/0 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:34:58 INFO - ======================================================================
+15:34:58 INFO - ---------------- scenario base -> dryspell_v9/ci_nga/base
+15:34:58 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 4
+15:35:04 INFO - step 2: done in 0.1 min
+15:35:04 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 4
+15:35:33 INFO - step 3: done in 0.49 min
+15:35:33 INFO - step 4: 5 countries, 2 at a time, 2 workers each
+15:36:12 INFO - step 4 [1/5] BEN: ok in 0.65 min
+15:36:22 INFO - step 4 [2/5] NGA: ok in 0.81 min
+15:36:38 INFO - step 4 [3/5] NER: ok in 0.43 min
+15:37:03 INFO - step 4 [4/5] CMR: ok in 0.68 min
+15:37:16 INFO - step 4 [5/5] TCD: ok in 0.62 min
+15:37:16 INFO - step 4: ok 5, skipped 0, failed 0, not in region 0
+15:37:16 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 4
+15:37:27 INFO - step 5: ok in 0.19 min
+15:37:27 [MainProcess] INFO -   longest_len    median  12.00  IQR  11.00-15.00   (235,778 of 1,701,594 seasons)
+15:37:27 [MainProcess] INFO -   dry_frac       median   0.00  IQR   0.00-0.00    (1,701,594 of 1,701,594 seasons)
+15:37:27 [MainProcess] INFO - STEP5 done in 0.2 min -> dryspell_v9/ci_nga/base/step05/ci_nga
 
+15:37:27 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA BEN NER CMR TCD
+15:38:11 INFO - step 6: done in 0.74 min -> dryspell_v9/ci_nga/base/step06/SSA
+15:38:11 INFO - ---------------- scenario chirps -> dryspell_v9/ci_nga/chirps
+15:38:11 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 4
+15:38:17 INFO - step 2: done in 0.09 min
+15:38:17 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 4
+15:38:46 INFO - step 3: done in 0.49 min
+15:38:46 INFO - step 4: 5 countries, 2 at a time, 2 workers each
+15:39:25 INFO - step 4 [1/5] BEN: ok in 0.65 min
+15:39:34 INFO - step 4 [2/5] NGA: ok in 0.81 min
+15:39:51 INFO - step 4 [3/5] NER: ok in 0.44 min
+15:40:15 INFO - step 4 [4/5] CMR: ok in 0.68 min
+15:40:28 INFO - step 4 [5/5] TCD: ok in 0.61 min
+15:40:28 INFO - step 4: ok 5, skipped 0, failed 0, not in region 0
+15:40:28 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 4
+15:40:40 INFO - step 5: ok in 0.21 min
+15:40:40 [MainProcess] INFO -   longest_len    median  11.00  IQR  10.00-13.00   (159,812 of 1,972,935 seasons)
+15:40:40 [MainProcess] INFO -   dry_frac       median   0.00  IQR   0.00-0.00    (1,972,935 of 1,972,935 seasons)
+15:40:40 [MainProcess] INFO - STEP5 done in 0.2 min -> dryspell_v9/ci_nga/chirps/step05/ci_nga
+
+15:40:40 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA BEN NER CMR TCD
+15:41:23 INFO - step 6: done in 0.72 min -> dryspell_v9/ci_nga/chirps/step06/SSA
+15:41:23 INFO - ---------------- scenario mask_bimodal -> dryspell_v9/ci_nga/mask_bimodal
+15:41:23 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 4
+15:41:29 INFO - step 2: done in 0.09 min
+15:41:29 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 4
+15:42:00 INFO - step 3: done in 0.52 min
+15:42:00 INFO - step 4: 5 countries, 2 at a time, 2 workers each
+15:42:38 INFO - step 4 [1/5] BEN: ok in 0.63 min
+15:42:46 INFO - step 4 [2/5] NGA: ok in 0.78 min
+15:43:03 INFO - step 4 [3/5] NER: ok in 0.43 min
+15:43:26 INFO - step 4 [4/5] CMR: ok in 0.66 min
+15:43:40 INFO - step 4 [5/5] TCD: ok in 0.61 min
+15:43:40 INFO - step 4: ok 5, skipped 0, failed 0, not in region 0
+15:43:40 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 4
+15:43:54 INFO - step 5: ok in 0.23 min
+15:43:54 [MainProcess] INFO -   longest_len    median  11.00  IQR  10.00-13.00   (110,850 of 1,365,712 seasons)
+15:43:54 [MainProcess] INFO -   dry_frac       median   0.00  IQR   0.00-0.00    (1,365,712 of 1,365,712 seasons)
+15:43:54 [MainProcess] INFO - STEP5 done in 0.2 min -> dryspell_v9/ci_nga/mask_bimodal/step05/ci_nga
+
+15:43:54 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA BEN NER CMR TCD
+15:44:38 INFO - step 6: done in 0.73 min -> dryspell_v9/ci_nga/mask_bimodal/step06/SSA
+15:44:38 INFO - ---------------- scenario excl0 -> dryspell_v9/ci_nga/excl0
+15:44:38 INFO - step 2: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_02_ndvi_phenology.py --region ci_nga --workers 4
+15:44:43 INFO - step 2: done in 0.09 min
+15:44:43 INFO - step 3: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_03_spells_seasons.py --region ci_nga --workers 4
+15:45:13 INFO - step 3: done in 0.49 min
+15:45:13 INFO - step 4: 5 countries, 2 at a time, 2 workers each
+15:45:51 INFO - step 4 [1/5] BEN: ok in 0.63 min
+15:46:02 INFO - step 4 [2/5] NGA: ok in 0.81 min
+15:46:17 INFO - step 4 [3/5] NER: ok in 0.43 min
+15:46:42 INFO - step 4 [4/5] CMR: ok in 0.67 min
+15:46:53 INFO - step 4 [5/5] TCD: ok in 0.61 min
+15:46:53 INFO - step 4: ok 5, skipped 0, failed 0, not in region 0
+15:46:53 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 4
+15:47:04 INFO - step 5: ok in 0.18 min
+15:47:04 [MainProcess] INFO -   longest_len    median  12.00  IQR  10.00-15.00   (260,208 of 1,701,594 seasons)
+15:47:04 [MainProcess] INFO -   dry_frac       median   0.00  IQR   0.00-0.00    (1,701,594 of 1,701,594 seasons)
+15:47:04 [MainProcess] INFO - STEP5 done in 0.2 min -> dryspell_v9/ci_nga/excl0/step05/ci_nga
+
+15:47:04 INFO - step 6: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_06_aggregate.py --region ci_nga --name SSA --countries NGA BEN NER CMR TCD
+15:47:47 INFO - step 6: done in 0.71 min -> dryspell_v9/ci_nga/excl0/step06/SSA
+15:47:47 INFO - step 7: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_07_compare.py --region ci_nga --scenarios base chirps mask_bimodal excl0
+15:48:06 INFO - step 7: done in 0.32 min
+scenario                  base  chirps  mask_bimodal   excl0
+layer                                                       
+demise_doy_median       310.00  302.00        301.00  310.00
+demise_rain_doy_median  280.00  272.00        273.00  280.00
+dry_frac_median           0.00    0.00          0.00    0.00
+first_start_median       79.00   66.00         63.00   78.00
+longest_len_median       12.00   11.00         11.00   11.50
+n_spells_mean             0.06    0.05          0.05    0.09
+n_spells_median           0.00    0.00          0.00    0.00
+n_valid_seasons          38.00   44.00         38.00   38.00
+onset_doy_median        125.50  128.00        135.00  125.50
+p_ge1                     0.06    0.05          0.05    0.08
+season_len_median       186.00  160.00        171.00  186.00
+15:48:06 [MainProcess] INFO - STEP7 done in 0.3 min -> dryspell_v9/ci_nga/compare/base_vs_chirps_vs_mask_bimodal_vs_excl0
+
+15:48:06 INFO - run_all finished in 13.1 min - status: dryspell_v9/ci_nga/run_all_status.csv
+15:48:06 INFO - ======================================================================
+15:48:06 INFO - run_all v9  region=ci_nga bbox=(2.5, 4.5, 14.5, 14.5) scenarios=['base'] steps=[4, 5] workers=4 country_jobs=1 resume=False config=v9_config.py
+15:48:06 INFO -   [base] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:48:06 INFO - ======================================================================
+15:48:07 INFO - ---------------- scenario base -> dryspell_v9/ci_nga/base
+15:48:07 INFO - step 4: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_04_sowing_risk.py --region ci_nga --workers 4 --bbox 7.0 10.5 9.5 12.5 --name kano_box --zones koppen
+15:48:33 INFO - step 4 target: ok in 0.43 min
+15:48:32 [MainProcess] INFO -   130 d  sow +20  impossible  27.1%  P(hit window) 0.02  most hit: R7 (beginning maturity, DAS 105-129) p=0.18
+15:48:32 [MainProcess] INFO -   130 d  sow +30  impossible  56.4%  P(hit window) 0.00  most hit: R7 (beginning maturity, DAS 105-129) p=0.18
+15:48:32 [MainProcess] INFO -   130 d  sow +40  impossible  76.0%  P(hit window) 0.02  most hit: R7 (beginning maturity, DAS 105-129) p=0.19
+15:48:32 [MainProcess] INFO - STEP4 done in 0.4 min -> dryspell_v9/ci_nga/base/step04/kano_box
+
+15:48:33 INFO - step 5: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_05_spell_stats.py --region ci_nga --workers 4 --bbox 7.0 10.5 9.5 12.5 --name kano_box
+15:48:42 INFO - step 5: ok in 0.16 min
+15:48:42 [MainProcess] INFO -   longest_len    median  11.00  IQR  10.00-12.00   (1,940 of 72,090 seasons)
+15:48:42 [MainProcess] INFO -   dry_frac       median   0.00  IQR   0.00-0.00    (72,090 of 72,090 seasons)
+15:48:42 [MainProcess] INFO - STEP5 done in 0.2 min -> dryspell_v9/ci_nga/base/step05/kano_box
+
+15:48:42 INFO - run_all finished in 0.6 min - status: dryspell_v9/ci_nga/run_all_status.csv
+15:48:43 INFO - ======================================================================
+15:48:43 INFO - run_all v9  region=ci_nga bbox=(2.5, 4.5, 14.5, 14.5) scenarios=['base'] steps=[4] workers=4 country_jobs=1 resume=False config=v9_config.py
+15:48:43 INFO -   [base] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:48:43 INFO - ======================================================================
+15:48:43 INFO - ---------------- scenario base -> dryspell_v9/ci_nga/base
+15:48:43 INFO - step 4: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_04_sowing_risk.py --region ci_nga --workers 4 --polygon zones_demo.gpkg --polygon_field NAME --polygon_value sahel
+15:49:06 INFO - step 4 target: ok in 0.38 min
+15:49:06 [MainProcess] INFO -   130 d  sow +20  impossible  81.9%  P(hit window) 0.02  most hit: R7 (beginning maturity, DAS 105-129) p=0.39
+15:49:06 [MainProcess] INFO -   130 d  sow +30  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+15:49:06 [MainProcess] INFO -   130 d  sow +40  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+15:49:06 [MainProcess] INFO - STEP4 done in 0.4 min -> dryspell_v9/ci_nga/base/step04/zones_demo_sahel
+
+15:49:06 INFO - run_all finished in 0.4 min - status: dryspell_v9/ci_nga/run_all_status.csv
+15:49:06 INFO - ======================================================================
+15:49:06 INFO - run_all v9  region=ci_nga bbox=(2.5, 4.5, 14.5, 14.5) scenarios=['base'] steps=[4] workers=2 country_jobs=1 resume=False config=v9_config.py
+15:49:06 INFO -   [base] SEASON_SOURCE=rads BIMODAL_SEASON=major DRY_SPELL_MIN_DAYS=10 USE_NDVI=True REGIME_SOURCE=consensus DEMISE_ADJUST=median_offset FALSE_START_EXCLUDE=False FALSE_DEMISE_EXCLUDE=False spell stats exclude 10/10 d (clip), crop exclude 0/0 d, SUMMARY_ZONES=aez8
+15:49:06 INFO - ======================================================================
+15:49:07 INFO - ---------------- scenario base -> dryspell_v9/ci_nga/base
+15:49:07 INFO - step 4: /home/runner/work/quick_test_farm_size_claude/quick_test_farm_size_claude/dry_spell_v9/v9_04_sowing_risk.py --region ci_nga --workers 2 --point 12.0 8.52 --name kano_cell
+15:49:13 INFO - step 4 target: ok in 0.12 min
+15:49:13 [MainProcess] INFO -   130 d  sow +20  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+15:49:13 [MainProcess] INFO -   130 d  sow +30  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+15:49:13 [MainProcess] INFO -   130 d  sow +40  impossible 100.0%  P(hit window) nan  most hit: nan (nan, DAS nan-nan) p=nan
+15:49:13 [MainProcess] INFO - STEP4 done in 0.1 min -> dryspell_v9/ci_nga/base/step04/kano_cell
+
+15:49:13 INFO - run_all finished in 0.1 min - status: dryspell_v9/ci_nga/run_all_status.csv
