@@ -10,7 +10,7 @@ The study now asks whether changes in travel time to cities and markets are asso
 - **The treatment is dated and checked before any outcome is examined.** The year a road appears in OpenStreetMap (OSM) is the year it was mapped, not necessarily the year it was built.
 - **Yields come in three tiers:**
   1. Admin panels (HarvestStat, GROW-Africa);
-  2. LSMS-ISA household and plot panels;
+  2. LSMS-ISA survey data aggregated to enumeration areas (EA panels);
   3. The NDVI pilot of the earlier design, kept for crops that pass its Gate B.
 - **A new identification section** defines treated and control units, the estimators, and the checks a result must pass before it is called causal rather than an association.
 - **The earlier 1 km yield prediction (old Phase 3) becomes optional.** Attribution does not depend on it.
@@ -24,7 +24,7 @@ The study estimates two effects of access change and one long-term description, 
 | E1 | Forest-to-cropland conversion (area, share of forest at baseline) | 0.01° cell (~1.1 km) | Access change, annual | Loss years 2016–2022 confirmed; 2001–2015 pre-period |
 | E1b | New cropland from other natural vegetation | 0.01° cell | Same | 2016–2022 |
 | E2a | Yield, admin statistics | Admin unit × crop × season | Population- or cropland-weighted access change of the unit | 2001–2023 |
-| E2b | Yield, households and plots | LSMS-ISA plot or household × crop × season | Access change around the enumeration area | Survey waves 2008–2024 |
+| E2b | Yield, enumeration areas | LSMS-ISA enumeration area × crop × season (household and plot data aggregated) | Cropland-weighted access change of the 0.01° cells within 5 km of the EA point | Survey waves 2008–2024 |
 | E2c | Seasonal NDVI productivity on pure-crop footprints | Footprint or cell × crop × season | Access change | 2017–2023 (Sentinel-2), 2001–2023 if MODIS qualifies |
 | E3 | Long differences of E1 and E2 | As above | Change 2015→2020, 2020→2025, 2015→2025 | Three epochs |
 
@@ -118,21 +118,29 @@ Yields are prepared in three tiers that trade coverage for attribution. Results 
 - **Treatment of a unit:** access change weighted by cropland (Phase 1 stable mask) and, as an alternative, by rural population.
 - **Admin yields are production divided by harvested area.** They change when cropland expands onto poorer land, so the share of the unit's cropland that is newly converted is a covariate and a heterogeneity dimension.
 
-### Tier 2: LSMS-ISA household and plot panels (E2b)
+### Tier 2: LSMS-ISA data aggregated to enumeration areas (E2b)
+
+The unit of analysis is the enumeration area (EA), the survey cluster whose coordinates the public files give. Household and plot records are only inputs to the EA values.
 
 - **Countries and waves:**
   - Eight LSMS-ISA countries: Burkina Faso, Ethiopia, Malawi, Mali, Niger, Nigeria, Tanzania and Uganda. The country list is from World Bank presentations and is to be checked against the Microdata Library for each panel.
-  - Only panels that revisit the same households across years with access change between waves are used.
-- **Location:**
-  - Public files give enumeration-area coordinates, displaced by up to 2 km (urban) or 5 km (rural). *(Offsets from a World Bank blog and a research paper; check each country's documentation.)*
-  - The treatment is the mean access change over a 5 km disc around the displaced point. The bias this introduces is estimated by simulating the displacement on the access maps.
-  - Restricted-access true coordinates are requested where the World Bank allows it.
-- **Outcomes:**
-  - Plot yield per crop: production / GPS-measured area, with GPS area preferred over self-reported area, which diverges strongly in validation studies.
-  - Household value of output per hectare.
-- **Mechanisms:** fertiliser and improved seed use, hired labour, share of output sold, crop choice, input and output prices, and extension contact.
+  - Only EAs surveyed in at least two waves with access change between them are used.
+  - The EA, not the household, is the panel unit. LSMS-ISA panels generally revisit the same EAs even when households drop out, split or are replaced *(to be checked per country)*, so EA series are longer and more stable than household series.
+- **Aggregation to EA × crop × season:**
+  - **Yield:** total production of the crop in the EA ÷ total GPS-measured area of the plots growing it (a ratio of sums, not a mean of plot yields). GPS area is preferred over self-reported area, which diverges strongly in validation studies.
+  - **Value of output per hectare**, all crops together, as a crop-agnostic outcome.
+  - **Minimum sample:** a minimum number of households and plots per EA-crop-season, fixed in advance; below it the observation is dropped.
+  - **Weights:** EA observations are weighted by the number of contributing plots; survey weights are used as an alternative.
+  - **Composition:** the crop's share of cultivated area in the EA is reported alongside its yield, since EA yield can move with which plots grow the crop.
+  - **Sensitivity:** EA values recomputed from households observed in both waves only, to separate yield change from changes in who is sampled.
+- **Location and treatment:**
+  - Public EA coordinates are displaced by up to 2 km (urban) or 5 km (rural). *(Offsets from a World Bank blog and a research paper; check each country's documentation.)*
+  - The treatment is the cropland-weighted mean access change of the 0.01° cells within 5 km of the displaced point, consistent with the EA as unit. The remaining bias is estimated by simulating the displacement on the access maps.
+  - True coordinates are not needed for this design; they would only tighten the treatment.
+- **Covariates:** EA means of plot characteristics (plot size, slope, irrigation, intercropping, soil from the plot modules or iSDAsoil), plus rainfall and prices at the EA point.
+- **Mechanisms, as EA shares:** share of plots with inorganic fertiliser and improved seed, share of households hiring labour, share of output sold, crop mix, local input and output prices, and extension contact.
   - Extension contact matters because Ethiopian evidence suggests roads and extension complement each other.
-- **Fixed effects:** plot (or household × parcel) fixed effects absorb soil and management. Wave × region fixed effects absorb weather and price shocks.
+- **Fixed effects:** EA fixed effects absorb time-invariant soil, climate and location. Wave × region fixed effects absorb weather and price shocks.
 
 ### Tier 3: NDVI on pure-crop footprints (E2c)
 
@@ -222,7 +230,8 @@ Every primary choice is rerun with its alternatives, and a result counts as robu
 | Treatment form | Binary event | Continuous dose | Same sign required |
 | Timing design | Annual event study | Long differences | Same sign required |
 | Controls | Not-yet-treated | Matched never-treated; spatial bands | Gate C, criterion 3 |
-| Yield tier | Tier 2 (LSMS) | Tier 1; Tier 3 | Disagreement → report by tier, do not pool |
+| Yield tier | Tier 2 (LSMS EA panels) | Tier 1; Tier 3 | Disagreement → report by tier, do not pool |
+| EA aggregation | Ratio of sums, all plots | Households in both waves only; survey weights | Material change → report both |
 | Cropland mask | GLAD stable cropland | GACED30; AFCD | As in the earlier design |
 | Forest definition | Hansen 30% | Hansen 10%; TMF (humid) | As in the earlier design |
 
@@ -243,7 +252,7 @@ The access maps exist; the treatment layer needs four additions to the script.
 - **Mapping effort is not random.** Campaigns follow crises, NGOs and donor interest, which can be correlated with outcomes. The placebo events test this, but do not remove it.
 - **Reverse causality.** Cropland expansion and settlement attract roads. Pre-trends and pipeline controls detect this, but cannot fully rule it out.
 - **Logging roads.** In humid forest, roads are often built for logging and later abandoned. Effects there are not effects of agricultural access.
-- **LSMS limits.** Location displacement blurs treatment. Panels are short and cover eight countries, so external validity across Sub-Saharan Africa is limited.
+- **LSMS limits.** Location displacement blurs treatment. Aggregating to EAs hides differences between households and lets EA yield move with crop and plot composition. Panels are short and cover eight countries, so external validity across Sub-Saharan Africa is limited.
 - **Admin yields** mix yield change with cropland expansion onto different land, and with the provenance issues of the earlier design.
 - **Short records.** The Sentinel-2 track (2017–2023) and the cropland series (2015–2024) give few post-event years for late events.
 - **Prior evidence is thin.** Africa-specific evidence on roads and deforestation is mostly correlational: road density is the strongest correlate of forest loss in the Congo Basin, and road building almost always preceded local loss there.
@@ -256,7 +265,7 @@ The access maps exist; the treatment layer needs four additions to the script.
 - [ ] Whether the OSM full-history planet includes user and changeset IDs; otherwise, how to join the changeset dump.
 - [ ] Imagery road-dating: transfer of the Valle et al. (2024) method to African savanna and cropland contexts; accuracy against Slagter et al. (2024) road-opening dates.
 - [ ] Completion dates in AidData and World Bank geocoded project data.
-- [ ] LSMS-ISA: panel structure and waves per country, displacement rules, access to restricted coordinates (registration).
+- [ ] LSMS-ISA: EA panel structure and waves per country (EAs revisited, household replacement rules), displacement rules, microdata registration.
 - [ ] Covariate sources and versions (table above).
 - [ ] All placeholder thresholds: event definition, burst rule, Gate T and Gate C criteria, matching variables.
 - [ ] All open items of the earlier design (GROW-Africa provenance, SPAM reference years, Sentinel-2 2017–2018 coverage, WorldCereal 2024/2025, GACED30 accuracy for Africa, TMF grid, thresholds, pilot definition, compute platform).
