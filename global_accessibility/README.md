@@ -1,6 +1,6 @@
 # global_accessibility_v3.py — travel time to cities and ports for several reference years
 
-**Use `global_accessibility_v3.py`** (version 3.0.1). Compared with version 2 (`global_accessibility_v2.py`,
+**Use `global_accessibility_v3.py`** (version 3.1.0). Compared with version 2 (`global_accessibility_v2.py`,
 kept for reference):
 
 - **any number of reference years, processed together** (default 2015, 2020, 2026), with change
@@ -42,6 +42,24 @@ Useful options: `--years 2015 2020 2026`, `--osm-source history|geofabrik`, `--b
 (regional run), `--stages download,grids` (run part of the chain), `--max-workers N`, `--no-cleanup`,
 `--no-ml`, `--no-weiss`, `--no-routing`, `--skip-network-check`, `--no-sensitivity`,
 `--sens-design oat|full`, `--routing-cities-per-continent N`, `--work-dir`, `--results-dir`.
+
+### Treatment layers for the access-change study (version 3.1)
+
+- **Road-only travel time** (`ROAD_ONLY`, default on; `--no-road-only`): for `ROAD_ONLY_LAYERS`
+  (cities 10, 11, 12, ports 5), travel time with the settlements, population weights and governance
+  factor of the first year, so that only the road network changes. Files `traveltime_roadonly/<year>/`
+  in the store and `tables/pop_weighted_traveltime_roadonly_*.csv`.
+- **Weiss completion per year** (`WEISS_YEARS`, `--weiss-years 2015 2020` or `--weiss-years none`):
+  default every year from 2015 to before the last; use `none` for annual runs "as mapped".
+- **Stage `events`** (`ROAD_EVENTS`, `--no-events`): per 0.01° cell and pair of consecutive years,
+  `road_events_<year>`: 1 new road cell, 2 faster, 3 slower, 4 road removed, +16 inside a mapping burst.
+  Bursts are assessed per 0.1° cell-year (`osm_burst_cells.csv`):
+  - at least `BURST_MIN_KM` = 25 km of new ways, of which at least 80% came from 3 users or fewer; or
+  - any new way from a changeset with HOT or MapWithAI/Esri tags.
+  User and changeset come from the OSM history (pyosmium) and the changeset dump (~8 GB download),
+  so they are available only with `--osm-source history`. With Geofabrik, bursts rest on the tags only.
+- **Annual runs:** `--years 2015 2016 … 2026 --weiss-years none` gives the yearly treatment; the
+  default three years are the long-term level.
 
 ### OSM history: what happens and what it needs
 
@@ -109,7 +127,8 @@ No container tools are needed. Missing packages are installed with
 |---|---|
 | `download` | OSM: the full-history planet cut at 1 January of each year into road tiles (default), or Geofabrik snapshots (smallest regions with a snapshot, falling back to parent regions, then to the next year's snapshot, at most `OSM_SNAPSHOT_MAX_LAG` = 1 year later, e.g. Russia 2016 for 2015); Microsoft ML roads; GHSL SMOD + POP (nearest 5-year epoch); World Port Index; Natural Earth countries; World Bank WGI; Copernicus DEM tile list; WorldCover tile list; Nelson et al. layers (latest figshare version, MD5-checked) |
 | `grids` | WorldCover 2021 at 30″ (mode, read from COG overviews); mean tan(slope) from Copernicus GLO-90 at ~180 m; countries; African land borders; settlements per GHSL epoch (8-connected urban clusters) and population on the grid |
-| `roads` | per OSM tile or extract in parallel: road speeds, burned at 30″ (fastest road per cell), km by class, border checkpoints; Microsoft roads (last year) |
+| `roads` | per OSM tile or extract in parallel (also a per-way km table for `events`): road speeds, burned at 30″ (fastest road per cell), km by class, border checkpoints; Microsoft roads (last year) |
+| `events` | road change between consecutive years per 0.01° cell, mapping bursts per 0.1° cell |
 | `friction` | per year: speed = max(road speed × corruption factor, walking speed × Tobler) → minutes per metre; +15 min (× corruption) at African border checkpoints |
 | `traveltime` | per year × 17 layers in parallel: multi-source Dijkstra on the lon/lat grid (step lengths depend on latitude; wraps at the dateline) |
 | `outputs` | COGs (1 km, 10 km) per year and change COGs per pair of years, global PNGs, population-weighted tables, methods folder |

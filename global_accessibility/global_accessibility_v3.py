@@ -40,7 +40,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "3.0.1"
+__version__ = "3.1.0"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -135,6 +135,8 @@ NELSON_LAYERS = None            # None = all 17 (all in the CSV tables); or e.g.
 #     railways). Applied to every reference year from 2015 up to the year before the last
 #     (a road mapped in 2015 and still there in the last year existed in between).
 WEISS2015_AUGMENT = True
+WEISS_YEARS = None              # years completed with Weiss 2015: None = every year 2015 <= y < last year;
+                                # [] = none (annual runs "as mapped"); or an explicit list, e.g. [2015, 2020]
 OSM_MAX_MISSING_REGIONS = 0     # regions allowed to have no extract at all (they get no roads)
 OSM_SNAPSHOT_MAX_LAG = 1        # years: a region with no 1 January snapshot of the year (e.g. Russia
                                 # before 2016) uses the next available one, at most this much later
@@ -146,6 +148,21 @@ WEISS_TILE_DEG = 10             # download in 10 x 10 degree tiles
 COMPLETE_TILE_DEG = 2           # tiles for "where OSM 2015 data exist" (Weiss validation tiles)
 COMPLETE_MIN = 0.8              # OSM 2015 road cells / Weiss network cells, before completion
 COMPLETE_MIN_CELLS = 50         # tiles with fewer Weiss network cells are not assessed
+
+# --- treatment layers for the access-change study ------------------------------
+ROAD_ONLY = True                # also compute road-only travel time: settlements, population weights and
+                                # governance factor held at the first year, so that only the roads change
+ROAD_ONLY_LAYERS = ["cities_10", "cities_11", "cities_12", "ports_5"]
+ROAD_EVENTS = True              # stage "events": road change per 0.01 deg cell between consecutive years
+EVENT_METADATA = True           # OSM history only: user and changeset of each way's first highway version
+                                # (pyosmium), joined to the changeset dump for campaign and import tags
+EVENT_CHANGESETS_URL = "https://planet.openstreetmap.org/planet/changesets-latest.osm.bz2"
+EVENT_CHANGESETS_FILE = None    # or a local copy of the changeset dump
+BURST_CELL_DEG = 0.1            # mapping bursts are assessed per 0.1 deg cell and year
+BURST_MIN_KM = 25.0             # >= this many km of new highway ways in the cell-year ...
+BURST_TOP_USERS = 3             # ... of which >= BURST_TOP_SHARE comes from <= BURST_TOP_USERS users,
+BURST_TOP_SHARE = 0.8           # or any new way from a changeset with campaign / AI-import tags
+BURST_TAG_RE = r"#hotosm|hotosm-project|#missingmaps|mapwithai|esri"
 
 # --- validation of the end year against a free routing engine (OSRM, OSM car) ---
 ROUTING_VALIDATION = True
@@ -205,6 +222,7 @@ REQUIRED = {  # import name: (pip name, minimum version)
     "pyproj": ("pyproj", "3.6"), "scipy": ("scipy", "1.11"), "numba": ("numba", "0.60"),
     "psutil": ("psutil", "5.9"), "matplotlib": ("matplotlib", "3.8"),
     "requests": ("requests", "2.28"), "pyarrow": ("pyarrow", "14"),
+    "osmium": ("osmium", "4.0"),          # pyosmium: way history metadata (stage events)
 }
 
 
@@ -867,9 +885,17 @@ def warm_up_numba():
 # =============================================================================
 # stage: download
 # =============================================================================
+def weiss_years(years):
+    """Reference years whose roads are completed with the Weiss 2015 surface (never the last)."""
+    if not WEISS2015_AUGMENT:
+        return []
+    if WEISS_YEARS is None:
+        return [y for y in years if 2015 <= y < max(years)]
+    return [y for y in years if y in set(WEISS_YEARS) and y < max(years)]
+
+
 def weiss_needed(years):
-    """The Weiss 2015 surface completes the roads of every year from 2015 to before the last."""
-    return WEISS2015_AUGMENT and any(2015 <= y < max(years) for y in years)
+    return bool(weiss_years(years))
 
 
 def network_targets(ctx):
@@ -1249,6 +1275,10 @@ def osm_history_plan(ctx, sess):
 
     with cf.ThreadPoolExecutor(len(years)) as ex:        # the years are cut side by side
         list(ex.map(one_year, years))
+    if ROAD_EVENTS and EVENT_METADATA and len(years) > 1:
+        if src != local and not src.exists():      # bbox history already removed by an earlier run
+            src = local
+        osm_event_metadata(ctx, src, osmium, sess)
     if src != local:
         src.unlink(missing_ok=True)
     plan = {}
@@ -1655,6 +1685,25 @@ def line_lengths_km(geoms):
     return np.bincount(idx[1:], weights=seg, minlength=len(geoms))
 
 
+def way_cells(geoms, ids, grid):
+    """km of each way per BURST_CELL_DEG cell (brow, bcol counted from the grid's north-west corner):
+    lines are densified, and each segment is assigned to the cell of its midpoint."""
+    parts, pidx = shapely.get_parts(geoms, return_index=True)
+    parts = shapely.segmentize(parts, BURST_CELL_DEG / 4)
+    xy, cidx = shapely.get_coordinates(parts, return_index=True)
+    same = cidx[1:] == cidx[:-1]
+    a, b = xy[:-1][same], xy[1:][same]
+    lon1, lat1, lon2, lat2 = map(np.radians, (a[:, 0], a[:, 1], b[:, 0], b[:, 1]))
+    h = np.sin((lat2 - lat1) / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin((lon2 - lon1) / 2) ** 2
+    km = 2 * R_EARTH / 1000 * np.arcsin(np.sqrt(np.clip(h, 0, 1)))
+    mid = (a + b) / 2
+    d = pd.DataFrame({"osm_id": ids[pidx[cidx[:-1][same]]],
+                      "brow": np.floor((grid.north - mid[:, 1]) / BURST_CELL_DEG).astype(np.int32),
+                      "bcol": np.floor((mid[:, 0] - grid.west) / BURST_CELL_DEG).astype(np.int32), "km": km})
+    d = d.dropna(subset=["osm_id"]).astype({"osm_id": np.int64})
+    return d.groupby(["osm_id", "brow", "bcol"], as_index=False)["km"].sum().astype({"km": np.float32})
+
+
 def roads_job(job):
     """One OSM extract -> max-speed window, km by class, checkpoint points."""
     pbf, out, grid_d, borders_path = job["pbf"], Path(job["out"]), job["grid"], job["borders"]
@@ -1685,6 +1734,13 @@ def roads_job(job):
     km = line_lengths_km(shapely.clip_by_rect(g.geometry.values, *job["clip"]) if job.get("clip")
                          else g.geometry.values)
     stats["km_by_class"] = pd.Series(km, index=g["highway"].values).groupby(level=0).sum().round(1).to_dict()
+    # way table for stage events: km of each way per BURST_CELL_DEG cell, in this tile
+    geo = shapely.clip_by_rect(g.geometry.values, *job["clip"]) if job.get("clip") else g.geometry.values
+    way_cells(geo, pd.to_numeric(g["osm_id"], errors="coerce").to_numpy(), grid) \
+        .merge(pd.DataFrame({"osm_id": pd.to_numeric(g["osm_id"], errors="coerce").to_numpy(),
+                             "highway": g["highway"].values, "speed": g["speed"].values.astype(np.float32)})
+               .drop_duplicates("osm_id"), on="osm_id", how="left") \
+        .assign(clipped=bool(job.get("clip"))).to_parquet(out.with_suffix(".ways.parquet"), index=False)
     b = g.total_bounds
     pad = grid.res          # one cell of margin: lines on the box edge must not be clipped away
     w = grid.window_of((b[0] - pad, b[1] - pad, b[2] + pad, b[3] + pad))
@@ -1839,6 +1895,181 @@ def stage_roads(ctx):
 
 
 # =============================================================================
+# OSM way metadata (history) and stage events: road change and mapping bursts
+# =============================================================================
+def history_way_meta(src, out, osmium_exe=None, tmpdir=None):
+    """First version carrying a highway tag of every way in an OSM history file: osm_id, version,
+    timestamp, changeset, uid -> parquet. The history is first reduced to highway ways with
+    osmium tags-filter (-R: without referenced nodes) when osmium-tool is available; pyosmium then
+    streams the ways, which come sorted by id and version, so no per-way state is kept."""
+    import osmium as pyosmium
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+    src = Path(src)
+    if osmium_exe:
+        red = Path(tmpdir or out.parent) / "history-highway-ways.osm.pbf"
+        if not red.exists():
+            try:
+                run_osmium([osmium_exe, "tags-filter", "-R", str(src), "w/highway", "-o", str(red), "--overwrite"],
+                           "OSM history: highway ways only")
+            except RuntimeError as e:
+                log(f"OSM history: tags-filter not usable on this file ({str(e)[:120]}); streaming the full history")
+                red = src
+        src = red
+    cols = {k: [] for k in ("osm_id", "version", "timestamp", "changeset", "uid")}
+    schema = pa.schema([("osm_id", pa.int64()), ("version", pa.int32()), ("timestamp", pa.timestamp("s", tz="UTC")),
+                        ("changeset", pa.int64()), ("uid", pa.int64())])
+    part = Path(str(out) + ".part")
+    writer = pq.ParquetWriter(part, schema)
+    last = [None]
+
+    def flush():
+        if cols["osm_id"]:
+            writer.write_table(pa.table(cols, schema=schema))
+            for v in cols.values():
+                v.clear()
+
+    class H(pyosmium.SimpleHandler):
+        def way(self, w):
+            if w.id == last[0] or "highway" not in w.tags:
+                return
+            last[0] = w.id
+            cols["osm_id"].append(w.id); cols["version"].append(w.version)
+            cols["timestamp"].append(w.timestamp); cols["changeset"].append(w.changeset); cols["uid"].append(w.uid)
+            if len(cols["osm_id"]) >= 2_000_000:
+                flush()
+    H().apply_file(str(src), locations=False)
+    flush(); writer.close()
+    part.replace(out)
+    if osmium_exe and src.name == "history-highway-ways.osm.pbf":
+        src.unlink(missing_ok=True)
+    return out
+
+
+def changeset_campaigns(path, ids, out):
+    """Tags of the changesets that created highway ways, from the changeset dump: comment, hashtags,
+    created_by, source, imagery_used, data_used; campaign = matches BURST_TAG_RE."""
+    import osmium as pyosmium
+    ids, rows, rx = set(int(i) for i in ids), [], re.compile(BURST_TAG_RE, re.I)
+    keys = ("comment", "hashtags", "created_by", "source", "imagery_used", "data_used")
+
+    class H(pyosmium.SimpleHandler):
+        def changeset(self, c):
+            if c.id in ids:
+                t = {k: c.tags.get(k, "") for k in keys}
+                rows.append({"changeset": c.id, **t,
+                             "campaign": bool(rx.search(" ".join((t["comment"], t["hashtags"], t["data_used"]))))})
+    H().apply_file(str(path))
+    df = pd.DataFrame(rows, columns=["changeset", *keys, "campaign"])
+    df.to_parquet(out, index=False)
+    return df
+
+
+def osm_event_metadata(ctx, src, osmium_exe, sess):
+    """Way metadata and changeset tags for stage events (history source only; resumable)."""
+    work, dl = ctx["work"], ctx["dl"]
+    meta, cst = work / "osm_way_meta.parquet", work / "osm_changeset_tags.parquet"
+    try:
+        if not meta.exists():
+            with Timer("OSM way metadata (history)"):
+                history_way_meta(src, meta, osmium_exe, work / "osm_tmp")
+        if not cst.exists():
+            cfile = Path(EVENT_CHANGESETS_FILE) if EVENT_CHANGESETS_FILE else \
+                download(EVENT_CHANGESETS_URL, dl / "osm" / "changesets-latest.osm.bz2", sess)
+            with Timer("OSM changeset tags"):
+                changeset_campaigns(cfile, pd.read_parquet(meta, columns=["changeset"]).changeset.unique(), cst)
+    except ImportError as e:
+        log(f"OSM event metadata skipped (pyosmium not available: {e}); bursts will use road length only")
+
+
+def way_table(ctx):
+    """km per way, BURST_CELL_DEG cell and reference year (pieces from tiles summed; overlapping
+    extracts, e.g. neighbouring Geofabrik countries, counted once)."""
+    work, out = ctx["work"], []
+    for y in ctx["years"]:
+        parts = [pd.read_parquet(f) for f in sorted((work / "roads" / str(y)).glob("*.ways.parquet"))]
+        if not parts:
+            continue
+        d = pd.concat(parts)
+        g = d.groupby(["osm_id", "brow", "bcol"])
+        km = np.where(g["clipped"].transform("all"), g["km"].transform("sum"), g["km"].transform("max"))
+        d = d.assign(km=km).drop_duplicates(["osm_id", "brow", "bcol"])
+        out.append(d[["osm_id", "highway", "speed", "brow", "bcol", "km"]].assign(year=y))
+    return pd.concat(out) if out else pd.DataFrame(columns=["osm_id", "highway", "speed", "brow", "bcol", "km", "year"])
+
+
+def stage_events(ctx):
+    """Road change between consecutive reference years, per 0.01 deg cell (from the OSM road rasters,
+    before the water rule and the completion), with mapping bursts flagged per BURST_CELL_DEG cell."""
+    if not ROAD_EVENTS or len(ctx["years"]) < 2:
+        return
+    grid, work = ctx["grid"], ctx["work"]
+    ys = sorted(ctx["years"])
+    ways = way_table(ctx)
+    first_year = ways.groupby("osm_id")["year"].min()
+    new = ways[(ways.year == ways.osm_id.map(first_year)) & (ways.year > ys[0])].copy()
+    meta_f, cst_f = work / "osm_way_meta.parquet", work / "osm_changeset_tags.parquet"
+    meta = pd.read_parquet(meta_f) if meta_f.exists() else None
+    if meta is not None:
+        new = new.merge(meta[["osm_id", "uid", "changeset", "timestamp"]], on="osm_id", how="left")
+        if cst_f.exists():
+            new = new.merge(pd.read_parquet(cst_f)[["changeset", "campaign"]], on="changeset", how="left")
+    if "campaign" not in new:
+        new["campaign"] = False
+    new["campaign"] = new["campaign"].astype("boolean").fillna(False).astype(bool)
+    f = BURST_CELL_DEG
+    rows = []
+    for (y, br, bc), g in new.groupby(["year", "brow", "bcol"]):
+        km = float(g.km.sum())
+        if meta is not None and g.uid.notna().any():
+            top = g.groupby("uid").km.sum().sort_values(ascending=False).head(BURST_TOP_USERS).sum() / max(km, 1e-9)
+        else:
+            top = np.nan
+        camp_km = float(g.km[g.campaign].sum())
+        burst = (km >= BURST_MIN_KM and top >= BURST_TOP_SHARE) or camp_km > 0
+        rows.append({"year": y, "brow": br, "bcol": bc, "west": grid.west + bc * f, "north": grid.north - br * f,
+                     "new_ways": int(g.osm_id.nunique()), "new_km": round(km, 2), "top_users_share": top,
+                     "campaign_km": round(camp_km, 2), "metadata": meta is not None, "burst": bool(burst)})
+    bursts = pd.DataFrame(rows, columns=["year", "brow", "bcol", "west", "north", "new_ways", "new_km",
+                                         "top_users_share", "campaign_km", "metadata", "burst"])
+    bursts.to_csv(work / "osm_burst_cells.csv", index=False)
+    k = int(round(f / grid.res))
+    summary = []
+    for a, b in zip(ys[:-1], ys[1:]):
+        ra = memmap(work / f"road_speed_{a}.npy", grid, None, mode="r")
+        rb = memmap(work / f"road_speed_{b}.npy", grid, None, mode="r")
+        ev = memmap(work / f"road_events_{b}.npy", grid, np.uint8, fill=0)
+        bb = bursts[(bursts.year == b) & bursts.burst]
+        bmask = np.zeros((-(-grid.height // k), -(-grid.width // k)), bool)
+        ok = (bb.brow.values < bmask.shape[0]) & (bb.bcol.values < bmask.shape[1]) & (bb.brow.values >= 0) & (bb.bcol.values >= 0)
+        bmask[bb.brow.values[ok], bb.bcol.values[ok]] = True
+        counts = np.zeros(5, np.int64); in_burst = np.zeros(5, np.int64)
+        for r0, r1 in row_chunks(grid.height):
+            x, z = np.asarray(ra[r0:r1]), np.asarray(rb[r0:r1])
+            e = np.zeros(x.shape, np.uint8)
+            e[(x == 0) & (z > 0)] = 1
+            e[(x > 0) & (z > x + 0.5)] = 2
+            e[(z > 0) & (z < x - 0.5)] = 3
+            e[(x > 0) & (z == 0)] = 4
+            bm = bmask[(np.arange(r0, r1) // k)[:, None], (np.arange(grid.width) // k)[None, :]]
+            flag = bm & ((e == 1) | (e == 2))
+            for c in range(1, 5):
+                counts[c] += int((e == c).sum()); in_burst[c] += int(((e == c) & flag).sum())
+            e[flag] += 16
+            ev[r0:r1] = e
+        ev.flush()
+        for c, name in ((1, "new road cell"), (2, "faster"), (3, "slower"), (4, "road removed")):
+            summary.append({"year": b, "since": a, "event": name, "cells": int(counts[c]),
+                            "cells_in_bursts": int(in_burst[c])})
+        nw = new[new.year == b]
+        summary.append({"year": b, "since": a, "event": "new ways (km)", "cells": round(float(nw.km.sum()), 1),
+                        "cells_in_bursts": round(float(nw.merge(bb[["year", "brow", "bcol"]], on=["year", "brow", "bcol"]).km.sum()), 1)})
+    pd.DataFrame(summary).to_csv(work / "road_events_summary.csv", index=False)
+    log(f"events: {len(bursts)} {BURST_CELL_DEG} deg cell-years with new ways, {int(bursts.burst.sum())} bursts"
+        + ("" if meta is not None else " (no user metadata: bursts from campaign tags only)"))
+
+
+# =============================================================================
 # stage: friction (per year)
 # =============================================================================
 def checkpoint_cells(ctx, year, corr, K=None, delay=None):
@@ -1859,11 +2090,12 @@ def checkpoint_cells(ctx, year, corr, K=None, delay=None):
     return cp
 
 
-def friction_from_parts(ctx, y, K, delay, out_path):
+def friction_from_parts(ctx, y, K, delay, out_path, gov_year=None):
     """Friction (min/m) = 60 / (1000 max(road x (1 - K c), off-road)); + border delays.
-    Used for the baseline and for each sensitivity scenario."""
+    Used for the baseline, each sensitivity scenario and the road-only version (governance
+    scores of gov_year instead of y)."""
     grid, work = ctx["grid"], ctx["work"]
-    corr = corruption_table(ctx, y, K)
+    corr = corruption_table(ctx, y if gov_year is None else gov_year, K)
     factor = np.ones(int(max(corr.cid.max(), 0)) + 1, np.float32)
     factor[corr.cid.values] = corr.road_speed_factor.values
     cg = memmap(work / "countries.npy", grid, None, mode="r")
@@ -1901,8 +2133,7 @@ def stage_friction(ctx):
         lut[k] = v
     ew, dy, _, _ = step_lengths(grid)
     y_end = ctx["years"][-1]
-    aug_years = [y for y in ctx["years"] if 2015 <= y < y_end] \
-        if WEISS2015_AUGMENT and (work / "weiss2015_speed.npy").exists() else []
+    aug_years = weiss_years(ctx["years"]) if (work / "weiss2015_speed.npy").exists() else []
     augment = bool(aug_years)
     if augment:
         weiss = memmap(work / "weiss2015_speed.npy", grid, None, mode="r")
@@ -1972,6 +2203,9 @@ def stage_friction(ctx):
         fstats, cp = friction_from_parts(ctx, y, CORRUPTION_K, BORDER_DELAY_MIN,
                                          work / f"friction_{y}.npy")
         stats.update(fstats)
+        if ROAD_ONLY:        # same roads, governance factor of the first year
+            friction_from_parts(ctx, y, CORRUPTION_K, BORDER_DELAY_MIN, work / f"friction_roadonly_{y}.npy",
+                                gov_year=ctx["years"][0])
         cp.to_csv(work / f"checkpoints_{y}.csv", index=False)
         (work / f"friction_{y}.json").write_text(json.dumps(stats))
         log(f"friction {y}: {stats}")
@@ -2048,6 +2282,51 @@ def tt_job(job):
     return info
 
 
+def destination_sources(name, lab, st, fr, ports, pr, pc, grid):
+    """Flat indices of the destination cells of one layer, and the number of destinations."""
+    kind, k = name.split("_"); k = int(k)
+    if kind == "cities":
+        lo, hi = CITY_LAYERS[k]
+        ids = st.loc[(st.population >= lo) & (st.population < hi), "settlement_id"].values
+        lut = np.zeros(int(st.settlement_id.max()) + 2 if len(st) else 2, bool)
+        lut[ids] = True
+        srcs = []
+        for r0, r1 in row_chunks(grid.height):
+            m = lut[np.asarray(lab[r0:r1])] & np.isfinite(fr[r0:r1])
+            srcs.append(np.flatnonzero(m) + r0 * grid.width)
+        return np.concatenate(srcs), int(len(ids))
+    sel = np.ones(len(ports), bool) if PORT_LAYERS[k] is None else \
+        ports["Harbor Size"].isin(PORT_LAYERS[k]).to_numpy(copy=True)
+    sel = sel & (pr >= 0)
+    return np.unique(pr[sel].astype(np.int64) * grid.width + pc[sel]), int(sel.sum())
+
+
+def road_only_jobs(ctx, ports):
+    """Travel-time jobs on the road-only friction, with the settlements of the first year's epoch."""
+    grid, work = ctx["grid"], ctx["work"]
+    e0 = ctx["epoch"][ctx["years"][0]]
+    lab = memmap(work / f"settlement_id_{e0}.npy", grid, None, mode="r")
+    st = pd.read_csv(work / f"settlements_{e0}.csv")
+    jobs, rows = [], []
+    for y in ctx["years"]:
+        ff = work / f"friction_roadonly_{y}.npy"
+        if not ff.exists():
+            continue
+        fr = memmap(ff, grid, None, mode="r")
+        pr, pc = port_cells(ports, grid, fr)
+        for name in [n for n in ROAD_ONLY_LAYERS if n in layer_names()]:
+            src, n_dest = destination_sources(name, lab, st, fr, ports, pr, pc, grid)
+            sp = work / "tt" / f"sources_roadonly_{y}_{name}.npy"
+            np.save(sp, src.astype(np.int64))
+            rows.append({"year": y, "layer": name, "settlement_epoch": e0, "destinations": n_dest,
+                         "source_cells": int(len(src))})
+            jobs.append({"grid": grid.to_dict(), "friction": str(ff), "sources": str(sp),
+                         "out": str(work / "tt" / f"tt_roadonly_{y}_{name}.npy"),
+                         "year": y, "layer": f"{name}_roadonly"})
+    pd.DataFrame(rows).to_csv(work / "destinations_roadonly.csv", index=False)
+    return jobs
+
+
 def stage_traveltime(ctx):
     grid, work = ctx["grid"], ctx["work"]
     (work / "tt").mkdir(exist_ok=True)
@@ -2088,6 +2367,8 @@ def stage_traveltime(ctx):
                          "sources": str(sp), "out": str(work / "tt" / f"tt_{y}_{name}.npy"),
                          "year": y, "layer": name})
     pd.DataFrame(dest_rows).to_csv(work / "destinations.csv", index=False)
+    if ROAD_ONLY:
+        jobs += road_only_jobs(ctx, ports)
     warm_up_numba()
     # per task: dist float32 + pos int32 + heap (<= N int32, typically far less) + sources
     per_task = grid.size * (4 + 4 + 2) + 0.3e9
@@ -2215,16 +2496,20 @@ def png_map(path, arr, nodata, title, kind, extent):
     plt.close(fig)
 
 
-def summary_tables(ctx):
-    """Population-weighted travel time per country, continent and globally."""
+def summary_tables(ctx, prefix="tt", layers=None, pop_epoch=None):
+    """Population-weighted travel time per country, continent and globally. prefix "tt_roadonly"
+    with pop_epoch = first epoch gives the road-only version (population held fixed)."""
     grid, work = ctx["grid"], ctx["work"]
     cg = memmap(work / "countries.npy", grid, None, mode="r")
     ct = pd.read_csv(work / "countries.csv")
     rows = []
     for y in ctx["years"]:
-        pop = memmap(work / f"population_{ctx['epoch'][y]}.npy", grid, None, mode="r")
-        for name in layer_names():
-            mm = np.load(work / "tt" / f"tt_{y}_{name}.npy", mmap_mode="r")
+        pop = memmap(work / f"population_{pop_epoch or ctx['epoch'][y]}.npy", grid, None, mode="r")
+        for name in layers or layer_names():
+            f = work / "tt" / f"{prefix}_{y}_{name}.npy"
+            if not f.exists():
+                continue
+            mm = np.load(f, mmap_mode="r")
             n = int(ct.cid.max()) + 1
             w = np.zeros(n); wt = np.zeros(n); w60 = np.zeros(n); wun = np.zeros(n)
             for r0, r1 in row_chunks(grid.height):
@@ -2302,6 +2587,13 @@ def stage_outputs(ctx):
         bc.to_csv(res / "tables" / "pop_weighted_traveltime_by_country.csv", index=False)
         bco.to_csv(res / "tables" / "pop_weighted_traveltime_by_continent.csv", index=False)
         gl.to_csv(res / "tables" / "pop_weighted_traveltime_global.csv", index=False)
+        if ROAD_ONLY:
+            e0 = ctx["epoch"][ctx["years"][0]]
+            bc, bco, gl = summary_tables(ctx, "tt_roadonly", ROAD_ONLY_LAYERS, e0)
+            if len(gl):
+                bc.to_csv(res / "tables" / "pop_weighted_traveltime_roadonly_by_country.csv", index=False)
+                bco.to_csv(res / "tables" / "pop_weighted_traveltime_roadonly_by_continent.csv", index=False)
+                gl.to_csv(res / "tables" / "pop_weighted_traveltime_roadonly_global.csv", index=False)
     write_methods(ctx)
 
 
@@ -2320,7 +2612,8 @@ def write_methods(ctx):
                   for k, v in SPEED_TABLE.items()]).to_csv(res / "speed_table.csv", index=False)
     pd.DataFrame([{"worldcover_class": k, "walking_speed_kmh_flat": v}
                   for k, v in LANDCOVER_SPEED.items()]).to_csv(res / "landcover_speed.csv", index=False)
-    for f in [f"osm{y}_completeness_tiles.csv" for y in ctx["years"]] + ["road_km_by_extract.csv", "destinations.csv", "tt_timings.csv", "osm_plan.json",
+    for f in [f"osm{y}_completeness_tiles.csv" for y in ctx["years"]] + ["road_km_by_extract.csv", "destinations.csv",
+              "destinations_roadonly.csv", "road_events_summary.csv", "osm_burst_cells.csv", "tt_timings.csv", "osm_plan.json",
               "countries.csv", "grids_info.json", "roads_info.json"] + \
              [f"corruption_{y}.csv" for y in ctx["years"]] + \
              [f"checkpoints_{y}.csv" for y in ctx["years"]] + \
@@ -2382,13 +2675,21 @@ def store_items(ctx):
                    f"friction {y}, including the governance factor and border delays")]
         items += [("traveltime", y, n, f"tt/tt_{y}_{n}.npy", "minutes", f"{BAND_DESC[n]} ({y}), full precision")
                   for n in layer_names()]
+        items += [("friction_roadonly", y, None, f"friction_roadonly_{y}.npy", "minutes per metre",
+                   f"friction {y} with the governance factor of {ctx['years'][0]} (road-only treatment)")]
+        items += [("traveltime_roadonly", y, n, f"tt/tt_roadonly_{y}_{n}.npy", "minutes",
+                   f"{BAND_DESC[n]} ({y}), road-only: settlements of epoch {ctx['epoch'][ctx['years'][0]]}, "
+                   f"governance of {ctx['years'][0]}") for n in ROAD_ONLY_LAYERS if n in layer_names()]
+        items += [("road_events", y, None, f"road_events_{y}.npy", "event code",
+                   "OSM road change since the previous reference year: 0 none, 1 new road cell, "
+                   "2 faster, 3 slower, 4 road removed; +16 inside a mapping burst (new or faster only)")]
     return [it for it in items if (work / it[3]).exists()]
 
 
 def store_path(root, name, year=None, layer=None):
     root = Path(root)
-    if name == "traveltime":
-        return root / "traveltime" / str(year) / f"{layer}.tif"
+    if name.startswith("traveltime"):
+        return root / name / str(year) / f"{layer}.tif"
     return root / (f"{name}_{year}.tif" if year is not None else f"{name}.tif")
 
 
@@ -2437,7 +2738,8 @@ def stage_store(ctx):
     with cf.ThreadPoolExecutor(n) as ex:
         list(ex.map(store_job, jobs))
     for pat in ("countries.csv", "settlements_*.csv", "corruption_*.csv", "checkpoints_*.csv",
-                "destinations.csv", "road_km_by_extract.csv", "osm_plan.json", "roads_info.json",
+                "destinations.csv", "destinations_roadonly.csv", "road_km_by_extract.csv", "osm_plan.json",
+                "roads_info.json", "road_events_summary.csv", "osm_burst_cells.csv",
                 "friction_*.json", "osm*_completeness_tiles.csv"):
         for f in work.glob(pat):
             shutil.copy(f, root / "tables" / f.name)
@@ -3011,7 +3313,7 @@ def dry_run(ctx):
         log(f"OSM {y}: largest extracts {[(r['region'], round(r['bytes'] / 1e9, 2)) for r in big]}")
 
 
-STAGES = ["download", "grids", "roads", "friction", "traveltime", "outputs", "store", "compare",
+STAGES = ["download", "grids", "roads", "events", "friction", "traveltime", "outputs", "store", "compare",
           "validate", "sensitivity", "cleanup"]
 
 
@@ -3021,7 +3323,7 @@ def nearest_epoch(y):
 
 def main(argv=None):
     global YEARS, OSM_SOURCE, BBOX, CLEANUP, ML_FILES, NELSON_LAYERS, MAX_WORKERS, INCLUDE_ML_ROADS, WEISS2015_AUGMENT
-    global NETWORK_CHECK, ROUTING_CITIES_PER_CONTINENT, ROUTING_VALIDATION, SENSITIVITY, SENS_DESIGN
+    global NETWORK_CHECK, WEISS_YEARS, ROAD_ONLY, ROAD_EVENTS, ROUTING_CITIES_PER_CONTINENT, ROUTING_VALIDATION, SENSITIVITY, SENS_DESIGN
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0],
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--years", type=int, nargs="+", default=YEARS, help="reference years (1 January)")
@@ -3033,6 +3335,10 @@ def main(argv=None):
     p.add_argument("--ml-files", nargs="+", default=ML_FILES)
     p.add_argument("--no-ml", action="store_true")
     p.add_argument("--no-weiss", action="store_true", help="do not complete roads with Weiss et al. (2018)")
+    p.add_argument("--weiss-years", nargs="+", default=None,
+                   help="years completed with Weiss 2015 ('none' for none); default: 2015 <= year < last")
+    p.add_argument("--no-road-only", action="store_true", help="skip the road-only travel time")
+    p.add_argument("--no-events", action="store_true", help="skip stage events (road change and mapping bursts)")
     p.add_argument("--skip-network-check", action="store_true", help="do not test the download servers first")
     p.add_argument("--nelson-layers", nargs="+", default=NELSON_LAYERS)
     p.add_argument("--max-workers", type=int, default=MAX_WORKERS)
@@ -3048,6 +3354,10 @@ def main(argv=None):
     CLEANUP = CLEANUP and not a.no_cleanup
     INCLUDE_ML_ROADS = INCLUDE_ML_ROADS and not a.no_ml
     WEISS2015_AUGMENT = WEISS2015_AUGMENT and not a.no_weiss
+    if a.weiss_years is not None:
+        WEISS_YEARS = [] if [v.lower() for v in a.weiss_years] == ["none"] else [int(v) for v in a.weiss_years]
+    ROAD_ONLY = ROAD_ONLY and not a.no_road_only
+    ROAD_EVENTS = ROAD_EVENTS and not a.no_events
     NETWORK_CHECK = NETWORK_CHECK and not a.skip_network_check
     ROUTING_CITIES_PER_CONTINENT = a.routing_cities_per_continent
     ROUTING_VALIDATION = ROUTING_VALIDATION and not a.no_routing
@@ -3068,7 +3378,7 @@ def main(argv=None):
         return
     done_dir = work / "_done"; done_dir.mkdir(exist_ok=True)
     want = [s.strip() for s in a.stages.split(",") if s.strip()]
-    funcs = {"download": stage_download, "grids": stage_grids, "roads": stage_roads,
+    funcs = {"download": stage_download, "grids": stage_grids, "roads": stage_roads, "events": stage_events,
              "friction": stage_friction, "traveltime": stage_traveltime,
              "outputs": stage_outputs, "store": stage_store, "compare": stage_compare, "validate": stage_validate, "sensitivity": stage_sensitivity,
              "cleanup": stage_cleanup}

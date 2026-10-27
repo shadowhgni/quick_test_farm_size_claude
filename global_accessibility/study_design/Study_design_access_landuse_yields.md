@@ -57,7 +57,7 @@ Access change is measured from one source and one method for every year, and eac
 - **Two treatment versions:**
   1. **Total access:** settlements and population of the nearest GHSL epoch. This mixes road change with settlement growth.
   2. **Road-only access:** destinations, land cover and the governance factor held at 2015, so that only the road network changes.
-  - The road-only version needs a new script option (`--fixed-destinations 2015`). This is listed as required work.
+  - Both versions are produced by `global_accessibility_v3.py` 3.1 (`ROAD_ONLY`, on by default, for cities 10, 11, 12 and ports 5).
 - **Treatment variables:**
   - **Binary event:** the first year in which travel time to the nearest settlement of 50,000–50 million (cities_11) falls by at least 20% and at least 15 minutes, and stays below that level for two years. Both thresholds are placeholders.
   - **Continuous dose:** change in log travel time.
@@ -285,7 +285,14 @@ The author holds the LSMS zips listed in `sources.csv`, at Windows OneDrive path
   - Niger ECVMA 2011, 2014 and EHCVM 2018, 2021;
   - Mali EHCVM 2018, 2021 (EAC-I 2014/2017 are cross-sections);
   - Burkina Faso EHCVM 2018, 2021.
-- **Additional EHCVM countries:** Benin, Côte d'Ivoire, Guinea-Bissau, Senegal, Togo (2018 and 2021). Whether their 2021/22 round revisits the 2018/19 clusters, as in Mali and Burkina Faso, is to be checked.
+- **Additional EHCVM countries:** Benin, Côte d'Ivoire, Guinea-Bissau, Senegal, Togo (2018 and 2021). All five 2021/22 rounds revisited the 2018/19 clusters, so they form EA panels (World Bank study pages, catalogs 6272–6279).
+  - Côte d'Ivoire and Guinea-Bissau re-interviewed the same 12 households per cluster where found and topped up otherwise.
+  - Benin, Senegal and Togo carry panel flags (`PanelHH`) in their cover files.
+  - Guinea-Bissau and Togo store the 2018/19 cluster and household numbers (`s00q07f1`, `s00q07f2`). For the others, clusters are matched on `grappe`, to be checked.
+- **EHCVM locations:** no displaced EA geovariables file is listed. The cover file `s00_me` lists **household** GPS coordinates (`GPS__Latitude`, `GPS__Longitude`).
+  - If these are filled and not displaced, they are personal data: use them only to compute the EA centroid, then discard them, and never publish them.
+  - Whether they are filled, and whether they are displaced, is to be checked on the downloaded files.
+  - EHCVM plot areas are partly GPS-measured (`s16aq45`, `s16aq47`, checked for Benin and Senegal).
 - **Gaps that break panel segments:**
   - Ethiopia 2015 is disabled; it is needed for the 2011–2015 segment.
   - Malawi: the IHPS panel releases (2010–2013, 2016, 2019) are absent or disabled. IHS-III, IV and V are cross-sections, apart from their panel subsamples, so the Malawi panel needs IHPS catalog 2248 and 3819.
@@ -315,14 +322,20 @@ Every primary choice is rerun with its alternatives, and a result counts as robu
 
 Each run, its inputs and its outcome are logged, including failed checks.
 
-## Required changes to `global_accessibility_v3.py`
+## Treatment layers in `global_accessibility_v3.py` (version 3.1, implemented)
 
-The access maps exist; the treatment layer needs four additions to the script.
+The four additions Phase 0 needs are in the script and tested on synthetic data. Imagery confirmation of road dates is the remaining Phase 0 task.
 
-1. **`--fixed-destinations <epoch>`.** Hold settlements, population weights, land cover and the governance factor at one epoch, so that the road network is the only thing changing between years. This touches `stage_friction` and `stage_traveltime`.
-2. **Sequential annual runs with the Weiss completion optional per year.** `--years` already accepts any list. The completion rule in `stage_friction` needs a switch, so that annual runs can use OSM as mapped.
-3. **Way-level event table from the OSM history:** first appearance, tag changes and deletions per way, aggregated per 0.01° cell and year, with user and changeset metadata where available. This is a new step next to `osm_history_plan`.
-4. **Store entries for the treatment.** Event class and year per cell, and annual travel-time change, added to `store_items`, so that the analysis scripts read them with `load_store`.
+1. **Road-only travel time** (`ROAD_ONLY`, `ROAD_ONLY_LAYERS`). Settlements, population weights and the governance factor are held at the first reference year, so the road network is the only thing that changes. Results go to `store/traveltime_roadonly/<year>/` and `tables/pop_weighted_traveltime_roadonly_*.csv`.
+2. **Weiss completion per year** (`WEISS_YEARS`, `--weiss-years`). The default completes every year from 2015 to before the last; `--weiss-years none` gives annual runs with OSM as mapped.
+3. **Stage `events`.** Per 0.01° cell and pair of consecutive years: 1 new road cell, 2 faster, 3 slower, 4 road removed, with +16 inside a mapping burst.
+   - Bursts follow the default thresholds and are assessed per 0.1° cell-year.
+   - Each way's length is split across the cells it crosses.
+   - User and changeset of each way's first highway version come from the OSM history via pyosmium; campaign and import tags come from the changeset dump.
+   - Outputs: `road_events_<year>`, `osm_burst_cells.csv`, `road_events_summary.csv`.
+4. **Store entries:** `road_events`, `friction_roadonly`, `traveltime_roadonly`, plus the burst and event tables in `store/tables/`, all readable with `load_store`.
+
+For annual treatment, run `--years 2015 2016 … 2026 --weiss-years none`; the default three years give the long-term level.
 
 ## Limitations and risks
 
@@ -392,7 +405,8 @@ Checked against providers on 2026-10-27; the remaining items need either the dat
 - [x] Compute platform: HPC node.
 - [ ] Approve or change the default thresholds (section "Default thresholds").
 - [ ] Copy the LSMS zips to the HPC, and fill the panel gaps listed in "LSMS-ISA data inventory" (Ethiopia 2015, Malawi IHPS, Tanzania 2008, Nigeria W5, Uganda 2009, Côte d'Ivoire 2018).
-- [ ] Register for Copernicus CDS (ERA5-Land) and NASA Earthdata.
+- [x] Copernicus CDS registration (done by the author; the CDS API key is to be placed in `~/.cdsapirc` on the HPC, not in the repository).
+- [ ] Register for NASA Earthdata.
 
 ## Sources
 

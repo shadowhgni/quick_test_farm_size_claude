@@ -102,6 +102,9 @@ def test_roads_job_rasterizes_and_finds_checkpoints(tmp_path):
     # the bridge track lies exactly on the bounding-box edge (lat 6.2): must not be clipped
     rows = np.nonzero(d["bridge"].any(axis=1))[0]
     assert d["bridge"].sum() >= 120 and len(rows) <= 2 and rows.min() >= d["bridge"].shape[0] - 3
+    w = pd.read_parquet(tmp_path / "x.ways.parquet")                     # way table for stage events
+    assert w.osm_id.nunique() == 3 and (w.km > 0).all() and not w.clipped.any()     # km per way and 0.1 deg cell
+    assert w.km.sum() == pytest.approx(sum(s["km_by_class"].values()), rel=1e-3)
 
 
 def test_corruption_and_border_delay(tmp_path):
@@ -301,10 +304,15 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
                    "highway": "primary"} for y in (2015, 2020, 2026)]).to_csv(work / "checkpoints_raw.csv", index=False)
     for e in (2015, 2020, 2025):
         lab = np.zeros(g.shape, np.int32); lab[118:123, 200:205] = 1; lab[30:32, 30:32] = 2
+        st_ = pd.DataFrame({"settlement_id": [1, 2], "population": [2e5, 8e3], "lon": [2.7, 1.26],
+                            "lat": [7.0, 7.74], "cells_1km": [25, 4]})
+        if e == 2025:                                                    # a town that grew past 50,000
+            lab[200:203, 30:33] = 3
+            st_ = pd.concat([st_, pd.DataFrame({"settlement_id": [3], "population": [6e4], "lon": [1.26],
+                                                "lat": [6.32], "cells_1km": [9]})])
         np.save(work / f"settlement_id_{e}.npy", lab)
         np.save(work / f"population_{e}.npy", np.full(g.shape, 50, np.float32))
-        pd.DataFrame({"settlement_id": [1, 2], "population": [2e5, 8e3], "lon": [2.7, 1.26],
-                      "lat": [7.0, 7.74], "cells_1km": [25, 4]}).to_csv(work / f"settlements_{e}.csv", index=False)
+        st_.to_csv(work / f"settlements_{e}.csv", index=False)
     pd.DataFrame({"Main Port Name": ["P"], "Country Code": ["A"], "Harbor Size": ["Medium"],
                   "Latitude": [6.2], "Longitude": [1.1]}).to_csv(dl / "UpdatedPub150.csv", index=False)
     nel = np.full((17400, 43200), 65535, np.uint16)                          # global, like Nelson
@@ -317,6 +325,8 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     ctx = {"work": work, "dl": dl, "results": res, "grid": g, "years": [2015, 2020, 2026],
            "epoch": {2015: 2015, 2020: 2020, 2026: 2025}, "nelson_layers": ["cities_11"]}
     monkeypatch.setattr(ga, "LIGHT_FACTOR", 10)
+    monkeypatch.setattr(ga, "ROAD_ONLY", True)
+    monkeypatch.setattr(ga, "ROAD_ONLY_LAYERS", ["cities_11"])
     ga.stage_friction(ctx)
     f15, f26 = np.load(work / "friction_2015.npy"), np.load(work / "friction_2026.npy")
     assert np.isinf(f15[0, 119]) and np.isfinite(f15[120, 119])             # river, bridge
@@ -345,6 +355,12 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     assert (t26 < t15 - 1).sum() > 100                                       # new road helps
     t20 = np.load(work / "tt" / "tt_2020_cities_11.npy")
     fin = np.isfinite(t15)
+    # road-only: settlements of 2015, same roads -> ignores the new town of 2025
+    r15 = np.load(work / "tt" / "tt_roadonly_2015_cities_11.npy"); r26 = np.load(work / "tt" / "tt_roadonly_2026_cities_11.npy")
+    assert np.allclose(r15[fin], t15[fin])                               # first year: identical
+    assert t26[201, 31] == 0 and r26[201, 31] > 30                       # new town is a destination only in total
+    assert (r26 >= t26 - 1e-3)[np.isfinite(r26)].all() and (r26 <= r15 + 1e-3)[fin].all()
+    assert (r26 < r15 - 1).sum() > 100                                   # roads alone still help
     assert (t26 <= t20 + 1e-3)[fin].all() and (t20 <= t15 + 1e-3)[fin].all()
     assert np.isinf(np.load(work / "tt" / "tt_2015_cities_1.npy")).all()   # no city of 5-50 M
     # resume reuses layers, but recomputes them when the friction grid was rebuilt since
@@ -374,6 +390,10 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     names = {(it["name"], it["year"], it["layer"]) for it in man["items"]}
     assert ("friction", 2020, None) in names and ("traveltime", 2026, "ports_5") in names
     assert ("population", 2020, None) in names and ("landcover", None, None) in names
+    assert ("traveltime_roadonly", 2026, "cities_11") in names and ("friction_roadonly", 2020, None) in names
+    ro, _ = ga.load_store(res, "traveltime_roadonly", 2026, "cities_11")
+    assert np.allclose(ro[np.isfinite(r26)], r26[np.isfinite(r26)])
+    assert (res / "tables" / "pop_weighted_traveltime_roadonly_global.csv").exists()
     assert sum(1 for n in names if n[0] == "traveltime") == 3 * 17
     arr, prof = ga.load_store(res, "traveltime", 2020, "cities_11")
     ref = np.load(work / "tt" / "tt_2020_cities_11.npy")
@@ -733,3 +753,96 @@ def test_change_pairs_and_weiss_years():
     assert ga.change_pairs([2026, 2015, 2020]) == [(2015, 2020), (2020, 2026), (2015, 2026)]
     assert ga.weiss_needed([2015, 2020, 2026]) and ga.weiss_needed([2020, 2026])
     assert not ga.weiss_needed([2010, 2014])
+
+
+
+def test_weiss_years(monkeypatch):
+    monkeypatch.setattr(ga, "WEISS2015_AUGMENT", True)
+    monkeypatch.setattr(ga, "WEISS_YEARS", None)
+    assert ga.weiss_years([2015, 2016, 2020, 2026]) == [2015, 2016, 2020]
+    monkeypatch.setattr(ga, "WEISS_YEARS", [])
+    assert ga.weiss_years([2015, 2020, 2026]) == [] and not ga.weiss_needed([2015, 2020, 2026])
+    monkeypatch.setattr(ga, "WEISS_YEARS", [2015, 2026])
+    assert ga.weiss_years([2015, 2020, 2026]) == [2015]                    # never the last year
+    monkeypatch.setattr(ga, "WEISS2015_AUGMENT", False)
+    assert ga.weiss_years([2015, 2020, 2026]) == []
+
+
+def test_stage_events_codes_and_bursts(tmp_path):
+    """Cell events from the OSM road rasters; bursts from new-way km per 0.1 deg cell, user and tags."""
+    g = ga.Grid((0, 6, 1, 7), D)                                          # 120 x 120 cells; 10 x 10 burst cells
+    work = tmp_path / "work"
+    r15 = np.zeros(g.shape, np.float32); r15[10, :] = 70; r15[50, :] = 40; r15[80, :] = 30
+    r20 = r15.copy(); r20[50, :] = 55                                     # upgrade (40 -> 55)
+    r20[80, :] = 0                                                        # removed
+    r20[:, 5] = np.maximum(r20[:, 5], 20)                                 # one long new road (column 5)
+    r20[30, 36:48] = 25                                                   # dense new mapping in burst cell (2, 3)
+    r20[97, 95] = 15                                                      # short new road from a HOT changeset
+    r20[10, 60:] = 49                                                     # slower (reclassified)
+    for y, r in ((2015, r15), (2020, r20)):
+        (work / "roads" / str(y)).mkdir(parents=True)
+        np.save(work / f"road_speed_{y}.npy", r)
+    old = pd.DataFrame({"osm_id": [1, 2], "highway": ["primary", "tertiary"], "speed": [70.0, 40.0],
+                        "brow": [0, 4], "bcol": [0, 0], "km": [110.0, 110.0], "clipped": [True, True]})
+    gone = pd.DataFrame({"osm_id": [3], "highway": ["unclassified"], "speed": [30.0], "brow": [6], "bcol": [0],
+                         "km": [110.0], "clipped": [True]})
+    long_road = pd.DataFrame({"osm_id": 10, "highway": "residential", "speed": 20.0, "brow": range(10), "bcol": 0,
+                              "km": 11.1, "clipped": True})
+    dense = pd.DataFrame({"osm_id": [12], "highway": ["track"], "speed": [15.0], "brow": [2], "bcol": [3],
+                          "km": [30.0], "clipped": [True]})
+    hot = pd.DataFrame({"osm_id": [11], "highway": ["track"], "speed": [15.0], "brow": [8], "bcol": [7],
+                        "km": [4.6], "clipped": [True]})
+    pd.concat([old, gone]).to_parquet(work / "roads" / "2015" / "t.ways.parquet")
+    pd.concat([old, long_road, dense, hot]).to_parquet(work / "roads" / "2020" / "t.ways.parquet")
+    pd.DataFrame({"osm_id": [10, 11, 12], "version": [1, 1, 1],
+                  "timestamp": pd.to_datetime(["2019-05-01", "2019-06-01", "2019-07-01"], utc=True),
+                  "changeset": [100, 101, 102], "uid": [7, 8, 9]}).to_parquet(work / "osm_way_meta.parquet")
+    pd.DataFrame({"changeset": [100, 101, 102], "comment": ["", "#hotosm-project-1234", ""], "hashtags": [""] * 3,
+                  "created_by": ["JOSM", "iD", "JOSM"], "source": [""] * 3, "imagery_used": [""] * 3,
+                  "data_used": [""] * 3, "campaign": [False, True, False]}).to_parquet(work / "osm_changeset_tags.parquet")
+    ga.stage_events({"grid": g, "work": work, "years": [2015, 2020]})
+    ev = np.load(work / "road_events_2020.npy"); code = ev & 15
+    assert (code[50, :] == 2).all() and (code[80, 6:] == 4).all() and code[80, 5] == 3 and (code[10, 60:] == 3).all()
+    assert code[30, 5] == 1 and ev[30, 5] < 16                            # one long road: 11 km per cell, no burst
+    assert (ev[30, 36:48] >= 16).all() and ev[97, 95] >= 16                # one user, 30 km in a cell; HOT changeset
+    assert (ev[50, :] < 16).all()
+    b = pd.read_csv(work / "osm_burst_cells.csv")
+    assert b.burst.sum() == 2 and len(b) == 12                            # 10 cells of the long road + 2
+    sm = pd.read_csv(work / "road_events_summary.csv").set_index("event")
+    assert sm.loc["road removed", "cells"] == 119 and sm.loc["new ways (km)", "cells"] == pytest.approx(145.6, abs=0.2)
+
+
+def test_way_cells_split_length():
+    g = ga.Grid((0, 6, 1, 7), D)
+    line = shapely.LineString([(0.05, 6.95), (0.95, 6.95)])               # ~99 km along 6.95 N
+    w = ga.way_cells(np.array([line]), np.array([5]), g)
+    assert set(w.bcol) == set(range(10)) and set(w.brow) == {0}
+    assert w.km.sum() == pytest.approx(ga.great_circle_km(0.05, 6.95, 0.95, 6.95), rel=1e-3)
+
+
+HISTORY_CHANGESETS = """<?xml version='1.0' encoding='UTF-8'?>
+<osm version="0.6" generator="test">
+ <changeset id="1" created_at="2014-06-01T00:00:00Z" closed_at="2014-06-01T01:00:00Z" open="false" num_changes="3" user="a" uid="1" min_lat="6" min_lon="0" max_lat="8" max_lon="3" comments_count="0">
+  <tag k="comment" v="roads #hotosm-project-42"/><tag k="created_by" v="iD 2.0"/>
+ </changeset>
+ <changeset id="2" created_at="2018-03-01T00:00:00Z" closed_at="2018-03-01T01:00:00Z" open="false" num_changes="3" user="a" uid="1" min_lat="6" min_lon="0" max_lat="8" max_lon="3" comments_count="0">
+  <tag k="comment" v="village road"/><tag k="created_by" v="Rapid 2.1"/><tag k="data_used" v="MapWithAI"/>
+ </changeset>
+ <changeset id="9" created_at="2018-03-01T00:00:00Z" closed_at="2018-03-01T01:00:00Z" open="false" num_changes="1" user="b" uid="2" min_lat="6" min_lon="0" max_lat="8" max_lon="3" comments_count="0">
+  <tag k="comment" v="unrelated"/>
+ </changeset>
+</osm>
+"""
+
+
+def test_history_way_meta_and_changesets(tmp_path):
+    pytest.importorskip("osmium")
+    osh = tmp_path / "h.osh"; osh.write_text(HISTORY_OSH)
+    m = pd.read_parquet(ga.history_way_meta(osh, tmp_path / "meta.parquet")).set_index("osm_id")
+    assert sorted(m.index) == [10, 11, 12]                                 # 13 is a river
+    assert m.loc[10, "version"] == 1 and m.loc[10, "changeset"] == 1 and m.loc[11, "changeset"] == 2
+    assert str(m.loc[11, "timestamp"])[:10] == "2018-03-01"
+    cs = tmp_path / "cs.osm"; cs.write_text(HISTORY_CHANGESETS)
+    t = ga.changeset_campaigns(cs, m.changeset.unique(), tmp_path / "cs.parquet").set_index("changeset")
+    assert set(t.index) == {1, 2}                                         # changeset 3 is not in the dump
+    assert t.loc[1, "campaign"] and t.loc[2, "campaign"] and t.loc[2, "data_used"] == "MapWithAI"
