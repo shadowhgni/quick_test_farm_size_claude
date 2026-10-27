@@ -243,7 +243,7 @@ Checked against the providers on 2026-10-27. Other rows (ERA5-Land, MODIS LST, F
 
 The covariate rows are now checked, with the restrictions above.
 
-## Default thresholds (proposed, to be approved before any outcome data are examined)
+## Default thresholds (approved 2026-10-27, before any outcome data were examined)
 
 Each threshold has a default, a reason and a sensitivity range. Once approved they are frozen, and changes after outcomes are seen are reported as deviations.
 
@@ -403,10 +403,10 @@ Checked against providers on 2026-10-27; the remaining items need either the dat
 - [x] ACLED registration (done by the author; credentials are kept out of the repository and read from environment variables on the HPC).
 - [x] Pilot subset and held-out zones: rule-based (section "Pilot selection rule").
 - [x] Compute platform: HPC node.
-- [ ] Approve or change the default thresholds (section "Default thresholds").
+- [x] Default thresholds approved by the author on 2026-10-27 (to be revised later; changes after outcomes are seen are reported as deviations).
 - [ ] Copy the LSMS zips to the HPC, and fill the panel gaps listed in "LSMS-ISA data inventory" (Ethiopia 2015, Malawi IHPS, Tanzania 2008, Nigeria W5, Uganda 2009, Côte d'Ivoire 2018).
 - [x] Copernicus CDS registration (done by the author; the CDS API key is to be placed in `~/.cdsapirc` on the HPC, not in the repository).
-- [ ] Register for NASA Earthdata.
+- [x] NASA Earthdata registration (done by the author). For scripted downloads, put the login in `~/.netrc` (`machine urs.earthdata.nasa.gov login <user> password <password>`, file mode 600) on the HPC; never in the repository.
 
 ## Sources
 
