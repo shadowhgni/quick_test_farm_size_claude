@@ -77,14 +77,20 @@ Each road event is therefore classified and dated as follows.
    - a large number of ways was added by few users or changesets; or
    - the changeset comes from a known import or campaign; or
    - the way's geometry already shows up in imagery from earlier years.
-   - Burst thresholds are fixed in advance. *(unverified: whether the public full-history planet carries user and changeset IDs; if not, the separate changeset dump on planet.openstreetmap.org is joined by changeset ID.)*
+   - Burst thresholds are fixed in advance.
+   - **Metadata (checked):** the full-history planet keeps the user, uid, changeset and timestamp of every version (Geofabrik's public extracts drop them since May 2018, so they cannot be used for this step). Each version's changeset ID joins the changeset dump (`changesets-YYMMDD.osm.bz2`), whose tags identify campaigns and imports:
+     - `comment` and `hashtags` carry HOT Tasking Manager hashtags (`#hotosm-project-<id>` on the production instance; the prefix is from community sources);
+     - `created_by` = "Rapid …" and `data_used` (matching MapWithAI or Esri) mark AI-assisted edits;
+     - `source` and `imagery_used` record the imagery.
+     - No official tag marks Microsoft road imports. The history file holds personal data and is handled under GDPR.
 3. **Imagery confirmation.** A new-way or upgrade event is confirmed when a road-construction signal appears in the 1–2 years before or at the OSM date:
    - in Landsat or Sentinel-2 time series along the segment: a bare-soil fraction jump, or a new linear feature;
    - the model is the Landsat road-dating method of Valle et al. (2024), developed on the Transamazon highway.
    - The ground check for the method is the Congo Basin forest-road dataset (Slagter et al. 2024), which gives the month of opening for 46,311 km of roads built 2019–2023.
 4. **Externally dated projects.** These form a subsample with independent timing and planned location:
-   - World Bank geocoded projects, *(unverified: release and fields)*;
-   - AidData geocoded Chinese official finance (Africa 2000–2012, global 2000–2014; whether completion dates are included is to be checked in the codebook).
+   - **AidData Geospatial Global Chinese Development Finance v3** (2024; commitments 2000–2021, implementation tracked to 2023): actual implementation start and completion dates, sector (e.g. "Transport and storage"), and precise OSM geometries for 8,797 features of 9,405 projects. This is the main dated subsample. Whether road projects come as line geometries is to be checked on a road record.
+   - **World Bank Geocoded Research Release v1.4.2** (AidData, 2017; IBRD/IDA projects approved 1995–2014): point locations only, with actual start and end dates and CRS purpose codes (21020 = road transport) *(field names from a secondary source; to be confirmed in the release files)*. It is used for timing only, since points do not locate the road.
+   - AidData's newer "China's Global Loans and Grants Dataset 1.0" (2025; commitments 2000–2023) has no geospatial version yet.
 5. **Event classes used in the analysis:**
    - *confirmed construction or upgrade*: the primary treatment;
    - *unconfirmed*: used in a sensitivity run;
@@ -123,18 +129,32 @@ Yields are prepared in three tiers that trade coverage for attribution. Results 
 The unit of analysis is the enumeration area (EA), the survey cluster whose coordinates the public files give. Household and plot records are only inputs to the EA values.
 
 - **Countries and waves:**
-  - Eight LSMS-ISA countries: Burkina Faso, Ethiopia, Malawi, Mali, Niger, Nigeria, Tanzania and Uganda. The country list is from World Bank presentations and is to be checked against the Microdata Library for each panel.
-  - Only EAs surveyed in at least two waves with access change between them are used.
-  - The EA, not the household, is the panel unit. LSMS-ISA panels generally revisit the same EAs even when households drop out, split or are replaced *(to be checked per country)*, so EA series are longer and more stable than household series.
+  - Eight LSMS-ISA countries. Only EAs surveyed in at least two waves with access change between them are used. The EA, not the household, is the panel unit: most panels revisit the same EAs, but several were refreshed, which breaks EA continuity. Checked on the World Bank Microdata Library:
+
+    | Country | Waves | Waves sharing EAs | Break |
+    | --- | --- | --- | --- |
+    | Ethiopia (ESS) | 2011/12, 2013/14, 2015/16, 2018/19, 2021/22 | 2011–2015 (urban EAs from 2013/14); 2018/19–2021/22 (Tigray and some EAs missing in 2021/22) | 2018/19 is a new panel |
+    | Malawi (IHPS) | 2010, 2013, 2016, 2019 | 102 EAs across all four waves (204 in 2010–2013) | None; panel reduced in 2016 |
+    | Nigeria (GHS-Panel) | 2010/11, 2012/13, 2015/16, 2018/19, 2023/24 | 500 EAs 2010–2015; 159 "long-panel" EAs to 2018/19; 2018/19–2023/24 | 360 new EAs in 2018/19 |
+    | Tanzania (NPS) | 2008/09, 2010/11, 2012/13, 2014/15, 2019/20, 2020/21 | 2008–2012 cohort (re-clustered in 2012/13); 2014/15–2020/21 cohort | New sample in 2014/15 |
+    | Uganda (UNPS) | 2009/10 to 2019/20 (7 waves) | 322 EAs from 2009/10 | A third of the sample refreshed from 2013/14 (EA or household level: to confirm) |
+    | Niger | ECVMA 2011, 2014; EHCVM 2018/19, 2021/22 | 2011–2014 household panel; 2018/19–2021/22 cluster panel | Between ECVMA and EHCVM |
+    | Mali | EAC-I 2014/15, 2017/18; EHCVM 2018/19, 2021/22 | EHCVM 2018/19–2021/22 (same clusters, 12 households each) | EAC-I rounds are cross-sections |
+    | Burkina Faso | EHCVM 2018/19, 2021/22 | Half of the 2018/19 households (3,227); movers not followed | — |
+
+  - Under the EA design, a refresh is handled by using each continuous segment as its own panel. Tracked movers are dropped from the EA aggregates, since they no longer farm in the EA.
 - **Aggregation to EA × crop × season:**
-  - **Yield:** total production of the crop in the EA ÷ total GPS-measured area of the plots growing it (a ratio of sums, not a mean of plot yields). GPS area is preferred over self-reported area, which diverges strongly in validation studies.
+  - **Yield:** total production of the crop in the EA ÷ total GPS-measured area of the plots growing it (a ratio of sums, not a mean of plot yields). Plot areas are GPS-measured in all countries checked except where the household refused, the terrain was too difficult or the plot was far away; there the self-reported area is used and flagged.
+  - **Harvest units:** quantities are converted to kg with the surveys' conversion factors (e.g. Nigeria `sa3iq6_conv`, Uganda AGSEC5A, Malawi seasonal crop conversion files). For intercropped plots, the crop's area is the plot area times the reported share planted to the crop (Tanzania, Uganda), and intercropped observations are also analysed separately.
   - **Value of output per hectare**, all crops together, as a crop-agnostic outcome.
   - **Minimum sample:** a minimum number of households and plots per EA-crop-season, fixed in advance; below it the observation is dropped.
   - **Weights:** EA observations are weighted by the number of contributing plots; survey weights are used as an alternative.
   - **Composition:** the crop's share of cultivated area in the EA is reported alongside its yield, since EA yield can move with which plots grow the crop.
   - **Sensitivity:** EA values recomputed from households observed in both waves only, to separate yield change from changes in who is sampled.
 - **Location and treatment:**
-  - Public EA coordinates are displaced by up to 2 km (urban) or 5 km (rural). *(Offsets from a World Bank blog and a research paper; check each country's documentation.)*
+  - Public EA coordinates are displaced: 0–2 km in urban areas and small towns, 0–5 km in rural areas, and 0–10 km for 1% of EAs, constrained within the zone (Ethiopia study documentation). The other countries state only that coordinates are offset; their parameters are to be read in each Basic Information Document.
+  - Plot coordinates are not released; public plot geovariable files carry only derived values (distance to the household, slope, elevation, wetness). The one possible exception, Tanzania 2020/21 plot GPS fields, is to be checked.
+  - The 1% of EAs moved up to 10 km are a known source of treatment error. The displacement simulation includes them.
   - The treatment is the cropland-weighted mean access change of the 0.01° cells within 5 km of the displaced point, consistent with the EA as unit. The remaining bias is estimated by simulating the displacement on the access maps.
   - True coordinates are not needed for this design; they would only tighten the treatment.
 - **Covariates:** EA means of plot characteristics (plot size, slope, irrigation, intercropping, soil from the plot modules or iSDAsoil), plus rainfall and prices at the EA point.
@@ -204,18 +224,24 @@ Every covariate has one primary source and one alternative, as in the earlier de
 
 | Variable | Primary | Alternative |
 | --- | --- | --- |
-| Rainfall | CHIRPS | ERA5-Land |
+| Rainfall | CHIRPS v3.0 (0.05°, 1981–present, CC BY 4.0; v2.0 only through 2026) | ERA5-Land |
 | Temperature | ERA5-Land | MODIS land surface temperature |
-| Conflict | ACLED | UCDP-GED |
-| Population | GHS-POP (epochs) | WorldPop |
+| Conflict | ACLED (free registration; event-level data needs a research tier; no redistribution of raw data) | UCDP-GED 26.1 (CC BY 4.0) |
+| Population | GHS-POP R2023A (5-year epochs) | WorldPop Global2 R2025A (annual 2015–2030; alpha release) |
 | Prices | FEWS NET price bulletins | WFP VAM |
 | Protected areas | WDPA | — |
-| Soils | iSDAsoil | SoilGrids |
+| Soils | iSDAsoil (30 m; weak in dense Central African forest) | SoilGrids 2.0 (250 m) |
 | Irrigation | WorldCereal 2021 irrigation | FAO global irrigated areas |
-| Logging concessions | Congo Basin concession maps *(source to confirm)* | — |
+| Logging concessions | GFW managed forest concessions v2025 (Cameroon, CAR, DRC, Equatorial Guinea, Gabon, Rep. Congo; Gabon view-only) | WRI national Forest Atlases |
 | Governance | WGI Control of Corruption (as in v3) | — |
 
-Sources in this table have not yet been checked against the providers and count as *(unverified)* until then.
+Checked against the providers on 2026-10-27. Other rows (ERA5-Land, MODIS LST, FEWS NET, WFP VAM, WDPA, WorldCereal irrigation, FAO GMIA v5) are available as listed, with these restrictions:
+- **FEWS NET** prices have 2025 gaps that cannot be backfilled.
+- **WFP VAM** update status could not be read.
+- **WDPA** forbids redistribution and commercial use.
+- **WorldCereal** irrigation covers 2021 only.
+
+The covariate rows are now checked, with the restrictions above.
 
 ## Validation, robustness and cross-check protocol
 
@@ -260,19 +286,63 @@ The access maps exist; the treatment layer needs four additions to the script.
   - For yields, Ethiopian studies report productivity gains from road expansion that vary with remoteness and extension.
   - The results here should be read against these, not assumed to match them.
 
-## Open items to verify before starting
+## Open items
 
-- [ ] Whether the OSM full-history planet includes user and changeset IDs; otherwise, how to join the changeset dump.
-- [ ] Imagery road-dating: transfer of the Valle et al. (2024) method to African savanna and cropland contexts; accuracy against Slagter et al. (2024) road-opening dates.
-- [ ] Completion dates in AidData and World Bank geocoded project data.
-- [ ] LSMS-ISA: EA panel structure and waves per country (EAs revisited, household replacement rules), displacement rules, microdata registration.
-- [ ] Covariate sources and versions (table above).
-- [ ] All placeholder thresholds: event definition, burst rule, Gate T and Gate C criteria, matching variables.
-- [ ] All open items of the earlier design (GROW-Africa provenance, SPAM reference years, Sentinel-2 2017–2018 coverage, WorldCereal 2024/2025, GACED30 accuracy for Africa, TMF grid, thresholds, pilot definition, compute platform).
+Checked against providers on 2026-10-27; the remaining items need either the data in hand or a decision.
+
+### Verified or corrected (earlier design)
+
+- **SPAM reference years.**
+  - SPAM 2010 uses 2009–2011 averages (closest years 2005–2015 where missing).
+  - SPAM 2020 uses 2019–2021 averages.
+  - SPAM 2017 covers 2016–2018 (an averaging statement was not found).
+  - The SPAM versions are not meant to be compared across time; they are used as level checks only.
+- **WorldCereal:** still 2021 only (temporary crops, maize, winter and spring cereals, active cropland, irrigation). More products are announced "by the end of 2026", including separate wheat, barley and rye, and sorghum, millet, sunflower, rapeseed and soybean. None is released yet. The classification module (openEO) and reference data 2021–2025 are available for making one's own maps.
+- **GACED30:** no Africa-specific accuracy is published. Globally the overall accuracy is 0.965 (F1 0.844; user's 0.883, producer's 0.808). By agro-ecological zone, F1 ranges from 0.631 to 0.913; it is weakest in the humid tropics, through missed cropland. Phase 1 must therefore measure its accuracy in Africa itself.
+- **JRC TMF:** latest version v1_2025 (1990–2025, Landsat Collection 2, 30 m).
+  - **Correction:** the native spacing appears to be 1 arc-second (≈0.000269°), not the GLAD grid (0.00025°), so TMF is resampled like Hansen.
+- **MODIS and VIIRS:** MOD13Q1 and MYD13Q1 were still produced in October 2026. NASA's latest schedule ends science data in February 2027 (Terra) and September 2027 (Aqua). Older pages give earlier dates.
+  - Suomi NPP VIIRS products end on 2 November 2026; NOAA-21 (VJ213A1) and NOAA-20 (VJ113A1) are the successors, at 500 m.
+- **Sentinel-2 L2A 2017–2018:** Digital Earth Africa serves L2A from 2017. The Earth Engine collection warns that 2017–2018 coverage is not global. ESA's Collection-1 reprocessing (2024) provides L2A from 2015 to 2021 on the Copernicus Data Space Ecosystem. Gaps are therefore a platform question, to be checked over the pilot area once it is chosen.
+- **GROW-Africa provenance:**
+  - Admin yields are aggregated mainly from FAOSTAT and Agro-MAPS, HarvestStat (FEWS NET) and ReSAKSS eAtlases, plus national statistics. The overlap with HarvestStat that the independence rule worried about is therefore confirmed, and shared-source labels are needed.
+  - "Year" is the agricultural or harvest year; the handling of two seasons per year is not documented.
+  - Point records carry a spatial precision column (km).
+  - **Overlap with Tier 2:** LSMS points in GROW-Africa are jittered as above, so GROW-Africa LSMS records and Tier 2 are the same data and must not both enter an analysis.
+
+### Verified (this revision)
+
+- OSM history metadata and changeset join (Phase 0, mapping bursts).
+- AidData and World Bank geocoded project dates (Phase 0, externally dated projects).
+- LSMS-ISA panel structure, displacement and plot data (Tier 2).
+- Covariate sources (covariate table).
+
+### Still to check, from the data files once downloaded
+
+- [ ] GeoGCDF v3: road projects as line geometries; World Bank v1.4.2: column definitions (actual versus revised end dates).
+- [ ] LSMS-ISA:
+  - displacement parameters in each country's Basic Information Document;
+  - whether Uganda's 2013/14 refresh replaced EAs or households, and which sample the 2018/19 and 2019/20 waves use;
+  - whether Niger's EHCVM 2021/22 re-interviews households;
+  - Tanzania 2020/21 plot GPS values;
+  - crop-module structure for Ethiopia and the EHCVM countries.
+- [ ] GROW-Africa: how multiple seasons are coded; meaning of the QC flags.
+- [ ] Sentinel-2 coverage over the pilot area in 2017–2018, on the chosen platform.
+
+### Needs a test in Phase 0
+
+- [ ] Imagery road-dating: transfer of the Valle et al. (2024) method to savanna and cropland, scored against Slagter et al. (2024).
+
+### Needs a decision or action by the author
+
+- [ ] Microdata registration: World Bank Microdata Library (LSMS-ISA; Malawi IHPS is licensed), ACLED (research tier), Copernicus CDS (ERA5-Land), NASA Earthdata.
+- [ ] Placeholder thresholds: event definition, burst rule, Gate T and Gate C criteria, matching variables, and those of the earlier design (Gate A accuracies, alignment rules, minimum footprints, sensor agreement, Gate B).
+- [ ] Pilot subset and held-out zones.
+- [ ] Compute platform for 10–30 m processing (HPC node, Earth Engine or Digital Earth Africa).
 
 ## Sources
 
-Checked through search results on 2026-10-27. Items tagged *(unverified)* in the text are not covered here. Sources of the earlier design (version of 27 Oct 2026) still apply and are not repeated.
+Checked on 2026-10-27 (search results and provider pages). Items tagged *(unverified)* in the text are not covered here. Sources of the earlier design (version of 27 Oct 2026) still apply and are not repeated.
 
 - [Asher, Garg & Novosad, The ecological footprint of transportation infrastructure (India)](https://www.greenfinanceplatform.org/sites/default/files/downloads/resource/Asher_The%20Ecological%20Footprint%20of%20Transportation%20Infrastructure.pdf)
 - [Kleinschroth et al. 2019, Congo Basin roads](https://mahb.stanford.edu/wp-content/uploads/2019/06/Kleinschroth-et-al.-2019-Congo-roads.pdf)
@@ -291,3 +361,9 @@ Checked through search results on 2026-10-27. Items tagged *(unverified)* in the
 - [LSMS-ISA displacement of enumeration-area coordinates (research paper)](https://arxiv.org/pdf/2409.07506) and [World Bank data blog](https://blogs.worldbank.org/en/opendata/exploring-youth-s-role-and-engagement-african-rural-economies)
 - [Temporal accuracy of OpenStreetMap, State of the Map 2021](https://api.media.ccc.de/v/sotm2021-academic-10398-towards-understanding-the-temporal-accuracy-of-openstreetmap-a-quantitative-experiment)
 - [OpenStreetMap planet and changeset files](https://planet.openstreetmap.org/)
+- [OSM full-history planet](https://wiki.openstreetmap.org/wiki/Planet.osm/full), [Geofabrik metadata note](https://download.geofabrik.de/technical.html) and [changeset tags](https://wiki.openstreetmap.org/wiki/Changeset)
+- [AidData Geospatial GCDF v3](https://www.aiddata.org/data/aiddatas-geospatial-global-chinese-development-finance-dataset-version-3-0) and [data repository](https://github.com/aiddata/gcdf-geospatial-data)
+- [World Bank Geocoded Research Release v1.4.2](https://www.aiddata.org/data/world-bank-geocoded-research-release-level-1-v1-4-2)
+- LSMS-ISA study pages, World Bank Microdata Library: [Ethiopia ESS 2018/19](https://microdata.worldbank.org/index.php/catalog/3823), [Nigeria GHS W4](https://microdata.worldbank.org/index.php/catalog/3557), [Tanzania NPS 2014/15](https://microdata.worldbank.org/index.php/catalog/2862), [Uganda UNPS 2015/16](https://microdata.worldbank.org/index.php/catalog/3460), [Malawi IHPS 2019](https://microdata.worldbank.org/index.php/catalog/3819), [Burkina Faso EHCVM 2021/22](https://microdata.worldbank.org/index.php/catalog/6224)
+- [CHIRPS v3](https://www.chc.ucsb.edu/data/chirps3), [UCDP downloads](https://ucdp.uu.se/downloads/), [ACLED EULA](https://acleddata.com/eula/), [WorldPop](https://hub.worldpop.org/), [WDPA legal](https://www.protectedplanet.net/en/legal), [GFW managed forests](https://data-api.globalforestwatch.org/dataset/gfw_managed_forests)
+- [SPAM 2010, ESSD](https://essd.copernicus.org/articles/12/3545/2020/), [SPAM 2017 Dataverse](https://doi.org/10.7910/DVN/FSSKBW), [WorldCereal global maps](https://esa-worldcereal.org/en/products/global-maps), [GACED30](https://essd.copernicus.org/articles/18/7071/2026/), [JRC TMF data](https://forobs.jrc.ec.europa.eu/TMF/data.php), [Terra end of mission](https://science.nasa.gov/science-research/earth-science/terra-the-end-of-an-era/), [Sentinel-2 Collection 1](https://sentinels.copernicus.eu/-/sentinel-2-collection-1-products-availability), [GROW-Africa paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC12215972/)
