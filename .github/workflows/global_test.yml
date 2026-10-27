@@ -33,7 +33,8 @@ jobs:
           PROJ_LIB: /opt/conda/share/proj    # a broken setting seen on a user's HPC node: the script must recover
         run: |
           rm -rf global_accessibility/test_results    # no leftovers from earlier runs
-          python global_accessibility/global_accessibility_v3.py \
+          # -X faulthandler + SIGABRT after 45 min: a hang prints the Python stack of every thread
+          timeout -s ABRT 45m python -X faulthandler global_accessibility/global_accessibility_v3.py \
             --bbox -1 5.5 4.5 13.5 --years 2015 2020 2026 --osm-source geofabrik \
             --routing-cities-per-continent 12 --ml-files Western_Africa.zip \
             --nelson-layers cities_10 cities_11 cities_12 ports_5 \
