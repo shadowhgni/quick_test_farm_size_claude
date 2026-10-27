@@ -243,6 +243,58 @@ Checked against the providers on 2026-10-27. Other rows (ERA5-Land, MODIS LST, F
 
 The covariate rows are now checked, with the restrictions above.
 
+## Default thresholds (proposed, to be approved before any outcome data are examined)
+
+Each threshold has a default, a reason and a sensitivity range. Once approved they are frozen, and changes after outcomes are seen are reported as deviations.
+
+| Item | Default | Rationale | Sensitivity |
+| --- | --- | --- | --- |
+| Access event | Travel time to cities_11 falls by ≥ 20% **and** ≥ 15 min, and stays below for ≥ 2 years | 15 min exceeds the noise from re-tagging one road class within a 1 km cell; 20% stops very remote cells from dominating; persistence removes edit-and-revert noise | 10% / 10 min; 30% / 30 min |
+| Mapping burst | Per 0.1° cell-year: ≥ 25 km of new highway ways with ≥ 80% of the length from ≤ 3 users or changesets, or any changeset tagged with a HOT project hashtag or `data_used` MapWithAI/Esri | Signatures of campaigns and AI-assisted imports in the changeset tags; tunable on known HOT projects | 10 km; 50 km |
+| Imagery confirmation | Construction signal in years *t*−2 to *t* (OSM year *t*) | Mapping usually lags construction and rarely precedes it | *t*−3 to *t*+1 |
+| Gate T | ≥ 60% of new and upgraded road events confirmed per zone, and ≤ 50% of events inside mapping bursts | Above 60%, misdated events dilute event-study estimates without overturning them; below it, only the long-term analysis is used | 50%; 70% |
+| Gate A | User's and producer's accuracy ≥ 70% for the gain and conversion classes per zone; 95% CI half-width ≤ 15 points; ≥ 50 sample points per change class per zone | Change classes are far less accurate than overall accuracy; 70% is a common floor for change maps | 60%; 80% |
+| Phase 2a alignment | Within 25% level; anomaly r ≥ 0.6; bias ≤ 20%; ≥ 5 overlapping seasons | Kept from the earlier design | 15% / 35% (trade-off curve) |
+| Minimum footprints (Phase 2b) | ≥ 30 footprints over ≥ 3 seasons per crop | Minimum for stable leave-one-season-out validation | 20; 50 |
+| Sensor agreement | Seasonal-feature r ≥ 0.9; zone bias ≤ 0.05 NDVI | Near published Sentinel-2/MODIS agreement; small relative to seasonal amplitude (~0.3–0.5) | r ≥ 0.8 |
+| Gate B | Kept from the earlier design (RMSE −15% vs best baseline; anomaly R² ≥ 0.3; stable sign; held-out zone skill) | — | — |
+| LSMS EA observation | ≥ 5 households and ≥ 8 plots per EA × crop × season; EA in ≥ 2 waves of one continuous panel segment | Keeps the EA ratio estimate stable while retaining most rural EAs (10–12 households sampled per EA) | 3 / 5; 8 / 12 |
+| Matching balance | Standardised mean difference < 0.1 on every matching variable | Standard balance criterion | < 0.2 |
+| Spatial bands | Treated 0–5 km from a new segment; control 10–30 km; 5–10 km excluded | Separates direct effects from local spillovers | 0–3 / 15–40 km |
+| Inference | Conley standard errors, 50 km cutoff; Benjamini–Hochberg q = 0.10 across crops and outcomes | Spatial correlation of outcomes; many crops and outcomes tested | 25 km; 100 km |
+| Gate C | Pre-period joint test p > 0.10 and every pre coefficient < ⅓ of the post effect; placebo effect not significant and < ½ of the main estimate; same sign under ≥ 2 control definitions and in the long-term analysis | Makes the causal label hard to earn | — |
+
+## Pilot selection rule and compute platform
+
+- **Pilot (rule-based; NDVI tier only).** For each crop:
+  - rank agro-ecological zones by the number of footprints passing Phases 2a and 2b;
+  - keep the top three, plus the lowest-density zone that still has ≥ 30 footprints;
+  - hold out one further qualifying zone, drawn at random with a recorded seed.
+  - The land-use and access analyses use all zones.
+- **Compute.** Everything runs on the HPC node (90 cores, ~485–533 GB RAM, ~25 TB disk), with the same script conventions as `global_accessibility_v3.py`. Earth Engine is used only for spot checks.
+
+## LSMS-ISA data inventory (author's local files)
+
+The author holds the LSMS zips listed in `sources.csv`, at Windows OneDrive paths. They must be copied to the HPC before use.
+
+- **Enabled and usable for EA panels:**
+  - Ethiopia 2011, 2013, 2018, 2021;
+  - Nigeria GHS-Panel W1–W4 (2010, 2012, 2015, 2018);
+  - Tanzania NPS 2010, 2012, 2014, 2020;
+  - Uganda UNPS 2010, 2011, 2013, 2015, 2018, 2019;
+  - Niger ECVMA 2011, 2014 and EHCVM 2018, 2021;
+  - Mali EHCVM 2018, 2021 (EAC-I 2014/2017 are cross-sections);
+  - Burkina Faso EHCVM 2018, 2021.
+- **Additional EHCVM countries:** Benin, Côte d'Ivoire, Guinea-Bissau, Senegal, Togo (2018 and 2021). Whether their 2021/22 round revisits the 2018/19 clusters, as in Mali and Burkina Faso, is to be checked.
+- **Gaps that break panel segments:**
+  - Ethiopia 2015 is disabled; it is needed for the 2011–2015 segment.
+  - Malawi: the IHPS panel releases (2010–2013, 2016, 2019) are absent or disabled. IHS-III, IV and V are cross-sections, apart from their panel subsamples, so the Malawi panel needs IHPS catalog 2248 and 3819.
+  - Tanzania 2008 is disabled; it is needed for the 2008–2012 cohort.
+  - Nigeria Wave 5 (2023/24, catalog 6410) is not listed.
+  - Uganda 2009/10 is disabled.
+  - Côte d'Ivoire EHCVM 2018 is disabled; it is needed for any CIV panel.
+- **Not used:** RHoMIS (cross-sections, no EA panel), Nigeria LSS 2018, Nigeria FAMVS 2013, South Africa 1993, Côte d'Ivoire 1985/1988.
+
 ## Validation, robustness and cross-check protocol
 
 Every primary choice is rerun with its alternatives, and a result counts as robust only if it passes a rule written down before the run. All thresholds are placeholders to fix before analysis.
@@ -335,10 +387,12 @@ Checked against providers on 2026-10-27; the remaining items need either the dat
 
 ### Needs a decision or action by the author
 
-- [ ] Microdata registration: World Bank Microdata Library (LSMS-ISA; Malawi IHPS is licensed), ACLED (research tier), Copernicus CDS (ERA5-Land), NASA Earthdata.
-- [ ] Placeholder thresholds: event definition, burst rule, Gate T and Gate C criteria, matching variables, and those of the earlier design (Gate A accuracies, alignment rules, minimum footprints, sensor agreement, Gate B).
-- [ ] Pilot subset and held-out zones.
-- [ ] Compute platform for 10–30 m processing (HPC node, Earth Engine or Digital Earth Africa).
+- [x] ACLED registration (done by the author; credentials are kept out of the repository and read from environment variables on the HPC).
+- [x] Pilot subset and held-out zones: rule-based (section "Pilot selection rule").
+- [x] Compute platform: HPC node.
+- [ ] Approve or change the default thresholds (section "Default thresholds").
+- [ ] Copy the LSMS zips to the HPC, and fill the panel gaps listed in "LSMS-ISA data inventory" (Ethiopia 2015, Malawi IHPS, Tanzania 2008, Nigeria W5, Uganda 2009, Côte d'Ivoire 2018).
+- [ ] Register for Copernicus CDS (ERA5-Land) and NASA Earthdata.
 
 ## Sources
 
