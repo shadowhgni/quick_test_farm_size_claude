@@ -74,15 +74,17 @@ read_panel <- function(name) {
 # one row per coefficient; failures are kept with their message
 result_row <- function(..., estimate = NA_real_, se = NA_real_, p = NA_real_, n = NA_integer_,
                        error = NA_character_) {
-  tibble(..., estimate = estimate, se = se, p = p, n = n, error = error)
+  tibble(..., estimate = as.numeric(estimate)[1], se = as.numeric(se)[1], p = as.numeric(p)[1],
+         n = as.integer(n)[1], error = error)
 }
 
 safely_run <- function(expr_fun, meta) {
   out <- tryCatch(expr_fun(), error = function(e) e)
   if (inherits(out, "error")) {
-    return(do.call(result_row, c(meta, list(term = "overall", error = conditionMessage(out)))))
+    out <- do.call(result_row, c(meta, list(term = "overall", error = conditionMessage(out))))
   }
-  out
+  # crop is NA for the cell panel and may come back as logical or integer: one type for bind_rows
+  out |> mutate(crop = as.character(crop))
 }
 
 # --- Callaway and Sant'Anna (did::att_gt), never-treated or not-yet-treated controls ---------------
@@ -103,15 +105,15 @@ cs_estimate <- function(d, yname, gname, control, meta, weights = "w") {
   att <- did::att_gt(
     yname = yname, tname = "year", idname = "id", gname = gname, data = as.data.frame(d),
     control_group = control, weightsname = weights, panel = TRUE,
-    allow_unbalanced_panel = TRUE, base_period = "universal", est_method = "reg",
+    allow_unbalanced_panel = TRUE, base_period = "varying", est_method = "reg",
     bstrap = TRUE, biters = cfg$bootstrap_iters, clustervars = "id", print_details = FALSE
   )
   dyn <- did::aggte(att, type = "dynamic", min_e = cfg$min_e, max_e = cfg$max_e, na.rm = TRUE)
   simple <- did::aggte(att, type = "simple", na.rm = TRUE)
-  pre_p <- if (!is.null(att$Wpval)) att$Wpval else NA_real_
-  zcrit <- stats::qnorm(0.975)
+  # Wald pre-test of did (valid with the default varying base period)
+  pre_p <- if (!is.null(att$Wpval)) as.numeric(att$Wpval)[1] else NA_real_
   dyn_rows <- tibble(
-    term = paste0("e", dyn$egt), estimate = dyn$att.egt, se = dyn$se.egt
+    term = paste0("e", dyn$egt), estimate = as.numeric(dyn$att.egt), se = as.numeric(dyn$se.egt)
   ) |>
     mutate(p = 2 * stats::pnorm(-abs(estimate / se)))
   bind_rows(
@@ -122,8 +124,7 @@ cs_estimate <- function(d, yname, gname, control, meta, weights = "w") {
     do.call(result_row, c(meta, list(term = "pretest_wald", estimate = NA_real_, p = pre_p,
                                      n = n_treated))),
     dyn_rows |> mutate(!!!meta, n = n_treated, error = NA_character_)
-  ) |>
-    mutate(ci_ok = is.finite(se), zcrit = zcrit)
+  )
 }
 
 # --- Sun and Abraham (fixest::sunab) with region x year effects and Conley errors -----------------
@@ -167,7 +168,9 @@ dose_estimate <- function(d, yname, gname, dname, meta) {
   # contdid wants a time-invariant dose, 0 for the never-treated (as dose__<spec> is built)
   res <- contdid::cont_did(
     yname = yname, tname = "year", idname = "id", gname = gname, dname = dname,
-    data = as.data.frame(d |> filter(!is.na(.data[[yname]]), .data[[gname]] >= 0)),
+    # treated units need a positive dose (an access gain); others are left out of this design
+    data = as.data.frame(d |> filter(!is.na(.data[[yname]]), .data[[gname]] >= 0, !is.na(.data[[dname]]),
+                                     .data[[gname]] == 0 | .data[[dname]] > 0)),
     target_parameter = "slope", aggregation = "dose", treatment_type = "continuous",
     control_group = "notyettreated", biters = cfg$bootstrap_iters
   )
@@ -198,7 +201,9 @@ run_dataset <- function(d, dataset, outcomes, by_crop = FALSE) {
   specs <- intersect(cfg$specs, str_remove(grep("^g__", names(d), value = TRUE), "^g__"))
   map_dfr(groups, function(cr) {
     dd <- if (by_crop) d |> filter(crop == cr) else d
-    map_dfr(outcomes[outcomes %in% names(dd)], function(y) {
+    present <- outcomes[outcomes %in% names(dd)]
+    present <- present[vapply(present, \(y) any(!is.na(dd[[y]])), logical(1))]
+    map_dfr(present, function(y) {
       map_dfr(specs, function(sp) {
         g <- paste0("g__", sp)
         base <- list(dataset = dataset, outcome = y, crop = cr, spec = sp)
@@ -268,7 +273,7 @@ run_longdiff <- function(d) {
     map_dfr(function(dd) {
       ds <- dd$dataset[[1]]
       cr <- dd$crop[[1]]
-      map_dfr(ys, function(y) {
+      map_dfr(ys[vapply(ys, \(y) any(!is.na(dd[[y]])), logical(1))], function(y) {
         map_dfr(specs, function(sp) {
           x <- paste0("d_access__", sp)
           base <- list(dataset = ds, outcome = str_remove(y, "^d_"), crop = cr, spec = sp,
@@ -317,7 +322,7 @@ gate_c <- function(est) {
     ld <- est |>
       filter(.data$estimator == "longdiff", .data$outcome == !!outcome,
              (is.na(.data$crop) & is.na(!!crop)) | (.data$crop %in% !!crop),
-             .data$spec == cfg$primary_spec, str_starts(.data$dataset, str_sub(!!dataset, 1, 2)))
+             .data$spec == cfg$primary_spec, .data$dataset == !!dataset)
     c4 <- if (nrow(ld) && is.finite(ld$estimate[[1]])) isTRUE(sign(ld$estimate[[1]]) == sign(eff)) else NA
     tibble(dataset = dataset, outcome = outcome, crop = crop, effect = eff,
            p = if (nrow(main)) main$p[[1]] else NA_real_,

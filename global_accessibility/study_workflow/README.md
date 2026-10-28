@@ -1,0 +1,96 @@
+# Study workflow: access change, land use and crop yields (v0.1)
+
+This folder implements the study design in `../study_design/Study_design_access_landuse_yields.md`
+from the travel-time store of `global_accessibility_v3.py`.
+
+| File | Role |
+| --- | --- |
+| `access_effects_v01.py` | Data pipeline (Python, one file, resumable stages, same conventions as `global_accessibility_v3.py`) |
+| `estimate_effects.R` | Estimation and Gate C (R; called by stage `estimate`, or run by hand) |
+| `run_study.sh` | Commands for the JupyterLab terminal: `check`, `dry`, `run`, `status`, `log`, `stop` |
+| `dev/` | Tests (`python -m pytest dev -q`) and a panel simulator with a known effect |
+
+## Run on the HPC
+
+1. Finish a `global_accessibility_v3.py` run (stage `store`). For annual treatment, run it with
+   `--years 2015 2016 … 2026 --weiss-years none`. The default 2015/2020/2026 run gives the long-term level.
+2. Put this folder next to the GA results and set `GA_RESULTS` at the top of `access_effects_v01.py`.
+   If you have both an annual run and a three-year run, list the annual run first.
+3. Install R and its packages once: `install.packages(c("dplyr", "tidyr", "readr", "purrr", "tibble",
+   "stringr", "jsonlite", "fixest", "did", "contdid", "nanoparquet"))`. Without `contdid`, the
+   continuous-dose design is skipped.
+4. Run `bash run_study.sh check`, then `bash run_study.sh dry`, then `bash run_study.sh run`.
+
+Each stage resumes where it stopped. To rerun a stage, delete `ae_work/_done/<stage>`. Results go to
+`ae_results/`:
+
+- `tables/` holds Gate T, matching balance, panel summary, access check and the LSMS inventory.
+- `panels/` holds the analysis files read by R.
+- `estimates/` holds `estimates.csv`, with every coefficient and every failed model with its error, and `gate_c.csv`.
+- `logs/` holds the run record, with the configuration and every download.
+
+## Data sources
+
+All of these are read by script without registration. Each was range-tested on 2026-10-28 from the
+cloud sandbox (HTTP 206); the HPC must be checked with `check`.
+
+| Use | Source | Notes |
+| --- | --- | --- |
+| Forest 2000, annual loss | Hansen GFC v1.13 (`GFC-2025-v1.13`, loss 2001–2025) | Loss from 2011 on was reprocessed in v1.13; v1.12 remains available (`HANSEN_VERSION`) |
+| Annual cropland | GACED30, 2000–2024, 30 m (Zenodo 10.5281/zenodo.18199675) | **Deviation from the design:** GLAD annual cropland (2015–2024) is the design's primary choice, but no scriptable download was found. Use `CROPLAND_SOURCE = "glad_annual"` with tiles exported from Earth Engine |
+| Rainfall | CHIRPS v3.0 annual, Africa | |
+| Conflict | UCDP GED 26.1 | ACLED (`CONFLICT_SOURCE = "acled"`, credentials in environment variables) is experimental: its paging and country names were not tested |
+| Dated road projects | AidData GeoGCDF v3.0.1 | Road geometry type not verified; the stage logs the geometry types it finds |
+| Admin yields | HarvestStat Africa v1.2 (CSV and boundaries, joined on `fnid`) | Rows with `qc_flag` 0 only |
+| LSMS-ISA | Harmonised panel v2.0 (Bentze & Wollburg; Zenodo 15774761) | Ethiopia, Malawi, Nigeria, Tanzania, Uganda; main season. Licence: Zenodo says CC0, the paper says CC BY-NC-ND 4.0, so do not redistribute |
+
+## What is implemented, and what is not
+
+**Implemented** (tested on the regional CI store with synthetic stand-ins for the downloads, and on
+simulated panels with a known effect):
+
+- **Phase 0 treatment:** per 30″ cell, it computes:
+  - travel-time series per version (road-only, total) and layer;
+  - gain and loss events with the approved thresholds;
+  - event classes: local, burst (placebo) or remote, from the OSM road events within 10 km;
+  - distance to the nearest road change, used for the spatial bands.
+- **Phase 1 land use:** forest at baseline (30% and 10%), annual loss, annual cropland, stable cropland,
+  conversion (loss in *t*, not cropland in *t*−1, cropland in *t*..*t*+2), and new cropland from other
+  vegetation.
+- **Covariates:** rainfall per year and conflict events per 0.1° block.
+- **Yields:**
+  - Admin units: cropland-weighted unit treatment, falling back to population weights.
+  - LSMS enumeration areas: displaced EA points, cropland-weighted access within 5 km (equal weights where there is no cropland), ratio-of-sums yields, approved minimum households and plots, mechanism shares. Intercropped plots are kept apart.
+- **Panels:**
+  - sampled E1 cell panel with sampling weights;
+  - coarsened exact matching with a balance table;
+  - spatial bands;
+  - E3 long differences for cells, admin units and EAs (consecutive survey waves).
+- **Estimation:**
+  - Callaway–Sant'Anna with not-yet-treated, never-treated, matched and band controls;
+  - burst placebo;
+  - Sun–Abraham;
+  - TWFE, for comparison only;
+  - `contdid` continuous dose;
+  - long differences with Conley errors (50 km).
+  - Gate C (criteria 1–4) and Benjamini–Hochberg control across crops and outcomes.
+
+**Not implemented yet:**
+
+- **Imagery confirmation of road dates** (Valle et al. 2024 method, scored against Slagter et al. 2024).
+  Gate T therefore reports only the burst criterion and agreement with dated projects. The confirmed
+  share is left empty, and no zone can fully pass Gate T until this is added.
+- **Agro-ecological zones:** Gate T is computed per country.
+- **EHCVM countries:** only inventoried from `sources.csv`. The 2018 harvest module has no kg
+  conversion in the files, and no public conversion table was found.
+- **Other covariates:** JRC TMF, logging concessions, protected areas, prices, temperature and soils.
+- **Phase 2 NDVI tier (E2c):** synthetic control for single projects, and the least-cost-route
+  instrument.
+
+**Checks still owed by the author:**
+
+- **LSMS wave years:** `LSMS_WAVE_YEARS` gives the harvest year of each harmonised-panel wave. It was
+  inferred from the survey years, not read from the panel documentation.
+- **Uganda and Tanzania coordinates:** missing in the harmonised panel for Uganda from 2013/14 and for
+  movers in Tanzania waves 4–5. Those EAs take their coordinates from earlier waves.
+- **ACLED:** run once with credentials and compare event counts with UCDP before using ACLED.
