@@ -7,7 +7,6 @@ from the travel-time store of `global_accessibility_v3.py`.
 | --- | --- |
 | `access_effects_v01.py` | Data pipeline (Python, one file, resumable stages, same conventions as `global_accessibility_v3.py`) |
 | `estimate_effects.R` | Estimation and Gate C (R; called by stage `estimate`, or run by hand) |
-| `run_study.sh` | Commands for the JupyterLab terminal: `check`, `dry`, `run`, `status`, `log`, `stop` |
 | `dev/` | Tests (`python -m pytest dev -q`) and a panel simulator with a known effect |
 
 ## Run on the HPC
@@ -19,7 +18,13 @@ from the travel-time store of `global_accessibility_v3.py`.
 3. Install R and its packages once: `install.packages(c("dplyr", "tidyr", "readr", "purrr", "tibble",
    "stringr", "jsonlite", "fixest", "did", "contdid", "nanoparquet"))`. Without `contdid`, the
    continuous-dose design is skipped.
-4. Run `bash run_study.sh check`, then `bash run_study.sh dry`, then `bash run_study.sh run`.
+4. In the JupyterLab terminal, from this folder (no SLURM, no shell scripts):
+   ```
+   python access_effects_v01.py --check-access
+   python access_effects_v01.py --ga-results ../ga_results --dry-run
+   nohup python -u access_effects_v01.py --ga-results ../ga_results > study_run.log 2>&1 &
+   tail -f study_run.log
+   ```
 
 Each stage resumes where it stopped. To rerun a stage, delete `ae_work/_done/<stage>`. Results go to
 `ae_results/`:
