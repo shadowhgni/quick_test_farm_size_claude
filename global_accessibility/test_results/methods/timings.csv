@@ -1,34 +1,34 @@
 step,seconds,rss_gb
-stage download,161.5,0.54
+stage download,109.0,0.54
 Weiss et al. 2015 friction surface,0.1,0.56
-land cover (WorldCover 2021),1.3,0.69
-slope (Copernicus GLO-90),2.2,1.01
-countries and African borders,0.3,1.04
-settlements GHSL 2015,0.9,1.06
-settlements GHSL 2020,0.9,1.06
-settlements GHSL 2025,1.0,1.06
-stage grids,6.8,1.06
-Microsoft ML roads,31.7,3.12
-stage roads,133.7,3.11
-stage events,1.7,3.23
-stage friction,0.3,3.23
-stage traveltime,7.7,3.21
-COG travel time 2015 1km,1.1,3.23
-COG travel time 2020 1km,1.1,3.23
-COG travel time 2026 1km,1.2,3.23
-COG change 2020-2015 1km,1.0,3.24
-COG change 2026-2020 1km,0.9,3.25
-COG change 2026-2015 1km,1.1,3.25
-COG travel time 2015 10km,0.1,3.25
-COG travel time 2020 10km,0.1,3.25
-COG travel time 2026 10km,0.1,3.25
-COG change 2020-2015 10km,0.2,3.25
-COG change 2026-2020 10km,0.2,3.25
-COG change 2026-2015 10km,0.2,3.25
-PNG maps,17.5,3.24
-summary tables,5.7,3.16
-stage outputs,30.8,3.16
-stage store,3.7,3.18
-stage compare,1.1,3.18
-stage validate,13.2,3.19
-stage sensitivity,6.5,3.19
+land cover (WorldCover 2021),2.0,0.67
+slope (Copernicus GLO-90),3.0,1.1
+countries and African borders,0.2,1.12
+settlements GHSL 2015,0.8,1.14
+settlements GHSL 2020,0.7,1.14
+settlements GHSL 2025,0.7,1.14
+stage grids,7.6,1.14
+Microsoft ML roads,23.2,3.2
+stage roads,103.8,3.19
+stage events,1.2,3.32
+stage friction,0.2,3.26
+stage traveltime,6.0,3.24
+COG travel time 2015 1km,0.9,3.25
+COG travel time 2020 1km,0.9,3.25
+COG travel time 2026 1km,0.9,3.26
+COG change 2020-2015 1km,0.7,3.26
+COG change 2026-2020 1km,0.7,3.26
+COG change 2026-2015 1km,0.8,3.27
+COG travel time 2015 10km,0.1,3.27
+COG travel time 2020 10km,0.1,3.27
+COG travel time 2026 10km,0.1,3.27
+COG change 2020-2015 10km,0.1,3.27
+COG change 2026-2020 10km,0.1,3.27
+COG change 2026-2015 10km,0.1,3.27
+PNG maps,12.8,3.26
+summary tables,3.9,3.24
+stage outputs,22.5,3.24
+stage store,2.8,3.24
+stage compare,0.8,3.24
+stage validate,13.0,3.25
+stage sensitivity,4.7,3.24

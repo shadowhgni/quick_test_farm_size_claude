@@ -1,35 +1,35 @@
 url,bytes,downloaded,last_modified,file
-https://download.geofabrik.de/index-v1.json,3785307,2026-10-28T17:16:09,"Wed, 28 Oct 2026 04:57:55 GMT",geofabrik-index-v1.json
-https://download.geofabrik.de/africa/benin-200101.osm.pbf,32169835,2026-10-28T17:16:16,"Wed, 19 Feb 2020 16:32:13 GMT",benin-200101.osm.pbf
-https://download.geofabrik.de/africa/ghana-200101.osm.pbf,47947263,2026-10-28T17:16:17,"Wed, 19 Feb 2020 16:30:35 GMT",ghana-200101.osm.pbf
-https://download.geofabrik.de/africa/burkina-faso-200101.osm.pbf,50365038,2026-10-28T17:16:19,"Wed, 19 Feb 2020 16:30:32 GMT",burkina-faso-200101.osm.pbf
-https://download.geofabrik.de/africa/niger-200101.osm.pbf,35990596,2026-10-28T17:16:24,"Wed, 19 Feb 2020 16:32:08 GMT",niger-200101.osm.pbf
-https://download.geofabrik.de/africa/togo-200101.osm.pbf,31618112,2026-10-28T17:16:26,"Wed, 19 Feb 2020 16:31:53 GMT",togo-200101.osm.pbf
-https://download.geofabrik.de/africa/benin-260101.osm.pbf,46832967,2026-10-28T17:16:33,"Thu, 01 Jan 2026 23:25:39 GMT",benin-260101.osm.pbf
-https://download.geofabrik.de/africa/burkina-faso-260101.osm.pbf,80806798,2026-10-28T17:16:37,"Thu, 01 Jan 2026 23:25:14 GMT",burkina-faso-260101.osm.pbf
-https://download.geofabrik.de/africa/niger-260101.osm.pbf,71818630,2026-10-28T17:16:47,"Thu, 01 Jan 2026 23:27:03 GMT",niger-260101.osm.pbf
-https://download.geofabrik.de/africa/nigeria-200101.osm.pbf,208700266,2026-10-28T17:16:55,"Wed, 19 Feb 2020 16:32:06 GMT",nigeria-200101.osm.pbf
-https://download.geofabrik.de/africa/ghana-260101.osm.pbf,108105651,2026-10-28T17:16:56,"Thu, 01 Jan 2026 23:25:57 GMT",ghana-260101.osm.pbf
-https://usaminedroads.z19.web.core.windows.net/drops/2025.04.28/Western_Africa.zip,314297907,2026-10-28T17:17:00,"Mon, 28 Apr 2025 08:58:48 GMT",Western_Africa.zip
-https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_SMOD_GLOBE_R2023A/GHS_SMOD_E2015_GLOBE_R2023A_54009_1000/V2-0/GHS_SMOD_E2015_GLOBE_R2023A_54009_1000_V2_0.zip,29185689,2026-10-28T17:17:02,"Mon, 27 Jan 2025 16:50:33 GMT",smod_2015.zip
-https://download.geofabrik.de/africa/togo-260101.osm.pbf,61134072,2026-10-28T17:17:03,"Thu, 01 Jan 2026 23:23:17 GMT",togo-260101.osm.pbf
-https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_SMOD_GLOBE_R2023A/GHS_SMOD_E2020_GLOBE_R2023A_54009_1000/V2-0/GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_V2_0.zip,35853870,2026-10-28T17:17:07,"Mon, 27 Jan 2025 16:50:39 GMT",smod_2020.zip
-https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2015_GLOBE_R2023A_54009_1000/V1-0/GHS_POP_E2015_GLOBE_R2023A_54009_1000_V1_0.zip,320436226,2026-10-28T17:17:14,"Mon, 27 Jan 2025 16:41:55 GMT",pop_2015.zip
-https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_SMOD_GLOBE_R2023A/GHS_SMOD_E2025_GLOBE_R2023A_54009_1000/V2-0/GHS_SMOD_E2025_GLOBE_R2023A_54009_1000_V2_0.zip,29624748,2026-10-28T17:17:16,"Mon, 27 Jan 2025 16:50:41 GMT",smod_2025.zip
-https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2020_GLOBE_R2023A_54009_1000/V1-0/GHS_POP_E2020_GLOBE_R2023A_54009_1000_V1_0.zip,322293568,2026-10-28T17:17:19,"Mon, 27 Jan 2025 16:44:34 GMT",pop_2020.zip
-https://msi.nga.mil/api/publications/download?type=view&key=16920959/SFH00000/UpdatedPub150.csv,3508891,2026-10-28T17:17:19,,UpdatedPub150.csv
-https://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_0_countries.zip,4930492,2026-10-28T17:17:20,"Fri, 13 May 2022 05:20:49 GMT",ne_10m_admin_0_countries.zip
-https://copernicus-dem-90m.s3.amazonaws.com/tileList.txt,1111950,2026-10-28T17:17:20,"Mon, 09 May 2022 13:54:34 GMT",copdem90_tileList.txt
-https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2025_GLOBE_R2023A_54009_1000/V1-0/GHS_POP_E2025_GLOBE_R2023A_54009_1000_V1_0.zip,323340844,2026-10-28T17:17:28,"Mon, 27 Jan 2025 16:47:11 GMT",pop_2025.zip
-https://ndownloader.figshare.com/files/14189843,411514170,2026-10-28T17:17:29,"Wed, 14 Apr 2021 06:00:48 GMT",travel_time_to_cities_10.tif
-https://ndownloader.figshare.com/files/14189849,420516009,2026-10-28T17:17:37,"Wed, 14 Apr 2021 06:00:53 GMT",travel_time_to_cities_11.tif
-https://ndownloader.figshare.com/files/14189885,442467991,2026-10-28T17:17:47,"Wed, 14 Apr 2021 06:01:26 GMT",travel_time_to_ports_5.tif
-https://ndownloader.figshare.com/files/37847109,7918,2026-10-28T17:17:47,"Thu, 13 Oct 2022 06:27:26 GMT",README.txt
-https://ndownloader.figshare.com/files/14189852,402462348,2026-10-28T17:17:49,"Wed, 14 Apr 2021 06:00:57 GMT",travel_time_to_cities_12.tif
-"https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface&format=image/geotiff&subset=Lat(0,10)&subset=Long(-10,0)",9437640,2026-10-28T17:17:51,,friction2015_+00_-010.tif
-"https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface&format=image/geotiff&subset=Lat(10,20)&subset=Long(-10,0)",9437640,2026-10-28T17:17:52,,friction2015_+10_-010.tif
-"https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface&format=image/geotiff&subset=Lat(0,10)&subset=Long(0,10)",9437640,2026-10-28T17:17:53,,friction2015_+00_+000.tif
-"https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface&format=image/geotiff&subset=Lat(10,20)&subset=Long(0,10)",9437640,2026-10-28T17:17:54,,friction2015_+10_+000.tif
-https://download.geofabrik.de/africa-150101.osm.pbf,721392542,2026-10-28T17:18:11,"Fri, 02 Jan 2015 00:25:46 GMT",africa-150101.osm.pbf
-https://download.geofabrik.de/africa/nigeria-260101.osm.pbf,664158838,2026-10-28T17:18:43,"Thu, 01 Jan 2026 23:24:55 GMT",nigeria-260101.osm.pbf
-https://api.worldbank.org/v2/country/all/indicator/GOV_WGI_CC.SC?source=3,107616,2026-10-28T17:18:46,,wgi_control_of_corruption.csv
+https://download.geofabrik.de/index-v1.json,3785307,2026-10-28T23:10:42,"Wed, 28 Oct 2026 04:57:55 GMT",geofabrik-index-v1.json
+https://download.geofabrik.de/africa/ghana-200101.osm.pbf,47947263,2026-10-28T23:10:49,"Wed, 19 Feb 2020 16:30:35 GMT",ghana-200101.osm.pbf
+https://download.geofabrik.de/africa/burkina-faso-200101.osm.pbf,50365038,2026-10-28T23:10:50,"Wed, 19 Feb 2020 16:30:32 GMT",burkina-faso-200101.osm.pbf
+https://download.geofabrik.de/africa/benin-200101.osm.pbf,32169835,2026-10-28T23:10:50,"Wed, 19 Feb 2020 16:32:13 GMT",benin-200101.osm.pbf
+https://download.geofabrik.de/africa/niger-200101.osm.pbf,35990596,2026-10-28T23:10:54,"Wed, 19 Feb 2020 16:32:08 GMT",niger-200101.osm.pbf
+https://download.geofabrik.de/africa/togo-200101.osm.pbf,31618112,2026-10-28T23:10:55,"Wed, 19 Feb 2020 16:31:53 GMT",togo-200101.osm.pbf
+https://download.geofabrik.de/africa/benin-260101.osm.pbf,46832967,2026-10-28T23:11:00,"Thu, 01 Jan 2026 23:25:39 GMT",benin-260101.osm.pbf
+https://download.geofabrik.de/africa/burkina-faso-260101.osm.pbf,80806798,2026-10-28T23:11:03,"Thu, 01 Jan 2026 23:25:14 GMT",burkina-faso-260101.osm.pbf
+https://download.geofabrik.de/africa/nigeria-200101.osm.pbf,208700266,2026-10-28T23:11:11,"Wed, 19 Feb 2020 16:32:06 GMT",nigeria-200101.osm.pbf
+https://download.geofabrik.de/africa/niger-260101.osm.pbf,71818630,2026-10-28T23:11:12,"Thu, 01 Jan 2026 23:27:03 GMT",niger-260101.osm.pbf
+https://download.geofabrik.de/africa/ghana-260101.osm.pbf,108105651,2026-10-28T23:11:12,"Thu, 01 Jan 2026 23:25:57 GMT",ghana-260101.osm.pbf
+https://download.geofabrik.de/africa/togo-260101.osm.pbf,61134072,2026-10-28T23:11:18,"Thu, 01 Jan 2026 23:23:17 GMT",togo-260101.osm.pbf
+https://usaminedroads.z19.web.core.windows.net/drops/2025.04.28/Western_Africa.zip,314297907,2026-10-28T23:11:18,"Mon, 28 Apr 2025 08:58:48 GMT",Western_Africa.zip
+https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_SMOD_GLOBE_R2023A/GHS_SMOD_E2015_GLOBE_R2023A_54009_1000/V2-0/GHS_SMOD_E2015_GLOBE_R2023A_54009_1000_V2_0.zip,29185689,2026-10-28T23:11:21,"Mon, 27 Jan 2025 16:50:33 GMT",smod_2015.zip
+https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_SMOD_GLOBE_R2023A/GHS_SMOD_E2020_GLOBE_R2023A_54009_1000/V2-0/GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_V2_0.zip,35853870,2026-10-28T23:11:26,"Mon, 27 Jan 2025 16:50:39 GMT",smod_2020.zip
+https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2015_GLOBE_R2023A_54009_1000/V1-0/GHS_POP_E2015_GLOBE_R2023A_54009_1000_V1_0.zip,320436226,2026-10-28T23:11:37,"Mon, 27 Jan 2025 16:41:55 GMT",pop_2015.zip
+https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_SMOD_GLOBE_R2023A/GHS_SMOD_E2025_GLOBE_R2023A_54009_1000/V2-0/GHS_SMOD_E2025_GLOBE_R2023A_54009_1000_V2_0.zip,29624748,2026-10-28T23:11:41,"Mon, 27 Jan 2025 16:50:41 GMT",smod_2025.zip
+https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2020_GLOBE_R2023A_54009_1000/V1-0/GHS_POP_E2020_GLOBE_R2023A_54009_1000_V1_0.zip,322293568,2026-10-28T23:11:46,"Mon, 27 Jan 2025 16:44:34 GMT",pop_2020.zip
+https://msi.nga.mil/api/publications/download?type=view&key=16920959/SFH00000/UpdatedPub150.csv,3508891,2026-10-28T23:11:46,,UpdatedPub150.csv
+https://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_0_countries.zip,4930492,2026-10-28T23:11:47,"Fri, 13 May 2022 05:20:49 GMT",ne_10m_admin_0_countries.zip
+https://copernicus-dem-90m.s3.amazonaws.com/tileList.txt,1111950,2026-10-28T23:11:48,"Mon, 09 May 2022 13:54:34 GMT",copdem90_tileList.txt
+https://download.geofabrik.de/africa-150101.osm.pbf,721392542,2026-10-28T23:11:51,"Fri, 02 Jan 2015 00:25:46 GMT",africa-150101.osm.pbf
+https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2025_GLOBE_R2023A_54009_1000/V1-0/GHS_POP_E2025_GLOBE_R2023A_54009_1000_V1_0.zip,323340844,2026-10-28T23:11:57,"Mon, 27 Jan 2025 16:47:11 GMT",pop_2025.zip
+https://ndownloader.figshare.com/files/14189843,411514170,2026-10-28T23:12:04,"Wed, 14 Apr 2021 06:00:48 GMT",travel_time_to_cities_10.tif
+https://ndownloader.figshare.com/files/14189849,420516009,2026-10-28T23:12:07,"Wed, 14 Apr 2021 06:00:53 GMT",travel_time_to_cities_11.tif
+https://ndownloader.figshare.com/files/37847109,7918,2026-10-28T23:12:08,"Thu, 13 Oct 2022 06:27:26 GMT",README.txt
+https://download.geofabrik.de/africa/nigeria-260101.osm.pbf,664158838,2026-10-28T23:12:09,"Thu, 01 Jan 2026 23:24:55 GMT",nigeria-260101.osm.pbf
+"https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface&format=image/geotiff&subset=Lat(0,10)&subset=Long(-10,0)",9437640,2026-10-28T23:12:11,,friction2015_+00_-010.tif
+"https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface&format=image/geotiff&subset=Lat(0,10)&subset=Long(0,10)",9437640,2026-10-28T23:12:11,,friction2015_+00_+000.tif
+"https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface&format=image/geotiff&subset=Lat(10,20)&subset=Long(-10,0)",9437640,2026-10-28T23:12:12,,friction2015_+10_-010.tif
+"https://data.malariaatlas.org/geoserver/Accessibility/ows?service=WCS&version=2.0.1&request=GetCoverage&coverageId=Accessibility__201501_Global_Travel_Speed_Friction_Surface&format=image/geotiff&subset=Lat(10,20)&subset=Long(0,10)",9437640,2026-10-28T23:12:12,,friction2015_+10_+000.tif
+https://ndownloader.figshare.com/files/14189852,402462348,2026-10-28T23:12:13,"Wed, 14 Apr 2021 06:00:57 GMT",travel_time_to_cities_12.tif
+https://ndownloader.figshare.com/files/14189885,442467991,2026-10-28T23:12:19,"Wed, 14 Apr 2021 06:01:26 GMT",travel_time_to_ports_5.tif
+https://api.worldbank.org/v2/country/all/indicator/GOV_WGI_CC.SC?source=3,107616,2026-10-28T23:12:24,,wgi_control_of_corruption.csv
