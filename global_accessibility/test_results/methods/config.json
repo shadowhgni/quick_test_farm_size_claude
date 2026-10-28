@@ -307,6 +307,10 @@
   2030
  ],
  "PROCESS_OVERHEAD": 350000000.0,
+ "ACCESS_SAMPLE_TILES": {
+  "worldcover": "v200/2021/map/ESA_WorldCover_10m_2021_v200_N06E000_Map.tif",
+  "copdem": "Copernicus_DSM_COG_30_N06_00_E001_00_DEM"
+ },
  "MICROMAMBA_URL": "https://github.com/mamba-org/micromamba-releases/releases/latest/download/micromamba-{plat}",
  "WORLDCOVER_CLASSES": [
   10,
@@ -321,6 +325,15 @@
   95,
   100
  ],
+ "WAY_COLUMNS": {
+  "osm_id": "int64",
+  "brow": "int32",
+  "bcol": "int32",
+  "km": "float32",
+  "highway": "object",
+  "speed": "float32",
+  "clipped": "bool"
+ },
  "TT_BINS": [
   0,
   15,

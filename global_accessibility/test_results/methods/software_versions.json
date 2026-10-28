@@ -1,7 +1,7 @@
 {
- "script": "global_accessibility_v3.py 3.1.1",
- "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
- "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+ "script": "global_accessibility_v3.py 3.2.2",
+ "python": "3.13.17 (main, Oct 22 2026, 02:40:32) [GCC 13.3.0]",
+ "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
  "numpy": "2.5.4",
  "pandas": "3.1.0",
  "geopandas": "1.2.0",
@@ -18,5 +18,5 @@
  "osmium": "4.3.2",
  "gdal": "3.12.2",
  "cpus": 4,
- "available_memory_gb": 12.7
+ "available_memory_gb": 12.9
 }
