@@ -1,0 +1,11 @@
+year,since,event,cells,cells_in_bursts
+2020,2015,new road cell,118155.0,0.0
+2020,2015,faster,15678.0,0.0
+2020,2015,slower,18359.0,0.0
+2020,2015,road removed,2178.0,0.0
+2020,2015,new ways (km),218126.8,0.0
+2026,2020,new road cell,41630.0,0.0
+2026,2020,faster,18288.0,0.0
+2026,2020,slower,6871.0,0.0
+2026,2020,road removed,1590.0,0.0
+2026,2020,new ways (km),100165.4,0.0

@@ -1,0 +1,8 @@
+K,delay_min,baseline
+0.0,15.0,False
+0.05,15.0,False
+0.1,15.0,True
+0.2,15.0,False
+0.1,0.0,False
+0.1,30.0,False
+0.1,60.0,False
