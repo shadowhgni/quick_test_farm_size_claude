@@ -700,8 +700,15 @@ def test_history_cut_per_year_and_tiles(tmp_path, monkeypatch, bbox):
     monkeypatch.setattr(ga, "OSM_HISTORY_FILE", str(osh))
     monkeypatch.setattr(ga, "OSM_TILE_DEG", 2)                            # 2 x 2 tiles over the grid
     monkeypatch.setattr(ga, "BBOX", bbox)
+    cs = tmp_path / "changesets.osm"; cs.write_text(HISTORY_CHANGESETS)   # never the 8 GB planet dump
+    monkeypatch.setattr(ga, "EVENT_CHANGESETS_FILE", str(cs))
     ctx = {"work": work, "dl": dl, "grid": g, "years": [2015, 2020, 2026]}
     plan = ga.osm_history_plan(ctx, None)
+    if ga.importlib.util.find_spec("osmium") is not None:              # way metadata from the history
+        meta = pd.read_parquet(work / "osm_way_meta.parquet").set_index("osm_id")
+        assert sorted(meta.index) == [10, 11, 12] and meta.loc[11, "changeset"] == 2
+        tags = pd.read_parquet(work / "osm_changeset_tags.parquet").set_index("changeset")
+        assert tags.loc[1, "campaign"] and tags.loc[2, "campaign"]
     assert sorted(plan) == [2015, 2020, 2026] and all(len(v) == 4 for v in plan.values())
     assert all(r["clip"] == r["bounds"] for v in plan.values() for r in v)
     # read back what each year contains
