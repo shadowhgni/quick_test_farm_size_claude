@@ -337,6 +337,24 @@ The four additions Phase 0 needs are in the script and tested on synthetic data.
 
 For annual treatment, run `--years 2015 2016 … 2026 --weiss-years none`; the default three years give the long-term level.
 
+## Workflow implementation (`study_workflow/`, v0.1, 2026-10-28)
+
+The pipeline `access_effects_v01.py` and the estimation script `estimate_effects.R` implement Phases 0–3 for E1, E2a, E2b and E3, except for the items listed below. They were tested on the regional store with synthetic inputs, and on simulated panels whose known effect, placebo and long difference they recover. Details are in `study_workflow/README.md`.
+
+**Deviations from this design, to be reported:**
+- **Cropland:** GACED30 annual is the default, because no scriptable download of GLAD annual cropland was found. GLAD annual can be used from tiles exported from Earth Engine (`CROPLAND_SOURCE`).
+- **Forest loss:** Hansen GFC v1.13 (loss to 2025), in which loss from 2011 onward was reprocessed.
+- **Conflict:** UCDP GED is the default and ACLED is opt-in, since ACLED access is untested.
+- **E2b source:** the LSMS-ISA harmonised panel v2.0 (Bentze & Wollburg). It covers only the main season and has no per-crop share of a plot, so intercropped plots are split equally and analysed apart.
+- **E2b cohorts:** the event year is mapped to the first survey wave on or after it. Consecutive-wave long differences are the natural design for E2b.
+- **Gate T zones:** Gate T is computed per country until a zone layer is added.
+
+**Not implemented in v0.1:**
+- imagery confirmation of road dates, so Gate T cannot fully pass yet;
+- EHCVM yields, since no kg conversion table was found for 2018/19;
+- TMF, concessions, protected areas, prices, temperature and soils as covariates;
+- the NDVI tier (E2c), synthetic control, and the least-cost-route instrument.
+
 ## Limitations and risks
 
 - **Mapping is not construction.** Even with imagery confirmation, some events will be misdated. Where Gate T fails, only long differences are interpreted.
