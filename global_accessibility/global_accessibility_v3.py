@@ -40,7 +40,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "3.1.0"
+__version__ = "3.1.1"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -1295,6 +1295,23 @@ def osm_history_plan(ctx, sess):
 
 
 
+def fetch_wgi(sess, per_page=1000):
+    """World Bank WGI score for every country and year, page by page; each page is retried with
+    backoff (http_request). Raises RemoteUnavailable if the API keeps failing."""
+    url, rows, page, pages = URLS["wgi"].format(ind=WGI_INDICATOR), [], 1, 1
+    while page <= pages:
+        r = http_request(url, sess, "GET", params={"source": 3, "format": "json", "per_page": per_page,
+                                                   "page": page})
+        if not r.ok:
+            raise RemoteUnavailable(f"{url}: HTTP {r.status_code}")
+        j = r.json()
+        pages = int(j[0]["pages"])
+        rows += [{"iso3": x["countryiso3code"], "year": int(x["date"]), "score": x["value"]}
+                 for x in (j[1] or []) if x["value"] is not None and x["countryiso3code"]]
+        page += 1
+    return rows
+
+
 def stage_download(ctx):
     work, sess = ctx["work"], session()
     dl = work / "downloads"
@@ -1358,21 +1375,16 @@ def stage_download(ctx):
         plan = osm_history_plan(ctx, sess)
         (work / "osm_plan.json").write_text(json.dumps(plan, indent=1))
 
-    # World Bank WGI, all years
-    wgi = []
-    page, pages = 1, 1
-    while page <= pages:
-        r = sess.get(URLS["wgi"].format(ind=WGI_INDICATOR),
-                     params={"source": 3, "format": "json", "per_page": 20000, "page": page},
-                     timeout=300).json()
-        pages = r[0]["pages"]
-        wgi += [{"iso3": x["countryiso3code"], "year": int(x["date"]), "score": x["value"]}
-                for x in r[1] if x["value"] is not None and x["countryiso3code"]]
-        page += 1
-    pd.DataFrame(wgi).to_csv(dl / "wgi_control_of_corruption.csv", index=False)
+    # World Bank WGI, all years (kept from an earlier run; small pages with retries, since the
+    # API can be slow: one 20,000-row request timed out after 5 min in CI)
+    wgi_f = dl / "wgi_control_of_corruption.csv"
+    if not (wgi_f.exists() and wgi_f.stat().st_size > 100):
+        wgi = fetch_wgi(sess)
+        pd.DataFrame(wgi).to_csv(wgi_f, index=False)
+        log(f"WGI {WGI_INDICATOR}: {len(wgi)} country-years")
     MANIFEST.append({"url": URLS["wgi"].format(ind=WGI_INDICATOR) + "?source=3",
-                     "file": "wgi_control_of_corruption.csv", "bytes": len(wgi),
-                     "downloaded": dt.datetime.now().isoformat(timespec="seconds")})
+                     "file": wgi_f.name, "bytes": wgi_f.stat().st_size,
+                     "downloaded": dt.datetime.fromtimestamp(wgi_f.stat().st_mtime).isoformat(timespec="seconds")})
 
     # WorldCover 2021 tile list (S3 listing)
     keys, marker = [], ""

@@ -853,3 +853,24 @@ def test_history_way_meta_and_changesets(tmp_path):
     t = ga.changeset_campaigns(cs, m.changeset.unique(), tmp_path / "cs.parquet").set_index("changeset")
     assert set(t.index) == {1, 2}                                         # changeset 3 is not in the dump
     assert t.loc[1, "campaign"] and t.loc[2, "campaign"] and t.loc[2, "data_used"] == "MapWithAI"
+
+
+def test_fetch_wgi_pages_and_retries(monkeypatch):
+    import types
+    monkeypatch.setattr(ga.time, "sleep", lambda s: None)
+    calls = []
+
+    class S:
+        def request(self, method, url, **kw):
+            calls.append(kw["params"]["page"])
+            if len(calls) == 1:
+                raise ga.requests.ReadTimeout("slow")                   # first try times out, then retried
+            p = kw["params"]["page"]
+            data = [{"countryiso3code": "BEN", "date": str(2000 + p), "value": 40.0 + p},
+                    {"countryiso3code": "", "date": "2000", "value": 1.0},
+                    {"countryiso3code": "TGO", "date": "2001", "value": None}]
+            return types.SimpleNamespace(ok=True, status_code=200, headers={},
+                                         json=lambda: [{"pages": 2}, data])
+    rows = ga.fetch_wgi(S(), per_page=3)
+    assert calls == [1, 1, 2] and rows == [{"iso3": "BEN", "year": 2001, "score": 41.0},
+                                           {"iso3": "BEN", "year": 2002, "score": 42.0}]
