@@ -977,3 +977,44 @@ def test_burst_cells_vectorised_matches_rule():
     assert t.loc[(5, 5), "new_km"] == 40 and t.loc[(5, 5), "top_users_share"] == 1.0 and t.loc[(5, 5), "burst"]
     e = ga.burst_cells(new.iloc[:0], g, True)
     assert e.empty and e.brow.dtype == np.int64
+
+
+def test_review_fixes_empty_tiles_plan_years_history_file(tmp_path, monkeypatch):
+    g = ga.Grid((0, 6, 1, 7), D)
+    work = tmp_path / "work"; dl = work / "downloads"; (dl / "osm" / "2015").mkdir(parents=True)
+    (work / "roads" / "2015").mkdir(parents=True)
+    plan = {"2015": [{"region": "sea", "file": str(dl / "osm" / "2015" / "sea.osm.pbf"), "bytes": 10, "clip": [0, 6, 1, 7],
+                      "source": "history-251229.osm.pbf"}]}
+    (work / "osm_plan.json").write_text(json.dumps(plan))
+    (work / "roads" / "2015" / "sea.done").write_text(json.dumps({"extract": "sea.osm.pbf", "segments": 0}))
+    ctx = {"grid": g, "work": work, "dl": dl, "years": [2015]}
+    ga.ensure_way_tables(ctx)                                             # tile without roads, file gone: no error
+    assert pd.read_parquet(work / "roads" / "2015" / "sea.ways.parquet").empty
+    with pytest.raises(RuntimeError, match="no OSM files for 2020"):
+        ga.road_jobs({**ctx, "years": [2015, 2020]}, 2020)
+    # the history file is found on disk from the plan, without the network
+    (dl / "osm" / "history-251229.osm.pbf").write_bytes(b"x"); (dl / "osm" / "history-260921.osm.pbf").write_bytes(b"y")
+    monkeypatch.setattr(ga, "OSM_HISTORY_FILE", None)
+    assert ga.local_history_file(ctx).name == "history-251229.osm.pbf"
+    (work / "osm_plan.json").unlink()
+    assert ga.local_history_file(ctx).name == "history-260921.osm.pbf"
+
+
+def test_read_rows_for_ids(tmp_path):
+    f = tmp_path / "m.parquet"
+    pd.DataFrame({"osm_id": np.arange(100, dtype=np.int64), "uid": np.arange(100) % 7}).to_parquet(f)
+    d = ga.read_rows_for_ids(f, ["osm_id", "uid"], [3, 50, 1000])
+    assert sorted(d.osm_id) == [3, 50] and list(d.columns) == ["osm_id", "uid"]
+
+
+def test_event_metadata_without_changeset_dump(tmp_path, monkeypatch):
+    pytest.importorskip("osmium")
+    osh = tmp_path / "h.osh"; osh.write_text(HISTORY_OSH)
+    work = tmp_path / "w"; (work / "downloads" / "osm").mkdir(parents=True)
+
+    def down(*a, **k):
+        raise ga.RemoteUnavailable("blocked")
+    monkeypatch.setattr(ga, "download", down)
+    monkeypatch.setattr(ga, "EVENT_CHANGESETS_FILE", None)
+    ga.osm_event_metadata({"work": work, "dl": work / "downloads"}, osh, None, None)   # no osmium-tool, dump blocked
+    assert (work / "osm_way_meta.parquet").exists() and not (work / "osm_changeset_tags.parquet").exists()

@@ -40,7 +40,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "3.2.0"
+__version__ = "3.2.1"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -1002,7 +1002,8 @@ def network_check(ctx, sess):
         import urllib3.util.connection as uc
         orig = uc.allowed_gai_family
         uc.allowed_gai_family = lambda: socket.AF_INET
-        retry = [_probe(t, sess) if e else "" for t, e in zip(targets, errs)]
+        with cf.ThreadPoolExecutor(8) as ex:
+            retry = list(ex.map(lambda te: _probe(te[0], sess) if te[1] else "", zip(targets, errs)))
         if sum(map(bool, retry)) < sum(map(bool, errs)):
             log("network: some servers fail over IPv6 but answer over IPv4; using IPv4 only")
             errs = retry
@@ -1792,8 +1793,14 @@ WAY_COLUMNS = {"osm_id": "int64", "brow": "int32", "bcol": "int32", "km": "float
                "highway": "object", "speed": "float32", "clipped": "bool"}
 
 
+def empty_way_table(path):
+    pd.DataFrame({k: pd.Series(dtype=v) for k, v in WAY_COLUMNS.items()}).to_parquet(path, index=False)
+
+
 def write_way_table(g, grid, clip, path):
     """Way table for stage events: km of each way per BURST_CELL_DEG cell, with class and speed."""
+    if g is None or len(g) == 0:
+        return empty_way_table(path)
     ids = pd.to_numeric(g["osm_id"], errors="coerce").to_numpy()
     geo = shapely.clip_by_rect(g.geometry.values, *clip) if clip else g.geometry.values
     d = way_cells(geo, ids, grid).merge(
@@ -1822,7 +1829,7 @@ def ways_job(job):
         g = g[g["highway"].isin(list(SPEED_TABLE))]
         g = g[g.intersects(box(*grid.bounds))]
     if g is None or g.empty:
-        pd.DataFrame({k: pd.Series(dtype=v) for k, v in WAY_COLUMNS.items()}).to_parquet(path, index=False)
+        empty_way_table(path)
         return str(path)
     g["speed"], _ = road_speed(g["highway"], g["other_tags"])
     write_way_table(g, grid, job.get("clip"), path)
@@ -1834,9 +1841,14 @@ def road_jobs(ctx, y):
     grid, work = ctx["grid"], ctx["work"]
     dl = ctx.get("dl", work / "downloads")
     pf = work / "osm_plan.json"
-    plan = json.loads(pf.read_text()) if pf.exists() else {}
+    if not pf.exists():
+        return []
+    plan = json.loads(pf.read_text())
+    if str(y) not in plan:
+        raise RuntimeError(f"osm_plan.json has no OSM files for {y} (planned for years {sorted(plan)}); "
+                           "delete WORK_DIR/_done/download and rerun to plan this year")
     jobs = []
-    for r in plan.get(str(y), []):
+    for r in plan[str(y)]:
         pbf = Path(r["file"]) if r.get("file") else dl / "osm" / str(y) / Path(r["url"]).name
         jobs.append({"pbf": str(pbf), "out": str(work / "roads" / str(y) / f"{r['region']}.npz"),
                      "grid": grid.to_dict(), "borders": str(work / "african_borders.gpkg"),
@@ -1848,6 +1860,8 @@ def roads_job(job):
     """One OSM extract -> max-speed window, km by class, checkpoint points."""
     pbf, out, grid_d, borders_path = job["pbf"], Path(job["out"]), job["grid"], job["borders"]
     if (out.with_suffix(".done")).exists():
+        if not out.with_suffix(".ways.parquet").exists() and Path(pbf).exists():
+            ways_job(job)                       # finished by a version without way tables
         return json.loads(out.with_suffix(".done").read_text())
     grid = Grid(grid_d["bbox"], grid_d["res_deg"])
     t0 = time.time()
@@ -1857,12 +1871,14 @@ def roads_job(job):
     except Exception:
         if Path(pbf).stat().st_size < 2048:           # an empty tile (sea, no roads)
             stats = {"extract": Path(pbf).name, "segments": 0}
+            empty_way_table(out.with_suffix(".ways.parquet"))
             out.with_suffix(".done").write_text(json.dumps(stats))
             return stats
         raise
     g = g[g["highway"].isin(list(SPEED_TABLE))]
     stats = {"extract": Path(pbf).name, "segments": int(len(g))}
     if g.empty:
+        empty_way_table(out.with_suffix(".ways.parquet"))
         out.with_suffix(".done").write_text(json.dumps(stats))
         return stats
     g["speed"], _ = road_speed(g["highway"], g["other_tags"])
@@ -1987,8 +2003,7 @@ def ml_roads(ctx):
 
 
 def stage_roads(ctx):
-    grid, work, dl = ctx["grid"], ctx["work"], ctx["dl"]
-    plan = json.loads((work / "osm_plan.json").read_text())
+    grid, work = ctx["grid"], ctx["work"]
     cp_rows, km_rows, info = [], [], {}
     for y in ctx["years"]:
         jobs = road_jobs(ctx, y)
@@ -2103,8 +2118,12 @@ def osm_event_metadata(ctx, src, osmium_exe, sess):
             with Timer("OSM way metadata (history)"):
                 history_way_meta(src, meta, osmium_exe, work / "osm_tmp")
         if not cst.exists():
-            cfile = Path(EVENT_CHANGESETS_FILE) if EVENT_CHANGESETS_FILE else \
-                download(EVENT_CHANGESETS_URL, dl / "osm" / "changesets-latest.osm.bz2", sess)
+            try:
+                cfile = Path(EVENT_CHANGESETS_FILE) if EVENT_CHANGESETS_FILE else \
+                    download(EVENT_CHANGESETS_URL, dl / "osm" / "changesets-latest.osm.bz2", sess)
+            except RemoteUnavailable as e:
+                log(f"OSM changeset dump not available ({e}); bursts without campaign tags")
+                return
             with Timer("OSM changeset tags"):
                 changeset_campaigns(cfile, pd.read_parquet(meta, columns=["changeset"]).changeset.unique(), cst)
     except ImportError as e:
@@ -2121,8 +2140,16 @@ def ensure_way_tables(ctx):
     if jobs:
         log(f"events: building {len(jobs)} missing way tables (stage roads ran with an older version)")
         run_budgeted(ways_job, jobs, lambda j: 1.5e9 + 7 * j["bytes"], "way tables")
-    missing = [j["pbf"] for y in ctx["years"] for j in road_jobs(ctx, y)
-               if not Path(j["out"]).with_suffix(".ways.parquet").exists()]
+    missing = []
+    for y in ctx["years"]:
+        for j in road_jobs(ctx, y):
+            wp, done = Path(j["out"]).with_suffix(".ways.parquet"), Path(j["out"]).with_suffix(".done")
+            if wp.exists():
+                continue
+            if done.exists() and not json.loads(done.read_text()).get("segments"):
+                empty_way_table(wp)             # a tile without roads: nothing to rebuild
+            else:
+                missing.append(j["pbf"])
     if missing:
         raise RuntimeError(f"events: no way table for {len(missing)} OSM files whose source is gone "
                            f"(e.g. {missing[0]}); rerun stage roads (delete WORK_DIR/_done/roads)")
@@ -2188,6 +2215,33 @@ def burst_cells(new, grid, have_meta):
     return t[cols].astype({c: "int64" for c in keys + ["new_ways"]})
 
 
+def read_rows_for_ids(path, columns, ids, key="osm_id"):
+    """Rows of a (large) parquet file whose key is in ids, read batch by batch."""
+    import pyarrow.parquet as pq
+    ids = np.asarray(ids, dtype=np.int64)
+    parts = []
+    for b in pq.ParquetFile(path).iter_batches(batch_size=5_000_000, columns=columns):
+        d = b.to_pandas()
+        parts.append(d[d[key].isin(ids)])
+    return pd.concat(parts) if parts else pd.DataFrame(columns=columns)
+
+
+def local_history_file(ctx):
+    """The OSM history file used by stage download: OSM_HISTORY_FILE, the name in osm_plan.json,
+    or the newest history-YYMMDD.osm.pbf in downloads/osm."""
+    if OSM_HISTORY_FILE and Path(OSM_HISTORY_FILE).exists():
+        return Path(OSM_HISTORY_FILE)
+    osm = ctx.get("dl", ctx["work"] / "downloads") / "osm"
+    pf = ctx["work"] / "osm_plan.json"
+    if pf.exists():
+        names = {r.get("source") for v in json.loads(pf.read_text()).values() for r in v if r.get("source")}
+        for n in sorted(names, reverse=True):
+            if (osm / n).exists():
+                return osm / n
+    found = sorted(osm.glob("history-*.osm.pbf")) if osm.exists() else []
+    return found[-1] if found else None
+
+
 def stage_events(ctx):
     """Road change between consecutive reference years, per 0.01 deg cell (from the OSM road rasters,
     before the water rule and the completion), with mapping bursts flagged per BURST_CELL_DEG cell."""
@@ -2198,19 +2252,21 @@ def stage_events(ctx):
     ensure_way_tables(ctx)
     meta_f, cst_f = work / "osm_way_meta.parquet", work / "osm_changeset_tags.parquet"
     if OSM_SOURCE == "history" and EVENT_METADATA and not (meta_f.exists() and cst_f.exists()):
-        # stage download ran with a version older than 3.1: get the metadata now
-        local, url, name, _ = history_source(ctx, session())
-        hist = local or ctx["dl"] / "osm" / name
-        if hist.exists():
-            osm_event_metadata(ctx, hist, ensure_osmium(work), session())
+        # stage download ran with a version older than 3.1: get the metadata now, from the history
+        # file already on disk (no network needed; osmium-tool used only if already installed)
+        hist = local_history_file(ctx)
+        if hist is not None:
+            exe = shutil.which("osmium") or (work / "tools" / "osmium" / "bin" / "osmium")
+            osm_event_metadata(ctx, hist, str(exe) if Path(exe).exists() else None, session())
         else:
-            log(f"events: OSM history file {hist} not found; bursts from campaign tags only")
+            log("events: no OSM history file on disk; bursts from campaign tags only")
     new = new_way_pieces(ctx)
-    meta = pd.read_parquet(meta_f, columns=["osm_id", "uid", "changeset"]) if meta_f.exists() else None
+    meta = read_rows_for_ids(meta_f, ["osm_id", "uid", "changeset"], new.osm_id.unique()) if meta_f.exists() else None
     if meta is not None:
         new = new.merge(meta, on="osm_id", how="left")
         if cst_f.exists():
-            new = new.merge(pd.read_parquet(cst_f, columns=["changeset", "campaign"]), on="changeset", how="left")
+            cs = read_rows_for_ids(cst_f, ["changeset", "campaign"], meta.changeset.dropna().unique(), key="changeset")
+            new = new.merge(cs, on="changeset", how="left")
     if "campaign" not in new:
         new["campaign"] = False
     new["campaign"] = new["campaign"].astype("boolean").fillna(False).astype(bool)
