@@ -40,7 +40,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "3.1.1"
+__version__ = "3.2.0"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -898,42 +898,95 @@ def weiss_needed(years):
     return bool(weiss_years(years))
 
 
+ACCESS_SAMPLE_TILES = {           # one real tile per remote collection, used only by the access check
+    "worldcover": "v200/2021/map/ESA_WorldCover_10m_2021_v200_N06E000_Map.tif",
+    "copdem": "Copernicus_DSM_COG_30_N06_00_E001_00_DEM"}
+
+
 def network_targets(ctx):
-    """(url, what it is for, required) for every server the run needs."""
+    """(url, what it is for, required, kind) for every resource the run needs. kind: "range" = the
+    first bytes of the actual file; "get" = a minimal API answer; "figshare" = article metadata and
+    the first bytes of one of its files; "history" = the OSM history listing and its newest file."""
+    work, years = ctx["work"], ctx["years"]
+    t = []
     if OSM_SOURCE == "geofabrik":
-        t = [("https://download.geofabrik.de/", "OSM road extracts (Geofabrik)", True)]
+        t.append((URLS["geofabrik_index"], "OSM road extracts (Geofabrik index)", True, "range"))
     else:
-        t = [(OSM_HISTORY_URL, "OSM full-history planet", not (OSM_HISTORY_FILE and Path(OSM_HISTORY_FILE).exists()))]
-        if not shutil.which("osmium") and not (ctx["work"] / "tools" / "osmium" / "bin" / "osmium").exists():
-            t += [("https://conda.anaconda.org/", "osmium-tool from conda-forge", True)]
-    t += [
-         ("https://jeodpp.jrc.ec.europa.eu/", "GHSL settlements and population (JRC)", True),
-         (URLS["worldcover_list"], "ESA WorldCover, read remotely in stage grids", True),
-         (URLS["copdem_list"], "Copernicus DEM, read remotely in stage grids", True),
-         ("https://naciscdn.org/", "Natural Earth countries", True),
-         ("https://api.worldbank.org/", "World Bank WGI (corruption)", True),
-         ("https://msi.nga.mil/", "World Port Index (NGA)", True)]
-    if INCLUDE_ML_ROADS and ML_FILES:
-        t.append(("https://usaminedroads.z19.web.core.windows.net/", "Microsoft road detections", True))
+        local = OSM_HISTORY_FILE and Path(OSM_HISTORY_FILE).exists()
+        t.append((OSM_HISTORY_URL, "OSM full-history planet (listing and newest file)", not local, "history"))
+        if ROAD_EVENTS and EVENT_METADATA and not EVENT_CHANGESETS_FILE:
+            t.append((EVENT_CHANGESETS_URL, "OSM changeset dump (stage events)", False, "range"))
+        if not shutil.which("osmium") and not (work / "tools" / "osmium" / "bin" / "osmium").exists():
+            t.append(("https://conda.anaconda.org/conda-forge/linux-64/repodata.json",
+                      "osmium-tool from conda-forge", True, "range"))
+            plat = {("Linux", "x86_64"): "linux-64", ("Linux", "aarch64"): "linux-aarch64"}.get(
+                (platform.system(), platform.machine()), "linux-64")
+            t.append((MICROMAMBA_URL.format(plat=plat), "micromamba (fallback installer for osmium-tool)", False, "range"))
+    for e in sorted({nearest_epoch(y) for y in years}):
+        t.append((URLS["ghsl_smod"].format(y=e), f"GHSL settlement model {e} (JRC)", True, "range"))
+        t.append((URLS["ghsl_pop"].format(y=e), f"GHSL population {e} (JRC)", True, "range"))
+    t += [(URLS["worldcover_list"] + "?prefix=v200/2021/map/&max-keys=1", "ESA WorldCover tile list", True, "get"),
+          (URLS["worldcover"].format(key=ACCESS_SAMPLE_TILES["worldcover"]), "ESA WorldCover tile (read remotely)", True, "range"),
+          (URLS["copdem_list"], "Copernicus DEM tile list", True, "range"),
+          (URLS["copdem"].format(t=ACCESS_SAMPLE_TILES["copdem"]), "Copernicus DEM tile (read remotely)", True, "range"),
+          (URLS["naturalearth"], "Natural Earth countries", True, "range"),
+          (URLS["wgi"].format(ind=WGI_INDICATOR) + "?source=3&format=json&per_page=1", "World Bank WGI API", True, "get"),
+          (URLS["wpi"], "World Port Index (NGA)", True, "range")]
+    if INCLUDE_ML_ROADS:
+        t += [(URLS["ml"].format(drop=ML_DROP, file=f), f"Microsoft road detections {f}", True, "range") for f in ML_FILES]
     if NELSON_COMPARE:
-        t += [("https://api.figshare.com/", "Nelson et al. 2019 (figshare metadata)", True),
-              ("https://ndownloader.figshare.com/", "Nelson et al. 2019 (figshare files)", True)]
-    if weiss_needed(ctx["years"]):
-        t.append(("https://data.malariaatlas.org/", "Weiss et al. 2015 roads (Malaria Atlas)", True))
+        t.append((URLS["nelson"].format(a=NELSON_ARTICLE), "Nelson et al. 2019 (figshare metadata and files)", True, "figshare"))
+    if weiss_needed(years):
+        t.append((WEISS_WCS.format(s=6, n=7, w=1, e=2), "Weiss et al. 2015 friction (Malaria Atlas WCS)", True, "get"))
     if ROUTING_VALIDATION:
-        t += [(u.rstrip("/") + "/", "routing validation (optional)", False) for u in ROUTING_SERVERS]
+        t += [(u.rstrip("/") + f"/table/v1/{ROUTING_PROFILE}/2.40,6.40;2.60,6.50", f"routing validation: {u}", False, "get")
+              for u in ROUTING_SERVERS]
     return t
 
 
-def _probe(url, sess):
-    """'' if the server answers at all (any HTTP status), else the error."""
+def _err_text(e):
+    err = str(e)
+    m = re.search(r"\[Errno -?\d+\][^'\")]*|Name or service not known|timed out|SSLError[^'\")]*", err)
+    return (m.group(0) if m else type(e).__name__)[:120]
+
+
+def _probe(target, sess):
+    """Try the resource itself: '' if it answers with data, else a short reason."""
+    url, kind = (target, "page") if isinstance(target, str) else (target[0], target[3])
+
+    def first_bytes(u, ranged=True):
+        h = {"Range": "bytes=0-2047"} if ranged else {}
+        with sess.get(u, headers=h, timeout=40, stream=True, allow_redirects=True) as r:
+            if r.status_code not in (200, 206):
+                return f"HTTP {r.status_code}" + (" (refused: server or a proxy/firewall)" if r.status_code in (401, 403, 407)
+                                                   else " (not found: the file may have moved)" if r.status_code == 404 else "")
+            chunk = next(r.iter_content(2048), b"")
+            return "" if chunk else "empty answer"
     try:
-        sess.head(url, timeout=20, allow_redirects=False)
-        return ""
-    except requests.RequestException as e:
-        err = str(e)
-        m = re.search(r"\[Errno -?\d+\][^'\")]*|Name or service not known|timed out|SSLError[^'\")]*", err)
-        return (m.group(0) if m else type(e).__name__)[:120]
+        if kind == "page":
+            sess.head(url, timeout=20, allow_redirects=False)
+            return ""
+        if kind == "range":
+            return first_bytes(url)
+        if kind == "get":
+            return first_bytes(url, ranged=False)
+        if kind == "history":
+            err = first_bytes(url, ranged=False)
+            if err:
+                return err
+            files = history_listing(sess)
+            if not files:
+                return "no history-YYMMDD.osm.pbf in the listing"
+            return first_bytes(url.rstrip("/") + "/" + max(files, key=lambda n: n[8:14]))
+        if kind == "figshare":
+            r = sess.get(url, timeout=40)
+            if r.status_code != 200:
+                return f"HTTP {r.status_code} (figshare API)"
+            files = r.json().get("files") or []
+            return first_bytes(files[0]["download_url"]) if files else "no files in the figshare article"
+        return f"unknown probe kind {kind}"
+    except (requests.RequestException, RemoteUnavailable, ValueError, KeyError) as e:
+        return _err_text(e)
 
 
 def network_check(ctx, sess):
@@ -943,42 +996,61 @@ def network_check(ctx, sess):
     global ROUTING_SERVERS, ROUTING_VALIDATION
     targets = network_targets(ctx)
     with cf.ThreadPoolExecutor(8) as ex:
-        errs = list(ex.map(lambda t: _probe(t[0], sess), targets))
+        errs = list(ex.map(lambda t: _probe(t, sess), targets))
     if any(errs):
         import socket
         import urllib3.util.connection as uc
         orig = uc.allowed_gai_family
         uc.allowed_gai_family = lambda: socket.AF_INET
-        retry = [_probe(t[0], sess) if e else "" for t, e in zip(targets, errs)]
+        retry = [_probe(t, sess) if e else "" for t, e in zip(targets, errs)]
         if sum(map(bool, retry)) < sum(map(bool, errs)):
             log("network: some servers fail over IPv6 but answer over IPv4; using IPv4 only")
             errs = retry
         else:
             uc.allowed_gai_family = orig
-    rows = [{"url": u, "purpose": w, "required": r, "reachable": not e, "error": e}
-            for (u, w, r), e in zip(targets, errs)]
+    rows = [{"url": u, "purpose": w, "required": r, "check": k, "reachable": not e, "error": e}
+            for (u, w, r, k), e in zip(targets, errs)]
     pd.DataFrame(rows).to_csv(ctx["work"] / "network_check.csv", index=False)
     bad = [x for x in rows if not x["reachable"]]
     for x in bad:
         log(f"network: cannot reach {x['url']} ({x['purpose']}): {x['error']}")
     if not bad:
-        log(f"network: all {len(rows)} servers reachable")
+        log(f"network: all {len(rows)} resources answered with data")
     opt_bad = {x["url"] for x in bad if not x["required"]}
     if opt_bad:
-        ROUTING_SERVERS = [u for u in ROUTING_SERVERS if u.rstrip("/") + "/" not in opt_bad]
+        ROUTING_SERVERS = [u for u in ROUTING_SERVERS if not any(b.startswith(u.rstrip("/") + "/") for b in opt_bad)]
         if not ROUTING_SERVERS:
             ROUTING_VALIDATION = False
             log("network: no routing server reachable; the routing validation is skipped")
     req_bad = [x for x in bad if x["required"]]
     if req_bad:
         raise SystemExit(
-            "This machine cannot reach " + str(len(req_bad)) + " server(s) the run needs:\n"
-            + "\n".join(f"  {x['url']:<52} {x['purpose']}: {x['error']}" for x in req_bad)
+            "This machine cannot get " + str(len(req_bad)) + " resource(s) the run needs:\n"
+            + "\n".join(f"  {x['purpose']}: {x['error']}\n      {x['url']}" for x in req_bad)
             + "\nThe cluster probably allows only some sites (other sites such as PyPI worked). Either ask "
             "your IT team to allow HTTPS (port 443) to these hosts from this node, or run "
             "`--stages download,grids` on a machine with internet access using the same --work-dir "
             "(e.g. a shared disk), then rerun here: finished stages are skipped. Nothing was deleted. "
             "(--skip-network-check skips this test.)")
+
+
+def check_access(ctx):
+    """--check-access: probe every resource (both OSM sources, all optional servers) and report."""
+    global OSM_SOURCE
+    sess, rows = session(), []
+    for src in ("history", "geofabrik"):
+        OSM_SOURCE = src
+        rows += [t for t in network_targets(ctx) if t not in rows]
+    t0 = time.time()
+    with cf.ThreadPoolExecutor(8) as ex:
+        errs = list(ex.map(lambda t: _probe(t, sess), rows))
+    df = pd.DataFrame([{"purpose": w, "url": u, "required": r, "check": k, "ok": not e, "error": e}
+                       for (u, w, r, k), e in zip(rows, errs)])
+    df.to_csv(ctx["work"] / "network_check.csv", index=False)
+    print(f"\naccess check ({time.time() - t0:.0f} s): {int(df.ok.sum())} of {len(df)} resources answered with data")
+    for _, x in df.iterrows():
+        print(f"  {'OK  ' if x.ok else 'FAIL'}  {x.purpose:<55} {x.error}")
+    print(f"\nreport: {ctx['work'] / 'network_check.csv'}  (Geofabrik is needed only with --osm-source geofabrik)")
 
 
 def geofabrik_plan(work, grid, years, sess):
@@ -1716,6 +1788,62 @@ def way_cells(geoms, ids, grid):
     return d.groupby(["osm_id", "brow", "bcol"], as_index=False)["km"].sum().astype({"km": np.float32})
 
 
+WAY_COLUMNS = {"osm_id": "int64", "brow": "int32", "bcol": "int32", "km": "float32",
+               "highway": "object", "speed": "float32", "clipped": "bool"}
+
+
+def write_way_table(g, grid, clip, path):
+    """Way table for stage events: km of each way per BURST_CELL_DEG cell, with class and speed."""
+    ids = pd.to_numeric(g["osm_id"], errors="coerce").to_numpy()
+    geo = shapely.clip_by_rect(g.geometry.values, *clip) if clip else g.geometry.values
+    d = way_cells(geo, ids, grid).merge(
+        pd.DataFrame({"osm_id": ids, "highway": g["highway"].values,
+                      "speed": g["speed"].values.astype(np.float32)}).dropna(subset=["osm_id"])
+        .astype({"osm_id": np.int64}).drop_duplicates("osm_id"), on="osm_id", how="left")
+    d.assign(clipped=bool(clip)).reindex(columns=list(WAY_COLUMNS)).astype(WAY_COLUMNS) \
+        .to_parquet(path, index=False)
+
+
+def ways_job(job):
+    """Way table of one OSM tile or extract, on its own (for road tables built by older versions)."""
+    path = Path(job["out"]).with_suffix(".ways.parquet")
+    if path.exists():
+        return str(path)
+    grid = Grid(job["grid"]["bbox"], job["grid"]["res_deg"])
+    try:
+        g = pyogrio.read_dataframe(job["pbf"], layer="lines", columns=["osm_id", "highway", "other_tags"],
+                                   where="highway IS NOT NULL")
+    except Exception:
+        if Path(job["pbf"]).stat().st_size < 2048:
+            g = None
+        else:
+            raise
+    if g is not None:
+        g = g[g["highway"].isin(list(SPEED_TABLE))]
+        g = g[g.intersects(box(*grid.bounds))]
+    if g is None or g.empty:
+        pd.DataFrame({k: pd.Series(dtype=v) for k, v in WAY_COLUMNS.items()}).to_parquet(path, index=False)
+        return str(path)
+    g["speed"], _ = road_speed(g["highway"], g["other_tags"])
+    write_way_table(g, grid, job.get("clip"), path)
+    return str(path)
+
+
+def road_jobs(ctx, y):
+    """Per-tile jobs of stage roads for one year, from osm_plan.json."""
+    grid, work = ctx["grid"], ctx["work"]
+    dl = ctx.get("dl", work / "downloads")
+    pf = work / "osm_plan.json"
+    plan = json.loads(pf.read_text()) if pf.exists() else {}
+    jobs = []
+    for r in plan.get(str(y), []):
+        pbf = Path(r["file"]) if r.get("file") else dl / "osm" / str(y) / Path(r["url"]).name
+        jobs.append({"pbf": str(pbf), "out": str(work / "roads" / str(y) / f"{r['region']}.npz"),
+                     "grid": grid.to_dict(), "borders": str(work / "african_borders.gpkg"),
+                     "bytes": pbf.stat().st_size if pbf.exists() else 0, "clip": r.get("clip")})
+    return jobs
+
+
 def roads_job(job):
     """One OSM extract -> max-speed window, km by class, checkpoint points."""
     pbf, out, grid_d, borders_path = job["pbf"], Path(job["out"]), job["grid"], job["borders"]
@@ -1746,13 +1874,7 @@ def roads_job(job):
     km = line_lengths_km(shapely.clip_by_rect(g.geometry.values, *job["clip"]) if job.get("clip")
                          else g.geometry.values)
     stats["km_by_class"] = pd.Series(km, index=g["highway"].values).groupby(level=0).sum().round(1).to_dict()
-    # way table for stage events: km of each way per BURST_CELL_DEG cell, in this tile
-    geo = shapely.clip_by_rect(g.geometry.values, *job["clip"]) if job.get("clip") else g.geometry.values
-    way_cells(geo, pd.to_numeric(g["osm_id"], errors="coerce").to_numpy(), grid) \
-        .merge(pd.DataFrame({"osm_id": pd.to_numeric(g["osm_id"], errors="coerce").to_numpy(),
-                             "highway": g["highway"].values, "speed": g["speed"].values.astype(np.float32)})
-               .drop_duplicates("osm_id"), on="osm_id", how="left") \
-        .assign(clipped=bool(job.get("clip"))).to_parquet(out.with_suffix(".ways.parquet"), index=False)
+    write_way_table(g, grid, job.get("clip"), out.with_suffix(".ways.parquet"))
     b = g.total_bounds
     pad = grid.res          # one cell of margin: lines on the box edge must not be clipped away
     w = grid.window_of((b[0] - pad, b[1] - pad, b[2] + pad, b[3] + pad))
@@ -1869,12 +1991,7 @@ def stage_roads(ctx):
     plan = json.loads((work / "osm_plan.json").read_text())
     cp_rows, km_rows, info = [], [], {}
     for y in ctx["years"]:
-        jobs = []
-        for r in plan[str(y)]:
-            pbf = Path(r["file"]) if r.get("file") else dl / "osm" / str(y) / Path(r["url"]).name
-            jobs.append({"pbf": str(pbf), "out": str(work / "roads" / str(y) / f"{r['region']}.npz"),
-                         "grid": grid.to_dict(), "borders": str(work / "african_borders.gpkg"),
-                         "bytes": pbf.stat().st_size, "clip": r.get("clip")})
+        jobs = road_jobs(ctx, y)
         (work / "roads" / str(y)).mkdir(parents=True, exist_ok=True)
         # GDAL OSM driver + geopandas: ~ 1.5 GB + 7 x the .pbf size (measured on Benin/Togo
         # extracts; conservative), plus the rasterized window
@@ -1994,20 +2111,81 @@ def osm_event_metadata(ctx, src, osmium_exe, sess):
         log(f"OSM event metadata skipped (pyosmium not available: {e}); bursts will use road length only")
 
 
-def way_table(ctx):
-    """km per way, BURST_CELL_DEG cell and reference year (pieces from tiles summed; overlapping
-    extracts, e.g. neighbouring Geofabrik countries, counted once)."""
-    work, out = ctx["work"], []
+def ensure_way_tables(ctx):
+    """Build way tables missing because stage roads ran with a version older than 3.1."""
+    jobs = []
     for y in ctx["years"]:
-        parts = [pd.read_parquet(f) for f in sorted((work / "roads" / str(y)).glob("*.ways.parquet"))]
-        if not parts:
+        (ctx["work"] / "roads" / str(y)).mkdir(parents=True, exist_ok=True)
+        jobs += [j for j in road_jobs(ctx, y)
+                 if not Path(j["out"]).with_suffix(".ways.parquet").exists() and Path(j["pbf"]).exists()]
+    if jobs:
+        log(f"events: building {len(jobs)} missing way tables (stage roads ran with an older version)")
+        run_budgeted(ways_job, jobs, lambda j: 1.5e9 + 7 * j["bytes"], "way tables")
+    missing = [j["pbf"] for y in ctx["years"] for j in road_jobs(ctx, y)
+               if not Path(j["out"]).with_suffix(".ways.parquet").exists()]
+    if missing:
+        raise RuntimeError(f"events: no way table for {len(missing)} OSM files whose source is gone "
+                           f"(e.g. {missing[0]}); rerun stage roads (delete WORK_DIR/_done/roads)")
+
+
+def new_way_pieces(ctx):
+    """km per BURST_CELL_DEG cell of the ways that first appear in each reference year after the
+    first. Streams the way tables (only ids are held for all ways), so it scales to the planet."""
+    work, ys = ctx["work"], sorted(ctx["years"])
+    seen, out = np.array([], np.int64), []
+    for y in ys:
+        files = sorted((work / "roads" / str(y)).glob("*.ways.parquet"))
+        if not files:
             continue
-        d = pd.concat(parts)
-        g = d.groupby(["osm_id", "brow", "bcol"])
-        km = np.where(g["clipped"].transform("all"), g["km"].transform("sum"), g["km"].transform("max"))
-        d = d.assign(km=km).drop_duplicates(["osm_id", "brow", "bcol"])
-        out.append(d[["osm_id", "highway", "speed", "brow", "bcol", "km"]].assign(year=y))
-    return pd.concat(out) if out else pd.DataFrame(columns=["osm_id", "highway", "speed", "brow", "bcol", "km", "year"])
+        ids = np.unique(np.concatenate([pd.read_parquet(f, columns=["osm_id"]).osm_id.to_numpy(np.int64)
+                                        for f in files]))
+        if y > ys[0]:
+            new_ids = np.setdiff1d(ids, seen, assume_unique=True)
+            parts = []
+            for f in files:
+                d = pd.read_parquet(f)
+                parts.append(d[d.osm_id.isin(new_ids)])
+            d = pd.concat(parts) if parts else pd.DataFrame(columns=list(WAY_COLUMNS))
+            if len(d):
+                g = d.groupby(["osm_id", "brow", "bcol"])
+                km = np.where(g["clipped"].transform("all"), g["km"].transform("sum"), g["km"].transform("max"))
+                d = d.assign(km=km).drop_duplicates(["osm_id", "brow", "bcol"])
+            out.append(d[["osm_id", "highway", "brow", "bcol", "km"]].assign(year=y))
+        seen = np.union1d(seen, ids)
+    cols = {"osm_id": "int64", "highway": "object", "brow": "int64", "bcol": "int64", "km": "float64", "year": "int64"}
+    if not out:
+        return pd.DataFrame({k: pd.Series(dtype=v) for k, v in cols.items()})
+    return pd.concat(out).astype(cols)
+
+
+def burst_cells(new, grid, have_meta):
+    """Per (year, BURST_CELL_DEG cell): new km, share of the top users, campaign km, burst flag."""
+    keys = ["year", "brow", "bcol"]
+    cols = ["year", "brow", "bcol", "west", "north", "new_ways", "new_km", "top_users_share",
+            "campaign_km", "metadata", "burst"]
+    if new.empty:
+        return pd.DataFrame({c: pd.Series(dtype="int64" if c in keys + ["new_ways"] else
+                                          "bool" if c in ("metadata", "burst") else "float64") for c in cols})
+    new = new.assign(camp_km=new.km.where(new.campaign, 0.0))
+    t = new.groupby(keys).agg(new_ways=("osm_id", "nunique"), new_km=("km", "sum"),
+                              campaign_km=("camp_km", "sum")).reset_index()
+    if have_meta and new.uid.notna().any():
+        u = new.dropna(subset=["uid"]).groupby(keys + ["uid"], as_index=False).km.sum() \
+            .sort_values(keys + ["km"], ascending=[True, True, True, False])
+        u = u[u.groupby(keys).cumcount() < BURST_TOP_USERS].groupby(keys, as_index=False).km.sum() \
+            .rename(columns={"km": "top_km"})
+        t = t.merge(u, on=keys, how="left")
+        t["top_users_share"] = t.top_km / t.new_km.clip(lower=1e-9)
+        t = t.drop(columns="top_km")
+    else:
+        t["top_users_share"] = np.nan
+    f = BURST_CELL_DEG
+    t["west"] = grid.west + t.bcol * f
+    t["north"] = grid.north - t.brow * f
+    t["metadata"] = bool(have_meta)
+    t["burst"] = ((t.new_km >= BURST_MIN_KM) & (t.top_users_share >= BURST_TOP_SHARE)) | (t.campaign_km > 0)
+    t["new_km"] = t.new_km.round(2); t["campaign_km"] = t.campaign_km.round(2)
+    return t[cols].astype({c: "int64" for c in keys + ["new_ways"]})
 
 
 def stage_events(ctx):
@@ -2017,34 +2195,28 @@ def stage_events(ctx):
         return
     grid, work = ctx["grid"], ctx["work"]
     ys = sorted(ctx["years"])
-    ways = way_table(ctx)
-    first_year = ways.groupby("osm_id")["year"].min()
-    new = ways[(ways.year == ways.osm_id.map(first_year)) & (ways.year > ys[0])].copy()
+    ensure_way_tables(ctx)
     meta_f, cst_f = work / "osm_way_meta.parquet", work / "osm_changeset_tags.parquet"
-    meta = pd.read_parquet(meta_f) if meta_f.exists() else None
+    if OSM_SOURCE == "history" and EVENT_METADATA and not (meta_f.exists() and cst_f.exists()):
+        # stage download ran with a version older than 3.1: get the metadata now
+        local, url, name, _ = history_source(ctx, session())
+        hist = local or ctx["dl"] / "osm" / name
+        if hist.exists():
+            osm_event_metadata(ctx, hist, ensure_osmium(work), session())
+        else:
+            log(f"events: OSM history file {hist} not found; bursts from campaign tags only")
+    new = new_way_pieces(ctx)
+    meta = pd.read_parquet(meta_f, columns=["osm_id", "uid", "changeset"]) if meta_f.exists() else None
     if meta is not None:
-        new = new.merge(meta[["osm_id", "uid", "changeset", "timestamp"]], on="osm_id", how="left")
+        new = new.merge(meta, on="osm_id", how="left")
         if cst_f.exists():
-            new = new.merge(pd.read_parquet(cst_f)[["changeset", "campaign"]], on="changeset", how="left")
+            new = new.merge(pd.read_parquet(cst_f, columns=["changeset", "campaign"]), on="changeset", how="left")
     if "campaign" not in new:
         new["campaign"] = False
     new["campaign"] = new["campaign"].astype("boolean").fillna(False).astype(bool)
-    f = BURST_CELL_DEG
-    rows = []
-    for (y, br, bc), g in new.groupby(["year", "brow", "bcol"]):
-        km = float(g.km.sum())
-        if meta is not None and g.uid.notna().any():
-            top = g.groupby("uid").km.sum().sort_values(ascending=False).head(BURST_TOP_USERS).sum() / max(km, 1e-9)
-        else:
-            top = np.nan
-        camp_km = float(g.km[g.campaign].sum())
-        burst = (km >= BURST_MIN_KM and top >= BURST_TOP_SHARE) or camp_km > 0
-        rows.append({"year": y, "brow": br, "bcol": bc, "west": grid.west + bc * f, "north": grid.north - br * f,
-                     "new_ways": int(g.osm_id.nunique()), "new_km": round(km, 2), "top_users_share": top,
-                     "campaign_km": round(camp_km, 2), "metadata": meta is not None, "burst": bool(burst)})
-    bursts = pd.DataFrame(rows, columns=["year", "brow", "bcol", "west", "north", "new_ways", "new_km",
-                                         "top_users_share", "campaign_km", "metadata", "burst"])
+    bursts = burst_cells(new, grid, meta is not None)
     bursts.to_csv(work / "osm_burst_cells.csv", index=False)
+    f = BURST_CELL_DEG
     k = int(round(f / grid.res))
     summary = []
     for a, b in zip(ys[:-1], ys[1:]):
@@ -2053,8 +2225,9 @@ def stage_events(ctx):
         ev = memmap(work / f"road_events_{b}.npy", grid, np.uint8, fill=0)
         bb = bursts[(bursts.year == b) & bursts.burst]
         bmask = np.zeros((-(-grid.height // k), -(-grid.width // k)), bool)
-        ok = (bb.brow.values < bmask.shape[0]) & (bb.bcol.values < bmask.shape[1]) & (bb.brow.values >= 0) & (bb.bcol.values >= 0)
-        bmask[bb.brow.values[ok], bb.bcol.values[ok]] = True
+        br, bc = bb.brow.to_numpy(np.int64), bb.bcol.to_numpy(np.int64)
+        ok = (br >= 0) & (br < bmask.shape[0]) & (bc >= 0) & (bc < bmask.shape[1])
+        bmask[br[ok], bc[ok]] = True
         counts = np.zeros(5, np.int64); in_burst = np.zeros(5, np.int64)
         for r0, r1 in row_chunks(grid.height):
             x, z = np.asarray(ra[r0:r1]), np.asarray(rb[r0:r1])
@@ -3356,6 +3529,8 @@ def main(argv=None):
     p.add_argument("--max-workers", type=int, default=MAX_WORKERS)
     p.add_argument("--no-cleanup", action="store_true")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--check-access", action="store_true",
+                   help="only test access to every resource the run needs; write WORK_DIR/network_check.csv")
     p.add_argument("--routing-cities-per-continent", type=int, default=ROUTING_CITIES_PER_CONTINENT)
     p.add_argument("--no-routing", action="store_true")
     p.add_argument("--no-sensitivity", action="store_true")
@@ -3385,6 +3560,9 @@ def main(argv=None):
            "nelson_layers": NELSON_LAYERS or layer_names()}
     log(f"global_accessibility v{__version__}: years {years}, GHSL epochs {ctx['epoch']}, grid {grid.to_dict()}")
     log(f"cpus {cpu_count()}, available memory {available_memory() / 1e9:.0f} GB")
+    if a.check_access:
+        check_access(ctx)
+        return
     if a.dry_run:
         dry_run(ctx)
         return

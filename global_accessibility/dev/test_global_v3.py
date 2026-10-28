@@ -632,26 +632,91 @@ def test_cleanup_only_after_all_stages_succeeded(tmp_path, monkeypatch):
     assert sorted(p.name for p in work.iterdir()) == ["pylib"]
 
 
-def test_network_check_stops_early_and_drops_optional_servers(tmp_path, monkeypatch):
-    blocked = {ga.OSM_HISTORY_URL, "https://router.project-osrm.org/"}
+class _Resp:
+    def __init__(self, status=200, body=b"x" * 10, js=None, text=""):
+        self.status_code, self.body, self.js, self.text, self.headers = status, body, js, text, {}
+        self.ok = status < 400
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+    def iter_content(self, n):
+        yield self.body
+
+    def json(self):
+        return self.js
+
+
+def test_network_check_probes_resources_and_drops_optional_servers(tmp_path, monkeypatch):
+    """Each resource is fetched (first bytes); a refused file (403) or an unreachable host stops the
+    run with the purpose of the resource; an unreachable routing server only drops validation."""
+    blocked = {"planet.openstreetmap.org", "router.project-osrm.org"}
+    refused = set()
+    listing = '<a href="history-260921.osm.pbf">h</a> 2026-09-24 17:05  152G'
 
     class S:
-        def head(self, url, **kw):
-            if url in blocked:
+        def get(self, url, **kw):
+            host = url.split("/")[2]
+            if host in blocked:
                 raise ga.requests.ConnectionError("Failed to establish a new connection: [Errno 101] Network is unreachable")
-            return object()
+            if any(r in url for r in refused):
+                return _Resp(403)
+            if "api.figshare.com" in url:
+                return _Resp(js={"files": [{"download_url": "https://ndownloader.figshare.com/files/1"}]})
+            return _Resp()
+
+        def request(self, method, url, **kw):                         # http_request (OSM history listing)
+            if url.split("/")[2] in blocked:
+                raise ga.requests.ConnectionError("[Errno 101] Network is unreachable")
+            return _Resp(text=listing)
+
+        def head(self, url, **kw):
+            return _Resp()
+    monkeypatch.setattr(ga.time, "sleep", lambda s: None)
     monkeypatch.setattr(ga, "ROUTING_SERVERS", list(ga.ROUTING_SERVERS))
     monkeypatch.setattr(ga, "ROUTING_VALIDATION", True)
+    monkeypatch.setattr(ga, "OSM_SOURCE", "history")
+    monkeypatch.setattr(ga, "EVENT_CHANGESETS_FILE", None)
+    monkeypatch.setattr(ga.shutil, "which", lambda x: "/usr/bin/osmium")   # osmium installed: no conda probe
     ctx = {"work": tmp_path, "years": [2015, 2026]}
     with pytest.raises(SystemExit) as e:
         ga.network_check(ctx, S())
-    assert "full-history" in str(e.value) and "Errno 101" in str(e.value)
-    assert "project-osrm" not in str(e.value)                            # optional: not a reason to stop
+    assert "OSM full-history planet" in str(e.value) and "Errno 101" in str(e.value)
+    assert "routing validation" not in str(e.value)                       # optional: not a reason to stop
     assert ga.ROUTING_SERVERS == ["https://routing.openstreetmap.de/routed-car"]
-    blocked.discard(ga.OSM_HISTORY_URL)
-    ga.network_check(ctx, S())                                             # only an optional server down: go on
     chk = pd.read_csv(tmp_path / "network_check.csv")
-    assert chk.reachable.all() and not chk.url.str.contains("project-osrm").any()   # dropped earlier
+    assert set(chk.check) >= {"history", "range", "get", "figshare"}
+    assert chk[chk.purpose.str.contains("changeset dump")].required.eq(False).all()
+    # a file refused by a proxy is reported as such
+    blocked.discard("planet.openstreetmap.org"); refused.add("GHS_POP_E2015")
+    with pytest.raises(SystemExit, match="HTTP 403 .refused"):
+        ga.network_check(ctx, S())
+    refused.clear()
+    ga.network_check(ctx, S())                                             # everything else answers: go on
+    assert pd.read_csv(tmp_path / "network_check.csv").reachable.all()
+
+
+def test_check_access_reports_both_osm_sources(tmp_path, monkeypatch, capsys):
+    class S:
+        def get(self, url, **kw):
+            if "geofabrik" in url:
+                raise ga.requests.ConnectionError("[Errno 101] Network is unreachable")
+            if "api.figshare.com" in url:
+                return _Resp(js={"files": [{"download_url": "https://ndownloader.figshare.com/files/1"}]})
+            return _Resp()
+
+        def request(self, method, url, **kw):
+            return _Resp(text='<a href="history-260921.osm.pbf">h</a> 2026-09-24 17:05  152G')
+    monkeypatch.setattr(ga, "session", lambda: S())
+    monkeypatch.setattr(ga, "OSM_SOURCE", "history")
+    ga.check_access({"work": tmp_path, "years": [2015, 2020, 2026]})
+    out = capsys.readouterr().out
+    assert "FAIL  OSM road extracts (Geofabrik index)" in out and "OK    OSM full-history planet" in out
+    df = pd.read_csv(tmp_path / "network_check.csv")
+    assert (~df.ok).sum() == 1 and df.purpose.str.contains("GHSL population 2020").any()
 
 
 # ---------------------------------------------------------------------------
@@ -874,3 +939,41 @@ def test_fetch_wgi_pages_and_retries(monkeypatch):
     rows = ga.fetch_wgi(S(), per_page=3)
     assert calls == [1, 1, 2] and rows == [{"iso3": "BEN", "year": 2001, "score": 41.0},
                                            {"iso3": "BEN", "year": 2002, "score": 42.0}]
+
+
+def test_stage_events_resumed_from_older_roads_stage(tmp_path, monkeypatch):
+    """HPC case: stage roads ran with a version that wrote no way tables, and no new way forms a
+    burst. Missing tables are rebuilt from the OSM files; empty burst tables keep integer indices."""
+    g = ga.Grid((0, 6, 3, 7), D)
+    work = tmp_path / "work"; dl = work / "downloads"
+    for y in (2015, 2020):
+        (dl / "osm" / str(y)).mkdir(parents=True)
+        (dl / "osm" / str(y) / "x.osm").write_text(OSM)                   # same roads both years
+    (work / "osm_plan.json").write_text(json.dumps({str(y): [{"region": "x", "file": str(dl / "osm" / str(y) / "x.osm"),
+                                                             "bytes": 1, "clip": None}] for y in (2015, 2020)}))
+    r = np.zeros(g.shape, np.float32); r[100, :] = 70
+    np.save(work / "road_speed_2015.npy", r); np.save(work / "road_speed_2020.npy", r)
+    monkeypatch.setattr(ga, "OSM_SOURCE", "geofabrik")
+    ctx = {"grid": g, "work": work, "dl": dl, "years": [2015, 2020]}
+    ga.stage_events(ctx)
+    assert (work / "roads" / "2020" / "x.ways.parquet").exists()
+    b = pd.read_csv(work / "osm_burst_cells.csv")
+    assert b.empty and (np.load(work / "road_events_2020.npy") == 0).all()
+    # a source file that is gone cannot be rebuilt: say so clearly
+    (work / "roads" / "2020" / "x.ways.parquet").unlink(); (dl / "osm" / "2020" / "x.osm").unlink()
+    with pytest.raises(RuntimeError, match="rerun stage roads"):
+        ga.stage_events(ctx)
+
+
+def test_burst_cells_vectorised_matches_rule():
+    g = ga.Grid((0, 6, 1, 7), D)
+    new = pd.DataFrame({"osm_id": [1, 2, 3, 4, 7, 5, 6], "year": 2020, "brow": [0, 0, 0, 0, 0, 5, 5],
+                        "bcol": [0, 0, 0, 0, 0, 5, 5], "km": [10.0, 10.0, 5.0, 1.0, 4.0, 20.0, 20.0],
+                        "uid": [1, 1, 2, 9, 10, 1, 2], "campaign": [False] * 7, "highway": "track"})
+    t = ga.burst_cells(new, g, True).set_index(["brow", "bcol"])
+    # cell (0, 0): users 1 (20 km), 2 (5), 10 (4), 9 (1): top three = 29 of 30 km
+    assert t.loc[(0, 0), "new_km"] == 30 and t.loc[(0, 0), "top_users_share"] == pytest.approx(29 / 30)
+    assert t.loc[(0, 0), "burst"]
+    assert t.loc[(5, 5), "new_km"] == 40 and t.loc[(5, 5), "top_users_share"] == 1.0 and t.loc[(5, 5), "burst"]
+    e = ga.burst_cells(new.iloc[:0], g, True)
+    assert e.empty and e.brow.dtype == np.int64
