@@ -40,7 +40,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "3.2.1"
+__version__ = "3.2.2"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -1177,14 +1177,22 @@ def _osmium_version(exe):
         return ""
 
 
+def find_osmium(work):
+    """A working osmium-tool executable already installed (PATH or WORK_DIR/tools), or None."""
+    for exe in (shutil.which("osmium"), Path(work) / "tools" / "osmium" / "bin" / "osmium"):
+        if exe and Path(exe).exists() and _osmium_version(exe):
+            return str(exe)
+    return None
+
+
 def ensure_osmium(work):
     """Path of an osmium-tool executable: on PATH, or in WORK_DIR/tools/osmium, else installed
     there from conda-forge with mamba/conda, or with micromamba downloaded from GitHub. No
     administrator rights needed; the tools folder is kept by the cleanup, like pylib."""
     prefix = Path(work) / "tools" / "osmium"
-    for exe in (shutil.which("osmium"), prefix / "bin" / "osmium"):
-        if exe and Path(exe).exists() and _osmium_version(exe):
-            return str(exe)
+    found = find_osmium(work)
+    if found:
+        return found
     env = {**os.environ, "CONDA_PKGS_DIRS": str(Path(work) / "tools" / "pkgs"),
            "MAMBA_ROOT_PREFIX": str(Path(work) / "tools" / "mamba_root")}
     tried = []
@@ -2004,6 +2012,9 @@ def ml_roads(ctx):
 
 def stage_roads(ctx):
     grid, work = ctx["grid"], ctx["work"]
+    if not (work / "osm_plan.json").exists():
+        raise RuntimeError("osm_plan.json not found: stage download must run first "
+                           "(delete WORK_DIR/_done/download and rerun)")
     cp_rows, km_rows, info = [], [], {}
     for y in ctx["years"]:
         jobs = road_jobs(ctx, y)
@@ -2109,47 +2120,67 @@ def changeset_campaigns(path, ids, out):
     return df
 
 
+def osm_way_metadata(ctx, src, osmium_exe):
+    """User and changeset of each way's first highway version, from the history file."""
+    meta = ctx["work"] / "osm_way_meta.parquet"
+    if meta.exists():
+        return meta
+    try:
+        with Timer("OSM way metadata (history)"):
+            log(f"OSM way metadata from {src}")
+            history_way_meta(src, meta, osmium_exe, ctx["work"] / "osm_tmp")
+        return meta
+    except ImportError as e:
+        log(f"OSM way metadata skipped (pyosmium not available: {e}); bursts from road length only")
+    except (RuntimeError, OSError) as e:
+        log(f"OSM way metadata failed ({str(e)[:200]}); bursts from campaign tags only")
+    return None
+
+
+def osm_changeset_tags(ctx, sess):
+    """Campaign and import tags of the changesets that created highway ways (changeset dump).
+    Optional: any failure (download, missing or damaged file) is logged and skipped."""
+    work, dl = ctx["work"], ctx.get("dl", ctx["work"] / "downloads")
+    meta, cst = work / "osm_way_meta.parquet", work / "osm_changeset_tags.parquet"
+    if cst.exists() or not meta.exists():
+        return
+    try:
+        cfile = Path(EVENT_CHANGESETS_FILE) if EVENT_CHANGESETS_FILE else \
+            download(EVENT_CHANGESETS_URL, dl / "osm" / "changesets-latest.osm.bz2", sess)
+        if not cfile.exists():
+            raise OSError(f"{cfile} not found")
+        with Timer("OSM changeset tags"):
+            changeset_campaigns(cfile, pd.read_parquet(meta, columns=["changeset"]).changeset.unique(), cst)
+    except ImportError as e:
+        log(f"OSM changeset tags skipped (pyosmium not available: {e})")
+    except (RemoteUnavailable, RuntimeError, OSError) as e:
+        log(f"OSM changeset dump not usable ({str(e)[:200]}); bursts without campaign tags")
+
+
 def osm_event_metadata(ctx, src, osmium_exe, sess):
     """Way metadata and changeset tags for stage events (history source only; resumable)."""
-    work, dl = ctx["work"], ctx["dl"]
-    meta, cst = work / "osm_way_meta.parquet", work / "osm_changeset_tags.parquet"
-    try:
-        if not meta.exists():
-            with Timer("OSM way metadata (history)"):
-                history_way_meta(src, meta, osmium_exe, work / "osm_tmp")
-        if not cst.exists():
-            try:
-                cfile = Path(EVENT_CHANGESETS_FILE) if EVENT_CHANGESETS_FILE else \
-                    download(EVENT_CHANGESETS_URL, dl / "osm" / "changesets-latest.osm.bz2", sess)
-            except RemoteUnavailable as e:
-                log(f"OSM changeset dump not available ({e}); bursts without campaign tags")
-                return
-            with Timer("OSM changeset tags"):
-                changeset_campaigns(cfile, pd.read_parquet(meta, columns=["changeset"]).changeset.unique(), cst)
-    except ImportError as e:
-        log(f"OSM event metadata skipped (pyosmium not available: {e}); bursts will use road length only")
-
+    if osm_way_metadata(ctx, src, osmium_exe) is not None:
+        osm_changeset_tags(ctx, sess)
 
 def ensure_way_tables(ctx):
     """Build way tables missing because stage roads ran with a version older than 3.1."""
-    jobs = []
+    all_jobs = []
     for y in ctx["years"]:
         (ctx["work"] / "roads" / str(y)).mkdir(parents=True, exist_ok=True)
-        jobs += [j for j in road_jobs(ctx, y)
-                 if not Path(j["out"]).with_suffix(".ways.parquet").exists() and Path(j["pbf"]).exists()]
+        all_jobs += road_jobs(ctx, y)
+    jobs = [j for j in all_jobs if not Path(j["out"]).with_suffix(".ways.parquet").exists() and Path(j["pbf"]).exists()]
     if jobs:
         log(f"events: building {len(jobs)} missing way tables (stage roads ran with an older version)")
         run_budgeted(ways_job, jobs, lambda j: 1.5e9 + 7 * j["bytes"], "way tables")
     missing = []
-    for y in ctx["years"]:
-        for j in road_jobs(ctx, y):
-            wp, done = Path(j["out"]).with_suffix(".ways.parquet"), Path(j["out"]).with_suffix(".done")
-            if wp.exists():
-                continue
-            if done.exists() and not json.loads(done.read_text()).get("segments"):
-                empty_way_table(wp)             # a tile without roads: nothing to rebuild
-            else:
-                missing.append(j["pbf"])
+    for j in all_jobs:
+        wp, done = Path(j["out"]).with_suffix(".ways.parquet"), Path(j["out"]).with_suffix(".done")
+        if wp.exists():
+            continue
+        if done.exists() and not json.loads(done.read_text()).get("segments"):
+            empty_way_table(wp)                 # a tile without roads: nothing to rebuild
+        else:
+            missing.append(j["pbf"])
     if missing:
         raise RuntimeError(f"events: no way table for {len(missing)} OSM files whose source is gone "
                            f"(e.g. {missing[0]}); rerun stage roads (delete WORK_DIR/_done/roads)")
@@ -2216,15 +2247,12 @@ def burst_cells(new, grid, have_meta):
 
 
 def read_rows_for_ids(path, columns, ids, key="osm_id"):
-    """Rows of a (large) parquet file whose key is in ids, read batch by batch."""
+    """Rows of a (large) parquet file whose key is in ids (pyarrow filter with row-group pruning)."""
     import pyarrow.parquet as pq
-    ids = np.asarray(ids, dtype=np.int64)
-    parts = []
-    for b in pq.ParquetFile(path).iter_batches(batch_size=5_000_000, columns=columns):
-        d = b.to_pandas()
-        parts.append(d[d[key].isin(ids)])
-    return pd.concat(parts) if parts else pd.DataFrame(columns=columns)
-
+    ids = np.unique(np.asarray(ids, dtype=np.int64))
+    if len(ids) == 0:
+        return pq.read_schema(path).empty_table().select(columns).to_pandas()
+    return pq.read_table(path, columns=columns, filters=[(key, "in", ids.tolist())]).to_pandas()
 
 def local_history_file(ctx):
     """The OSM history file used by stage download: OSM_HISTORY_FILE, the name in osm_plan.json,
@@ -2239,6 +2267,8 @@ def local_history_file(ctx):
             if (osm / n).exists():
                 return osm / n
     found = sorted(osm.glob("history-*.osm.pbf")) if osm.exists() else []
+    if found:
+        log(f"events: using the newest OSM history file on disk, {found[-1].name} (not named in osm_plan.json)")
     return found[-1] if found else None
 
 
@@ -2252,14 +2282,30 @@ def stage_events(ctx):
     ensure_way_tables(ctx)
     meta_f, cst_f = work / "osm_way_meta.parquet", work / "osm_changeset_tags.parquet"
     if OSM_SOURCE == "history" and EVENT_METADATA and not (meta_f.exists() and cst_f.exists()):
-        # stage download ran with a version older than 3.1: get the metadata now, from the history
-        # file already on disk (no network needed; osmium-tool used only if already installed)
-        hist = local_history_file(ctx)
-        if hist is not None:
-            exe = shutil.which("osmium") or (work / "tools" / "osmium" / "bin" / "osmium")
-            osm_event_metadata(ctx, hist, str(exe) if Path(exe).exists() else None, session())
-        else:
-            log("events: no OSM history file on disk; bursts from campaign tags only")
+        # stage download ran with a version older than 3.1: way metadata from the history file
+        # already on disk (osmium-tool used only if already installed); the changeset tags may need
+        # the changeset dump, downloaded if needed (optional: a failure only skips the tags)
+        if not meta_f.exists():
+            hist = local_history_file(ctx)
+            if hist is None:
+                log("events: no OSM history file on disk; bursts without user metadata")
+            else:
+                exe = find_osmium(work)
+                reg = work / "osm_tmp" / "history-bbox.osm.pbf"   # same extract as stage download
+                if BBOX and not reg.exists() and exe:   # regional run: cut the area, not the planet
+                    reg.parent.mkdir(parents=True, exist_ok=True)
+                    part = reg.with_name("history-bbox.part.osm.pbf")
+                    try:
+                        run_osmium([exe, "extract", "--with-history", "-s", "complete_ways", "-b",
+                                    ",".join(map(str, grid.bounds)), str(hist), "-o", str(part), "--overwrite"],
+                                   "events: history extract of the bbox")
+                        part.replace(reg)
+                    except (RuntimeError, OSError) as e:
+                        log(f"events: bbox extract failed ({str(e)[:200]}); streaming the full history file")
+                if BBOX and reg.exists():
+                    hist = reg
+                osm_way_metadata(ctx, hist, exe)
+        osm_changeset_tags(ctx, session())
     new = new_way_pieces(ctx)
     meta = read_rows_for_ids(meta_f, ["osm_id", "uid", "changeset"], new.osm_id.unique()) if meta_f.exists() else None
     if meta is not None:
@@ -3538,9 +3584,9 @@ def dry_run(ctx):
     if OSM_SOURCE == "history":
         local, url, name, size = history_source(ctx, session())
         size = size or (local.stat().st_size if local else 0)
-        exe = shutil.which("osmium") or (ctx["work"] / "tools" / "osmium" / "bin" / "osmium")
+        exe = find_osmium(ctx["work"])
         log(f"OSM history: {name} ({size / 1e9:.0f} GB, {'local file' if local else url}); "
-            f"osmium-tool: {_osmium_version(exe) or 'not installed yet (installed from conda-forge at the start of the run)'}")
+            f"osmium-tool: {(exe and _osmium_version(exe)) or 'not installed yet (installed from conda-forge at the start of the run)'}")
         peak = size + ny * 0.6 * size + ny * 0.15 * size
         log(f"OSM: {ny} years cut side by side from one file; peak scratch disk ~{peak / 1e9:,.0f} GB "
             f"(history + one temporary planet per year + road files)"

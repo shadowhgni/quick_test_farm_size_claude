@@ -1018,3 +1018,27 @@ def test_event_metadata_without_changeset_dump(tmp_path, monkeypatch):
     monkeypatch.setattr(ga, "EVENT_CHANGESETS_FILE", None)
     ga.osm_event_metadata({"work": work, "dl": work / "downloads"}, osh, None, None)   # no osmium-tool, dump blocked
     assert (work / "osm_way_meta.parquet").exists() and not (work / "osm_changeset_tags.parquet").exists()
+
+
+def test_read_rows_for_ids_empty(tmp_path):
+    f = tmp_path / "m.parquet"
+    pd.DataFrame({"osm_id": np.arange(5, dtype=np.int64), "uid": np.arange(5)}).to_parquet(f)
+    d = ga.read_rows_for_ids(f, ["osm_id", "uid"], [])
+    assert len(d) == 0 and list(d.columns) == ["osm_id", "uid"] and d.osm_id.dtype == np.int64
+
+
+def test_changeset_tags_missing_file_does_not_stop(tmp_path, monkeypatch):
+    work = tmp_path / "w"; work.mkdir()
+    pd.DataFrame({"osm_id": [1], "uid": [2], "changeset": [3]}).to_parquet(work / "osm_way_meta.parquet")
+    monkeypatch.setattr(ga, "EVENT_CHANGESETS_FILE", str(tmp_path / "missing.osm.bz2"))
+    ga.osm_changeset_tags({"work": work, "dl": work / "downloads"}, None)
+    assert not (work / "osm_changeset_tags.parquet").exists()
+    bad = tmp_path / "bad.osm.bz2"; bad.write_bytes(b"not bzip2")
+    monkeypatch.setattr(ga, "EVENT_CHANGESETS_FILE", str(bad))
+    ga.osm_changeset_tags({"work": work, "dl": work / "downloads"}, None)   # parse error logged, not raised
+    assert not (work / "osm_changeset_tags.parquet").exists()
+
+
+def test_stage_roads_needs_plan(tmp_path):
+    with pytest.raises(RuntimeError, match="osm_plan.json"):
+        ga.stage_roads({"grid": ga.Grid((0, 0, 1, 1), 0.1), "work": tmp_path, "years": [2020]})
