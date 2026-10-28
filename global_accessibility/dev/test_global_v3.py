@@ -1042,3 +1042,30 @@ def test_changeset_tags_missing_file_does_not_stop(tmp_path, monkeypatch):
 def test_stage_roads_needs_plan(tmp_path):
     with pytest.raises(RuntimeError, match="osm_plan.json"):
         ga.stage_roads({"grid": ga.Grid((0, 0, 1, 1), 0.1), "work": tmp_path, "years": [2020]})
+
+
+def test_way_cells_skips_degenerate_ways():
+    g = ga.Grid((0, 0, 1, 1), 1 / 120)
+    good = LineString([(0.10, 0.50), (0.30, 0.50)])
+    zero = shapely.from_wkt("LINESTRING (0.2 0.2, 0.2 0.2)")          # the HPC failure case
+    three = shapely.from_wkt("LINESTRING (0.4 0.4, 0.4 0.4, 0.4 0.4)")
+    lines = np.array([good, zero, three, shapely.LineString(), None], dtype=object)
+    d = ga.way_cells(lines, np.array([1, 2, 3, 4, 5]), g)
+    assert set(d.osm_id) == {1}
+    assert d[d.osm_id == 1].km.sum() == pytest.approx(22.2, rel=0.01)
+
+
+def test_store_temp_folder_is_unique_per_grid(tmp_path, monkeypatch):
+    seen = []
+    monkeypatch.setattr(ga, "store_job", lambda job: seen.append(job["tmp"]))
+    monkeypatch.setattr(ga, "store_items", lambda ctx: [
+        ("traveltime", y, "ports_3", f"tt_{y}.npy", "minutes", "x") for y in (2015, 2020)])
+    for y in (2015, 2020):
+        np.save(tmp_path / f"tt_{y}.npy", np.zeros((2, 2), np.float32))
+    ctx = {"grid": ga.Grid((0, 0, 1, 1), 0.5), "work": tmp_path, "results": tmp_path / "res", "years": [2015, 2020],
+           "epoch": {2015: 2015, 2020: 2020}}
+    try:
+        ga.stage_store(ctx)
+    except Exception:
+        pass                                 # later steps need real outputs; only the temp folders matter here
+    assert len(seen) == 2 and len(set(seen)) == 2

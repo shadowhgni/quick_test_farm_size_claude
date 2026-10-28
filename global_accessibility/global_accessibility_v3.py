@@ -40,7 +40,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "3.2.2"
+__version__ = "3.2.3"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -1782,7 +1782,21 @@ def way_cells(geoms, ids, grid):
     """km of each way per BURST_CELL_DEG cell (brow, bcol counted from the grid's north-west corner):
     lines are densified, and each segment is assigned to the cell of its midpoint."""
     parts, pidx = shapely.get_parts(geoms, return_index=True)
-    parts = shapely.segmentize(parts, BURST_CELL_DEG / 4)
+    # OSM can hold degenerate ways (one node, or the same node repeated): GEOS refuses to densify them
+    # ("point array must contain 0 or >1 elements", HPC 2026-10-28) and they have no length anyway
+    ok = (shapely.get_type_id(parts) == 1) & (shapely.get_num_coordinates(parts) >= 2)
+    ok[ok] = shapely.length(parts[ok]) > 0       # zero-length ways (repeated node) also fail in GEOS
+    parts, pidx = parts[ok], pidx[ok]
+    try:
+        parts = shapely.segmentize(parts, BURST_CELL_DEG / 4)
+    except shapely.errors.GEOSException:            # one bad geometry must not lose the whole tile
+        dense = []
+        for g in parts:
+            try:
+                dense.append(shapely.segmentize(g, BURST_CELL_DEG / 4))
+            except shapely.errors.GEOSException:
+                dense.append(shapely.LineString())
+        parts = np.array(dense, dtype=object)
     xy, cidx = shapely.get_coordinates(parts, return_index=True)
     same = cidx[1:] == cidx[:-1]
     a, b = xy[:-1][same], xy[1:][same]
@@ -3011,7 +3025,10 @@ def stage_store(ctx):
     for name, year, layer, f, units, desc in store_items(ctx):
         out = store_path(root, name, year, layer)
         jobs.append({"src": str(work / f), "out": str(out), "grid": grid.to_dict(), "units": units,
-                     "description": desc, "tmp": str(work / "tmp" / "store")})
+                     "description": desc,
+                     # one temp folder per grid: traveltime/<year>/<layer>.tif of different years share a
+                     # file name, and parallel threads overwrote each other's temp file (HPC, 2026-09-27)
+                     "tmp": str(work / "tmp" / "store" / f"{name}_{year}_{layer}")})
         dt_ = np.load(work / f, mmap_mode="r").dtype
         manifest.append({"name": name, "year": year, "layer": layer,
                          "file": str(out.relative_to(root)), "units": units, "description": desc,
@@ -3600,6 +3617,7 @@ def dry_run(ctx):
         log(f"OSM {y}: largest extracts {[(r['region'], round(r['bytes'] / 1e9, 2)) for r in big]}")
 
 
+OPTIONAL_STAGES = {"events"}     # a failure here is logged and the run continues
 STAGES = ["download", "grids", "roads", "events", "friction", "traveltime", "outputs", "store", "compare",
           "validate", "sensitivity", "cleanup"]
 
@@ -3674,6 +3692,7 @@ def main(argv=None):
              "friction": stage_friction, "traveltime": stage_traveltime,
              "outputs": stage_outputs, "store": stage_store, "compare": stage_compare, "validate": stage_validate, "sensitivity": stage_sensitivity,
              "cleanup": stage_cleanup}
+    failed_optional = []
     for s in STAGES:
         if s not in want:
             continue
@@ -3681,15 +3700,26 @@ def main(argv=None):
         if marker.exists() and s != "cleanup":
             log(f"stage {s}: already done (delete {marker} to redo)")
             continue
+        if s == "cleanup" and failed_optional:
+            log(f"stage cleanup skipped: stage {', '.join(failed_optional)} failed (see above), so "
+                f"{ctx['work']} is kept to rerun it; the travel-time results are complete")
+            continue
         with Timer(f"stage {s}"):
             try:
                 funcs[s](ctx)
-            except RemoteUnavailable as e:
-                log(traceback.format_exc())
-                write_methods(ctx)
-                raise SystemExit(f"stage {s} stopped: a server kept failing ({e}). Nothing was deleted; "
-                                 "rerun later to resume.") from None
-            except Exception:
+            except Exception as e:
+                if s in OPTIONAL_STAGES:
+                    # the road-event layers are extra: their failure must not stop the travel-time outputs
+                    log(traceback.format_exc())
+                    log(f"stage {s} FAILED ({str(e)[:200]}); the run continues without it "
+                        f"(rerun it later with --stages {s})")
+                    failed_optional.append(s)
+                    continue
+                if isinstance(e, RemoteUnavailable):
+                    log(traceback.format_exc())
+                    write_methods(ctx)
+                    raise SystemExit(f"stage {s} stopped: a server kept failing ({e}). Nothing was deleted; "
+                                     "rerun later to resume.") from None
                 log(traceback.format_exc())
                 write_methods(ctx)
                 raise
