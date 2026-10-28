@@ -229,6 +229,7 @@
   "ports_5"
  ],
  "WEISS2015_AUGMENT": true,
+ "WEISS_YEARS": null,
  "OSM_MAX_MISSING_REGIONS": 0,
  "OSM_SNAPSHOT_MAX_LAG": 1,
  "WEISS_NETWORK_KMH": 10.0,
@@ -237,6 +238,22 @@
  "COMPLETE_TILE_DEG": 2,
  "COMPLETE_MIN": 0.8,
  "COMPLETE_MIN_CELLS": 50,
+ "ROAD_ONLY": true,
+ "ROAD_ONLY_LAYERS": [
+  "cities_10",
+  "cities_11",
+  "cities_12",
+  "ports_5"
+ ],
+ "ROAD_EVENTS": true,
+ "EVENT_METADATA": true,
+ "EVENT_CHANGESETS_URL": "https://planet.openstreetmap.org/planet/changesets-latest.osm.bz2",
+ "EVENT_CHANGESETS_FILE": null,
+ "BURST_CELL_DEG": 0.1,
+ "BURST_MIN_KM": 25.0,
+ "BURST_TOP_USERS": 3,
+ "BURST_TOP_SHARE": 0.8,
+ "BURST_TAG_RE": "#hotosm|hotosm-project|#missingmaps|mapwithai|esri",
  "ROUTING_VALIDATION": true,
  "NETWORK_CHECK": true,
  "ROUTING_SERVERS": [
@@ -358,6 +375,7 @@
   "download",
   "grids",
   "roads",
+  "events",
   "friction",
   "traveltime",
   "outputs",
