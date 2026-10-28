@@ -2309,11 +2309,14 @@ def main(argv=None):
     p.add_argument("--check-access", action="store_true")
     a = p.parse_args(argv)
     GA_RESULTS, MAX_WORKERS = list(a.ga_results), a.max_workers
+    if a.check_access:      # needs no travel-time store: can run while global_accessibility_v3.py still runs
+        res = Path(a.results_dir).resolve()
+        (res / "tables").mkdir(parents=True, exist_ok=True)
+        log(f"access_effects v{__version__}: access check")
+        return check_access({"results": res})
     ctx = make_ctx(a.work_dir, a.results_dir, tuple(a.bbox) if a.bbox else None)
     log(f"access_effects v{__version__}: {len(ctx['tiles'])} tiles, GA runs "
         f"{[r['dir'] for r in ctx['store'].runs]}, cpus {cpu_count()}, memory {available_memory() / 1e9:.0f} GB")
-    if a.check_access:
-        return check_access(ctx)
     if a.dry_run:
         return dry_run(ctx)
     want = [s.strip() for s in a.stages.split(",") if s.strip()]

@@ -12,6 +12,7 @@ cd "$(dirname "$0")"
 SCRIPT="${AE_SCRIPT:-access_effects_v01.py}"
 
 PY="${PYTHON:-python}"
+GA="${GA_RESULTS:-../ga_results}"     # RESULTS_DIR of global_accessibility_v03.py (one folder up by default)
 cmd="${1:-help}"; shift || true
 stamp=$(date +%Y%m%d_%H%M)
 case "$cmd" in
@@ -21,7 +22,7 @@ case "$cmd" in
     if [ -f study.pid ] && kill -0 "$(cat study.pid)" 2>/dev/null; then
       echo "already running (pid $(cat study.pid)); use: bash run_study.sh status"; exit 1
     fi
-    nohup "$PY" -u "$SCRIPT" "$@" > "study_$stamp.log" 2>&1 &
+    nohup "$PY" -u "$SCRIPT" --ga-results "$GA" "$@" > "study_$stamp.log" 2>&1 &
     echo $! > study.pid
     echo "started pid $(cat study.pid), log study_$stamp.log" ;;
   status)
