@@ -187,17 +187,18 @@ def run(tmp_path_factory):
 
 def test_stages_write_tables(run):
     w, r = run["work"], run["results"]
-    t = pd.read_parquet(next((w / "treatment").glob("*.parquet")))
+    t = pd.read_parquet(w / "treatment" / f"{run['tiles'][0]['tile']}.parquet")
     assert {"ev_roadonly_cities_11", "evclass_roadonly_cities_11", "dnew_2020"} <= set(t.columns)
-    lu = pd.read_parquet(next((w / "landuse").glob("*.parquet")))
+    lu = pd.read_parquet(w / "landuse" / f"{run['tiles'][0]['tile']}.parquet")
     assert lu.forest2000_km2.sum() > 0 and lu.filter(like="loss_km2_").to_numpy().sum() > 0
     assert lu.filter(like="conv_km2_").to_numpy().sum() > 0
     # conversion is a subset of loss
     for y in range(2015, 2025):
         assert (lu[f"conv_km2_{y}"] <= lu[f"loss_km2_{y}"] + 1e-6).all()
-    cov = pd.read_parquet(next((w / "covariates").glob("*.parquet")))
+    tile = run["tiles"][0]["tile"]
+    cov = pd.read_parquet(w / "covariates" / f"{tile}.parquet")    # (the folder also holds conflict_events)
     assert cov.rain_2010.between(600, 1400).all() and cov.filter(like="conflict_").to_numpy().sum() > 0
-    pr = pd.read_parquet(next((w / "projects").glob("*.parquet")))
+    pr = pd.read_parquet(w / "projects" / f"{run['tiles'][0]['tile']}.parquet")
     assert set(pr.proj_year.unique()) >= {0, 2018}
     assert (r / "tables" / "gate_t.csv").exists()
     e1 = pd.read_parquet(r / "panels" / "e1_cells.parquet")

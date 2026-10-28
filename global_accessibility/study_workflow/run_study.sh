@@ -17,7 +17,7 @@ cmd="${1:-help}"; shift || true
 stamp=$(date +%Y%m%d_%H%M)
 case "$cmd" in
   check)  "$PY" "$SCRIPT" --check-access "$@" ;;
-  dry)    "$PY" "$SCRIPT" --check-access && "$PY" "$SCRIPT" --dry-run "$@" 2>&1 | tee "drystudy_$stamp.log" ;;
+  dry)    "$PY" "$SCRIPT" --check-access && "$PY" "$SCRIPT" --ga-results "$GA" --dry-run "$@" 2>&1 | tee "study_dryrun_$stamp.log" ;;
   run)
     if [ -f study.pid ] && kill -0 "$(cat study.pid)" 2>/dev/null; then
       echo "already running (pid $(cat study.pid)); use: bash run_study.sh status"; exit 1
