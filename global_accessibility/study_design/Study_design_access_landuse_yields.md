@@ -4,6 +4,18 @@ Revision of "NDVI-based crop yield estimation and land-use change in Sub-Saharan
 
 ## What changed in this revision
 
+**Revision 2 (2026-10-30): land-cover layers, forest replacement, crop change, NDVI.** Prompted by GLC_FCS30D (Zhang et al. 2024) and a review of alternatives; details in section "Revision 2: layers, replacement, crop change and NDVI".
+- **Cropland layers.** The primary sources are unchanged: Hansen loss plus GACED30 annual cropland.
+  - New cross-checks: AFCD, GLC_FCS30D v2 and GLAD annual cropland.
+  - Conversion is now split into annual crops and tree crops.
+- **New estimands:**
+  - E1c: what replaces lost forest (annual crops, tree crops, pasture, regrowth, other).
+  - E2e: crop composition (crop area shares, diversity, share sold).
+- **The NDVI tier is redefined** as E2d, "vegetation vigour on stable rainfed cropland". It is a secondary outcome and not a proxy for yield. It is gated by the new Gate V, and it is labelled "composite" when access changes the crop mix.
+- **New thresholds** are drafted, marked "to approve", and are to be fixed before any outcome data are examined.
+
+**Revision 1 (2026-10-27).**
+
 The study now asks whether changes in travel time to cities and markets are associated with, and where the evidence allows, cause forest conversion to cropland and yield change. The earlier land-use mapping and NDVI yield work become outcome layers for that question.
 
 - **New treatment layer.** Annual travel-time maps for 2015–2026 come from `global_accessibility_v3.py`, plus a road-only version with destinations held fixed. A long-term level uses 2015, 2020 and 2025.
@@ -21,11 +33,13 @@ The study estimates two effects of access change and one long-term description, 
 
 | Estimand | Outcome | Unit | Treatment | Years |
 | --- | --- | --- | --- | --- |
-| E1 | Forest-to-cropland conversion (area, share of forest at baseline) | 0.01° cell (~1.1 km) | Access change, annual | Loss years 2016–2022 confirmed; 2001–2015 pre-period |
+| E1 | Forest-to-cropland conversion (area, share of forest at baseline), split into annual and tree crops | 0.01° cell (~1.1 km) | Access change, annual | Loss years 2016–2022 confirmed; 2001–2015 pre-period |
 | E1b | New cropland from other natural vegetation | 0.01° cell | Same | 2016–2022 |
+| E1c | What replaces lost forest: shares of the forest lost in *t* now under annual crops, tree crops, pasture, regrowth, other | 0.01° cell × loss year | Same | Loss years 2001–2020 (Masolele); 2021+ cross-check only |
 | E2a | Yield, admin statistics | Admin unit × crop × season | Population- or cropland-weighted access change of the unit | 2001–2023 |
 | E2b | Yield, enumeration areas | LSMS-ISA enumeration area × crop × season (household and plot data aggregated) | Cropland-weighted access change of the 0.01° cells within 5 km of the EA point | Survey waves 2008–2024 |
-| E2c | Seasonal NDVI productivity on pure-crop footprints | Footprint or cell × crop × season | Access change | 2017–2023 (Sentinel-2), 2001–2023 if MODIS qualifies |
+| E2d | Vegetation vigour on stable rainfed cropland (seasonal peak and integral of NDVI, kNDVI, EVI); secondary, not yield | 0.01° cell or admin unit/EA × season | Access change | 2017–2024 (HLS/Sentinel-2); 2001–2016 MODIS (pre-period) |
+| E2e | Crop composition: crop area shares, Shannon diversity, share of output sold | Admin unit × year; EA × wave | As E2a / E2b | 2001–2023; survey waves |
 | E3 | Long differences of E1 and E2 | As above | Change 2015→2020, 2020→2025, 2015→2025 | Three epochs |
 
 **Intensification vs. extensification.** Better access can raise output by expanding cropland (E1) or by raising yields on existing cropland (E2). To keep them apart, every yield outcome is measured on **stable cropland only**: cropland in every year of the window (Phase 1 mask). Yields on newly converted land are reported separately, because they mix soil fertility and management effects with access.
@@ -107,11 +121,26 @@ Zones below the threshold are analysed only at the long-term level (E3).
 
 Phase 1 of the earlier design is kept unchanged as the source of E1, with a longer pre-period and an outcome table per cell and year.
 
-- **Kept unchanged from the earlier design:** GLAD cropland 2015–2024, Hansen GFC baseline at 30% canopy with 10% as a check, JRC TMF in humid forest, the conversion rule (loss in *t*, not cropland in *t*−1, cropland in one of *t* to *t*+2), the validation sample, cross-checks with GACED30, AFCD, GLC_FCS30D and WRI drivers, and Gate A.
+- **Kept from the earlier design** (cropland source changed in revision 2: GACED30 primary, GLAD annual as cross-check): Hansen GFC baseline at 30% canopy with 10% as a check, JRC TMF in humid forest, the conversion rule (loss in *t*, not cropland in *t*−1, cropland in one of *t* to *t*+2), the validation sample, cross-checks with GACED30, AFCD, GLC_FCS30D and WRI drivers, and Gate A.
 - **Per cell and year:** confirmed conversion area, conversion as a share of the forest remaining, tree-cover loss without confirmed conversion, and new cropland from other natural vegetation.
 - **Pre-period for trend tests:**
   - Hansen tree-cover loss from 2001;
   - GACED30 cropland from 2000, which extends the conversion series before 2015 where it agrees with GLAD over 2015–2024.
+- **Revision 2: annual versus tree crops.**
+  - GACED30 counts woody perennials as cropland; AFCD (2000–2022) excludes them.
+  - Annual-crop conversion is conversion into land that is cropland in both maps. Tree-crop conversion is conversion into land that is cropland in GACED30 but not in AFCD. GLC_FCS30D class 12 (tree or shrub cropland) is the cross-check.
+  - GLC_FCS30D v2 (to 2022) also cross-checks the dating of conversion, since its change detection (CCDC) is temporally smoothed.
+  - GLC_FCS30D is not used as the primary source: no accuracy is reported for Africa, its change detection was validated only in the US and EU (F1 ≈ 0.6), and it ends in 2022.
+- **E1c, what replaces lost forest.**
+  - **Primary source:** Masolele et al. 2024 (Africa, 30 m, forest losses 2001–2020), with 15 land-use classes grouped into annual crops (small- and large-scale cropland), tree crops (cocoa, oil palm, rubber, cashew, coffee, tea, plantation forest), pasture, regrowth and other (mining, roads, settlement).
+  - **Its classes describe land use around 2022,** not in the year of loss. E1c therefore asks what forest lost in year *t* became by 2022. It is analysed with the 2015→2020 long difference, and with the staggered design restricted to losses up to 2020 (with a later replacement measured later: reported).
+  - **Extensions and cross-checks:**
+    - JRC TMF transition subtypes (plantation, water, other land, regrowth; humid tropics, to 2025);
+    - GLC_FCS30D transitions (to 2022);
+    - Descals et al. 2024 oil-palm planting year (1990–2021), which dates oil palm;
+    - Global Pasture Watch (2000–2022);
+    - the WRI/Sims drivers of loss (1 km, one dominant driver for 2001–2024, no timing), as a cross-sectional check only.
+  - Masolele's data agreement is non-commercial, which is compatible with this study.
 - **Logging and plantations:** in the Congo Basin, many roads are logging roads, and a large share of roads in concessions are abandoned within a few years (Kleinschroth et al. 2019). Concession areas are flagged and analysed separately, so that logging-road effects are not read as agricultural access effects.
 
 ## Phase 2: yield outcomes
@@ -162,12 +191,42 @@ The unit of analysis is the enumeration area (EA), the survey cluster whose coor
   - Extension contact matters because Ethiopian evidence suggests roads and extension complement each other.
 - **Fixed effects:** EA fixed effects absorb time-invariant soil, climate and location. Wave × region fixed effects absorb weather and price shocks.
 
-### Tier 3: NDVI on pure-crop footprints (E2c)
+### Tier 3: vegetation vigour on stable rainfed cropland (E2d, secondary)
 
-- **Kept unchanged from the earlier design:** Phases 2a–2d (screening, purity rules, the Sentinel-2/MODIS agreement test, the pilot model, Gate B).
-- Only crops passing Gate B are used, with the seasonal NDVI features as the outcome directly or as predicted yield.
-- A crop-agnostic fallback, integrated NDVI on stable cropland, is reported as "cropland productivity", not yield.
-- **Roots and tubers** (cassava, yams) are expected to fail Gate B. For them, Tier 1 and Tier 2 are the only yield evidence.
+NDVI is used directly as an outcome, with its own label, because it tracks smallholder yields too loosely to stand in for them. Smallholder R² is about 0.15–0.5 at field level (Burke & Lobell 2017; Lobell et al. 2020), and at district level it ranges from negative to about 0.7.
+- **Mask: stable rainfed cropland.**
+  - Cropland in every year 2015–2024 in both GACED30 and AFCD;
+  - no irrigation (GLC_FCS30D class 20, WorldCereal irrigation);
+  - no tree crops (GACED30 not AFCD, GLC_FCS30D class 12);
+  - low tree cover;
+  - cropland fraction of the cell at or above the threshold.
+- **Metrics:**
+  - Seasonal peak and seasonal integral of NDVI, kNDVI and EVI.
+  - The season window is fixed per agro-ecological zone from the 2001–2014 climatology, so that roads cannot move it.
+  - PML-V2 GPP is used as a robustness check.
+- **Sensors:**
+  - HLS 30 m or Sentinel-2 10 m with cloud masking from 2017, for the main estimates;
+  - MODIS MOD13Q1 250 m for 2001–2016 (pre-trends), harmonised in the overlap years.
+  - MODIS science data ends in 2027 and its orbit has drifted, so the late years rely on HLS/Sentinel-2.
+- **Computation:** per-cell and per-unit season metrics are computed in Google Earth Engine and exported as tables, then joined on the HPC.
+- **Gate V** (draft thresholds below). It must pass before any E2d result is interpreted:
+  1. Within-unit correlation of detrended NDVI anomalies with survey yields (HarvestStat units, LSMS EAs).
+  2. Where both are estimable, the access effect on NDVI has the same sign as on survey yields.
+  3. Dry-season NDVI and non-cropland NDVI placebos show no effect.
+  4. Results hold across indices (NDVI, kNDVI, EVI, GPP) and sensors (MODIS vs HLS in the overlap years).
+- **Composite label.** If E2e shows that access changes the crop mix, E2d and E2a results are labelled "composite (yield + crop mix)".
+- **Gate B (optional).** The earlier NDVI→yield model is kept as an option, for crops that pass Gate B. Roots and tubers are expected to fail it.
+
+### Crop composition (E2e)
+
+No satellite product tracks crop types over time in Africa. WorldCereal (2021), CROPGRIDS (around 2020), SPAM and GAEZ are single snapshots, or not comparable across versions. Crop change therefore comes from statistics:
+- **Admin level:** HarvestStat harvested area by crop × unit × year. Shares are computed on a fixed set of crops, in units that report those crops in most years.
+- **EA level:** the LSMS-ISA harmonised panel, plot area by crop × EA × wave.
+- **Outcomes:**
+  - area shares of maize, cassava, other staples, and cash and tree crops;
+  - Shannon diversity;
+  - share of output sold (EA).
+- **Two uses.** E2e is a mechanism result in its own right (compare Adamopoulos on specialisation in Ethiopia, and the null crop-choice results of Casaburi et al. in Sierra Leone). It is also the diagnostic that decides the composite label of E2a and E2d.
 
 ## Identification strategy and controls
 
@@ -264,6 +323,23 @@ Each threshold has a default, a reason and a sensitivity range. Once approved th
 | Inference | Conley standard errors, 50 km cutoff; Benjamini–Hochberg q = 0.10 across crops and outcomes | Spatial correlation of outcomes; many crops and outcomes tested | 25 km; 100 km |
 | Gate C | Pre-period joint test p > 0.10 and every pre coefficient < ⅓ of the post effect; placebo effect not significant and < ½ of the main estimate; same sign under ≥ 2 control definitions and in the long-term analysis | Makes the causal label hard to earn | — |
 
+## Draft thresholds, revision 2 (to approve before any outcome data are examined)
+
+| Item | Default | Rationale | Sensitivity |
+| --- | --- | --- | --- |
+| Gate V 1: anomaly correlation | Within-unit Pearson r ≥ 0.3 between detrended NDVI season metric and log survey yield, per zone, with ≥ 30 unit-seasons | At district level, r of 0.5–0.7 where satellites work and below 0.2 where they do not; 0.3 is a minimal meaningful signal | 0.2; 0.4 |
+| Gate V 2: sign agreement | Same sign as the survey-yield effect where both are estimable; 95% confidence intervals overlap | Coefficient agreement as in Lobell et al. 2020 | — |
+| Gate V 3: placebos | Dry-season NDVI and non-cropland NDVI: p > 0.05 and < ½ of the main effect | Detects tree, irrigation and regional greening | — |
+| Gate V 4: index and sensor | Same sign for NDVI, kNDVI, EVI; MODIS–HLS season-metric correlation r ≥ 0.8 in the overlap years | Index choice must not drive the result | r ≥ 0.7 |
+| Stable cropland (E2d) | Cell share of stable cropland (GACED30 ∩ AFCD, every year 2015–2024) ≥ 50%; MODIS pixels ≥ 70% | Limits mixing with non-crop vegetation at 250 m–1 km | 30% / 70% |
+| Tree cover in cropland (E2d) | Hansen tree cover 2000 ≤ 10% on the stable cropland | Agroforestry and parkland trees dominate NDVI | 20% |
+| Irrigation (E2d) | Irrigated share (GLC_FCS30D class 20 or WorldCereal) ≤ 5% of the cell | Irrigation decouples NDVI from rainfed yield | 10% |
+| Season window (E2d) | Fixed per agro-ecological zone from the MODIS 2001–2014 climatology of green-up and dormancy | Roads must not move the window | ± 16 days |
+| Tree-crop conversion (E1) | GACED30 cropland and not AFCD cropland in two consecutive years after the loss | Removes single-year disagreement between the maps | One year |
+| Replacement shares (E1c) | Computed where the cell lost ≥ 0.01 km² of forest in the loss year (about 11 Landsat pixels) | Shares of tiny losses are noise | 0.005; 0.05 km² |
+| Crop shares (E2e, admin) | Fixed crop set; units reporting it in ≥ ⅔ of years | HarvestStat reporting varies by year | ½ |
+| Composite label | Any major crop share changes by ≥ 5 points with BH q ≤ 0.10 | A crop-mix shift of that size can move NDVI and admin yields | 3; 10 points |
+
 ## Pilot selection rule and compute platform
 
 - **Pilot (rule-based; NDVI tier only).** For each crop:
@@ -317,7 +393,11 @@ Every primary choice is rerun with its alternatives, and a result counts as robu
 | Controls | Not-yet-treated | Matched never-treated; spatial bands | Gate C, criterion 3 |
 | Yield tier | Tier 2 (LSMS EA panels) | Tier 1; Tier 3 | Disagreement → report by tier, do not pool |
 | EA aggregation | Ratio of sums, all plots | Households in both waves only; survey weights | Material change → report both |
-| Cropland mask | GLAD stable cropland | GACED30; AFCD | As in the earlier design |
+| Cropland map (E1) | GACED30 (to 2024; scriptable) | GLAD annual (2015–2024); AFCD; GLC_FCS30D v2 (to 2022) | Same sign required; a difference > 25% → report a range |
+| Annual vs tree crop split | GACED30 cropland not in AFCD | GLC_FCS30D class 12 | Shares differ by > 10 points → report both |
+| Forest replacement (E1c) | Masolele 2024 (losses ≤ 2020) | TMF subtypes; GLC_FCS30D; Sims drivers | Same direction of the shift required for a headline |
+| NDVI index (E2d) | NDVI seasonal integral | Peak NDVI; kNDVI; EVI; PML-V2 GPP | Gate V criterion 4 |
+| NDVI sensor (E2d) | HLS/Sentinel-2 (2017+) | MODIS 250 m | Gate V criterion 4 |
 | Forest definition | Hansen 30% | Hansen 10%; TMF (humid) | As in the earlier design |
 
 Each run, its inputs and its outcome are logged, including failed checks.
@@ -354,6 +434,25 @@ The pipeline `access_effects_v01.py` and the estimation script `estimate_effects
 - EHCVM yields, since no kg conversion table was found for 2018/19;
 - TMF, concessions, protected areas, prices, temperature and soils as covariates;
 - the NDVI tier (E2c), synthetic control, and the least-cost-route instrument.
+
+## Revision 2: layers, replacement, crop change and NDVI
+
+**Why.** GLC_FCS30D (Zhang et al. 2024, ESSD 16:1353–1381; Zenodo 8239305 and v2 15063683) was proposed by the author. Three reviews (2026-10-30) compared it and the alternatives, summarised in Phase 1, Tier 3, E2e and the tables above.
+
+**Deviation log.**
+
+| Date | Change | Reason | Before outcomes were seen? |
+| --- | --- | --- | --- |
+| 2026-10-28 | GACED30 instead of GLAD annual as the primary cropland map | No scriptable GLAD annual download found | Yes |
+| 2026-10-28 | Hansen GFC v1.13; UCDP default, ACLED opt-in; LSMS-ISA harmonised panel for E2b | Data availability | Yes |
+| 2026-10-30 | Annual/tree-crop split of E1; new E1c and E2e; E2c redefined as E2d (vigour, Gate V) | Author's question on GLC_FCS30D, NDVI and crop change; research review | Yes |
+| 2026-10-30 | Road-only travel time added to the HPC run after the fact (GA 3.3.0 stage `roadonly`) | The September travel-time run predates road-only | Yes |
+
+**Risks specific to revision 2.**
+- **Detection may depend on roads.** Cropland-change detection scores low in every product (F1 < 0.65), and accuracy rises with image density and field size. If roads change either, the measurement error is not random. The tree-crop split and the GLC_FCS30D dating check help, but do not remove this.
+- **Tree crops under shade** (cocoa) may never show as Hansen loss.
+- **Masolele's classes describe 2022**, so short-lived uses after loss are missed.
+- **NDVI can move with weeds, fallow and crop switching.** Gate V and the composite label exist for this.
 
 ## Limitations and risks
 
@@ -427,6 +526,32 @@ Checked against providers on 2026-10-27; the remaining items need either the dat
 - [x] NASA Earthdata registration (done by the author). For scripted downloads, put the login in `~/.netrc` (`machine urs.earthdata.nasa.gov login <user> password <password>`, file mode 600) on the HPC; never in the repository.
 
 ## Sources
+
+Revision 2 (checked 2026-10-30):
+- **Land cover:**
+  - [GLC_FCS30D, ESSD 16:1353](https://essd.copernicus.org/articles/16/1353/2024/), [Zenodo v2](https://zenodo.org/records/15063683), [GEE catalog](https://gee-community-catalog.org/projects/glc_fcs/)
+  - [AFCD, ESSD 17:3777](https://essd.copernicus.org/articles/17/3777/2025/), [Zenodo 14920706](https://zenodo.org/records/14920706)
+  - [Kerner et al. 2024, cropland map intercomparison in SSA](https://pmc.ncbi.nlm.nih.gov/articles/PMC11087537/)
+- **Forest replacement and tree crops:**
+  - [Masolele et al. 2024 data, Zenodo 11065705](https://zenodo.org/records/11065705)
+  - [WRI drivers of forest loss 1 km](https://datasets.wri.org/datasets/dominant-drivers-of-tree-cover-loss-at-1km)
+  - [TMF data users guide](https://forobs.jrc.ec.europa.eu/static/tmf/TMF_DataUsersGuide.pdf)
+  - [Descals et al. 2024 oil palm, ESSD 16:5111](https://doi.org/10.5194/essd-16-5111-2024)
+  - [Global Pasture Watch](https://zenodo.org/records/13890401)
+  - [Kalischek et al. 2023 cocoa](https://doi.org/10.1038/s43016-023-00751-8)
+  - [WRI planted trees](https://datasets.wri.org/datasets/spatial-database-of-planted-trees-sdpt-version-21)
+- **Crop composition:**
+  - [HarvestStat Africa, Sci. Data 12:690](https://doi.org/10.5061/dryad.vq83bk42w)
+  - [CROPGRIDS](https://doi.org/10.6084/m9.figshare.22491997)
+  - [WorldCereal documentation](https://worldcereal.github.io/worldcereal-documentation/)
+- **NDVI as an outcome:**
+  - [Burke & Lobell 2017, PNAS](https://pmc.ncbi.nlm.nih.gov/articles/PMC5338538)
+  - [Lobell et al., Uganda](https://documents1.worldbank.org/curated/en/556261522069698373/pdf/Eyes-in-the-sky-boots-on-the-ground-assessing-satellite-and-ground-based-approaches-to-crop-yield-measurement-and-analysis-in-Uganda.pdf)
+  - [Jain 2020, REEP](https://ideas.repec.org/a/ucp/renvpo/doi10.1093-reep-rez023.html)
+  - [kNDVI](https://pmc.ncbi.nlm.nih.gov/articles/PMC7909876)
+  - [PML-V2](https://zenodo.org/records/10647618)
+  - [MODIS–VIIRS transition](https://www.earthdata.nasa.gov/data/alerts-outages/transition-from-modis-viirs)
+
 
 Checked on 2026-10-27 (search results and provider pages). Items tagged *(unverified)* in the text are not covered here. Sources of the earlier design (version of 27 Oct 2026) still apply and are not repeated.
 
