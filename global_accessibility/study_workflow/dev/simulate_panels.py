@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 
-def simulate(out, effect=0.02, seed=1, n=1500, years=range(2008, 2025)):
+def simulate(out, effect=0.02, seed=1, n=1500, years=range(2008, 2025), mix_shift=0.0):
     rng = np.random.default_rng(seed)
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
@@ -42,6 +42,23 @@ def simulate(out, effect=0.02, seed=1, n=1500, years=range(2008, 2025)):
                        "d_access__roadonly_cities_11": d_access,
                        "d_conv_share": 0.5 * d_access + rng.normal(0, 0.05, n)})
     e3.to_parquet(out / "e3_longdiff.parquet", index=False)
+    if mix_shift:
+        # admin units: access events raise maize share by mix_shift (crop switching) and log yield by `effect`
+        na = 400
+        ua = np.arange(1, na + 1)
+        ga = np.where(rng.random(na) < 0.5, rng.integers(2010, 2018, na), 0)
+        rega, lata, lona = rng.choice(["AAA", "BBB"], na), rng.uniform(-5, 5, na), rng.uniform(10, 20, na)
+        e2a, e2e = [], []
+        for y in range(2005, 2023):
+            post = (ga > 0) & (y >= ga)
+            base = dict(id=ua, year=y, region=rega, lat=lata, lon=lona, w=1.0,
+                        **{"g__roadonly_cities_11": ga, "g__total_cities_11": ga})
+            e2a.append(pd.DataFrame(dict(base, crop="Maize",
+                                         log_yield=0.2 + effect * post + rng.normal(0, 0.02, na))))
+            e2e.append(pd.DataFrame(dict(base, share_maize=0.4 + mix_shift * post + rng.normal(0, 0.01, na),
+                                         shannon=1.0 + rng.normal(0, 0.01, na))))
+        pd.concat(e2a, ignore_index=True).to_parquet(out / "e2a_admin.parquet", index=False)
+        pd.concat(e2e, ignore_index=True).to_parquet(out / "e2e_admin.parquet", index=False)
     return out
 
 

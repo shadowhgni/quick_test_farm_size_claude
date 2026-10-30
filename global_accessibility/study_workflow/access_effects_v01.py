@@ -19,22 +19,27 @@ and --check-access tests every server first. Run it from the JupyterLab terminal
 Stages (each resumes where it stopped; completed stages are skipped):
     treatment  access level, events and doses per 30" cell (Phase 0) from the travel-time store
     landuse    forest at baseline, annual tree-cover loss, cropland and conversion per cell (Phase 1)
+    landcover_alt  annual vs tree-crop conversion (AFCD), GLC_FCS30D cross-checks, what replaced lost forest
+               (Masolele 2024, JRC TMF, oil palm planting year), stable rainfed cropland mask (revision 2)
     covariates rainfall, conflict, population, slope, land cover per cell and year
     projects   externally dated road projects (AidData GeoGCDF v3) as cells with completion years
     gate_t     Gate T per zone: share of access events inside mapping bursts, agreement with
                dated projects (imagery confirmation is not implemented: see the README)
     admin      admin-unit panel (HarvestStat) with cropland- and population-weighted treatment (E2a)
-    lsms       LSMS-ISA enumeration-area panel (E2b) from the author's zip files (sources.csv)
-    panels     analysis files: E1 cell-year panel (sampled), E2a, E2b, E3 long differences
+    lsms       LSMS-ISA enumeration-area panel (E2b) from the harmonised panel (Zenodo)
+    cropmix    crop composition per admin unit x year and EA x wave (E2e)
+    ndvi       vegetation vigour per cell from the Earth Engine exports of ee_ndvi_export.py (E2d)
+    panels     analysis files: E1, E1c and E2d cell panels (sampled), E2a, E2b, E2e, E3 long differences,
+               Gate V inputs
     estimate   estimate_effects.R (staggered DiD, continuous dose, long differences, placebos)
-    gate_c     Gate C table from the estimates; Benjamini-Hochberg across crops and outcomes
+    gate_c     Gate C table from the estimates (with the composite label and Gate V of revision 2)
 
 Unit of analysis for land use: the 30 arc-second cell of the travel-time grid (~0.93 km at the
 equator; the design calls it the 0.01 degree cell). Work is split into 10 x 10 degree tiles.
 """
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -88,6 +93,27 @@ STABLE_CROP_FROM = 2015             # stable cropland = cropland in every year f
 CONVERSION_WINDOW = 2               # conversion: loss in t, not cropland in t-1, cropland in one of t..t+2
 LANDUSE_STRIP_ROWS = 1000           # Hansen rows read at a time (0.25 degree)
 LANDUSE_TASK_GB = 6
+
+# --- land-cover cross-checks and forest replacement (revision 2; stage landcover_alt) -----------------
+AFCD_URL = "https://zenodo.org/api/records/14920706/files/AFCD_{y}.tif/content"   # Africa cropland 2000-2022,
+AFCD_LAST_YEAR = 2022               # excludes woody perennials; 2-bit BigTIFF, 1 cropland, 3 nodata (CC BY 4.0)
+GLC_URL = "https://zenodo.org/api/records/15063683/files/{name}/content"           # GLC_FCS30D v2, 23-band
+GLC_LAST_YEAR = 2022                # annual tiles 2000-2022 in zips per 10 degree band (CC BY 4.0)
+MASOLELE_URL = ("https://zenodo.org/api/records/11065705/files/"
+                "LandUseFollowingDeforestation_dl_30m_20010101_20201231_af_epsg.4326_v1.tif/content")
+MASOLELE_LAST_LOSS = 2020           # land use around 2022 of forest lost 2001-2020 (non-commercial agreement)
+DESCALS_URL = "https://zenodo.org/api/records/13379129/files/GlobalOilPalm_OP-YoP.zip/content"   # planting year
+TMF_URL = ("https://ies-ows.jrc.ec.europa.eu/iforce/tmf_v1/download.py?type=tile&dataset={dataset}"
+           "&lat={lat}&lon={lon}")      # JRC TMF v1_2025 10 degree tiles (no range requests)
+TMF_ENABLED = True                  # each revision-2 layer can be switched off; a switched-off layer gives NaN
+GLC_ENABLED = True
+MASOLELE_ENABLED = True
+DESCALS_ENABLED = True
+LANDCOVER_ALT_TASK_GB = 10
+REPL_MIN_LOSS_KM2 = 0.01            # E1c shares only where >= 0.01 km2 of forest was lost (draft, to approve)
+E2D_MIN_STABLE = 0.5                # E2d cells: stable rainfed cropland >= 50% of the cell,
+E2D_MAX_TREECOVER = 10              # tree cover 2000 on it <= 10%, irrigated <= 5% (drafts, to approve)
+E2D_MAX_IRRIG = 0.05
 
 # --- covariates -----------------------------------------------------------------------
 COV_YEARS = list(range(2001, 2025))
@@ -149,6 +175,11 @@ CONLEY_KM = 50
 BH_Q = 0.10
 BOOTSTRAP_ITERS = 999
 MAX_UNITS_CS = 200000
+NDVI_DIR = "./ndvi_exports"         # GeoTIFFs vigour_<sensor>_<year>*.tif written by ee_ndvi_export.py
+NDVI_PRIMARY_SENSOR = "modis"      # consistent sensor over 2001-2024 for the event study; "s2" = robustness
+VIGOUR_NODATA = -9999.0           # nodata of the exports (ee_ndvi_export.py unmasks to it)
+VIGOUR_BANDS = ["ndvi_integral", "ndvi_peak", "kndvi_integral", "evi_integral", "ndvi_dry_integral",
+                "ndvi_noncrop_integral", "crop_frac", "n_obs"]   # band order of the exports
 COMPOSITE_SHIFT = 0.05             # revision 2 drafts (to approve): crop-share shift that labels yield/vigour
 GATE_V_R = 0.3                     # results "composite"; Gate V within-unit anomaly correlation, minimum
 GATE_V_MIN_N = 30                  # unit-seasons per zone, and MODIS-HLS season-metric correlation
@@ -825,18 +856,7 @@ def gaced_index(ctx, sess, bounds):
     for L in range(int(math.floor(w / 6) * 6), int(math.ceil(e / 6) * 6), 6):
         name = gaced_zip_name(L)
         z = download(GACED30_URL.format(name=name.replace("+", "%2B")), ctx["dl"] / "gaced30" / name, sess)
-        cache = z.with_suffix(".index.json")
-        if cache.exists():
-            members = json.loads(cache.read_text())
-        else:
-            members = {}
-            with zipfile.ZipFile(z) as zf:
-                for m in zf.namelist():
-                    if m.lower().endswith(".tif"):
-                        with rasterio.open(f"/vsizip/{z}/{m}") as src:
-                            members[f"/vsizip/{z}/{m}"] = list(src.bounds)
-            cache.write_text(json.dumps(members))
-        for m, b in members.items():
+        for m, b in zip_index(z).items():
             if b[0] < e and b[2] > w and b[1] < n and b[3] > s:
                 idx[m] = b
     return idx
@@ -892,6 +912,45 @@ def cropland_strip(sources, years, transform, shape):
     return out, valid
 
 
+def hansen_strips(job, lut, tile_shape):
+    """Iterate a Hansen 10 x 10 degree tile in strips of LANDUSE_STRIP_ROWS rows. Each Hansen pixel is
+    assigned to the 30" cell holding its centre; yields one dict per strip with: sel (pixels of a cell of the
+    tile, on land), ii (cell index of each), aa (pixel area, km2, spherical), tc / ly (tree cover 2000 and
+    loss year of each), transform and shape of the strip."""
+    tr0, tc0, _, _ = job["win"]
+    tnr, tnc = tile_shape
+    gres, gwest, gnorth = job["gres"], job["gwest"], job["gnorth"]
+    with rasterio.open(job["treecover2000"]) as tcs, rasterio.open(job["lossyear"]) as lys, \
+            rasterio.open(job["datamask"]) as dms:
+        H, W = tcs.height, tcs.width
+        res = tcs.transform.a
+        west, north = tcs.transform.c, tcs.transform.f
+        lon_c = west + (np.arange(W) + 0.5) * res
+        ccol = np.floor((lon_c - gwest) / gres).astype(np.int64) - tc0
+        okc = (ccol >= 0) & (ccol < tnc)
+        for r in range(0, H, LANDUSE_STRIP_ROWS):
+            h = min(LANDUSE_STRIP_ROWS, H - r)
+            win = Window(0, r, W, h)
+            lat_c = north - (r + np.arange(h) + 0.5) * res
+            crow = np.floor((gnorth - lat_c) / gres).astype(np.int64) - tr0
+            okr = (crow >= 0) & (crow < tnr)
+            if not okr.any():
+                continue
+            tc, ly, dm = tcs.read(1, window=win), lys.read(1, window=win), dms.read(1, window=win)
+            flat = crow[:, None] * tnc + ccol[None, :]
+            ok = okr[:, None] & okc[None, :] & (dm == 1)
+            idx = np.where(ok, lut[np.clip(flat, 0, tnr * tnc - 1)], -1)
+            sel = idx >= 0
+            if not sel.any():
+                continue
+            top = np.radians(north - (r + np.arange(h)) * res)
+            bot = np.radians(north - (r + np.arange(h) + 1) * res)
+            parea = R_EARTH ** 2 * math.radians(res) * (np.sin(top) - np.sin(bot)) / 1e6
+            yield {"sel": sel, "ii": idx[sel], "aa": np.broadcast_to(parea[:, None], (h, W))[sel],
+                   "tc": tc[sel], "ly": ly[sel], "transform": from_origin(west, north - r * res, res, res),
+                   "shape": (h, W)}
+
+
 def landuse_job(job):
     """One 10 x 10 degree tile: Hansen pixels (0.00025 deg) assigned to the 30" cell that holds their
     centre, in strips of LANDUSE_STRIP_ROWS rows. Areas are spherical pixel areas."""
@@ -899,8 +958,7 @@ def landuse_job(job):
     if out.exists():
         return job["tile"]
     cell, rr, cc = tile_cells(job)
-    tr0, tc0, tnr, tnc = job["win"]
-    gres, gwest, gnorth = job["gres"], job["gwest"], job["gnorth"]
+    _, _, tnr, tnc = job["win"]
     lut = np.full(tnr * tnc, -1, np.int64)
     lut[rr * tnc + cc] = np.arange(len(cell))
     n = len(cell)
@@ -920,64 +978,38 @@ def landuse_job(job):
     if n == 0:
         write_parquet(pd.DataFrame({"cell": cell}), out)
         return job["tile"]
-    with rasterio.open(job["treecover2000"]) as tcs, rasterio.open(job["lossyear"]) as lys, \
-            rasterio.open(job["datamask"]) as dms:
-        H, W = tcs.height, tcs.width
-        res = tcs.transform.a
-        west, north = tcs.transform.c, tcs.transform.f
-        lon_c = west + (np.arange(W) + 0.5) * res
-        ccol = np.floor((lon_c - gwest) / gres).astype(np.int64) - tc0
-        okc = (ccol >= 0) & (ccol < tnc)
-        for r in range(0, H, LANDUSE_STRIP_ROWS):
-            h = min(LANDUSE_STRIP_ROWS, H - r)
-            win = Window(0, r, W, h)
-            lat_c = north - (r + np.arange(h) + 0.5) * res
-            crow = np.floor((gnorth - lat_c) / gres).astype(np.int64) - tr0
-            okr = (crow >= 0) & (crow < tnr)
-            if not okr.any():
-                continue
-            tc = tcs.read(1, window=win)
-            ly = lys.read(1, window=win)
-            dm = dms.read(1, window=win)
-            flat = crow[:, None] * tnc + ccol[None, :]
-            ok = okr[:, None] & okc[None, :] & (dm == 1)
-            idx = np.where(ok, lut[np.clip(flat, 0, tnr * tnc - 1)], -1)
-            sel = idx >= 0
-            if not sel.any():
-                continue
-            top, bot = np.radians(north - (r + np.arange(h)) * res), np.radians(north - (r + np.arange(h) + 1) * res)
-            parea = (R_EARTH ** 2 * math.radians(res) * (np.sin(top) - np.sin(bot)) / 1e6)
-            area = np.broadcast_to(parea[:, None], (h, W))
-            ii, aa = idx[sel], area[sel]
-            f30, f10, lys_ = tc[sel] >= FOREST_THRESHOLD, tc[sel] >= FOREST_THRESHOLD_ALT, ly[sel]
-            def add(key, m):
-                acc[key] += np.bincount(ii[m], weights=aa[m], minlength=n)
-            add("forest2000_km2", f30)
-            add("forest10_km2", f10)
-            add("loss_pre_km2", f30 & (lys_ >= 1) & (lys_ <= 14))
-            for y in loss_years:
-                add(f"loss_km2_{y}", f30 & (lys_ == y - 2000))
-                add(f"loss10_km2_{y}", f10 & (lys_ == y - 2000))
-            if crop_years and job["crop_sources"]:
-                transform = rasterio.transform.from_origin(west, north - r * res, res, res)
-                crop, valid = cropland_strip(job["crop_sources"], crop_years, transform, (h, W))
-                cs, vs = crop[:, sel], valid[sel]
-                add("crop_valid_km2", vs)
-                for i, y in enumerate(crop_years):
-                    add(f"crop_km2_{y}", cs[i])
-                stable = np.all(cs[[i for i, y in enumerate(crop_years) if y >= STABLE_CROP_FROM]], axis=0) \
-                    if any(y >= STABLE_CROP_FROM for y in crop_years) else np.zeros(len(ii), bool)
-                add("crop_stable_km2", stable)
-                pos = {y: i for i, y in enumerate(crop_years)}
-                for y in conv_years:
-                    later = [pos[t] for t in range(y, y + CONVERSION_WINDOW + 1) if t in pos]
-                    becomes = np.any(cs[later], axis=0)
-                    # confirmed conversion: loss in y, not cropland in y-1, cropland in one of y..y+2
-                    add(f"conv_km2_{y}", f30 & (lys_ == y - 2000) & ~cs[pos[y - 1]] & becomes)
-                    # new cropland from other vegetation: not forest (10%) in 2000, no loss, not cropland in
-                    # y-1, cropland in y and the year after (when observed)
-                    nxt = cs[pos[y + 1]] if y + 1 in pos else cs[pos[y]]
-                    add(f"newcrop_km2_{y}", ~f10 & (lys_ == 0) & ~cs[pos[y - 1]] & cs[pos[y]] & nxt)
+    for st in hansen_strips(job, lut, (tnr, tnc)):
+        ii, aa, sel = st["ii"], st["aa"], st["sel"]
+        h, W = st["shape"]
+        f30, f10, lys_ = st["tc"] >= FOREST_THRESHOLD, st["tc"] >= FOREST_THRESHOLD_ALT, st["ly"]
+
+        def add(key, m):
+            acc[key] += np.bincount(ii[m], weights=aa[m], minlength=n)
+        add("forest2000_km2", f30)
+        add("forest10_km2", f10)
+        add("loss_pre_km2", f30 & (lys_ >= 1) & (lys_ <= 14))
+        for y in loss_years:
+            add(f"loss_km2_{y}", f30 & (lys_ == y - 2000))
+            add(f"loss10_km2_{y}", f10 & (lys_ == y - 2000))
+        if crop_years and job["crop_sources"]:
+            crop, valid = cropland_strip(job["crop_sources"], crop_years, st["transform"], (h, W))
+            cs, vs = crop[:, sel], valid[sel]
+            add("crop_valid_km2", vs)
+            for i, y in enumerate(crop_years):
+                add(f"crop_km2_{y}", cs[i])
+            stable = np.all(cs[[i for i, y in enumerate(crop_years) if y >= STABLE_CROP_FROM]], axis=0) \
+                if any(y >= STABLE_CROP_FROM for y in crop_years) else np.zeros(len(ii), bool)
+            add("crop_stable_km2", stable)
+            pos = {y: i for i, y in enumerate(crop_years)}
+            for y in conv_years:
+                later = [pos[t] for t in range(y, y + CONVERSION_WINDOW + 1) if t in pos]
+                becomes = np.any(cs[later], axis=0)
+                # confirmed conversion: loss in y, not cropland in y-1, cropland in one of y..y+2
+                add(f"conv_km2_{y}", f30 & (lys_ == y - 2000) & ~cs[pos[y - 1]] & becomes)
+                # new cropland from other vegetation: not forest (10%) in 2000, no loss, not cropland in
+                # y-1, cropland in y and the year after (when observed)
+                nxt = cs[pos[y + 1]] if y + 1 in pos else cs[pos[y]]
+                add(f"newcrop_km2_{y}", ~f10 & (lys_ == 0) & ~cs[pos[y - 1]] & cs[pos[y]] & nxt)
     d = {"cell": cell}
     d.update({k: v.astype(np.float32) for k, v in acc.items()})
     # cells without cropland data (outside the cropland tiles, or no tiles at all): NaN, not 0
@@ -1033,6 +1065,310 @@ def stage_landuse(ctx):
                      "gnorth": ctx["grid"].north, "out": str(ctx["work"] / "landuse" / f"{t['tile']}.parquet")})
     run_parallel(landuse_job, jobs, LANDUSE_TASK_GB * 1e9, "land-use tiles")
     return {"tiles": len(jobs), "cropland": CROPLAND_SOURCE}
+
+
+# =============================================================================
+# stage landcover_alt (revision 2): annual vs tree-crop conversion (AFCD), GLC_FCS30D cross-checks,
+# forest replacement (Masolele 2024, JRC TMF), oil-palm planting after loss (Descals 2024)
+# =============================================================================
+MASOLELE_GROUPS = {1: "annual", 4: "annual",                                   # large / small-scale cropland
+                   7: "tree", 8: "tree", 10: "tree", 12: "tree", 13: "tree", 14: "tree", 15: "tree",
+                   2: "pasture", 6: "regrowth", 3: "other", 5: "other", 9: "other", 11: "other"}
+TMF_GROUPS = {84: "plantation", 85: "plantation", 86: "plantation", 73: "water", 74: "water",
+              41: "other", 42: "other", 51: "other", 52: "other", 53: "other", 31: "regrowth",
+              32: "regrowth", 33: "regrowth"}
+GLC_FOREST = list(range(51, 93))
+GLC_CROP = (10, 11, 12, 20)
+REPL_GROUPS = ["annual", "tree", "pasture", "regrowth", "other"]
+TMF_REPL_GROUPS = ["plantation", "water", "other", "regrowth"]
+
+
+def zip_index(z, pattern=r"\.tif$"):
+    """{"/vsizip/<zip>/<member>": bounds} of the GeoTIFF members of a zip (header reads, cached)."""
+    z = Path(z)
+    cache = z.with_name(z.name + ".index.json")
+    if cache.exists():
+        return json.loads(cache.read_text())
+    out = {}
+    with zipfile.ZipFile(z) as zf:
+        for m in zf.namelist():
+            if re.search(pattern, m, re.I):
+                with rasterio.open(f"/vsizip/{z}/{m}") as src:
+                    out[f"/vsizip/{z}/{m}"] = list(src.bounds)
+    cache.write_text(json.dumps(out))
+    return out
+
+
+def file_bounds(paths):
+    """{path: bounds} of readable rasters (a download that is not a raster, e.g. an error page, is skipped)."""
+    out = {}
+    for p in paths:
+        try:
+            with rasterio.open(p) as src:
+                out[str(p)] = list(src.bounds)
+        except rasterio.errors.RasterioIOError as e:
+            log(f"not a readable raster, skipped: {p} ({str(e)[:120]})")
+    return out
+
+
+def warp_strip(sources, bands, transform, shape, nodata, fill=None):
+    """Nearest-neighbour warp of the given bands of every source ({path: bounds}) that overlaps a strip of
+    Hansen pixels, all bands in one pass per source; returns (len(bands), rows, cols) uint16 holding `fill`
+    where no source covers the pixel. nodata=None for sources without a nodata value (then `fill` must be a
+    value the source never holds)."""
+    fill = nodata if fill is None else fill
+    out = np.full((len(bands), *shape), fill, np.uint16)
+    res, w, n = transform.a, transform.c, transform.f
+    e, s_ = w + shape[1] * res, n - shape[0] * res
+    for path, b in sources.items():
+        if not (b[0] < e and b[2] > w and b[1] < n and b[3] > s_):
+            continue
+        c0 = max(0, int(math.floor((b[0] - w) / res)))
+        c1 = min(shape[1], int(math.ceil((b[2] - w) / res)))
+        if c1 <= c0:
+            continue
+        with rasterio.open(path) as src:
+            use = [i for i, band in enumerate(bands) if band is not None and band <= src.count]
+            if not use:
+                continue
+            a = np.full((len(use), shape[0], c1 - c0), fill, np.uint16)
+            reproject(rasterio.band(src, [bands[i] for i in use]), a,
+                      dst_transform=from_origin(w + c0 * res, n, res, res), dst_crs="EPSG:4326",
+                      resampling=Resampling.nearest, src_nodata=nodata, dst_nodata=fill)
+        for j, i in enumerate(use):
+            cur = out[i, :, c0:c1]
+            take = (cur == fill) & (a[j] != fill)
+            cur[take] = a[j][take]
+    return out
+
+
+def landcover_alt_job(job):
+    """One tile: Hansen pixels assigned to their 30" cell (as landuse_job); per cell and year:
+    - conversion split into annual crops (cropland in GACED30 and AFCD) and tree crops (GACED30, not AFCD,
+      two consecutive years); GLC_FCS30D forest->cropland transitions (its own dating) and -> tree crops;
+    - replacement of the forest lost in year t (Masolele 2020 classes, losses <= 2020; TMF subtypes);
+    - oil palm planted within 5 years after the loss (Descals planting year);
+    - stable rainfed cropland for E2d (GACED30 and AFCD every year), its tree cover, irrigated and
+      tree-crop area (GLC_FCS30D 2022 classes 20 and 12)."""
+    out = Path(job["out"])
+    if out.exists():
+        return job["tile"]
+    cell, rr, cc = tile_cells(job)
+    _, _, tnr, tnc = job["win"]
+    lut = np.full(tnr * tnc, -1, np.int64)
+    lut[rr * tnc + cc] = np.arange(len(cell))
+    n = len(cell)
+    afcd_years = sorted(job["afcd"])
+    gaced_years = list(CROPLAND_YEARS)
+    conv_years = [y for y in range(2001, 2000 + HANSEN_LAST_LOSS + 1)
+                  if y - 1 in gaced_years and y in gaced_years and y + 1 <= max(afcd_years or [0])]
+    repl_years = list(range(2001, MASOLELE_LAST_LOSS + 1))
+    tmf_years = list(range(2001, 2000 + HANSEN_LAST_LOSS + 1))
+    glc_years = list(range(2001, GLC_LAST_YEAR + 1))
+    acc = {k: np.zeros(n) for k in ("stable2_km2", "stable_pre_km2", "stable2_tc_sum", "irrig_km2",
+                                    "glc_treecrop_km2", "afcd_valid_km2", "gaced_valid_km2", "glc_valid_km2",
+                                    "masolele_valid_km2", "tmf_valid_km2")}
+    for y in conv_years:
+        for k in ("conv_annual", "conv_tree", "conv_unres"):
+            acc[f"{k}_km2_{y}"] = np.zeros(n)
+    for y in glc_years:
+        acc[f"glc_conv_km2_{y}"] = np.zeros(n)
+        acc[f"glc_conv_tree_km2_{y}"] = np.zeros(n)
+    for y in repl_years:
+        for g in REPL_GROUPS + ["unclassified"]:
+            acc[f"repl_{g}_km2_{y}"] = np.zeros(n)
+    for y in tmf_years:
+        for g in TMF_REPL_GROUPS:
+            acc[f"tmf_{g}_km2_{y}"] = np.zeros(n)
+        acc[f"palm_after_loss_km2_{y}"] = np.zeros(n)
+    if n == 0:
+        write_parquet(pd.DataFrame({"cell": cell}), out)
+        return job["tile"]
+    for st in hansen_strips(job, lut, (tnr, tnc)):
+        ii, aa, transform, (h, W), sel = st["ii"], st["aa"], st["transform"], st["shape"], st["sel"]
+        f30, lys_, tcv = st["tc"] >= FOREST_THRESHOLD, st["ly"].astype(np.int16), st["tc"].astype(np.float64)
+
+        def add(key, m, wts=None):
+            acc[key] += np.bincount(ii[m], weights=(aa if wts is None else aa * wts)[m], minlength=n)
+
+        gaced, gvalid = cropland_strip(job["crop_sources"], gaced_years, transform, (h, W)) \
+            if job["crop_sources"] else (np.zeros((len(gaced_years), h, W), bool), np.zeros((h, W), bool))
+        gs = gaced[:, sel]
+        add("gaced_valid_km2", gvalid[sel])
+        gpos = {y: i for i, y in enumerate(gaced_years)}
+        # AFCD (1 cropland, 0 non-cropland, 3 nodata), one Africa-wide file per year
+        af = np.full((len(afcd_years), int(sel.sum())), 3, np.uint16)
+        for i, y in enumerate(afcd_years):
+            af[i] = warp_strip(job["afcd"][y], [1], transform, (h, W), nodata=3)[0][sel]
+        apos = {y: i for i, y in enumerate(afcd_years)}
+        avalid = (af != 3).all(axis=0) if len(afcd_years) else np.zeros(len(ii), bool)
+        add("afcd_valid_km2", avalid)
+        acrop = af == 1
+        # conversion split: first year k in y..y+2 with GACED30 cropland; annual if AFCD cropland in k or
+        # k+1; tree if GACED30 cropland in k and k+1 and AFCD not cropland in both (two consecutive years)
+        for y in conv_years:
+            conv = f30 & (lys_ == y - 2000) & ~gs[gpos[y - 1]]
+            later = [t for t in range(y, y + CONVERSION_WINDOW + 1) if t in gpos]
+            k = np.full(len(ii), 0, np.int16)
+            for t in reversed(later):
+                k[gs[gpos[t]]] = t
+            conv &= k > 0
+            annual = np.zeros(len(ii), bool)
+            tree = np.zeros(len(ii), bool)
+            for t in later:
+                m = conv & (k == t)
+                if not m.any() or t not in apos:
+                    continue
+                a_k = acrop[apos[t]]
+                a_k1 = acrop[apos[t + 1]] if t + 1 in apos else a_k
+                g_k1 = gs[gpos[t + 1]] if t + 1 in gpos else gs[gpos[t]]
+                annual |= m & (a_k | a_k1)
+                tree |= m & ~(a_k | a_k1) & g_k1 & avalid
+            add(f"conv_annual_km2_{y}", annual)
+            add(f"conv_tree_km2_{y}", tree)
+            add(f"conv_unres_km2_{y}", conv & ~annual & ~tree)
+        # stable rainfed cropland (E2d mask): GACED30 every year from STABLE_CROP_FROM and AFCD every year
+        ys_g = [gpos[y] for y in gaced_years if y >= STABLE_CROP_FROM]
+        ys_a = [apos[y] for y in afcd_years if y >= STABLE_CROP_FROM]
+        stable = (gs[ys_g].all(axis=0) if ys_g else np.zeros(len(ii), bool)) & \
+            (acrop[ys_a].all(axis=0) if ys_a else np.zeros(len(ii), bool))
+        add("stable_pre_km2", stable)                  # before removing irrigated and tree-crop pixels
+        # GLC_FCS30D annual (23 bands = 2000..2022; 0 / 250 fill), all bands in one warp
+        if job["glc"]:
+            gl = warp_strip(job["glc"], list(range(1, 24)), transform, (h, W), nodata=0)[:, sel]
+            gl[gl == 250] = 0
+            gok = (gl > 0).all(axis=0)
+            add("glc_valid_km2", gok)
+            for y in glc_years:
+                prev, cur = gl[y - 1 - 2000], gl[y - 2000]
+                fprev = np.isin(prev, GLC_FOREST)
+                add(f"glc_conv_km2_{y}", fprev & np.isin(cur, GLC_CROP))
+                add(f"glc_conv_tree_km2_{y}", fprev & (cur == 12))
+            last = gl[GLC_LAST_YEAR - 2000]
+            add("irrig_km2", stable & (last == 20))
+            add("glc_treecrop_km2", last == 12)
+            stable &= gok & ~np.isin(last, (12, 20))
+        add("stable2_km2", stable)
+        add("stable2_tc_sum", stable, tcv)
+        # Masolele: land use around 2022 of the forest lost 2001-2020 (cumulative file of 2020; 0 = no
+        # classified loss; 255 = outside the raster)
+        if job["masolele"]:
+            ms = warp_strip(job["masolele"], [1], transform, (h, W), nodata=None, fill=255)[0][sel]
+            mok = ms != 255
+            add("masolele_valid_km2", mok)
+            for y in repl_years:
+                lost = f30 & (lys_ == y - 2000) & mok
+                if not lost.any():
+                    continue
+                for g in REPL_GROUPS:
+                    codes = [c for c, gg in MASOLELE_GROUPS.items() if gg == g]
+                    add(f"repl_{g}_km2_{y}", lost & np.isin(ms, codes))
+                add(f"repl_unclassified_km2_{y}", lost & ~np.isin(ms, list(MASOLELE_GROUPS)))
+        # JRC TMF transition subtypes (humid tropics only; 255 = outside the tile)
+        if job["tmf"]:
+            tm = warp_strip(job["tmf"], [1], transform, (h, W), nodata=None, fill=255)[0][sel]
+            add("tmf_valid_km2", (tm != 255) & (tm > 0))
+            for y in tmf_years:
+                lost = f30 & (lys_ == y - 2000)
+                if not lost.any():
+                    continue
+                for g in TMF_REPL_GROUPS:
+                    codes = [c for c, gg in TMF_GROUPS.items() if gg == g]
+                    add(f"tmf_{g}_km2_{y}", lost & np.isin(tm, codes))
+        # oil palm planting year (0 none): planted 0..5 years after the loss
+        if job["palm"]:
+            yop = warp_strip(job["palm"], [1], transform, (h, W), nodata=None, fill=65535)[0][sel].astype(np.int32)
+            for y in tmf_years:
+                add(f"palm_after_loss_km2_{y}", f30 & (lys_ == y - 2000) & (yop >= y) & (yop <= y + 5))
+    d = {"cell": cell}
+    d.update({k: v.astype(np.float32) for k, v in acc.items()})
+    d["stable2_tc_mean"] = np.where(acc["stable2_km2"] > 0, acc["stable2_tc_sum"] / np.maximum(acc["stable2_km2"], 1e-12),
+                                    np.nan).astype(np.float32)
+    del d["stable2_tc_sum"]
+    # unknown, not zero: no AFCD or GACED30 coverage -> split and stable mask unknown; no GLC_FCS30D ->
+    # irrigated / orchard exclusion and stable mask unknown; outside Masolele / TMF -> replacement unknown
+    nod = (acc["afcd_valid_km2"] <= 0) | (acc["gaced_valid_km2"] <= 0)
+    noglc = acc["glc_valid_km2"] <= 0
+    nom, notmf = acc["masolele_valid_km2"] <= 0, acc["tmf_valid_km2"] <= 0
+    for k in list(d):
+        if k.startswith(("conv_annual_", "conv_tree_", "conv_unres_", "stable2_", "stable_pre_")):
+            d[k] = np.where(nod, np.nan, d[k]).astype(np.float32)
+        if k.startswith(("stable2_", "irrig_", "glc_conv", "glc_treecrop")):
+            d[k] = np.where(noglc, np.nan, d[k]).astype(np.float32)
+        if k.startswith("repl_"):
+            d[k] = np.where(nom, np.nan, d[k]).astype(np.float32)
+        if k.startswith("tmf_") and k != "tmf_valid_km2":
+            d[k] = np.where(notmf, np.nan, d[k]).astype(np.float32)
+    write_parquet(pd.DataFrame(d), out)
+    return job["tile"]
+
+
+def glc_zip_names(w, e):
+    """GLC_FCS30D v2 zips covering longitudes w..e: one zip per 10 degree band, named after its two 5 degree
+    tile columns (upper-left corner names), e.g. E0-E5 = 0..10 E, W5-W10 = -10..0."""
+    names = []
+    for L in range(int(math.floor(w / 10) * 10), int(math.ceil(e / 10) * 10), 10):
+        names.append(f"GLC_FCS30D_19852022maps_E{L}-E{L + 5}.zip" if L >= 0 else
+                     f"GLC_FCS30D_19852022maps_W{-L - 5}-W{-L}.zip")
+    return names
+
+
+def tmf_tile_url(w, n):
+    lat = f"N{n}" if n >= 0 else f"S{-n}"
+    lon = f"E{w}" if w >= 0 else f"W{-w}"
+    return TMF_URL.format(dataset="TransitionMap_Subtypes", lat=lat, lon=lon)
+
+
+def landcover_alt_targets():
+    return [(AFCD_URL.format(y=2020), "annual cropland without tree crops (AFCD)", True),
+            (GLC_URL.format(name=glc_zip_names(0, 5)[0]), "land cover dynamics (GLC_FCS30D v2)", False),
+            (MASOLELE_URL, "land use after deforestation (Masolele 2024)", False),
+            (DESCALS_URL, "oil palm planting year (Descals 2024)", False)]
+
+
+def stage_landcover_alt(ctx):
+    sess, dl = session(), ctx["dl"]
+    afcd = {}
+    for y in range(STABLE_CROP_FROM - 1, AFCD_LAST_YEAR + 1):
+        afcd[y] = file_bounds([download(AFCD_URL.format(y=y), dl / "afcd" / f"AFCD_{y}.tif", sess)])
+    # a failed download stops the stage (a rerun resumes): tiles must never be cached with a layer silently
+    # missing. A layer that is not wanted is switched off with its *_ENABLED flag.
+    masolele = file_bounds([download(MASOLELE_URL, dl / "masolele" / Path(MASOLELE_URL.split("/content")[0]).name,
+                                     sess)]) if MASOLELE_ENABLED else {}
+    palm = zip_index(download(DESCALS_URL, dl / "descals" / "GlobalOilPalm_OP-YoP.zip", sess)) \
+        if DESCALS_ENABLED else {}
+    w, s, e, n = ctx["bbox"]
+    glc = {}
+    for name in glc_zip_names(w, e) if GLC_ENABLED else []:
+        glc.update(zip_index(download(GLC_URL.format(name=name), dl / "glc_fcs30d" / name, sess),
+                             r"_Annual_V1\.1\.tif$"))
+    jobs = []
+    for t in ctx["tiles"]:
+        tf = ctx["work"] / "treatment" / f"{t['tile']}.parquet"
+        if not tf.exists() or pq.read_metadata(tf).num_rows == 0:
+            continue
+        tw, tn = int(math.floor(t["w"] / 10) * 10), int(math.ceil(t["n"] / 10) * 10)
+        hid = hansen_tile_id(tw, tn)
+        files = {layer: str(dl / "hansen" / Path(hansen_url(layer, hid)).name)
+                 for layer in ("treecover2000", "lossyear", "datamask")}
+        if not all(Path(f).exists() for f in files.values()):
+            log(f"landcover_alt {t['tile']}: Hansen tile missing (run stage landuse first); tile skipped")
+            continue
+        tmf = {}
+        if TMF_ENABLED and -20 <= tn <= 30:
+            try:
+                tf_ = download(tmf_tile_url(tw, tn), dl / "tmf" / f"TMF_TransitionMap_Subtypes_{t['tile']}.tif", sess)
+                tmf = file_bounds([tf_])
+            except RemoteUnavailable:
+                tmf = {}                       # outside the humid tropics there is no tile
+        crop_sources = gaced_index(ctx, sess, (t["w"], t["s"], t["e"], t["n"])) if CROPLAND_SOURCE == "gaced30" \
+            else glad_annual_sources()
+        jobs.append({"tile": t["tile"], "win": t["win"], "treatment": str(tf), **files, "crop_sources": crop_sources,
+                     "afcd": afcd, "glc": glc, "masolele": masolele, "tmf": tmf, "palm": palm,
+                     "gres": ctx["grid"].res, "gwest": ctx["grid"].west, "gnorth": ctx["grid"].north,
+                     "out": str(ctx["work"] / "landcover_alt" / f"{t['tile']}.parquet")})
+    run_parallel(landcover_alt_job, jobs, LANDCOVER_ALT_TASK_GB * 1e9, "land-cover cross-check tiles")
+    return {"tiles": len(jobs), "glc_tiles": len(glc), "masolele": bool(masolele), "palm_tiles": len(palm)}
 
 
 # =============================================================================
@@ -1843,6 +2179,153 @@ def ea_longdiff(panel, tr):
 
 
 # =============================================================================
+# stage ndvi (E2d): vegetation vigour exported from Google Earth Engine (ee_ndvi_export.py)
+# =============================================================================
+def vigour_files(sensor, year):
+    """GeoTIFFs of one sensor and year in NDVI_DIR (Earth Engine splits large exports into several files)."""
+    return sorted(Path(NDVI_DIR).glob(f"vigour_{sensor}_{year}*.tif")) if NDVI_DIR else []
+
+
+def vigour_inventory():
+    """{sensor: [years]} of the exports found in NDVI_DIR."""
+    inv = {}
+    for f in sorted(Path(NDVI_DIR).glob("vigour_*_*.tif")) if NDVI_DIR and Path(NDVI_DIR).exists() else []:
+        m = re.match(r"vigour_([a-z0-9]+)_(\d{4})", f.name)
+        if m:
+            inv.setdefault(m.group(1), set()).add(int(m.group(2)))
+    return {k: sorted(v) for k, v in inv.items()}
+
+
+def ndvi_job(job):
+    out = Path(job["out"])
+    want = {f"{b}_{sen}_{y}" for sen, ys in job["inventory"].items() for y in ys for b in VIGOUR_BANDS}
+    if out.exists() and want <= set(pq.read_schema(out).names):
+        return job["tile"]                      # every export found is already in the tile table
+    cell, rr, cc = tile_cells(job)
+    d = {"cell": cell}
+    if len(cell):
+        transform, shape = job["transform"], job["shape"]
+        for sensor, years in job["inventory"].items():
+            for y in years:
+                arr = np.full((len(VIGOUR_BANDS), *shape), np.nan, np.float32)
+                tb = (transform.c, transform.f - shape[0] * transform.a, transform.c + shape[1] * transform.a, transform.f)
+                for f in vigour_files(sensor, y):
+                    with rasterio.open(f) as src:
+                        b = src.bounds
+                        if not (b.left < tb[2] and b.right > tb[0] and b.bottom < tb[3] and b.top > tb[1]):
+                            continue
+                        a = np.full((len(VIGOUR_BANDS), *shape), np.nan, np.float32)
+                        nb = min(src.count, len(VIGOUR_BANDS))
+                        reproject(rasterio.band(src, list(range(1, nb + 1))), a[:nb], dst_transform=transform,
+                                  dst_crs="EPSG:4326", resampling=Resampling.nearest,
+                                  src_nodata=src.nodata if src.nodata is not None else VIGOUR_NODATA,
+                                  dst_nodata=np.nan)
+                    a[a <= VIGOUR_NODATA + 1] = np.nan    # the export's nodata, even when the file has no tag
+                    arr = np.where(np.isnan(arr), a, arr)
+                for i, bname in enumerate(VIGOUR_BANDS):
+                    d[f"{bname}_{sensor}_{y}"] = arr[i][rr, cc]
+    write_parquet(pd.DataFrame(d), out)
+    return job["tile"]
+
+
+def stage_ndvi(ctx):
+    inv = vigour_inventory()
+    if not inv:
+        log(f"ndvi: no Earth Engine exports in NDVI_DIR={NDVI_DIR!r} (run ee_ndvi_export.py and copy the "
+            "vigour_<sensor>_<year>*.tif files there); E2d skipped")
+        return {"sensors": {}}
+    log(f"ndvi: exports found {inv}")
+    jobs = []
+    for t in ctx["tiles"]:
+        tf = ctx["work"] / "treatment" / f"{t['tile']}.parquet"
+        if not tf.exists():
+            continue
+        transform, shape = tile_grid(ctx, t)
+        jobs.append({"tile": t["tile"], "win": t["win"], "treatment": str(tf), "transform": transform,
+                     "shape": shape, "inventory": inv, "out": str(ctx["work"] / "ndvi" / f"{t['tile']}.parquet")})
+    run_parallel(ndvi_job, jobs, 3e9, "vigour tiles")
+    return {"sensors": inv}
+
+
+def detrended(df, value, group):
+    """value minus its group-specific linear time trend (groups with >= 3 years), else NaN."""
+    out = pd.Series(np.nan, index=df.index)
+    for _, g in df.groupby(group):
+        v = g[value].to_numpy(np.float64)
+        t = g["year"].to_numpy(np.float64)
+        ok = np.isfinite(v)
+        if ok.sum() >= 3 and np.ptp(t[ok]) > 0:
+            b = np.polyfit(t[ok], v[ok], 1)
+            out[g.index] = v - np.polyval(b, t)
+    return out
+
+
+def within_r(df, a, b):
+    ok = df[[a, b]].dropna()
+    return (float(np.corrcoef(ok[a], ok[b])[0, 1]) if len(ok) >= 3 and ok[a].std() > 0 and ok[b].std() > 0
+            else np.nan), len(ok)
+
+
+def gate_v_inputs(s2, sensors, primary, pdir, work):
+    """Gate V criteria 1 and 4 inputs per zone (country):
+    - r_within: correlation of detrended unit-year NDVI integral (mean of the sampled stable-cropland cells in
+      the admin unit, or within EA_RADIUS_KM of the EA) with detrended log yield (HarvestStat, LSMS);
+    - r_sensor: correlation of within-cell anomalies of the NDVI integral between sensors in the overlap years."""
+    from scipy.spatial import cKDTree
+    rows = []
+    col = lambda sen, y: f"ndvi_integral_{sen}_{y}"
+    years = sorted({int(c.rsplit("_", 1)[1]) for c in s2.columns if c.startswith(f"ndvi_integral_{primary}_")})
+    long = pd.concat([pd.DataFrame({"cell": s2.cell, "lon": s2.lon, "lat": s2.lat, "zone": s2.iso3, "year": y,
+                                    "ndvi": s2[col(primary, y)]}) for y in years], ignore_index=True)
+    uf = work / "admin" / "units.gpkg"
+    e2a_f = pdir / "e2a_admin.parquet"
+    if uf.exists() and e2a_f.exists():
+        units = gpd.read_file(uf)[["fnid", "geometry"]]
+        pts = gpd.GeoDataFrame(s2[["cell"]], geometry=gpd.points_from_xy(s2.lon, s2.lat), crs=4326)
+        cu = gpd.sjoin(pts, units, predicate="within", how="inner")[["cell", "fnid"]]
+        un = long.merge(cu, on="cell").groupby(["fnid", "zone", "year"], as_index=False).ndvi.mean()
+        y = pd.read_parquet(e2a_f, columns=["fnid", "crop", "year", "log_yield"])
+        m = y.merge(un, on=["fnid", "year"])
+        if len(m):
+            m["key"] = m.fnid + "|" + m.crop
+            m["dy"], m["dn"] = detrended(m, "log_yield", "key"), detrended(m, "ndvi", "key")
+            for z, g in m.groupby("zone"):
+                r, k = within_r(g, "dy", "dn")
+                rows.append({"zone": z, "source": "admin", "n": k, "r_within": r})
+    e2b_f = pdir / "e2b_ea.parquet"
+    if e2b_f.exists():
+        y = pd.read_parquet(e2b_f, columns=["ea", "crop", "year", "log_yield", "lat", "lon"])
+        if len(y):
+            ea = y.drop_duplicates("ea")[["ea", "lat", "lon"]]
+            c0 = np.cos(np.radians(ea.lat.mean()))
+            tree = cKDTree(np.column_stack([s2.lon.to_numpy() * c0, s2.lat.to_numpy()]))
+            hits = tree.query_ball_point(np.column_stack([ea.lon.to_numpy() * c0, ea.lat.to_numpy()]), EA_RADIUS_KM / 111.32)
+            pairs = pd.DataFrame([(e, s2.cell.iloc[i]) for e, h in zip(ea.ea, hits) for i in h], columns=["ea", "cell"])
+            if len(pairs):
+                en = long.merge(pairs, on="cell").groupby(["ea", "zone", "year"], as_index=False).ndvi.mean()
+                m = y.merge(en, on=["ea", "year"])
+                m["key"] = m.ea + "|" + m.crop
+                m["dy"], m["dn"] = detrended(m, "log_yield", "key"), detrended(m, "ndvi", "key")
+                for z, g in m.groupby("zone"):
+                    r, k = within_r(g, "dy", "dn")
+                    rows.append({"zone": z, "source": "ea", "n": k, "r_within": r})
+    for other in [x for x in sensors if x != primary]:
+        both = sorted(set(years) & {int(c.rsplit("_", 1)[1]) for c in s2.columns if c.startswith(f"ndvi_integral_{other}_")})
+        if len(both) < 3:
+            continue
+        a = np.column_stack([s2[col(primary, y)] for y in both])
+        b = np.column_stack([s2[col(other, y)] for y in both])
+        a, b = a - np.nanmean(a, axis=1, keepdims=True), b - np.nanmean(b, axis=1, keepdims=True)
+        for z in sorted(s2.iso3.unique()):
+            m = (s2.iso3 == z).to_numpy()
+            x, w_ = a[m].ravel(), b[m].ravel()
+            ok = np.isfinite(x) & np.isfinite(w_)
+            r = float(np.corrcoef(x[ok], w_[ok])[0, 1]) if ok.sum() >= 3 else np.nan
+            rows.append({"zone": z, "source": f"sensor_{primary}_vs_{other}", "n": int(ok.sum()), "r_sensor": r})
+    return pd.DataFrame(rows, columns=["zone", "source", "n", "r_within", "r_sensor"])
+
+
+# =============================================================================
 # stage cropmix (E2e): crop composition per admin unit x year and EA x wave
 # =============================================================================
 CROP_GROUPS = [  # (group, regex on the lower-case crop name); first match wins; recalled crop vocabularies
@@ -2018,22 +2501,43 @@ def panel_tile_job(job):
     if not lu_f.exists():
         return None
     t = t.merge(pd.read_parquet(lu_f), on="cell", how="inner")
-    cov_f = Path(job["covariates"])
-    if cov_f.exists():
+    cov_f = Path(job.get("covariates") or "")
+    if job.get("covariates") and cov_f.exists():
         t = t.merge(pd.read_parquet(cov_f), on="cell", how="left")
-    t = t[t["forest2000_km2"] >= E1_FOREST_MIN_KM2]
-    if t.empty:
-        return None
+    la_f, nd_f = Path(job.get("landcover_alt") or ""), Path(job.get("ndvi") or "")
+    la = pd.read_parquet(la_f) if job.get("landcover_alt") and la_f.exists() else None
     prim = job["primary"]
-    g, _ = cohort_dose(t, prim)
     rng = np.random.default_rng([SEED, job["seed"]])
-    s = sample_cells(t.reset_index(drop=True), g > 0, job["n_treated"], job["n_control"], rng)
-    s["tile"] = job["tile"]
-    return s
+    out = {}
+    # the extra tables are merged after each sample is drawn, so a tile never holds every column for every cell
+    e1 = t[t["forest2000_km2"] >= E1_FOREST_MIN_KM2]
+    if not e1.empty:
+        g, _ = cohort_dose(e1, prim)
+        s1 = sample_cells(e1.reset_index(drop=True), g > 0, job["n_treated"], job["n_control"], rng)
+        if la is not None:
+            keep = ["cell"] + [c for c in la.columns if c.startswith(("conv_annual_", "conv_tree_", "repl_", "tmf_",
+                                                                      "palm_after_"))]
+            s1 = s1.merge(la[keep], on="cell", how="left")
+        s1["tile"] = job["tile"]
+        out["e1"] = s1
+    if la is not None and job.get("ndvi") and nd_f.exists():
+        m = t[["cell", "area_km2"]].merge(la[["cell", "stable2_km2", "stable_pre_km2", "stable2_tc_mean", "irrig_km2"]],
+                                          on="cell", how="inner")
+        frac = m.stable2_km2 / m.area_km2
+        irr = m.irrig_km2 / m.stable_pre_km2.where(m.stable_pre_km2 > 0)      # irrigated share of the stable area
+        ok = (frac >= E2D_MIN_STABLE) & (m.stable2_tc_mean <= E2D_MAX_TREECOVER) & (irr <= E2D_MAX_IRRIG)
+        e2 = t[t.cell.isin(m.cell[ok.fillna(False)])]                          # unknown (NaN) masks never pass
+        if not e2.empty:
+            g, _ = cohort_dose(e2, prim)
+            s2 = sample_cells(e2.reset_index(drop=True), g > 0, job["n_treated"], job["n_control"], rng)
+            s2 = s2.merge(pd.read_parquet(nd_f), on="cell", how="left")
+            s2["tile"] = job["tile"]
+            out["e2d"] = s2
+    return out or None
 
 
-def e1_long(s, loss_years):
-    """Wide sampled cells -> long cell-year panel of E1 outcomes and treatment columns."""
+def cell_base(s):
+    """Per sampled cell: ids, location, weights and the treatment columns of every specification."""
     specs = spec_names(s.columns)
     base = {"id": s["cell"].to_numpy(np.int64), "lat": s["lat"].to_numpy(), "lon": s["lon"].to_numpy(),
             "region": s["iso3"].to_numpy() if "iso3" in s else s["cid"].astype(str).to_numpy(),
@@ -2051,6 +2555,23 @@ def e1_long(s, loss_years):
             # leave the treated group of the main design
             base[f"g__{sp}"] = np.where(cls.to_numpy() == 2, -1, g).astype(np.int32)
         base[f"band__{sp}"] = bands(s, sp, g)
+    return base, specs
+
+
+def recode_cohorts(out, specs, first, last):
+    """g = -1 for cells treated before the first outcome year (always treated: no comparison possible),
+    0 for cells treated after the last one (not yet treated within the window)."""
+    for sp in specs:
+        out.loc[(out[f"g__{sp}"] > 0) & (out[f"g__{sp}"] <= first), f"g__{sp}"] = -1
+        for c in (f"g__{sp}", f"gburst__{sp}"):
+            if c in out:
+                out.loc[out[c] > last, c] = 0
+    return out
+
+
+def e1_long(s, loss_years):
+    """Wide sampled cells -> long cell-year panel of E1 outcomes and treatment columns."""
+    base, specs = cell_base(s)
     forest = s["forest2000_km2"].to_numpy(np.float64)
     cum = np.zeros(len(s))
     parts = []
@@ -2065,6 +2586,9 @@ def e1_long(s, loss_years):
                      loss_share=np.where(rem > 0, loss / rem, np.nan).astype(np.float32),
                      conv_share=np.where(rem > 0, conv / rem, np.nan).astype(np.float32),
                      newcrop_share=(newc / s["area_km2"].to_numpy()).astype(np.float32))
+            for k in ("conv_annual", "conv_tree"):          # revision 2 split (AFCD); NaN where unknown
+                v = s.get(f"{k}_km2_{y}", pd.Series(np.full(len(s), np.nan))).to_numpy(np.float64)
+                d[f"{k}_share"] = np.where(rem > 0, v / rem, np.nan).astype(np.float32)
         if f"rain_{y}" in s:
             d["rain"] = s[f"rain_{y}"].to_numpy(np.float32)
         if f"conflict_{y}" in s:
@@ -2072,14 +2596,57 @@ def e1_long(s, loss_years):
         parts.append(pd.DataFrame(d))
         cum += loss
     out = pd.concat(parts, ignore_index=True)
-    # cells treated before the first outcome year are always treated: no comparison possible.
     # g = -1 marks cells left out of a specification (estimate_effects.R drops them per specification)
-    for sp in specs:
-        out.loc[(out[f"g__{sp}"] > 0) & (out[f"g__{sp}"] <= loss_years[0]), f"g__{sp}"] = -1
-        for c in (f"g__{sp}", f"gburst__{sp}"):
-            if c in out:
-                out.loc[out[c] > loss_years[-1], c] = 0     # treated after the window: not yet treated
-    return out
+    return recode_cohorts(out, specs, loss_years[0], loss_years[-1])
+
+
+def e1c_long(s):
+    """E1c: per sampled cell and loss year t <= MASOLELE_LAST_LOSS with >= REPL_MIN_LOSS_KM2 of forest lost:
+    shares of that loss under each replacement class (Masolele, as of ~2022), TMF subtypes and oil palm.
+    The outcome exists only where loss happened: it is the composition of the loss, conditional on loss."""
+    base, specs = cell_base(s)
+    years = [y for y in range(2001, MASOLELE_LAST_LOSS + 1) if f"repl_annual_km2_{y}" in s]
+    parts = []
+    for y in years:
+        loss = s[f"loss_km2_{y}"].to_numpy(np.float64) if f"loss_km2_{y}" in s else np.zeros(len(s))
+        keep = loss >= REPL_MIN_LOSS_KM2
+        if not keep.any():
+            continue
+        d = {k: (v[keep] if isinstance(v, np.ndarray) else v) for k, v in base.items()}
+        d["year"] = np.full(int(keep.sum()), y, np.int32)
+        d["loss_km2"] = loss[keep].astype(np.float32)
+        with np.errstate(invalid="ignore", divide="ignore"):
+            for g in REPL_GROUPS + ["unclassified"]:
+                d[f"repl_{g}"] = (s[f"repl_{g}_km2_{y}"].to_numpy(np.float64)[keep] / loss[keep]).astype(np.float32)
+            for g in TMF_REPL_GROUPS:
+                c = f"tmf_{g}_km2_{y}"
+                if c in s:
+                    d[f"tmf_{g}"] = (s[c].to_numpy(np.float64)[keep] / loss[keep]).astype(np.float32)
+            if f"palm_after_loss_km2_{y}" in s:
+                d["palm_after_loss"] = (s[f"palm_after_loss_km2_{y}"].to_numpy(np.float64)[keep] / loss[keep]).astype(np.float32)
+        parts.append(pd.DataFrame(d))
+    if not parts:
+        return pd.DataFrame()
+    out = pd.concat(parts, ignore_index=True)
+    return recode_cohorts(out, specs, years[0], years[-1])
+
+
+def e2d_long(s, years, sensor):
+    """E2d: per sampled stable-cropland cell and year, the vigour metrics of `sensor` (columns
+    <band>_<sensor>_<year> of stage ndvi) and the treatment columns."""
+    base, specs = cell_base(s)
+    parts = []
+    for y in years:
+        d = dict(base, year=np.full(len(s), y, np.int32))
+        for b in VIGOUR_BANDS:
+            c = f"{b}_{sensor}_{y}"
+            if c in s and b not in ("crop_frac", "n_obs"):
+                d[b] = s[c].to_numpy(np.float32)
+        if f"rain_{y}" in s:
+            d["rain"] = s[f"rain_{y}"].to_numpy(np.float32)
+        parts.append(pd.DataFrame(d))
+    out = pd.concat(parts, ignore_index=True)
+    return recode_cohorts(out, specs, years[0], years[-1])
 
 
 def cem_weights(s, treated, cols, bins=5):
@@ -2168,17 +2735,44 @@ def stage_panels(ctx):
         jobs.append({"tile": t["tile"], "seed": i, "treatment": str(tf),
                      "landuse": str(work / "landuse" / f"{t['tile']}.parquet"),
                      "covariates": str(work / "covariates" / f"{t['tile']}.parquet"),
+                     "landcover_alt": str(work / "landcover_alt" / f"{t['tile']}.parquet"),
+                     "ndvi": str(work / "ndvi" / f"{t['tile']}.parquet"),
                      "primary": PRIMARY_SPEC if PRIMARY_SPEC in (specs_avail or []) else (specs_avail or [None])[0],
                      "n_treated": nt, "n_control": nc})
     if not jobs:
         raise RuntimeError("panels: no treatment tables; run stage treatment first")
-    parts = [p for p in run_parallel(panel_tile_job, jobs, 3e9, "panel tiles") if p is not None]
-    if not parts:
-        log("panels: no cell has land-use data with forest at baseline; E1 and E3 cell panels skipped")
-        return {"e1_cells": 0}
-    s = pd.concat(parts, ignore_index=True)
+    res_parts = [p for p in run_parallel(panel_tile_job, jobs, 6e9, "panel tiles") if p is not None]
+    for name in ("e2a_admin", "e2b_ea", "e2e_admin", "e2e_ea"):
+        f = work / "panels_parts" / f"{name}.parquet"
+        if f.exists():
+            shutil.copy(f, pdir / f"{name}.parquet")
     _, countries = ssa_country_ids(ctx["store"])
-    s["iso3"] = s["cid"].map(dict(zip(countries.cid, countries.iso3))).fillna("NA")
+    iso = dict(zip(countries.cid, countries.iso3))
+    info = {}
+    e2d_parts = [p["e2d"] for p in res_parts if "e2d" in p]
+    if e2d_parts:
+        s2 = pd.concat(e2d_parts, ignore_index=True)
+        s2["iso3"] = s2["cid"].map(iso).fillna("NA")
+        sensors = sorted({c.split("_")[-2] for c in s2.columns if c.startswith("ndvi_integral_")})
+        primary_sensor = NDVI_PRIMARY_SENSOR if NDVI_PRIMARY_SENSOR in sensors else sensors[0]
+        years = sorted({int(c.rsplit("_", 1)[1]) for c in s2.columns if c.startswith(f"ndvi_integral_{primary_sensor}_")})
+        e2d = e2d_long(s2, years, primary_sensor)
+        write_parquet(e2d, pdir / "e2d_vigour.parquet")
+        gate_v_inputs(s2, sensors, primary_sensor, pdir, work).to_csv(pdir / "gate_v_inputs.csv", index=False)
+        info.update({"e2d_cells": int(e2d.id.nunique()), "e2d_sensor": primary_sensor})
+    parts = [p["e1"] for p in res_parts if "e1" in p]
+    if not parts:
+        log("panels: no cell has land-use data with forest at baseline; E1, E1c and the E3 cell panel skipped")
+        e3 = pd.concat([pd.read_parquet(f) for f in (work / "panels_parts" / "e3_admin.parquet",
+                                                     work / "panels_parts" / "e3_ea.parquet") if f.exists()]
+                       or [pd.DataFrame()], ignore_index=True)
+        if not e3.empty:
+            write_parquet(e3, pdir / "e3_longdiff.parquet")
+        info |= {"e1_cells": 0, "e3_rows": len(e3), "primary_spec": jobs[0]["primary"]}
+        (res / "tables" / "panels_summary.json").write_text(json.dumps(info, indent=1))
+        return info
+    s = pd.concat(parts, ignore_index=True)
+    s["iso3"] = s["cid"].map(iso).fillna("NA")
     prim = jobs[0]["primary"]
     if prim != PRIMARY_SPEC:
         log(f"WARNING: {PRIMARY_SPEC} is not in the treatment tables (the travel-time store has no road-only "
@@ -2194,6 +2788,11 @@ def stage_panels(ctx):
     loss_years = sorted(int(c.rsplit("_", 1)[1]) for c in s.columns if c.startswith("loss_km2_"))
     e1 = e1_long(s, loss_years)
     write_parquet(e1, pdir / "e1_cells.parquet")
+    if any(c.startswith("repl_annual_km2_") for c in s.columns):
+        e1c = e1c_long(s)
+        if not e1c.empty:
+            write_parquet(e1c, pdir / "e1c_replacement.parquet")
+            info["e1c_rows"] = len(e1c)
     e3 = e3_longdiff(s, LONG_EPOCHS, loss_years)
     for extra in ("e3_admin.parquet", "e3_ea.parquet"):     # long differences of E2a / E2b (stages admin, lsms)
         f = work / "panels_parts" / extra
@@ -2201,12 +2800,8 @@ def stage_panels(ctx):
             e3 = pd.concat([e3, pd.read_parquet(f)], ignore_index=True)
     if not e3.empty:
         write_parquet(e3, pdir / "e3_longdiff.parquet")
-    for name in ("e2a_admin", "e2b_ea", "e2e_admin", "e2e_ea", "e1c_replacement", "e2d_vigour"):
-        f = work / "panels_parts" / f"{name}.parquet"
-        if f.exists():
-            shutil.copy(f, pdir / f"{name}.parquet")
-    info = {"e1_cells": int(e1.id.nunique()), "e1_rows": len(e1), "e3_rows": len(e3), "primary_spec": prim,
-            "treated": int((g > 0).sum()), "matching_strata": int(len(strata))}
+    info.update({"e1_cells": int(e1.id.nunique()), "e1_rows": len(e1), "e3_rows": len(e3), "primary_spec": prim,
+                 "treated": int((g > 0).sum()), "matching_strata": int(len(strata))})
     (res / "tables" / "panels_summary.json").write_text(json.dumps(info, indent=1))
     log(f"panels: {info}")
     return info
@@ -2323,6 +2918,7 @@ def access_targets():
          (HARVESTSTAT_CSV_URL, "admin yields (HarvestStat Africa)", False),
          (HARVESTSTAT_GPKG_URL, "admin units (HarvestStat Africa)", False)]
     t += [(u, p, r) for u, p, r in landuse_targets()]
+    t += landcover_alt_targets()
     return t
 
 
@@ -2391,7 +2987,8 @@ def dry_run(ctx):
 # =============================================================================
 # driver
 # =============================================================================
-STAGES = ["treatment", "landuse", "covariates", "projects", "gate_t", "admin", "lsms", "cropmix", "panels",
+STAGES = ["treatment", "landuse", "landcover_alt", "covariates", "projects", "gate_t", "admin", "lsms", "cropmix",
+          "ndvi", "panels",
           "estimate", "gate_c"]
 
 

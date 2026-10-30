@@ -86,6 +86,7 @@ def make_inputs(root, ga_store):
     n = int(10 / res)
     tc = np.where(rng.random((n, n)) < 0.4, 60, 5).astype(np.uint8)
     ly = np.where((tc >= 30) & (rng.random((n, n)) < 0.08), rng.integers(1, 25, (n, n)), 0).astype(np.uint8)
+    tc[200:300, 400:600], ly[200:300, 400:600] = 5, 0          # a stable cropland block (lat 8.5-9, lon 2-3)
     for layer, a in (("treecover2000", tc), ("lossyear", ly), ("datamask", np.ones((n, n), np.uint8))):
         write_tif(src / Path(ae.hansen_url(layer, "10N_000E")).name, a, 0, 10, res)
     # GACED30: one 3 x 3 degree tile, 25 bands (2000-2024), cropland where loss happened 0-2 years before
@@ -95,7 +96,50 @@ def make_inputs(root, ga_store):
     for b in range(25):
         y = 2000 + b
         crop[b] = np.where(((ly_t > 0) & (2000 + ly_t <= y)) | (tc_t < 30) & (rng.random((m, m)) < 0.3), 10, 0)
+    crop[:, 0:100, 400:600] = 10
     write_tif(src / "Crop_0_6.tif", crop, 0, 9, res, nodata=255)
+    # AFCD (annual crops only): GACED30 cropland except west of 0.5 E, where cropland is "tree crops"
+    for y in range(2014, 2023):
+        af = np.where(crop[y - 2000] == 10, 1, 0).astype(np.uint8)
+        af[:, 0:100] = 0
+        write_tif(src / f"AFCD_{y}.tif", af, 0, 9, res, nodata=3)
+    # GLC_FCS30D v2 tile E0N10 (0-5 E, 5-10 N), 23 bands 2000-2022
+    gt, gl_ = tc[0:1000, 0:1000], ly[0:1000, 0:1000].astype(np.int32)
+    glc = np.zeros((23, 1000, 1000), np.uint8)
+    for b in range(23):
+        y = 2000 + b
+        forest = (gt >= 30) & ((gl_ == 0) | (2000 + gl_ > y))
+        lost = (gt >= 30) & (gl_ > 0) & (2000 + gl_ <= y)
+        band = np.full((1000, 1000), 130, np.uint8)
+        band[forest] = 52
+        band[lost] = 10
+        band[lost & (np.arange(1000)[None, :] < 100)] = 12
+        band[200:300, 400:600] = 10
+        glc[b] = band
+    write_tif(src / "GLC_FCS30D_20002022_E0N10_Annual_V1.1.tif", glc, 0, 10, res)
+    with zipfile.ZipFile(src / ae.glc_zip_names(0, 3)[0], "w") as zf:
+        zf.write(src / "GLC_FCS30D_20002022_E0N10_Annual_V1.1.tif", "GLC_FCS30D_20002022_E0N10_Annual_V1.1.tif")
+    # Masolele: land use of the forest lost 2001-2020 (cacao west of 0.5 E, small-scale cropland elsewhere)
+    ms = np.where((ly_t >= 1) & (ly_t <= 20), 4, 0).astype(np.uint8)
+    ms[:, 0:100] = np.where(ms[:, 0:100] > 0, 15, 0)
+    write_tif(src / Path(ae.MASOLELE_URL.split("/content")[0]).name, ms, 0, 9, res)
+    # Descals oil palm planting year: one year after the loss, west of 0.5 E
+    yop = np.where(ly_t > 0, 2000 + ly_t + 1, 0).astype(np.uint16)
+    yop[:, 100:] = 0
+    write_tif(src / "GlobalOilPalm_OP-YoP_1.tif", yop, 0, 9, res)
+    with zipfile.ZipFile(src / "GlobalOilPalm_OP-YoP.zip", "w") as zf:
+        zf.write(src / "GlobalOilPalm_OP-YoP_1.tif", "GlobalOilPalm_OP-YoP_1.tif")
+    # Earth Engine vigour exports (MODIS 2001-2024, Sentinel-2 2017-2024), 8 bands on the 30" grid
+    (src / "ndvi").mkdir()
+    base = rng.uniform(2.5, 3.5, (360, 360)).astype(np.float32)
+    year_signal = {y: rng.normal(0, 0.1, (360, 360)).astype(np.float32) for y in range(2001, 2025)}
+    for sensor, years in (("modis", range(2001, 2025)), ("s2", range(2017, 2025))):
+        for y in years:
+            yr = year_signal[y]                          # the same weather signal seen by both sensors
+            v = base + 0.02 * (y - 2001) + yr + (rng.normal(0, 0.02, (360, 360)) if sensor == "s2" else 0)
+            bands = np.stack([v, v / 4, v / 5, v * 0.6, np.full_like(v, 1.0), v * 0.8,
+                              np.full_like(v, 0.8), np.full_like(v, 5.0)]).astype(np.float32)
+            write_tif(src / "ndvi" / f"vigour_{sensor}_{y}.tif", bands, 0, 9, 1 / 120, nodata=-9999)
     with zipfile.ZipFile(src / ae.gaced_zip_name(0), "w") as zf:
         zf.write(src / "Crop_0_6.tif", "Crop_0_6.tif")
     for y in ae.COV_YEARS:
@@ -125,6 +169,7 @@ def make_inputs(root, ga_store):
                          "product": "Maize", "season_name": "Main", "planting_year": y, "planting_month": 5,
                          "harvest_year": y, "harvest_month": 9, "crop_production_system": "All",
                          "qc_flag": 0, "area": 1000.0, "production": 1200.0, "yield": rng.uniform(0.8, 1.6)})
+            rows.append(dict(rows[-1], product="Cassava", area=500.0, production=4000.0, **{"yield": 8.0}))
     pd.DataFrame(rows).to_csv(src / Path(ae.HARVESTSTAT_CSV_URL).name, index=False)
     # LSMS harmonised panel: 6 EAs x 12 households x 2 plots, waves 1-4 (Nigeria years 2010-2018)
     import pyreadstat
@@ -178,6 +223,8 @@ def run(tmp_path_factory):
     mp.setattr(ae, "E1_SAMPLE_CONTROL", 4000)
     mp.setattr(ae, "CONFLICT_SOURCE", "ucdp")
     mp.setattr(ae, "BOOTSTRAP_ITERS", 99)
+    mp.setattr(ae, "TMF_ENABLED", False)
+    mp.setattr(ae, "NDVI_DIR", str(src / "ndvi"))
     ctx = ae.make_ctx(root / "work", root / "results", BBOX)
     want = [s for s in ae.STAGES if s not in ("estimate", "gate_c")]
     ae.run_stages(ctx, want)
@@ -206,7 +253,7 @@ def test_stages_write_tables(run):
     assert e1.year.min() == 2001 and e1.groupby("id").size().nunique() == 1
     assert (e1.g__roadonly_cities_11 >= -1).all()
     e2a = pd.read_parquet(r / "panels" / "e2a_admin.parquet")
-    assert e2a.id.nunique() == 3 and "g__roadonly_cities_11" in e2a
+    assert e2a.id.nunique() == 6 and "g__roadonly_cities_11" in e2a           # 3 units x 2 crops
     e3 = pd.read_parquet(r / "panels" / "e3_longdiff.parquet")
     assert {"E1_cells", "E2a_admin"} <= set(e3.dataset) and "d_access__roadonly_cities_11" in e3
     assert (r / "tables" / "e1_matching_balance.csv").exists()
@@ -214,6 +261,34 @@ def test_stages_write_tables(run):
     assert e2b.ea.nunique() == 6 and set(e2b.year) == {2010, 2012, 2015, 2018}
     assert {"g__roadonly_cities_11", "log_yield", "n_hh", "n_plots"} <= set(e2b.columns)
     assert "E2b_ea" in set(e3.dataset)
+    # --- revision 2 -------------------------------------------------------------------------------------
+    tile = run["tiles"][0]["tile"]
+    la = pd.read_parquet(w / "landcover_alt" / f"{tile}.parquet").merge(lu, on="cell")
+    for y in range(2015, 2022):
+        split = la[f"conv_annual_km2_{y}"] + la[f"conv_tree_km2_{y}"] + la[f"conv_unres_km2_{y}"]
+        ok = split.notna()
+        assert np.allclose(split[ok], la.loc[ok, f"conv_km2_{y}"], atol=1e-6)      # the split is complete
+    assert la.filter(like="conv_tree_km2_").to_numpy().sum() > 0 and la.filter(like="conv_annual_km2_").to_numpy().sum() > 0
+    for y in range(2001, 2021):
+        tot = sum(la[f"repl_{g}_km2_{y}"] for g in ae.REPL_GROUPS + ["unclassified"])
+        assert np.allclose(tot.fillna(0), la[f"loss_km2_{y}"], atol=1e-6)         # every lost pixel classified once
+    assert la.filter(like="repl_tree_km2_").to_numpy().sum() > 0
+    assert la.filter(like="palm_after_loss_km2_").to_numpy().sum() > 0
+    assert la.filter(like="glc_conv_km2_").to_numpy().sum() > 0 and la.stable2_km2.sum() > 0
+    assert "conv_annual_share" in e1 and "conv_tree_share" in e1
+    e1c = pd.read_parquet(r / "panels" / "e1c_replacement.parquet")
+    shares = e1c[[f"repl_{g}" for g in ae.REPL_GROUPS + ["unclassified"]]].sum(axis=1)
+    assert np.allclose(shares, 1, atol=1e-4) and e1c.year.max() <= 2020
+    e2d = pd.read_parquet(r / "panels" / "e2d_vigour.parquet")
+    assert {"ndvi_integral", "ndvi_dry_integral", "ndvi_noncrop_integral", "g__roadonly_cities_11"} <= set(e2d.columns)
+    assert e2d.year.min() == 2001 and e2d.year.max() == 2024
+    gv = pd.read_csv(r / "panels" / "gate_v_inputs.csv")
+    assert (gv.source.str.startswith("sensor_")).any() and (gv.r_sensor.dropna() > 0.8).all()
+    e2e = pd.read_parquet(r / "panels" / "e2e_admin.parquet")
+    assert np.allclose(e2e.share_maize, 2 / 3) and np.allclose(e2e.share_cassava, 1 / 3)
+    assert {"g__roadonly_cities_11", "shannon"} <= set(e2e.columns)
+    e2e_ea = pd.read_parquet(r / "panels" / "e2e_ea.parquet")
+    assert np.allclose(e2e_ea.share_maize, 1) and "share_sold" in e2e_ea
 
 
 def r_ready():
@@ -280,3 +355,42 @@ def test_project_lines_beyond_the_tile_edge_count(tmp_path):
     ae.projects_job(job)
     o = pd.read_parquet(tmp_path / "o.parquet")
     assert list(o.proj_year) == [2018, 0]
+
+
+@pytest.mark.skipif(not r_ready(), reason="Rscript with did, fixest, nanoparquet, dplyr not available")
+def test_crop_mix_shift_labels_yield_composite(tmp_path):
+    import simulate_panels
+    p = simulate_panels.simulate(tmp_path / "panels", effect=0.05, seed=4, n=300, mix_shift=0.10)
+    out = tmp_path / "est"
+    r = subprocess.run(["Rscript", str(HERE.parent / "estimate_effects.R"), str(p), str(out)],
+                       capture_output=True, text=True, timeout=1800)
+    assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-3000:]
+    est = pd.read_csv(out / "estimates.csv")
+    mix = est[(est.dataset == "E2e_admin") & (est.outcome == "share_maize") & (est.estimator == "cs")
+              & (est.control == "notyettreated") & (est.term == "overall")]
+    assert mix.estimate.iloc[0] == pytest.approx(0.10, abs=0.01)
+    gc = pd.read_csv(out / "gate_c.csv")
+    row = gc[(gc.dataset == "E2a_admin") & (gc.outcome == "log_yield")].iloc[0]
+    assert bool(row.crop_mix_shift) and "composite" in row.label
+    assert (out / "gate_v.csv").exists()
+
+
+def test_vigour_nodata_without_tag_is_nan(tmp_path, monkeypatch):
+    """Earth Engine exports may carry no nodata tag: -9999 must still read as missing, not as a value."""
+    d = tmp_path / "ndvi"; d.mkdir()
+    bands = np.full((8, 12, 12), 3.0, np.float32)
+    bands[:, :6, :] = -9999.0
+    write_tif(d / "vigour_modis_2020.tif", bands, 0, 1, 1 / 12, nodata=None)
+    monkeypatch.setattr(ae, "NDVI_DIR", str(d))
+    pd.DataFrame({"cell": [1, 2], "row": [0, 11], "col": [0, 0]}).to_parquet(tmp_path / "t.parquet")
+    job = {"tile": "x", "win": (0, 0, 12, 12), "treatment": str(tmp_path / "t.parquet"),
+           "transform": from_origin(0, 1, 1 / 12, 1 / 12), "shape": (12, 12), "inventory": ae.vigour_inventory(),
+           "out": str(tmp_path / "o.parquet")}
+    ae.ndvi_job(job)
+    o = pd.read_parquet(tmp_path / "o.parquet")
+    assert np.isnan(o.ndvi_integral_modis_2020[0]) and o.ndvi_integral_modis_2020[1] == 3.0
+    # a later export (another sensor) makes the tile table be rebuilt
+    write_tif(d / "vigour_s2_2020.tif", bands, 0, 1, 1 / 12, nodata=None)
+    job["inventory"] = ae.vigour_inventory()
+    ae.ndvi_job(job)
+    assert "ndvi_integral_s2_2020" in pd.read_parquet(tmp_path / "o.parquet")

@@ -202,12 +202,12 @@ NDVI is used directly as an outcome, with its own label, because it tracks small
   - cropland fraction of the cell at or above the threshold.
 - **Metrics:**
   - Seasonal peak and seasonal integral of NDVI, kNDVI and EVI.
-  - The season window is fixed per agro-ecological zone from the 2001–2014 climatology, so that roads cannot move it.
+  - The season window is fixed per pixel from the MODIS 2001–2014 climatology: the months whose mean NDVI is at least halfway between the climatological minimum and maximum. Because it is fixed before 2015, roads cannot move it.
   - PML-V2 GPP is used as a robustness check.
 - **Sensors:**
-  - HLS 30 m or Sentinel-2 10 m with cloud masking from 2017, for the main estimates;
-  - MODIS MOD13Q1 250 m for 2001–2016 (pre-trends), harmonised in the overlap years.
-  - MODIS science data ends in 2027 and its orbit has drifted, so the late years rely on HLS/Sentinel-2.
+  - MODIS MOD13Q1 250 m, aggregated to the cell: the continuous 2001–2024 series for the event study. The same sensor runs across the whole event window.
+  - Sentinel-2 (cloud masking with Cloud Score+, computed at 100 m) for 2017–2024: the sensor robustness series (Gate V criterion 4).
+  - MODIS science data ends in 2027 and its orbit has drifted, so the late years are checked against Sentinel-2.
 - **Computation:** per-cell and per-unit season metrics are computed in Google Earth Engine and exported as tables, then joined on the HPC.
 - **Gate V** (draft thresholds below). It must pass before any E2d result is interpreted:
   1. Within-unit correlation of detrended NDVI anomalies with survey yields (HarvestStat units, LSMS EAs).
@@ -334,7 +334,7 @@ Each threshold has a default, a reason and a sensitivity range. Once approved th
 | Stable cropland (E2d) | Cell share of stable cropland (GACED30 ∩ AFCD, every year 2015–2024) ≥ 50%; MODIS pixels ≥ 70% | Limits mixing with non-crop vegetation at 250 m–1 km | 30% / 70% |
 | Tree cover in cropland (E2d) | Hansen tree cover 2000 ≤ 10% on the stable cropland | Agroforestry and parkland trees dominate NDVI | 20% |
 | Irrigation (E2d) | Irrigated share (GLC_FCS30D class 20 or WorldCereal) ≤ 5% of the cell | Irrigation decouples NDVI from rainfed yield | 10% |
-| Season window (E2d) | Fixed per agro-ecological zone from the MODIS 2001–2014 climatology of green-up and dormancy | Roads must not move the window | ± 16 days |
+| Season window (E2d) | Fixed per pixel from the MODIS 2001–2014 monthly climatology (months ≥ halfway between min and max) | Roads must not move the window | 40% / 60% of the amplitude |
 | Tree-crop conversion (E1) | GACED30 cropland and not AFCD cropland in two consecutive years after the loss | Removes single-year disagreement between the maps | One year |
 | Replacement shares (E1c) | Computed where the cell lost ≥ 0.01 km² of forest in the loss year (about 11 Landsat pixels) | Shares of tiny losses are noise | 0.005; 0.05 km² |
 | Crop shares (E2e, admin) | Fixed crop set; units reporting it in ≥ ⅔ of years | HarvestStat reporting varies by year | ½ |
@@ -397,7 +397,7 @@ Every primary choice is rerun with its alternatives, and a result counts as robu
 | Annual vs tree crop split | GACED30 cropland not in AFCD | GLC_FCS30D class 12 | Shares differ by > 10 points → report both |
 | Forest replacement (E1c) | Masolele 2024 (losses ≤ 2020) | TMF subtypes; GLC_FCS30D; Sims drivers | Same direction of the shift required for a headline |
 | NDVI index (E2d) | NDVI seasonal integral | Peak NDVI; kNDVI; EVI; PML-V2 GPP | Gate V criterion 4 |
-| NDVI sensor (E2d) | HLS/Sentinel-2 (2017+) | MODIS 250 m | Gate V criterion 4 |
+| NDVI sensor (E2d) | MODIS 250 m (2001–2024, continuous) | Sentinel-2 (2017–2024) | Gate V criterion 4 |
 | Forest definition | Hansen 30% | Hansen 10%; TMF (humid) | As in the earlier design |
 
 Each run, its inputs and its outcome are logged, including failed checks.

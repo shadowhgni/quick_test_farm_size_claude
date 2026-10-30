@@ -373,8 +373,8 @@ gate_v <- function(est, inputs_file) {
   }
   eff <- main$estimate[[1]]
   c1 <- if (nrow(inp) && "r_within" %in% names(inp)) {
-    ok <- inp |> filter(n >= cfg$gate_v_min_n)
-    tibble(criterion = "1 anomaly correlation", pass = nrow(ok) > 0 && all(ok$r_within >= cfg$gate_v_r),
+    ok <- inp |> filter(!is.na(r_within), n >= cfg$gate_v_min_n)
+    tibble(criterion = "1 anomaly correlation", pass = if (nrow(ok)) all(ok$r_within >= cfg$gate_v_r) else NA,
            detail = paste0(nrow(ok), " zones; min r ", round(min(ok$r_within, Inf), 3)))
   } else {
     tibble(criterion = "1 anomaly correlation", pass = NA, detail = "gate_v_inputs.csv missing")
@@ -389,7 +389,8 @@ gate_v <- function(est, inputs_file) {
                detail = paste0(nrow(plc), " placebo estimates"))
   idx <- bind_rows(sel("E2d_vigour", "kndvi_integral"), sel("E2d_vigour", "evi_integral"),
                    sel("E2d_vigour", "ndvi_peak")) |> filter(is.finite(estimate))
-  sens <- if (nrow(inp) && "r_sensor" %in% names(inp)) all(inp$r_sensor >= cfg$gate_v_r_sensor, na.rm = TRUE) else NA
+  rs <- if (nrow(inp) && "r_sensor" %in% names(inp)) inp$r_sensor[!is.na(inp$r_sensor)] else numeric()
+  sens <- if (length(rs)) all(rs >= cfg$gate_v_r_sensor) else NA    # no second sensor: not assessed
   c4 <- tibble(criterion = "4 index and sensor robustness",
                pass = (if (nrow(idx)) all(sign(idx$estimate) == sign(eff)) else NA) & sens,
                detail = paste0(nrow(idx), " alternative indices; sensor r check ", sens))
