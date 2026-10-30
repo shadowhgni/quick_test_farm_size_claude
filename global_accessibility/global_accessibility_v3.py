@@ -40,7 +40,7 @@ Layers (as Nelson et al. 2019, figshare 10.6084/m9.figshare.7638134):
 """
 from __future__ import annotations
 
-__version__ = "3.2.3"
+__version__ = "3.3.0"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -2677,6 +2677,43 @@ def stage_traveltime(ctx):
     pd.DataFrame(info).to_csv(work / "tt_timings.csv", index=False)
 
 
+def stage_roadonly(ctx):
+    """Road-only travel time for a run whose stage traveltime finished before version 3.1 (which
+    added it): builds only the missing road-only friction grids and travel-time layers; the existing
+    travel time is not recomputed. Nothing to do for runs made with 3.1 or later."""
+    if not ROAD_ONLY:
+        return
+    grid, work, years = ctx["grid"], ctx["work"], ctx["years"]
+    names = [n for n in ROAD_ONLY_LAYERS if n in layer_names()]
+    todo = [y for y in years if not all((work / "tt" / f"tt_roadonly_{y}_{n}.npy").exists()
+                                         and Path(str(work / "tt" / f"tt_roadonly_{y}_{n}.npy") + ".done").exists()
+                                         for n in names)]
+    if not todo:
+        log("road-only travel time: complete")
+        return
+    (work / "tt").mkdir(exist_ok=True)
+    for y in years:
+        ff = work / f"friction_roadonly_{y}.npy"
+        if not ff.exists():
+            log(f"road-only friction {y} (governance of {years[0]})")
+            tmp = ff.with_name(ff.stem + ".part.npy")
+            friction_from_parts(ctx, y, CORRUPTION_K, BORDER_DELAY_MIN, tmp, gov_year=years[0])
+            tmp.replace(ff)
+    ports = load_ports(ctx)
+    ports["class"] = ports["Harbor Size"].map({"Large": 1, "Medium": 2, "Small": 3,
+                                               "Very Small": 4}).fillna(5).astype(int)
+    jobs = road_only_jobs(ctx, ports)
+    warm_up_numba()
+    per_task = grid.size * (4 + 4 + 2) + 0.3e9
+    info = run_budgeted(tt_job, jobs, lambda j: per_task, "road-only travel time")
+    pd.DataFrame(info).to_csv(work / "tt_timings_roadonly.csv", index=False)
+    # the store was written without these grids: let stage store run again (it keeps the COGs it has)
+    marker = work / "_done" / "store"
+    if marker.exists():
+        marker.unlink()
+        log("road-only travel time added: stage store will run again to include it")
+
+
 # =============================================================================
 # stage: outputs (COGs, PNGs, statistics, methods folder)
 # =============================================================================
@@ -3618,7 +3655,7 @@ def dry_run(ctx):
 
 
 OPTIONAL_STAGES = {"events"}     # a failure here is logged and the run continues
-STAGES = ["download", "grids", "roads", "events", "friction", "traveltime", "outputs", "store", "compare",
+STAGES = ["download", "grids", "roads", "events", "friction", "traveltime", "roadonly", "outputs", "store", "compare",
           "validate", "sensitivity", "cleanup"]
 
 
@@ -3689,7 +3726,7 @@ def main(argv=None):
     done_dir = work / "_done"; done_dir.mkdir(exist_ok=True)
     want = [s.strip() for s in a.stages.split(",") if s.strip()]
     funcs = {"download": stage_download, "grids": stage_grids, "roads": stage_roads, "events": stage_events,
-             "friction": stage_friction, "traveltime": stage_traveltime,
+             "friction": stage_friction, "traveltime": stage_traveltime, "roadonly": stage_roadonly,
              "outputs": stage_outputs, "store": stage_store, "compare": stage_compare, "validate": stage_validate, "sensitivity": stage_sensitivity,
              "cleanup": stage_cleanup}
     failed_optional = []

@@ -315,7 +315,12 @@ gate_c <- function(est) {
     ctrls <- bind_rows(sel("cs", "notyettreated"), sel("cs", "nevertreated"), sel("cs", "matched"),
                        sel("cs", "bands")) |>
       filter(is.finite(estimate))
-    other_version <- str_replace(cfg$primary_spec, "^roadonly_", "total_")
+    # the other treatment version of the primary layer (road-only <-> total)
+    other_version <- if (str_starts(cfg$primary_spec, "roadonly_")) {
+      str_replace(cfg$primary_spec, "^roadonly_", "total_")
+    } else {
+      str_replace(cfg$primary_spec, "^total_", "roadonly_")
+    }
     alt <- sel("cs", "notyettreated", sp = other_version)
     c3 <- sum(sign(ctrls$estimate) == sign(eff)) >= 2 &&
       (nrow(alt) == 0 || isTRUE(sign(alt$estimate[[1]]) == sign(eff)))

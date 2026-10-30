@@ -2052,6 +2052,10 @@ def stage_panels(ctx):
     _, countries = ssa_country_ids(ctx["store"])
     s["iso3"] = s["cid"].map(dict(zip(countries.cid, countries.iso3))).fillna("NA")
     prim = jobs[0]["primary"]
+    if prim != PRIMARY_SPEC:
+        log(f"WARNING: {PRIMARY_SPEC} is not in the treatment tables (the travel-time store has no road-only "
+            f"layers); the panels use {prim} as primary. Add road-only travel time with "
+            "global_accessibility_v3.py >= 3.3 (stage roadonly), then delete ae_work/_done/treatment and rerun")
     g, _ = cohort_dose(s, prim)
     match_cols = [c for c in (f"tt_{prim}_{tt_years(s.columns, prim)[0]}", f"pop_{POP_EPOCHS_IN(s)[0]}"
                               if POP_EPOCHS_IN(s) else None, "tan_slope", "forest2000_km2", "loss_pre_km2",
@@ -2136,7 +2140,15 @@ def stage_estimate(ctx):
         log("R package contdid missing: the continuous-dose design is skipped (install.packages('contdid'))")
     out = ctx["results"] / "estimates"
     out.mkdir(parents=True, exist_ok=True)
-    cfg = {"primary_spec": PRIMARY_SPEC, "specs": ESTIMATE_SPECS, "min_e": EVENT_WINDOW[0],
+    prim = PRIMARY_SPEC
+    sf = ctx["results"] / "tables" / "panels_summary.json"
+    if sf.exists():
+        prim = json.loads(sf.read_text()).get("primary_spec") or PRIMARY_SPEC
+    if prim != PRIMARY_SPEC:
+        log(f"WARNING: primary specification {PRIMARY_SPEC} is not in the panels; {prim} is used instead "
+            "(road-only travel time missing from the store? run global_accessibility_v3.py >= 3.3 stage roadonly)")
+    specs = [prim] + [x for x in ESTIMATE_SPECS if x != prim]
+    cfg = {"primary_spec": prim, "specs": specs, "min_e": EVENT_WINDOW[0],
            "max_e": EVENT_WINDOW[1], "conley_km": CONLEY_KM, "bh_q": BH_Q, "seed": SEED,
            "bootstrap_iters": BOOTSTRAP_ITERS, "max_units_cs": MAX_UNITS_CS}
     cf_ = out / "config.json"

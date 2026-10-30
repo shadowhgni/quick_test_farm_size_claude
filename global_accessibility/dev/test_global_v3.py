@@ -398,6 +398,18 @@ def test_stages_friction_to_compare_offline(tmp_path, monkeypatch):
     arr, prof = ga.load_store(res, "traveltime", 2020, "cities_11")
     ref = np.load(work / "tt" / "tt_2020_cities_11.npy")
     assert np.allclose(arr[np.isfinite(ref)], ref[np.isfinite(ref)]) and np.isnan(arr[~np.isfinite(ref)]).all()
+    # --- stage roadonly: a run whose traveltime finished before 3.1 (no road-only grids) gets them added,
+    # without recomputing the existing travel time, and the store is re-armed (HPC, 2026-10-30)
+    for f in list(work.glob("friction_roadonly_*.npy")) + list((work / "tt").glob("tt_roadonly_*")):
+        f.unlink()
+    (work / "_done").mkdir(exist_ok=True)
+    (work / "_done" / "store").write_text("x")
+    main_mtime = (work / "tt" / "tt_2026_cities_11.npy").stat().st_mtime
+    ga.stage_roadonly(ctx)
+    assert np.allclose(np.load(work / "tt" / "tt_roadonly_2026_cities_11.npy")[np.isfinite(r26)], r26[np.isfinite(r26)])
+    assert (work / "tt" / "tt_2026_cities_11.npy").stat().st_mtime == main_mtime      # not recomputed
+    assert not (work / "_done" / "store").exists()
+    ga.stage_roadonly(ctx)                                                  # complete: nothing to do
     part, pprof = ga.load_store(res, "friction", 2026, bbox=(1.5, 6.5, 2.0, 7.0))
     assert part.shape == (60, 60) and pprof["transform"].c == pytest.approx(1.5)
     lcs, _ = ga.load_store(res, "landcover")
