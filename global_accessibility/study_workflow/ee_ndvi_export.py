@@ -54,7 +54,7 @@ ASSETS = {
     "s2": "COPERNICUS/S2_SR_HARMONIZED",
     "cloudscore": "GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED",
     "glc": "projects/sat-io/open-datasets/GLC-FCS30D/annual",
-    "hansen": "UMD/hansen/global_forest_change_2024_v1_12",
+    "hansen": "UMD/hansen/global_forest_change_2025_v1_13",
 }
 CLIM_YEARS = (2001, 2014)
 CROP_CLASSES = [10, 11]
