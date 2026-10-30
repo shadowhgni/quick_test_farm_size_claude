@@ -45,7 +45,8 @@ cfg <- list(
   gate_pre_p = 0.10, gate_pre_ratio = 1 / 3, gate_placebo_ratio = 0.5, gate_placebo_p = 0.05,
   bootstrap_iters = 999L,
   seed = 20261028L,
-  max_units_cs = 200000L
+  max_units_cs = 200000L,
+  composite_shift = 0.05, gate_v_r = 0.3, gate_v_min_n = 30L, gate_v_r_sensor = 0.8
 )
 if (!is.na(cfg_file) && file.exists(cfg_file)) {
   user <- jsonlite::fromJSON(cfg_file)
@@ -339,6 +340,64 @@ gate_c <- function(est) {
            significant_bh = q_bh <= cfg$bh_q)
 }
 
+# --- composite label (revision 2): yield and vigour results move with the crop mix -------------------
+composite_label <- function(gc_tab, est) {
+  if (!nrow(gc_tab)) return(gc_tab)
+  mix <- est |>
+    filter(str_starts(dataset, "E2e_"), spec == cfg$primary_spec, estimator == "cs",
+           control == "notyettreated", term == "overall", str_starts(outcome, "share_"),
+           outcome != "share_sold", is.finite(p)) |>
+    mutate(q = stats::p.adjust(p, method = "BH"),
+           shift = q <= cfg$bh_q & abs(estimate) >= cfg$composite_shift)
+  shift_admin <- any(mix$shift[mix$dataset == "E2e_admin"])
+  shift_ea <- any(mix$shift[mix$dataset == "E2e_ea"])
+  gc_tab |>
+    mutate(crop_mix_shift = case_when(
+      dataset %in% c("E2a_admin", "E2d_vigour") ~ shift_admin | (dataset == "E2d_vigour" & shift_ea),
+      dataset == "E2b_ea" ~ shift_ea,
+      TRUE ~ FALSE
+    ),
+    label = if_else(crop_mix_shift & dataset %in% c("E2a_admin", "E2b_ea", "E2d_vigour"),
+                    paste0(label, "; composite (yield + crop mix)"), label))
+}
+
+# --- Gate V (revision 2): may the vigour outcome be interpreted? -------------------------------------
+gate_v <- function(est, inputs_file) {
+  inp <- if (file.exists(inputs_file)) read_csv(inputs_file, show_col_types = FALSE) else tibble()
+  sel <- \(ds, out) est |>
+    filter(dataset == ds, outcome == out, spec == cfg$primary_spec, estimator == "cs",
+           control == "notyettreated", term == "overall")
+  main <- sel("E2d_vigour", "ndvi_integral")
+  if (!nrow(main) || !is.finite(main$estimate[[1]])) {
+    return(tibble(criterion = "all", pass = NA, detail = "no E2d estimate"))
+  }
+  eff <- main$estimate[[1]]
+  c1 <- if (nrow(inp) && "r_within" %in% names(inp)) {
+    ok <- inp |> filter(n >= cfg$gate_v_min_n)
+    tibble(criterion = "1 anomaly correlation", pass = nrow(ok) > 0 && all(ok$r_within >= cfg$gate_v_r),
+           detail = paste0(nrow(ok), " zones; min r ", round(min(ok$r_within, Inf), 3)))
+  } else {
+    tibble(criterion = "1 anomaly correlation", pass = NA, detail = "gate_v_inputs.csv missing")
+  }
+  yld <- bind_rows(sel("E2a_admin", "log_yield"), sel("E2b_ea", "log_yield")) |> filter(is.finite(estimate))
+  c2 <- tibble(criterion = "2 sign agreement with survey yields",
+               pass = if (nrow(yld)) all(sign(yld$estimate) == sign(eff)) else NA,
+               detail = paste0(nrow(yld), " yield estimates"))
+  plc <- bind_rows(sel("E2d_vigour", "ndvi_dry_integral"), sel("E2d_vigour", "ndvi_noncrop_integral"))
+  c3 <- tibble(criterion = "3 placebos (dry season, non-cropland)",
+               pass = if (nrow(plc)) all(plc$p > 0.05 & abs(plc$estimate) < 0.5 * abs(eff), na.rm = TRUE) else NA,
+               detail = paste0(nrow(plc), " placebo estimates"))
+  idx <- bind_rows(sel("E2d_vigour", "kndvi_integral"), sel("E2d_vigour", "evi_integral"),
+                   sel("E2d_vigour", "ndvi_peak")) |> filter(is.finite(estimate))
+  sens <- if (nrow(inp) && "r_sensor" %in% names(inp)) all(inp$r_sensor >= cfg$gate_v_r_sensor, na.rm = TRUE) else NA
+  c4 <- tibble(criterion = "4 index and sensor robustness",
+               pass = (if (nrow(idx)) all(sign(idx$estimate) == sign(eff)) else NA) & sens,
+               detail = paste0(nrow(idx), " alternative indices; sensor r check ", sens))
+  out <- bind_rows(c1, c2, c3, c4)
+  bind_rows(out, tibble(criterion = "Gate V", pass = all(out$pass %in% TRUE),
+                        detail = "E2d interpreted only if every criterion passes"))
+}
+
 # --- main ------------------------------------------------------------------------------------------
 log_msg("estimate_effects.R: panels ", panels_dir, " -> ", out_dir)
 e1 <- read_panel("e1_cells")
@@ -346,14 +405,30 @@ e2a <- read_panel("e2a_admin")
 e2b <- read_panel("e2b_ea")
 e3 <- read_panel("e3_longdiff")
 
+e1c <- read_panel("e1c_replacement")
+e2d <- read_panel("e2d_vigour")
+e2e_admin <- read_panel("e2e_admin")
+e2e_ea <- read_panel("e2e_ea")
+share_outcomes <- c("share_maize", "share_cassava", "share_rice", "share_sorghum_millet", "share_cash",
+                    "share_staples_other", "shannon")
 est <- bind_rows(
-  run_dataset(e1, "E1_cells", c("conv_share", "newcrop_share", "loss_share")),
+  run_dataset(e1, "E1_cells", c("conv_share", "conv_annual_share", "conv_tree_share", "newcrop_share",
+                                "loss_share")),
+  run_dataset(e1c, "E1c_replacement", c("repl_annual", "repl_tree", "repl_pasture", "repl_regrowth",
+                                        "repl_other")),
   run_dataset(e2a, "E2a_admin", c("log_yield"), by_crop = TRUE),
   run_dataset(e2b, "E2b_ea", c("log_yield", "log_value_ha"), by_crop = TRUE),
+  run_dataset(e2d, "E2d_vigour", c("ndvi_integral", "ndvi_peak", "kndvi_integral", "evi_integral",
+                                   "ndvi_dry_integral", "ndvi_noncrop_integral")),
+  run_dataset(e2e_admin, "E2e_admin", share_outcomes),
+  run_dataset(e2e_ea, "E2e_ea", c(share_outcomes, "share_sold")),
   run_longdiff(e3)
 )
 write_csv(est, file.path(out_dir, "estimates.csv"), na = "")
 gc_tab <- if (nrow(est)) gate_c(est |> filter(estimator != "longdiff" | TRUE)) else tibble()
+gc_tab <- composite_label(gc_tab, est)
+gv_tab <- gate_v(est, file.path(panels_dir, "gate_v_inputs.csv"))
+write_csv(gv_tab, file.path(out_dir, "gate_v.csv"), na = "")
 write_csv(gc_tab, file.path(out_dir, "gate_c.csv"), na = "")
 writeLines(capture.output(sessionInfo()), file.path(out_dir, "sessionInfo.txt"))
 log_msg("estimates: ", nrow(est), " rows; Gate C: ", nrow(gc_tab), " rows")

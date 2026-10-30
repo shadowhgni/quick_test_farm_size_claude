@@ -132,6 +132,7 @@ LSMS_WAVE_YEARS = {                 # harvest (agricultural) year of each panel 
     "Niger": {1: 2011, 2: 2014},
     "Mali": {1: 2014, 2: 2017},
 }
+CROPMIX_MIN_REPORT = 2 / 3          # E2e admin: a crop is in a unit's fixed set if reported in >= 2/3 of its years
 EA_RADIUS_KM = 5.0                  # EA treatment: cropland-weighted access of the cells within 5 km of the point
 EA_MIN_HH = 5                       # EA x crop x season kept with >= 5 households ...
 EA_MIN_PLOTS = 8                    # ... and >= 8 plots (approved defaults)
@@ -148,6 +149,10 @@ CONLEY_KM = 50
 BH_Q = 0.10
 BOOTSTRAP_ITERS = 999
 MAX_UNITS_CS = 200000
+COMPOSITE_SHIFT = 0.05             # revision 2 drafts (to approve): crop-share shift that labels yield/vigour
+GATE_V_R = 0.3                     # results "composite"; Gate V within-unit anomaly correlation, minimum
+GATE_V_MIN_N = 30                  # unit-seasons per zone, and MODIS-HLS season-metric correlation
+GATE_V_R_SENSOR = 0.8
 RSCRIPT = "Rscript"                 # or the full path of Rscript
 
 # --- resources (None = detect) --------------------------------------------------
@@ -1487,6 +1492,24 @@ def admin_panel(units_tr, hv, units):
     return out
 
 
+def unit_year_treatment(out, d, specs):
+    """Treatment columns of estimate_effects.R on a unit-year table `out` (columns id, year), from the
+    unit treatment merged into `d` (same rows): cohort (-1 always treated or burst-only, 0 not treated within
+    the unit's series), burst placebo cohort and dose."""
+    for sp in specs:
+        g, dose = cohort_dose(d, sp)
+        burst = d[f"evclass_{sp}"].to_numpy() == 2
+        out[f"g__{sp}"] = np.where(burst, -1, g).astype(np.int32)
+        out[f"gburst__{sp}"] = np.where(burst, g, 0).astype(np.int32)
+        out[f"dose__{sp}"] = dose
+        first = out.groupby("id").year.transform("min")
+        last = out.groupby("id").year.transform("max")
+        out.loc[(out[f"g__{sp}"] > 0) & (out[f"g__{sp}"] <= first), f"g__{sp}"] = -1
+        for c in (f"g__{sp}", f"gburst__{sp}"):
+            out.loc[out[c] > last, c] = 0
+    return out
+
+
 def admin_longdiff(units_tr, hv_panel, units):
     """E3 for admin units: mean log yield over the 3 harvest years ending at each epoch end, differenced,
     against the unit access gain over the epoch."""
@@ -1727,7 +1750,8 @@ def ea_panel(agg, pts, tr):
     d["w"] = d.get("n_plots", pd.Series(1.0, index=d.index)).fillna(1.0).astype(float)
     keep = ["id", "uid", "ea", "country", "crop", "year", "log_yield", "log_value_ha", "n_hh", "n_plots", "fert",
             "improved", "hired", "sold", "region", "lat", "lon", "w"]
-    out = d[[c for c in keep if c in d]].copy()
+    keep += [c for c in d.columns if c.startswith("share_") or c in ("shannon", "n_crops")]
+    out = d[[c for c in dict.fromkeys(keep) if c in d]].copy()
     # survey waves are irregular: the cohort is the first survey year at or after the event (DiD needs the
     # cohort among the observed periods); an event after the last wave of the EA is not treated in its panel
     waves = out.groupby("country").year.apply(lambda x: np.sort(x.unique())).to_dict()
@@ -1775,6 +1799,7 @@ def stage_lsms(ctx):
     sums = pd.concat(parts, ignore_index=True).fillna(0)
     weight = "cropland"
     tr = unit_treatment(sums, "cropland", fallback="equal")     # equal weights where no cropland around the EA
+    write_parquet(tr, ctx["work"] / "lsms" / "ea_treatment.parquet")     # reused by stage cropmix
     agg = ea_aggregate(plots)
     panel = ea_panel(agg, pts, tr)
     write_parquet(panel, ctx["work"] / "panels_parts" / "e2b_ea.parquet")
@@ -1815,6 +1840,109 @@ def ea_longdiff(panel, tr):
                 vals.append(-(np.log1p(trx.at[u, f"tt_{sp}_{yb}"]) - np.log1p(trx.at[u, f"tt_{sp}_{ya}"])))
         out[f"d_access__{sp}"] = np.asarray(vals, np.float32)
     return out
+
+
+# =============================================================================
+# stage cropmix (E2e): crop composition per admin unit x year and EA x wave
+# =============================================================================
+CROP_GROUPS = [  # (group, regex on the lower-case crop name); first match wins; recalled crop vocabularies
+    ("maize", r"maize|corn"),
+    ("cassava", r"cassava|manioc"),
+    ("rice", r"rice|paddy"),
+    ("sorghum_millet", r"sorghum|millet"),
+    ("cash", r"coffee|cocoa|cacao|tea\b|cotton|tobacco|sugar|cashew|palm|rubber|sesame|vanilla|clove|coconut"),
+    ("staples_other", r"wheat|barley|teff|yam|potato|cocoyam|taro|plantain|banana|bean|cowpea|groundnut|"
+                      r"peanut|soy|pea\b|peas|lentil|chickpea|pigeon"),
+]
+
+
+def crop_group(names):
+    low = pd.Series(names, dtype=object).astype(str).str.lower()
+    out = pd.Series("other", index=low.index, dtype=object)
+    for g, rx in reversed(CROP_GROUPS):          # reversed + overwrite = first match wins
+        out[low.str.contains(rx, regex=True, na=False)] = g
+    return out.to_numpy()
+
+
+def composition(area, unit_cols):
+    """Shares by crop group, Shannon diversity and crop count from crop areas (columns unit_cols + crop +
+    area): one row per unit."""
+    a = area[area.area > 0].copy()
+    a["group"] = crop_group(a.crop)
+    tot = a.groupby(unit_cols).area.transform("sum")
+    a["p"] = a.area / tot
+    sh = a.groupby(unit_cols).p.apply(lambda p: float(-(p * np.log(p)).sum())).rename("shannon")
+    n = a.groupby(unit_cols).crop.nunique().rename("n_crops")
+    g = a.pivot_table(index=unit_cols, columns="group", values="p", aggfunc="sum", fill_value=0.0)
+    g.columns = [f"share_{c}" for c in g.columns]
+    for grp, _ in CROP_GROUPS + [("other", "")]:
+        if f"share_{grp}" not in g:
+            g[f"share_{grp}"] = 0.0
+    return g.join(sh).join(n).reset_index()
+
+
+def admin_crop_areas(hv):
+    """HarvestStat harvested area per unit x year x crop (seasons and systems summed), on each unit's fixed
+    crop set: the crops it reports in >= CROPMIX_MIN_REPORT of its years; years missing any of them dropped."""
+    hv = hv[(hv.qc_flag == 0) & (hv.area > 0) & hv.harvest_year.notna()]
+    a = hv.groupby(["fnid", "harvest_year", "product"], as_index=False).area.sum() \
+        .rename(columns={"harvest_year": "year", "product": "crop"})
+    a["year"] = a.year.astype(int)
+    ny = a.groupby("fnid").year.nunique().rename("ny")
+    rep = a.groupby(["fnid", "crop"]).year.nunique().rename("nrep").reset_index().join(ny, on="fnid")
+    fixed = rep[rep.nrep >= CROPMIX_MIN_REPORT * rep.ny][["fnid", "crop"]]
+    a = a.merge(fixed, on=["fnid", "crop"])
+    need = fixed.groupby("fnid").crop.nunique().rename("need")
+    have = a.groupby(["fnid", "year"]).crop.nunique().rename("have").reset_index().join(need, on="fnid")
+    full = have[have.have == have.need][["fnid", "year"]]
+    return a.merge(full, on=["fnid", "year"])
+
+
+def stage_cropmix(ctx):
+    work, out_parts = ctx["work"], ctx["work"] / "panels_parts"
+    info = {}
+    # admin units (HarvestStat), with the unit treatment of stage admin
+    uf = work / "admin" / "units.gpkg"
+    trf = sorted((work / "admin").glob("unit_treatment_*.parquet")) if (work / "admin").exists() else []
+    trf = [f for f in trf if f.stem.endswith(ADMIN_WEIGHT)] or trf
+    csv = ctx["dl"] / "harveststat" / Path(HARVESTSTAT_CSV_URL).name
+    if uf.exists() and trf and csv.exists():
+        units = gpd.read_file(uf, ignore_geometry=True)
+        tr = pd.read_parquet(trf[0])
+        comp = composition(admin_crop_areas(pd.read_csv(csv, low_memory=False)), ["fnid", "year"])
+        d = comp.merge(units[["fnid", "uid", "lat", "lon", "country_code"]], on="fnid").merge(tr, on="uid")
+        d["id"] = pd.factorize(d.fnid)[0] + 1
+        d["region"] = d.country_code.astype(str)
+        d["w"] = 1.0
+        cols = ["id", "fnid", "year", "region", "lat", "lon", "w", "shannon", "n_crops"] + \
+            [c for c in d.columns if c.startswith("share_")]
+        panel = unit_year_treatment(d[cols].copy(), d, spec_names(tr.columns))
+        write_parquet(panel, out_parts / "e2e_admin.parquet")
+        info["admin_units"] = int(panel.id.nunique())
+        log(f"cropmix: {panel.id.nunique():,} admin units, {len(panel):,} unit-years")
+    else:
+        log("cropmix: admin composition skipped (stage admin outputs not found)")
+    # enumeration areas (LSMS-ISA harmonised panel), with the EA treatment of stage lsms
+    pf, tf, pts_f = work / "lsms" / "plotcrop.parquet", work / "lsms" / "ea_treatment.parquet", work / "lsms" / "ea_points.parquet"
+    if pf.exists() and tf.exists() and pts_f.exists():
+        plots = pd.read_parquet(pf)
+        plots = plots[plots.crop_area_ha > 0].copy()
+        plots["ea"] = plots.country.astype(str) + "|" + plots.ea_id_obs.astype(str)
+        area = plots.groupby(["ea", "country", "year", "crop_name"], as_index=False).crop_area_ha.sum() \
+            .rename(columns={"crop_name": "crop", "crop_area_ha": "area"})
+        comp = composition(area, ["ea", "country", "year"])
+        hh = plots.groupby(["ea", "year"]).agg(n_hh=("household_id_obs", "nunique"),
+                                               share_sold=("share_kg_sold", "mean")).reset_index()
+        comp = comp.merge(hh, on=["ea", "year"])
+        comp = comp[comp.n_hh >= EA_MIN_HH]
+        comp["crop_name"] = "MIX"
+        panel = ea_panel(comp, pd.read_parquet(pts_f), pd.read_parquet(tf))
+        write_parquet(panel, out_parts / "e2e_ea.parquet")
+        info["ea"] = int(panel.ea.nunique())
+        log(f"cropmix: {panel.ea.nunique():,} EAs, {len(panel):,} EA-waves")
+    else:
+        log("cropmix: EA composition skipped (stage lsms outputs not found)")
+    return info
 
 
 # =============================================================================
@@ -2073,7 +2201,7 @@ def stage_panels(ctx):
             e3 = pd.concat([e3, pd.read_parquet(f)], ignore_index=True)
     if not e3.empty:
         write_parquet(e3, pdir / "e3_longdiff.parquet")
-    for name in ("e2a_admin", "e2b_ea"):
+    for name in ("e2a_admin", "e2b_ea", "e2e_admin", "e2e_ea", "e1c_replacement", "e2d_vigour"):
         f = work / "panels_parts" / f"{name}.parquet"
         if f.exists():
             shutil.copy(f, pdir / f"{name}.parquet")
@@ -2150,7 +2278,9 @@ def stage_estimate(ctx):
     specs = [prim] + [x for x in ESTIMATE_SPECS if x != prim]
     cfg = {"primary_spec": prim, "specs": specs, "min_e": EVENT_WINDOW[0],
            "max_e": EVENT_WINDOW[1], "conley_km": CONLEY_KM, "bh_q": BH_Q, "seed": SEED,
-           "bootstrap_iters": BOOTSTRAP_ITERS, "max_units_cs": MAX_UNITS_CS}
+           "bootstrap_iters": BOOTSTRAP_ITERS, "max_units_cs": MAX_UNITS_CS,
+           "composite_shift": COMPOSITE_SHIFT, "gate_v_r": GATE_V_R, "gate_v_min_n": GATE_V_MIN_N,
+           "gate_v_r_sensor": GATE_V_R_SENSOR}
     cf_ = out / "config.json"
     cf_.write_text(json.dumps(cfg, indent=1))
     log(f"estimate: {rscript} {script}")
@@ -2261,7 +2391,7 @@ def dry_run(ctx):
 # =============================================================================
 # driver
 # =============================================================================
-STAGES = ["treatment", "landuse", "covariates", "projects", "gate_t", "admin", "lsms", "panels",
+STAGES = ["treatment", "landuse", "covariates", "projects", "gate_t", "admin", "lsms", "cropmix", "panels",
           "estimate", "gate_c"]
 
 
