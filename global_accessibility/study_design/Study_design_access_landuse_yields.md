@@ -235,7 +235,7 @@ Effects are estimated by comparing units that gain access at different times, wi
 ### Designs
 
 1. **Staggered event study (primary, annual treatment).**
-   - Estimators robust to heterogeneous effects across treatment cohorts: Callaway and Sant'Anna for binary events; Callaway, Goodman-Bacon and Sant'Anna for continuous doses (R package `contdid`); Sun and Abraham as a check.
+   - Estimators robust to heterogeneous effects across treatment cohorts: Callaway and Sant'Anna for binary events; Callaway, Goodman-Bacon and Sant'Anna for continuous doses (`contdid`, run through its Python port `moderndid`); Sun and Abraham as a check.
    - Controls are never-treated and not-yet-treated units, with unit fixed effects and region × year fixed effects. Event-time coefficients run from −5 to +5 years.
    - Two-way fixed effects regressions are reported only for comparison, because they can be biased with staggered timing.
 2. **Long differences (E3, three epochs).**
@@ -419,7 +419,7 @@ For annual treatment, run `--years 2015 2016 … 2026 --weiss-years none`; the d
 
 ## Workflow implementation (`study_workflow/`, v0.1, 2026-10-28)
 
-The pipeline `access_effects_v01.py` and the estimation script `estimate_effects.R` implement Phases 0–3 for E1, E2a, E2b and E3, except for the items listed below. They were tested on the regional store with synthetic inputs, and on simulated panels whose known effect, placebo and long difference they recover. Details are in `study_workflow/README.md`.
+The pipeline `access_effects_v01.py` and the estimation script (`estimate_effects.R` in v0.1–v0.2, `estimate_effects.py` from v0.3) implement Phases 0–3 for E1, E2a, E2b and E3, except for the items listed below. They were tested on the regional store with synthetic inputs, and on simulated panels whose known effect, placebo and long difference they recover. Details are in `study_workflow/README.md`.
 
 **Deviations from this design, to be reported:**
 - **Cropland:** GACED30 annual is the default, because no scriptable download of GLAD annual cropland was found. GLAD annual can be used from tiles exported from Earth Engine (`CROPLAND_SOURCE`).
@@ -447,6 +447,8 @@ The pipeline `access_effects_v01.py` and the estimation script `estimate_effects
 | 2026-10-28 | Hansen GFC v1.13; UCDP default, ACLED opt-in; LSMS-ISA harmonised panel for E2b | Data availability | Yes |
 | 2026-10-30 | Annual/tree-crop split of E1; new E1c and E2e; E2c redefined as E2d (vigour, Gate V) | Author's question on GLC_FCS30D, NDVI and crop change; research review | Yes |
 | 2026-10-30 | Road-only travel time added to the HPC run after the fact (GA 3.3.0 stage `roadonly`) | The September travel-time run predates road-only | Yes |
+| 2026-10-30 | Estimation moved from R (`did`, `fixest`, `contdid`) to Python: `moderndid` 0.4.1, `pyfixest` 0.60.0, and Conley errors computed in the script with the `fixest` conventions. Parity on simulated panels: identical point estimates and pre-trend tests, Conley errors within 3%, bootstrap errors within 15%, identical Gate C decisions | The HPC container has no R | Yes |
+| 2026-10-30 | Continuous dose (`cont_did`): balanced units only and unweighted. The R script's overall ACRT error was about 10 times too small (wrong field); a Monte Carlo with a true slope of 0 supports the Python error | Package limits; bug found in the parity check | Yes |
 
 **Risks specific to revision 2.**
 - **Detection may depend on roads.** Cropland-change detection scores low in every product (F1 < 0.65), and accuracy rises with image density and field size. If roads change either, the measurement error is not random. The tree-crop split and the GLC_FCS30D dating check help, but do not remove this.

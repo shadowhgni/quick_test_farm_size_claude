@@ -1,4 +1,4 @@
-# Study workflow: access change, land use and crop yields (v0.2)
+# Study workflow: access change, land use and crop yields (v0.3)
 
 This folder implements the study design in `../study_design/Study_design_access_landuse_yields.md`
 from the travel-time store of `global_accessibility_v3.py`.
@@ -6,9 +6,11 @@ from the travel-time store of `global_accessibility_v3.py`.
 | File | Role |
 | --- | --- |
 | `access_effects_v01.py` | Data pipeline (Python, one file, resumable stages, same conventions as `global_accessibility_v3.py`) |
-| `estimate_effects.R` | Estimation, Gate C, Gate V and the composite label (R; called by stage `estimate`, or run by hand) |
+| `estimate_effects.py` | Estimation, Gate C, Gate V and the composite label (pure Python; called by stage `estimate`, or run by hand) |
 | `ee_ndvi_export.py` | Vegetation-vigour exports from Google Earth Engine for E2d (run on any machine with an Earth Engine account) |
-| `dev/` | Tests (`python -m pytest dev -q`) and a panel simulator with a known effect |
+| `dev/` | Tests (`python -m pytest dev -q`), a panel simulator with a known effect, and `reference_estimate_effects.R` (the earlier R script, kept only for the parity tests) |
+
+**No R is needed.** Every step runs in Python.
 
 ## Run on the HPC
 
@@ -16,9 +18,10 @@ from the travel-time store of `global_accessibility_v3.py`.
    `--years 2015 2016 … 2026 --weiss-years none`. The default 2015/2020/2026 run gives the long-term level.
 2. Put this folder next to the GA results and set `GA_RESULTS` at the top of `access_effects_v01.py`.
    If you have both an annual run and a three-year run, list the annual run first.
-3. Install R and its packages once: `install.packages(c("dplyr", "tidyr", "readr", "purrr", "tibble",
-   "stringr", "jsonlite", "fixest", "did", "contdid", "nanoparquet"))`. Without `contdid`, the
-   continuous-dose design is skipped.
+3. Stage `estimate` needs Python 3.12 or later (`moderndid` requires it). On first use it installs
+   `moderndid==0.4.1`, `pyfixest==0.60.0` and `statsmodels` with pip into `ae_work/pylib_py3XX`, one folder per Python version so that compiled packages are never mixed. It warns when an installed version differs from the tested one. If the default
+   `python` is older, run the whole workflow with `python3.13` (or any Python ≥ 3.12 that has the geo stack).
+   The dry run lists which estimation packages are present.
 4. In the JupyterLab terminal, from this folder (no SLURM, no shell scripts):
    ```
    python access_effects_v01.py --check-access
@@ -27,24 +30,34 @@ from the travel-time store of `global_accessibility_v3.py`.
    tail -f study_run.log
    ```
 
-5. **Vegetation vigour (E2d, optional).** On a machine with an Earth Engine account:
-   ```
-   pip install earthengine-api
-   earthengine authenticate
-   python ee_ndvi_export.py --project <your-cloud-project> --dry-run      # checks the assets first
-   python ee_ndvi_export.py --project <your-cloud-project> --sensor modis --years 2001-2024
-   python ee_ndvi_export.py --project <your-cloud-project> --sensor s2 --years 2017-2024
-   ```
-   Then copy the `vigour_*.tif` files from Google Drive (folder `ae_ndvi`) to `study_workflow/ndvi_exports/`.
-   Without them, stage `ndvi` logs that E2d is skipped and the rest runs. **This script has not been run
-   against Earth Engine yet** (no account in development): start with `--dry-run`, which checks every asset
-   and band name before any export.
+5. **Vegetation vigour (E2d, optional).** Earth Engine logs in with a service-account key file, and the
+   exports go to a Cloud Storage bucket. The key file never goes in this folder or in the repository.
+   The scripts print only its `client_email`.
+   - The service account needs these roles: Earth Engine Resource Writer and Service Usage Consumer on the project, and Storage Object Admin on the bucket.
+   - Set up the key and the package:
+     ```
+     export GEE_KEY_FILE=/mnt/users/dhougni/post-harvest-aidi-field-mgt-8fda1b9ab354.json
+     chmod 600 "$GEE_KEY_FILE"
+     pip install earthengine-api google-cloud-storage
+     ```
+   - Run the exports. The default project is `post-harvest-aidi-field-mgt`.
+     ```
+     python ee_ndvi_export.py --bucket <bucket> --dry-run       # checks the key, the bucket, every asset and band
+     python ee_ndvi_export.py --bucket <bucket> --sensor modis --years 2001-2024
+     python ee_ndvi_export.py --bucket <bucket> --sensor s2 --years 2017-2024
+     ```
+   - When the tasks finish (see https://code.earthengine.google.com/tasks), copy the files to `ndvi_exports/`. Use either of these:
+     - `python ee_ndvi_export.py --bucket <bucket> --download ndvi_exports`;
+     - add `--ndvi-bucket <bucket>` to the `access_effects_v01.py` command, and stage `ndvi` downloads the new files itself. If an earlier run skipped E2d, stage `ndvi` and the stages after it rerun on their own.
+   - Without the exports, stage `ndvi` logs that E2d is skipped and the rest runs.
+   - `--to-drive` is refused with a service-account key, because the files would land in the service account's own Drive.
+   - **This script has not been run against Earth Engine yet.** Start with `--dry-run`.
 
 Each stage resumes where it stopped. To rerun a stage, delete `ae_work/_done/<stage>`. Results go to
 `ae_results/`:
 
 - `tables/` holds Gate T, matching balance, panel summary, access check and the LSMS inventory.
-- `panels/` holds the analysis files read by R.
+- `panels/` holds the analysis files read by `estimate_effects.py`.
 - `estimates/` holds `estimates.csv`, with every coefficient and every failed model with its error, and `gate_c.csv`.
 - `logs/` holds the run record, with the configuration and every download.
 
@@ -83,7 +96,7 @@ configuration constants at the top of `access_effects_v01.py` (`REPL_MIN_LOSS_KM
 - **Stage `ndvi` (E2d):** reads the Earth Engine exports. Panels sample stable-cropland cells: at least 50% stable rainfed cropland, tree cover ≤ 10%, irrigated ≤ 5%.
   - MODIS gives the continuous 2001–2024 series (primary); Sentinel-2 (2017–2024) is the sensor check.
   - Gate V inputs (within-unit NDVI–yield correlation and sensor correlation) go to `panels/gate_v_inputs.csv`.
-- **R:**
+- **Estimation:**
   - new outcomes for E1 (annual and tree-crop conversion), E1c, E2d and E2e;
   - `gate_v.csv`;
   - the composite label in `gate_c.csv` when access shifts crop shares (BH q ≤ 0.10 and ≥ 5 points).
@@ -96,6 +109,43 @@ configuration constants at the top of `access_effects_v01.py` (`REPL_MIN_LOSS_KM
 | JRC TMF v1_2025 transition subtypes | E1c cross-check, humid tropics | 10° tiles from the JRC server (no range requests) |
 | Descals 2024 oil palm (Zenodo 13379129) | Oil palm planted after loss | 146 MB zip |
 | MODIS MOD13Q1, Sentinel-2, GLC_FCS30D, Hansen in Earth Engine | E2d | Via `ee_ndvi_export.py` |
+
+## Estimation in Python (v0.3)
+
+`estimate_effects.py` replaces the R script. Its packages are:
+
+- `moderndid` 0.4.1, a port of R `did` and `contdid`;
+- `pyfixest` 0.60.0, a port of R `fixest`;
+- `statsmodels`, for Benjamini–Hochberg.
+
+Conley errors are computed in the script with a uniform kernel. All observation pairs within the cutoff
+are counted, across periods. The small-sample factor is (N−1)/(N−K), with K counting the fixed effects.
+These are the same conventions as `fixest::conley`.
+
+`dev/test_estimate_parity.py` runs both scripts on the same simulated panels. It is the `parity` CI job.
+
+| Quantity | Python vs R |
+| --- | --- |
+| Point estimates (every model) | identical (rtol 1e-8; observed ≤ 1e-14) |
+| Pre-trend Wald p-values | identical (≤ 1e-6) |
+| Conley errors (TWFE, Sun–Abraham, long differences) | within 3% (observed 0.2–1.5%) |
+| Callaway–Sant'Anna bootstrap errors | within 15% (observed 1–8%; different random draws) |
+| Gate C decisions | identical |
+
+**Known differences:**
+
+- **Continuous dose.** Units must be balanced, and sampling weights are not used; the `note` column says
+  so. The R `contdid` script reported an overall ACRT error about 10 times too small, because it read the
+  wrong field.
+  - A Monte Carlo check used a true slope of 0 and 20 replications.
+  - The estimates had a standard deviation of 0.0047, and the Python error averaged 0.0054.
+  - None of the 20 replications rejected the null at 5%.
+  - The Python errors are therefore the ones to use, and the parity test does not compare dose errors.
+- **Sun–Abraham** is built from cohort × relative-period dummies (reference −1, never-treated as controls).
+  - The terms are aggregated with weighted observation shares, as `fixest::aggregate` does.
+  - Its error is a delta-method error from the Conley matrix.
+  - Above `max_units_sa` units, at least half of the sample is never-treated units.
+  - The parity panels use unequal weights that rise with the cohort.
 
 ## What is implemented, and what is not
 
@@ -124,7 +174,7 @@ simulated panels with a known effect):
   - burst placebo;
   - Sun–Abraham;
   - TWFE, for comparison only;
-  - `contdid` continuous dose;
+  - continuous dose (`moderndid.cont_did`);
   - long differences with Conley errors (50 km).
   - Gate C (criteria 1–4) and Benjamini–Hochberg control across crops and outcomes.
 

@@ -1,4 +1,4 @@
-name: Study workflow - access_effects_v01.py and estimate_effects.R tests
+name: Study workflow - access_effects_v01.py and estimate_effects.py tests
 
 on:
   push:
@@ -13,7 +13,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  python:
+    # what the HPC runs: pure Python, no R
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Python packages
+        run: pip install pytest numpy pandas geopandas pyogrio shapely rasterio pyproj scipy psutil requests pyarrow pyreadstat moderndid==0.4.1 pyfixest==0.60.0 statsmodels google-cloud-storage
+      - name: Tests (no R installed; the parity tests are skipped)
+        working-directory: global_accessibility/study_workflow
+        run: timeout -s ABRT 50m python -X faulthandler -m pytest dev -q -p no:warnings
+
+  parity:
+    # Python estimates against the earlier R script (dev/reference_estimate_effects.R)
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -25,11 +41,11 @@ jobs:
         with:
           use-public-rspm: true
       - name: R packages
-        run: |
-          Rscript -e 'install.packages(c("dplyr","tidyr","readr","purrr","tibble","stringr","jsonlite","fixest","did","contdid","nanoparquet"))'
-          Rscript -e 'for (p in c("fixest","did","contdid","nanoparquet")) cat(p, requireNamespace(p, quietly = TRUE), "\n")'
+        run: Rscript -e 'install.packages(c("dplyr","tidyr","readr","purrr","tibble","stringr","jsonlite","fixest","did","contdid","nanoparquet"))'
       - name: Python packages
-        run: pip install pytest numpy pandas geopandas pyogrio shapely rasterio pyproj scipy psutil requests pyarrow pyreadstat
-      - name: Tests (regional store of the global test + synthetic inputs; R tests included)
+        run: pip install pytest numpy pandas scipy pyarrow moderndid==0.4.1 pyfixest==0.60.0 statsmodels
+      - name: Parity tests
         working-directory: global_accessibility/study_workflow
-        run: timeout -s ABRT 50m python -X faulthandler -m pytest dev -q -p no:warnings
+        env:
+          REQUIRE_PARITY: '1'
+        run: timeout -s ABRT 50m python -X faulthandler -m pytest dev/test_estimate_parity.py -q -p no:warnings

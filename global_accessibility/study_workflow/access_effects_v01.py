@@ -6,11 +6,11 @@ crop yields in Sub-Saharan Africa" (study_design/Study_design_access_landuse_yie
 
 Builds every analysis table of the study design from the travel-time store written by
 global_accessibility_v3.py (one or more runs) and from open land-use, yield and covariate data,
-then runs the estimation script (estimate_effects.R) and evaluates the gates.
+then runs the estimation script (estimate_effects.py) and evaluates the gates.
 
 Stand-alone script (Python >= 3.11), same conventions as global_accessibility_v3.py: it installs
-missing Python packages into WORK_DIR/pylib, every stage is resumable, a dry run prints the plan,
-and --check-access tests every server first. Run it from the JupyterLab terminal:
+missing Python packages into WORK_DIR/pylib_py3XX (one folder per Python version), every stage is
+resumable, a dry run prints the plan, and --check-access tests every server first. Run it from the JupyterLab terminal:
     python access_effects_v01.py --check-access     # every server reachable?
     python access_effects_v01.py --dry-run          # inputs found, tiles, disk, memory
     python access_effects_v01.py                    # all stages (rerun the same command after a crash)
@@ -31,7 +31,7 @@ Stages (each resumes where it stopped; completed stages are skipped):
     ndvi       vegetation vigour per cell from the Earth Engine exports of ee_ndvi_export.py (E2d)
     panels     analysis files: E1, E1c and E2d cell panels (sampled), E2a, E2b, E2e, E3 long differences,
                Gate V inputs
-    estimate   estimate_effects.R (staggered DiD, continuous dose, long differences, placebos)
+    estimate   estimate_effects.py (staggered DiD, continuous dose, long differences, placebos; pure Python)
     gate_c     Gate C table from the estimates (with the composite label and Gate V of revision 2)
 
 Unit of analysis for land use: the 30 arc-second cell of the travel-time grid (~0.93 km at the
@@ -39,7 +39,7 @@ equator; the design calls it the 0.01 degree cell). Work is split into 10 x 10 d
 """
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 # =============================================================================
 # CONFIGURATION - edit here (command-line options override a few of these)
@@ -176,6 +176,9 @@ BH_Q = 0.10
 BOOTSTRAP_ITERS = 999
 MAX_UNITS_CS = 200000
 NDVI_DIR = "./ndvi_exports"         # GeoTIFFs vigour_<sensor>_<year>*.tif written by ee_ndvi_export.py
+NDVI_GCS_BUCKET = None              # bucket of the exports: stage ndvi then downloads them itself, with the
+NDVI_GCS_PREFIX = "ae_ndvi"         # service-account key named by the environment variable GEE_KEY_FILE
+GEE_PROJECT = "post-harvest-aidi-field-mgt"
 NDVI_PRIMARY_SENSOR = "modis"      # consistent sensor over 2001-2024 for the event study; "s2" = robustness
 VIGOUR_NODATA = -9999.0           # nodata of the exports (ee_ndvi_export.py unmasks to it)
 VIGOUR_BANDS = ["ndvi_integral", "ndvi_peak", "kndvi_integral", "evi_integral", "ndvi_dry_integral",
@@ -184,7 +187,7 @@ COMPOSITE_SHIFT = 0.05             # revision 2 drafts (to approve): crop-share 
 GATE_V_R = 0.3                     # results "composite"; Gate V within-unit anomaly correlation, minimum
 GATE_V_MIN_N = 30                  # unit-seasons per zone, and MODIS-HLS season-metric correlation
 GATE_V_R_SENSOR = 0.8
-RSCRIPT = "Rscript"                 # or the full path of Rscript
+MAX_UNITS_SA = 100000              # Sun-Abraham regression: units kept (all treated + a draw of controls)
 
 # --- resources (None = detect) --------------------------------------------------
 MAX_WORKERS = None
@@ -235,14 +238,30 @@ def _version_ok(dist, minimum):
     return num(have) >= num(minimum)
 
 
+def pylib_dir(work_dir):
+    """Private package folder, one per Python version: compiled wheels built for one interpreter must not be
+    found by another (a cp311 numpy in the folder would hide a missing numpy from python3.13)."""
+    return Path(work_dir).resolve() / f"pylib_py{sys.version_info[0]}{sys.version_info[1]}"
+
+
+def pip_into_pylib(lib, specs, deps=True):
+    """pip install --target LIB (appended to sys.path, after the environment's own packages)."""
+    lib.mkdir(parents=True, exist_ok=True)
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--quiet", "--target", str(lib),
+                           *([] if deps else ["--no-deps"]), *specs])
+    if str(lib) not in sys.path:
+        sys.path.append(str(lib))
+    importlib.invalidate_caches()
+
+
 def bootstrap(work_dir):
-    """Install missing packages into WORK_DIR/pylib (no admin rights needed).
+    """Install missing packages into pylib_dir(WORK_DIR) (no admin rights needed).
 
     pylib goes at the END of sys.path, so the environment's own numpy, pandas, GDAL stack always win
     (a second numpy in front of them breaks compiled packages such as rasterio). Missing packages are
     installed without their dependencies first; only a package that then fails to import is installed
     again with its dependencies. Outdated packages are reported, not shadowed."""
-    lib = Path(work_dir).resolve() / "pylib"
+    lib = pylib_dir(work_dir)
     if lib.exists() and str(lib) not in sys.path:
         sys.path.append(str(lib))
         importlib.invalidate_caches()
@@ -1799,7 +1818,7 @@ def unit_treatment(sums, weight, fallback=None):
 
 def admin_panel(units_tr, hv, units):
     """HarvestStat rows (quality flag 0) joined to the unit treatment: one row per unit x crop x season x
-    harvest year, with log yield and the treatment columns of estimate_effects.R."""
+    harvest year, with log yield and the treatment columns of estimate_effects.py."""
     hv = hv[(hv.qc_flag == 0) & (hv["yield"] > 0) & hv.harvest_year.notna()].copy()
     hv = hv.drop(columns=["country_code", "lat", "lon"], errors="ignore")    # taken from the boundary file
     hv = hv.merge(units[["fnid", "uid", "lat", "lon", "country_code"]], on="fnid", how="inner")
@@ -1829,7 +1848,7 @@ def admin_panel(units_tr, hv, units):
 
 
 def unit_year_treatment(out, d, specs):
-    """Treatment columns of estimate_effects.R on a unit-year table `out` (columns id, year), from the
+    """Treatment columns of estimate_effects.py on a unit-year table `out` (columns id, year), from the
     unit treatment merged into `d` (same rows): cohort (-1 always treated or burst-only, 0 not treated within
     the unit's series), burst placebo cohort and dose."""
     for sp in specs:
@@ -2078,7 +2097,7 @@ def ea_sums_job(job):
 
 
 def ea_panel(agg, pts, tr):
-    """EA x crop rows with the treatment columns of estimate_effects.R."""
+    """EA x crop rows with the treatment columns of estimate_effects.py."""
     d = agg.merge(pts[["ea", "uid", "lat", "lon"]], on="ea").merge(tr, on="uid")
     d["crop"] = d.crop_name.astype(str)
     d["id"] = pd.factorize(d.ea + "|" + d.crop)[0] + 1
@@ -2228,7 +2247,27 @@ def ndvi_job(job):
     return job["tile"]
 
 
+def fetch_vigour_exports(ctx):
+    """Download the Earth Engine exports from Cloud Storage (NDVI_GCS_BUCKET, service-account key in the
+    environment variable GEE_KEY_FILE), with the download function of ee_ndvi_export.py."""
+    if not NDVI_GCS_BUCKET:
+        return
+    try:
+        have = importlib.util.find_spec("google.cloud.storage") is not None
+    except ModuleNotFoundError:          # find_spec raises when the parent package (google) is missing
+        have = False
+    if not have:
+        lib = pylib_dir(ctx["work"])
+        log(f"ndvi: installing google-cloud-storage into {lib}")
+        pip_into_pylib(lib, ["google-cloud-storage"])
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import ee_ndvi_export
+    ee_ndvi_export.download_exports(NDVI_GCS_BUCKET, NDVI_GCS_PREFIX, os.environ.get("GEE_KEY_FILE"), NDVI_DIR,
+                                    project=GEE_PROJECT, log=log)
+
+
 def stage_ndvi(ctx):
+    fetch_vigour_exports(ctx)
     inv = vigour_inventory()
     if not inv:
         log(f"ndvi: no Earth Engine exports in NDVI_DIR={NDVI_DIR!r} (run ee_ndvi_export.py and copy the "
@@ -2429,7 +2468,7 @@ def stage_cropmix(ctx):
 
 
 # =============================================================================
-# stage panels: analysis files for estimate_effects.R
+# stage panels: analysis files for estimate_effects.py
 # =============================================================================
 def spec_names(cols):
     """Treatment specifications <version>_<layer> present in a treatment table."""
@@ -2596,7 +2635,7 @@ def e1_long(s, loss_years):
         parts.append(pd.DataFrame(d))
         cum += loss
     out = pd.concat(parts, ignore_index=True)
-    # g = -1 marks cells left out of a specification (estimate_effects.R drops them per specification)
+    # g = -1 marks cells left out of a specification (estimate_effects.py drops them per specification)
     return recode_cohorts(out, specs, loss_years[0], loss_years[-1])
 
 
@@ -2829,38 +2868,67 @@ def smd_table(s, treated, cols):
 # =============================================================================
 # stages estimate and gate_c
 # =============================================================================
-R_PACKAGES = ["dplyr", "tidyr", "readr", "purrr", "tibble", "stringr", "jsonlite", "fixest", "did",
-              "nanoparquet", "contdid"]
+ESTIMATION_PACKAGES = {  # import name: (pip name, pinned version); installed by stage estimate (Python >= 3.12)
+    "moderndid": ("moderndid", "0.4.1"), "pyfixest": ("pyfixest", "0.60.0"), "statsmodels": ("statsmodels", "0.14"),
+}
 
 
-def find_r_script():
-    for p in (Path(__file__).resolve().parent / "estimate_effects.R", Path.cwd() / "estimate_effects.R"):
+def estimation_versions_differing():
+    """Installed estimation packages whose version is not the tested one (feols_conley reads pyfixest
+    internals, so another version may break or change it)."""
+    from importlib import metadata
+    out = []
+    for mod, (pip, v) in ESTIMATION_PACKAGES.items():
+        if importlib.util.find_spec(mod) is None:
+            continue
+        try:
+            have = metadata.version(pip)
+        except metadata.PackageNotFoundError:
+            continue
+        if (have != v) if v.count(".") == 2 else not _version_ok(pip, v):
+            out.append(f"{pip} {have} (tested: {v})")
+    return out
+
+
+def estimation_packages_missing():
+    return [f"{pip}=={v}" if v.count(".") == 2 else f"{pip}>={v}" for mod, (pip, v) in ESTIMATION_PACKAGES.items()
+            if importlib.util.find_spec(mod) is None]
+
+
+def ensure_estimation_packages(work):
+    """Install the estimation packages into pylib_dir(WORK_DIR) on first use. Unlike bootstrap, they are
+    installed with their dependencies (moderndid and pyfixest need polars, formulaic, numba ...); the
+    environment's own numpy / pandas / scipy stay first on the path. moderndid needs Python >= 3.12."""
+    for w in estimation_versions_differing():
+        log(f"WARNING: estimation package {w}; results may differ from the tested stack")
+    need = estimation_packages_missing()
+    if not need:
+        return
+    if sys.version_info < (3, 12):
+        raise RuntimeError(f"stage estimate needs Python >= 3.12 (moderndid); this is {platform_python()}. "
+                           "Run the workflow with a newer python that has the geo stack, e.g. "
+                           "python3.13 access_effects_v01.py --stages estimate,gate_c (it uses its own pylib_py313)")
+    lib = pylib_dir(work)
+    log(f"estimate: installing {' '.join(need)} into {lib}")
+    pip_into_pylib(lib, need)
+
+
+def platform_python():
+    return f"Python {sys.version.split()[0]} ({sys.executable})"
+
+
+def find_estimation_script():
+    for p in (Path(__file__).resolve().parent / "estimate_effects.py", Path.cwd() / "estimate_effects.py"):
         if p.exists():
             return p
     return None
 
 
-def r_missing_packages(rscript):
-    code = ("p <- c(" + ",".join(f'"{x}"' for x in R_PACKAGES) + "); "
-            "cat(p[!vapply(p, requireNamespace, logical(1), quietly = TRUE)], sep = '\\n')")
-    r = subprocess.run([rscript, "-e", code], capture_output=True, text=True, timeout=300)
-    return [x for x in r.stdout.split() if x]
-
-
 def stage_estimate(ctx):
-    rscript = shutil.which(RSCRIPT) or (RSCRIPT if Path(RSCRIPT).exists() else None)
-    script = find_r_script()
-    if rscript is None or script is None:
-        raise RuntimeError(f"stage estimate needs Rscript ({RSCRIPT}) and estimate_effects.R next to this "
-                           "script; or run it by hand: Rscript estimate_effects.R <RESULTS_DIR>/panels "
-                           "<RESULTS_DIR>/estimates")
-    miss = r_missing_packages(rscript)
-    if miss:
-        required = [m for m in miss if m != "contdid"]
-        if required:
-            raise RuntimeError(f"R packages missing: {required}. In R: install.packages(c("
-                               + ", ".join(f'"{m}"' for m in required) + "))")
-        log("R package contdid missing: the continuous-dose design is skipped (install.packages('contdid'))")
+    script = find_estimation_script()
+    if script is None:
+        raise RuntimeError("estimate_effects.py not found next to access_effects_v01.py")
+    ensure_estimation_packages(ctx["work"])
     out = ctx["results"] / "estimates"
     out.mkdir(parents=True, exist_ok=True)
     prim = PRIMARY_SPEC
@@ -2873,18 +2941,19 @@ def stage_estimate(ctx):
     specs = [prim] + [x for x in ESTIMATE_SPECS if x != prim]
     cfg = {"primary_spec": prim, "specs": specs, "min_e": EVENT_WINDOW[0],
            "max_e": EVENT_WINDOW[1], "conley_km": CONLEY_KM, "bh_q": BH_Q, "seed": SEED,
-           "bootstrap_iters": BOOTSTRAP_ITERS, "max_units_cs": MAX_UNITS_CS,
+           "bootstrap_iters": BOOTSTRAP_ITERS, "max_units_cs": MAX_UNITS_CS, "max_units_sa": MAX_UNITS_SA,
            "composite_shift": COMPOSITE_SHIFT, "gate_v_r": GATE_V_R, "gate_v_min_n": GATE_V_MIN_N,
            "gate_v_r_sensor": GATE_V_R_SENSOR}
     cf_ = out / "config.json"
     cf_.write_text(json.dumps(cfg, indent=1))
-    log(f"estimate: {rscript} {script}")
+    log(f"estimate: {platform_python()} {script}")
+    env = {**os.environ, "PYTHONPATH": os.pathsep.join([p for p in sys.path if p])}
     with open(out / "estimate_log.txt", "w") as fh:
-        r = subprocess.run([rscript, str(script), str(ctx["results"] / "panels"), str(out), str(cf_)],
-                           stdout=fh, stderr=subprocess.STDOUT)
+        r = subprocess.run([sys.executable, str(script), str(ctx["results"] / "panels"), str(out), str(cf_)],
+                           stdout=fh, stderr=subprocess.STDOUT, env=env)
     if r.returncode != 0:
         tail = (out / "estimate_log.txt").read_text()[-1500:]
-        raise RuntimeError(f"estimate_effects.R failed ({r.returncode}):\n{tail}")
+        raise RuntimeError(f"estimate_effects.py failed ({r.returncode}):\n{tail}")
     est = pd.read_csv(out / "estimates.csv")
     failed = est[est.error.notna()] if "error" in est else est.iloc[0:0]
     log(f"estimate: {len(est)} coefficients, {len(failed)} models failed (see estimates.csv, column error)")
@@ -2972,12 +3041,12 @@ def dry_run(ctx):
     free = shutil.disk_usage(ctx["work"]).free
     log(f"free disk in the work folder: {free / 1e9:,.0f} GB; memory {available_memory() / 1e9:.0f} GB; "
         f"workers for 3 GB tasks: {plan_workers(3e9, len(ctx['tiles']))}")
-    rscript = shutil.which(RSCRIPT)
-    script = find_r_script()
-    log(f"Rscript: {rscript or 'NOT FOUND'}; estimate_effects.R: {script or 'NOT FOUND'}")
-    if rscript:
-        miss = r_missing_packages(rscript)
-        log(f"R packages missing: {miss or 'none'}")
+    miss = estimation_packages_missing()
+    log(f"estimation: {platform_python()}; estimate_effects.py: {find_estimation_script() or 'NOT FOUND'}; "
+        f"packages {'to install at stage estimate: ' + ' '.join(miss) if miss else 'installed'}"
+        + ("; WARNING: needs Python >= 3.12" if sys.version_info < (3, 12) else ""))
+    for w in estimation_versions_differing():
+        log(f"WARNING: estimation package {w}")
     lsms = lsms_plan(ctx)
     log(f"LSMS: {lsms}")
     for s in STAGES:
@@ -3011,7 +3080,26 @@ def mark_done(ctx, name, info=None):
     (ctx["work"] / "_done" / name).write_text(json.dumps(info or {}, default=str))
 
 
+def rearm_ndvi(ctx):
+    """Stage ndvi is marked done even when no export existed yet (E2d skipped). When exports have since
+    arrived in NDVI_DIR, or a bucket is given to fetch them, rerun ndvi and the stages that read it."""
+    f = ctx["work"] / "_done" / "ndvi"
+    if not f.exists():
+        return
+    try:
+        empty = not json.loads(f.read_text() or "{}").get("sensors")
+    except ValueError:
+        empty = True
+    if empty and (NDVI_GCS_BUCKET or vigour_inventory()):
+        after = STAGES[STAGES.index("ndvi"):]
+        log(f"ndvi: E2d was skipped earlier and exports are now available; rerunning {', '.join(after)}")
+        for s in after:
+            (ctx["work"] / "_done" / s).unlink(missing_ok=True)
+
+
 def run_stages(ctx, want):
+    if "ndvi" in want:
+        rearm_ndvi(ctx)
     funcs = {s: globals()[f"stage_{s}"] for s in STAGES}
     for s in STAGES:
         if s not in want:
@@ -3036,9 +3124,11 @@ def write_run_record(ctx, ok, err=None):
 
 
 def main(argv=None):
-    global GA_RESULTS, MAX_WORKERS
+    global GA_RESULTS, MAX_WORKERS, NDVI_GCS_BUCKET
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     p.add_argument("--ga-results", nargs="+", default=GA_RESULTS)
+    p.add_argument("--ndvi-bucket", default=NDVI_GCS_BUCKET,
+                   help="Cloud Storage bucket of the Earth Engine exports (key: environment variable GEE_KEY_FILE)")
     p.add_argument("--work-dir", default=WORK_DIR)
     p.add_argument("--results-dir", default=RESULTS_DIR)
     p.add_argument("--bbox", type=float, nargs=4, metavar=("W", "S", "E", "N"), default=None)
@@ -3047,7 +3137,7 @@ def main(argv=None):
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--check-access", action="store_true")
     a = p.parse_args(argv)
-    GA_RESULTS, MAX_WORKERS = list(a.ga_results), a.max_workers
+    GA_RESULTS, MAX_WORKERS, NDVI_GCS_BUCKET = list(a.ga_results), a.max_workers, a.ndvi_bucket
     if a.check_access:      # needs no travel-time store: can run while global_accessibility_v3.py still runs
         res = Path(a.results_dir).resolve()
         (res / "tables").mkdir(parents=True, exist_ok=True)

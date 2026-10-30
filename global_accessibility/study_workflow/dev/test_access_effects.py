@@ -291,22 +291,24 @@ def test_stages_write_tables(run):
     assert np.allclose(e2e_ea.share_maize, 1) and "share_sold" in e2e_ea
 
 
-def r_ready():
-    rs = shutil.which("Rscript")
-    if not rs:
-        return False
-    r = subprocess.run([rs, "-e", "q(status = !all(vapply(c('did','fixest','nanoparquet','dplyr'), "
-                        "requireNamespace, logical(1), quietly = TRUE)))"], capture_output=True)
-    return r.returncode == 0
+def est_ready():
+    """The Python estimation stack (moderndid needs Python >= 3.12)."""
+    import importlib.util
+    return sys.version_info >= (3, 12) and all(importlib.util.find_spec(m) for m in ("moderndid", "pyfixest", "statsmodels"))
 
 
-@pytest.mark.skipif(not r_ready(), reason="Rscript with did, fixest, nanoparquet, dplyr not available")
+def run_estimation(panels, out):
+    return subprocess.run([sys.executable, str(HERE.parent / "estimate_effects.py"), str(panels), str(out)],
+                          capture_output=True, text=True, timeout=3600,
+                          env={**__import__("os").environ, "PYTHONPATH": __import__("os").pathsep.join(sys.path)})
+
+
+@pytest.mark.skipif(not est_ready(), reason="moderndid, pyfixest, statsmodels (Python >= 3.12) not available")
 def test_estimate_recovers_simulated_effect(tmp_path):
     import simulate_panels
     p = simulate_panels.simulate(tmp_path / "panels", effect=0.02, seed=3)
     out = tmp_path / "est"
-    r = subprocess.run(["Rscript", str(HERE.parent / "estimate_effects.R"), str(p), str(out)],
-                       capture_output=True, text=True, timeout=1800)
+    r = run_estimation(p, out)
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-3000:]
     est = pd.read_csv(out / "estimates.csv")
     cs = est[(est.estimator == "cs") & (est.control == "notyettreated") & (est.term == "overall")
@@ -321,7 +323,7 @@ def test_estimate_recovers_simulated_effect(tmp_path):
     assert bool(row.c1_pretrends) and bool(row.c2_placebo) and bool(row.c3_controls_versions)
 
 
-@pytest.mark.skipif(not r_ready(), reason="Rscript with did, fixest, nanoparquet, dplyr not available")
+@pytest.mark.skipif(not est_ready(), reason="moderndid, pyfixest, statsmodels (Python >= 3.12) not available")
 def test_estimate_stage_on_pipeline_panels(run):
     info = ae.stage_estimate(run)
     assert info["coefficients"] > 0
@@ -357,13 +359,12 @@ def test_project_lines_beyond_the_tile_edge_count(tmp_path):
     assert list(o.proj_year) == [2018, 0]
 
 
-@pytest.mark.skipif(not r_ready(), reason="Rscript with did, fixest, nanoparquet, dplyr not available")
+@pytest.mark.skipif(not est_ready(), reason="moderndid, pyfixest, statsmodels (Python >= 3.12) not available")
 def test_crop_mix_shift_labels_yield_composite(tmp_path):
     import simulate_panels
     p = simulate_panels.simulate(tmp_path / "panels", effect=0.05, seed=4, n=300, mix_shift=0.10)
     out = tmp_path / "est"
-    r = subprocess.run(["Rscript", str(HERE.parent / "estimate_effects.R"), str(p), str(out)],
-                       capture_output=True, text=True, timeout=1800)
+    r = run_estimation(p, out)
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-3000:]
     est = pd.read_csv(out / "estimates.csv")
     mix = est[(est.dataset == "E2e_admin") & (est.outcome == "share_maize") & (est.estimator == "cs")
@@ -394,3 +395,127 @@ def test_vigour_nodata_without_tag_is_nan(tmp_path, monkeypatch):
     job["inventory"] = ae.vigour_inventory()
     ae.ndvi_job(job)
     assert "ndvi_integral_s2_2020" in pd.read_parquet(tmp_path / "o.parquet")
+
+
+def test_ee_download_and_key_handling(tmp_path, monkeypatch, capsys):
+    import ee_ndvi_export as ex
+    key = tmp_path / "key.json"
+    key.write_text(json.dumps({"client_email": "sa@proj.iam.gserviceaccount.com", "private_key": "SECRET"}))
+    key.chmod(0o644)
+    email, _ = ex.key_email(key)
+    out = capsys.readouterr().out
+    assert email == "sa@proj.iam.gserviceaccount.com" and "chmod 600" in out and "SECRET" not in out
+
+    class Blob:
+        def __init__(self, name, data):
+            self.name, self.data, self.size = name, data, len(data)
+
+        def download_to_filename(self, f):
+            Path(f).write_bytes(self.data)
+
+    class Bucket:
+        def list_blobs(self, prefix=None, max_results=None):
+            blobs = [Blob("ae_ndvi/vigour_modis_2020-0000000000-0000000000.tif", b"abc"),
+                     Blob("ae_ndvi/vigour_modis_2020-0000000000-0000065536.tif", b"defg"), Blob("ae_ndvi/x.txt", b"")]
+            return [b for b in blobs if b.name.startswith(prefix or "")]
+    monkeypatch.setattr(ex, "gcs_bucket", lambda bucket, project, key_file: Bucket())
+    assert ex.download_exports("b", "ae_ndvi", str(key), tmp_path / "dl") == 2
+    assert ex.download_exports("b", "ae_ndvi", str(key), tmp_path / "dl") == 0       # same sizes: kept
+    assert sorted(f.name for f in (tmp_path / "dl").iterdir()) == ["vigour_modis_2020-0000000000-0000000000.tif",
+                                                                    "vigour_modis_2020-0000000000-0000065536.tif"]
+
+
+# --- regressions from the code review of v0.3 -----------------------------------------------------
+def test_cap_units_keeps_never_treated():
+    import estimate_effects as ef
+    d = pd.DataFrame({"id": np.arange(100), "g": np.r_[np.full(80, 2018), np.zeros(20)]})
+    kept = ef.cap_units(d, "g", 50, np.random.default_rng(0))
+    assert kept.id.nunique() == 50 and (kept.g == 0).sum() == 20 and (kept.g > 0).sum() == 30
+
+
+def test_conley_meat_equals_brute_force():
+    import estimate_effects as ef
+    rng = np.random.default_rng(1)
+    lat, lon = np.repeat(rng.uniform(0, 2, 40), 3), np.repeat(rng.uniform(0, 2, 40), 3)
+    s = rng.normal(size=(120, 2))
+    xyz = ef.unit_xyz(lat, lon)
+    dist = 2 * ef.R_EARTH_KM * np.arcsin(np.clip(np.linalg.norm(xyz[:, None] - xyz[None], axis=2) / 2, 0, 1))
+    brute = s.T @ (dist <= 60).astype(float) @ s
+    assert np.allclose(ef.conley_meat(s, lat, lon, 60), brute)
+
+
+def test_gate_v_placebo_without_estimates_is_not_a_pass(tmp_path):
+    import estimate_effects as ef
+    cfg = {**ef.DEFAULTS, "primary_spec": "s"}
+    base = dict(dataset="E2d_vigour", crop=None, spec="s", estimator="cs", control="notyettreated", term="overall",
+                se=0.01, n=10, note=None)
+    est = pd.DataFrame([dict(base, outcome="ndvi_integral", estimate=0.1, p=0.01, error=None),
+                        dict(base, outcome="ndvi_dry_integral", estimate=np.nan, p=np.nan, error="failed"),
+                        dict(base, outcome="ndvi_noncrop_integral", estimate=np.nan, p=np.nan, error="failed")])
+    g = ef.gate_v(est, tmp_path / "none.csv", cfg)
+    c3 = g[g.criterion.str.startswith("3")].iloc[0]
+    assert c3["pass"] is None and not g[g.criterion == "Gate V"]["pass"].iloc[0]
+
+
+def test_gate_c_empty_has_columns(tmp_path):
+    import estimate_effects as ef
+    est = pd.DataFrame(columns=ef.COLUMNS)
+    g = ef.gate_c(est, {**ef.DEFAULTS, "primary_spec": "s"})
+    g.to_csv(tmp_path / "g.csv", index=False)
+    assert pd.read_csv(tmp_path / "g.csv").empty
+
+
+@pytest.mark.skipif(not est_ready(), reason="moderndid, pyfixest, statsmodels (Python >= 3.12) not available")
+def test_longdiff_uses_covariates_present_in_each_dataset():
+    import estimate_effects as ef
+    rng = np.random.default_rng(2)
+    n = 300
+    cells = pd.DataFrame({"dataset": "E1_cells", "crop": None, "region": rng.choice(["A", "B"], n),
+                          "epoch": "2015-2020", "lat": rng.uniform(0, 5, n), "lon": rng.uniform(0, 5, n), "w": 1.0,
+                          "d_access__s": rng.uniform(0, 1, n), "d_rain": rng.normal(size=n)})
+    cells["d_y"] = 0.5 * cells["d_access__s"] + rng.normal(0, 0.05, n)
+    admin = cells.drop(columns="d_rain").assign(dataset="E2a_admin", crop="Maize")
+    rows = ef.run_longdiff(pd.concat([cells, admin], ignore_index=True), {**ef.DEFAULTS, "specs": ["s"]})
+    r = pd.DataFrame(rows)
+    assert r.error.isna().all(), r.error.tolist()
+    assert np.allclose(r.estimate, 0.5, atol=0.05)
+
+
+def test_ndvi_rearmed_when_exports_arrive(tmp_path, monkeypatch):
+    ctx = {"work": tmp_path}
+    (tmp_path / "_done").mkdir()
+    for s in ae.STAGES:
+        (tmp_path / "_done" / s).write_text(json.dumps({"sensors": {}} if s == "ndvi" else {}))
+    monkeypatch.setattr(ae, "NDVI_GCS_BUCKET", None)
+    monkeypatch.setattr(ae, "vigour_inventory", lambda: {})
+    ae.rearm_ndvi(ctx)
+    assert (tmp_path / "_done" / "ndvi").exists()                     # nothing new: left done
+    monkeypatch.setattr(ae, "vigour_inventory", lambda: {"modis": [2020]})
+    ae.rearm_ndvi(ctx)
+    after = ae.STAGES[ae.STAGES.index("ndvi"):]
+    assert not any((tmp_path / "_done" / s).exists() for s in after)
+    assert (tmp_path / "_done" / "cropmix").exists()
+
+
+def test_fetch_vigour_installs_storage_when_google_is_missing(tmp_path, monkeypatch):
+    import importlib.util
+    import ee_ndvi_export
+    real = importlib.util.find_spec
+
+    def find_spec(name, *a):
+        if name.startswith("google"):
+            raise ModuleNotFoundError("No module named 'google'")
+        return real(name, *a)
+    calls = []
+    monkeypatch.setattr(importlib.util, "find_spec", find_spec)
+    monkeypatch.setattr(ae, "pip_into_pylib", lambda lib, specs, deps=True: calls.append(specs))
+    monkeypatch.setattr(ee_ndvi_export, "download_exports", lambda *a, **k: 0)
+    monkeypatch.setattr(ae, "NDVI_GCS_BUCKET", "bucket")
+    ae.fetch_vigour_exports({"work": tmp_path})
+    assert calls == [["google-cloud-storage"]]
+
+
+def test_ee_export_refuses_drive_with_service_account(tmp_path):
+    import ee_ndvi_export as ex
+    with pytest.raises(SystemExit, match="service account"):
+        ex.main(["--to-drive", "--key-file", str(tmp_path / "k.json")])

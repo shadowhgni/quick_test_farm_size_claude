@@ -185,7 +185,8 @@ dose_estimate <- function(d, yname, gname, dname, meta) {
 
 # --- long differences (E3): d_outcome on access gain, region effects, Conley errors ---------------
 ld_estimate <- function(d, yname, xname, meta, conley_km = cfg$conley_km) {
-  covs <- intersect(c("d_rain", "d_logpop", "d_conflict"), names(d))
+  covs <- intersect(c("d_rain", "d_logpop", "d_conflict"), names(d)) |>
+    Filter(f = \(v) any(!is.na(d[[v]])))     # pooled files: all-NA columns for datasets without them
   rhs <- paste(c(xname, covs), collapse = " + ")
   m <- fixest::feols(stats::as.formula(paste0(yname, " ~ ", rhs, " | region^epoch")), data = d,
                      weights = ~w, vcov = fixest::conley(cutoff = conley_km),

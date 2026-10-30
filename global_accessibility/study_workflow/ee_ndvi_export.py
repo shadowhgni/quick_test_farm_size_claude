@@ -5,16 +5,24 @@ Google Earth Engine and exported as one GeoTIFF per sensor and year on the 30 ar
 global_accessibility_v3.py (the grid of access_effects_v01.py).
 
 NOT TESTED against Earth Engine in development (no Earth Engine account there): run --dry-run first; it
-checks every asset and prints the band names before any export starts.
+checks the login, every asset, the band names and the bucket before any export starts.
 
-    pip install earthengine-api
-    earthengine authenticate                    # once (opens a link; paste the code back)
-    python ee_ndvi_export.py --project <your-cloud-project> --dry-run
-    python ee_ndvi_export.py --project <your-cloud-project> --sensor modis --years 2001-2024
-    python ee_ndvi_export.py --project <your-cloud-project> --sensor s2 --years 2017-2024
+Login: a service-account key (JSON) given with --key-file or the environment variable GEE_KEY_FILE (never
+printed, never copied; keep it outside this folder with chmod 600). Without a key, the user credentials of
+`earthengine authenticate` are used. The service account needs the roles Earth Engine Resource Writer and
+Service Usage Consumer on the project, and Storage Object Admin on the bucket.
 
-Exports go to Google Drive, folder --folder (default "ae_ndvi"), as vigour_<sensor>_<year>*.tif (Earth Engine
-splits large images into several files). Cells without a value hold -9999. Copy them to NDVI_DIR of access_effects_v01.py (default ./ndvi_exports).
+    pip install earthengine-api google-cloud-storage
+    export GEE_KEY_FILE=/mnt/users/dhougni/post-harvest-aidi-field-mgt-XXXXXXXX.json
+    python ee_ndvi_export.py --bucket <bucket> --dry-run
+    python ee_ndvi_export.py --bucket <bucket> --sensor modis --years 2001-2024
+    python ee_ndvi_export.py --bucket <bucket> --sensor s2 --years 2017-2024
+    python ee_ndvi_export.py --bucket <bucket> --download ndvi_exports     # when the tasks have finished
+
+Exports go to gs://<bucket>/<prefix>/vigour_<sensor>_<year>*.tif (prefix default "ae_ndvi"; Earth Engine splits
+large images into several files), or to Google Drive with --to-drive. Cells without a value hold -9999 (also
+written as the GeoTIFF nodata value). --download copies them to NDVI_DIR of access_effects_v01.py (default
+./ndvi_exports); stage ndvi can also fetch them itself (NDVI_GCS_BUCKET).
 
 Bands, in this order (VIGOUR_BANDS of access_effects_v01.py):
     1 ndvi_integral          sum over the season months of the monthly mean NDVI
@@ -32,7 +40,11 @@ cover 2000 <= 10%; irrigated (20) and tree/orchard (12) cropland are excluded. a
 GACED30 and AFCD stable-cropland filter on the cells.
 """
 import argparse
+import json
+import os
+import stat
 import sys
+from pathlib import Path
 
 GRID_RES = 1 / 120                                   # 30 arc-seconds
 GRID_TRANSFORM = [GRID_RES, 0, -180.0, 0, -GRID_RES, 85.0]   # origin of the global_accessibility_v3.py grid
@@ -54,6 +66,61 @@ NODATA = -9999.0                                     # VIGOUR_NODATA of access_e
 S2_SCALE = 100                                       # metres at which Sentinel-2 monthly composites are computed
 
 
+DEFAULT_PROJECT = "post-harvest-aidi-field-mgt"
+DEFAULT_PREFIX = "ae_ndvi"
+
+
+def key_email(key_file):
+    """client_email of a service-account key file (the key itself is never printed). Warns when the file
+    can be read by other users."""
+    key_file = Path(key_file).expanduser()
+    if not key_file.exists():
+        sys.exit(f"key file not found: {key_file}")
+    mode = key_file.stat().st_mode
+    if mode & (stat.S_IRGRP | stat.S_IROTH):
+        print(f"WARNING: {key_file} is readable by other users; run: chmod 600 {key_file}")
+    return json.loads(key_file.read_text())["client_email"], key_file
+
+
+def ee_init(project, key_file):
+    import ee
+    if key_file:
+        email, kf = key_email(key_file)
+        ee.Initialize(credentials=ee.ServiceAccountCredentials(email, str(kf)), project=project)
+        print(f"Earth Engine: service account {email}, project {project}")
+    else:
+        ee.Initialize(project=project)
+        print(f"Earth Engine: stored user credentials, project {project}")
+    return ee
+
+
+def gcs_bucket(bucket, project, key_file):
+    from google.cloud import storage
+    client = storage.Client.from_service_account_json(str(Path(key_file).expanduser()), project=project) \
+        if key_file else storage.Client(project=project)
+    return client.bucket(bucket)
+
+
+def download_exports(bucket, prefix, key_file, dest, project=DEFAULT_PROJECT, log=print):
+    """Copy gs://bucket/prefix/vigour_*.tif to dest (files already there with the same size are kept)."""
+    dest = Path(dest)
+    dest.mkdir(parents=True, exist_ok=True)
+    b = gcs_bucket(bucket, project, key_file)
+    n = 0
+    for blob in b.list_blobs(prefix=f"{prefix.rstrip('/')}/vigour_"):
+        if not blob.name.endswith(".tif"):
+            continue
+        out = dest / Path(blob.name).name
+        if out.exists() and out.stat().st_size == blob.size:
+            continue
+        tmp = out.with_name(out.name + ".part")
+        blob.download_to_filename(str(tmp))
+        tmp.replace(out)
+        n += 1
+    log(f"downloaded {n} export files from gs://{bucket}/{prefix} to {dest}")
+    return n
+
+
 def parse_years(text):
     a, _, b = text.partition("-")
     return list(range(int(a), int(b or a) + 1))
@@ -61,15 +128,36 @@ def parse_years(text):
 
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    p.add_argument("--project", required=True, help="Google Cloud project registered for Earth Engine")
+    p.add_argument("--project", default=DEFAULT_PROJECT, help="Google Cloud project registered for Earth Engine")
+    p.add_argument("--key-file", default=os.environ.get("GEE_KEY_FILE"),
+                   help="service-account key JSON (default: environment variable GEE_KEY_FILE)")
+    p.add_argument("--bucket", help="Cloud Storage bucket for the exports")
+    p.add_argument("--prefix", default=DEFAULT_PREFIX, help="folder in the bucket (or Drive folder)")
+    p.add_argument("--to-drive", action="store_true", help="export to Google Drive instead of Cloud Storage")
     p.add_argument("--sensor", choices=["modis", "s2"], default="modis")
     p.add_argument("--years", default="2001-2024")
-    p.add_argument("--folder", default="ae_ndvi")
     p.add_argument("--bbox", type=float, nargs=4, default=SSA_BBOX, metavar=("W", "S", "E", "N"))
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--download", metavar="DIR", help="only download finished exports from the bucket to DIR")
     a = p.parse_args(argv)
-    import ee
-    ee.Initialize(project=a.project)
+    if not a.to_drive and not a.bucket:
+        sys.exit("give --bucket <name> (Cloud Storage) or --to-drive")
+    if a.download and not a.bucket:
+        sys.exit("--download reads from Cloud Storage: give --bucket <name>")
+    if a.to_drive and a.key_file and not a.download:
+        # a service account has its own Drive, which the user cannot open (and often no Drive quota)
+        sys.exit("--to-drive with a service-account key would export to the service account's own Drive. "
+                 "Use --bucket, or log in as yourself (earthengine authenticate) and pass --key-file ''")
+    if a.download:
+        download_exports(a.bucket, a.prefix, a.key_file, a.download, a.project)
+        return
+    ee = ee_init(a.project, a.key_file)
+    if not a.to_drive:
+        try:
+            next(iter(gcs_bucket(a.bucket, a.project, a.key_file).list_blobs(max_results=1)), None)
+            print(f"bucket gs://{a.bucket}: reachable")
+        except Exception as e:                       # noqa: BLE001 - shown to the user, then stop
+            sys.exit(f"bucket gs://{a.bucket} not usable with these credentials: {e}")
     region = ee.Geometry.Rectangle(list(a.bbox), "EPSG:4326", False)
 
     # --- assets and band names (checked first) --------------------------------------------------
@@ -86,7 +174,8 @@ def main(argv=None):
     if a.sensor == "s2":
         print("Sentinel-2 bands:", ee.ImageCollection(ASSETS["s2"]).first().bandNames().getInfo()[:13])
     years = parse_years(a.years)
-    print(f"sensor {a.sensor}, years {years[0]}-{years[-1]}, bbox {a.bbox}, Drive folder {a.folder}")
+    where = f"Drive folder {a.prefix}" if a.to_drive else f"gs://{a.bucket}/{a.prefix}/"
+    print(f"sensor {a.sensor}, years {years[0]}-{years[-1]}, bbox {a.bbox}, exports to {where}")
 
     # --- masks at 30 m ----------------------------------------------------------------------------
     by_year = {1999 + i + 1: glc.select(b) for i, b in enumerate(glc_bands)}
@@ -183,9 +272,12 @@ def main(argv=None):
                                              "ndvi_dry_integral"]), noncrop, crop_frac_cell,
                            crop_part.select("n_obs")).toFloat().unmask(NODATA)    # masked -> NODATA, not 0
         name = f"vigour_{a.sensor}_{y}"
-        task = ee.batch.Export.image.toDrive(image=img, description=name, folder=a.folder, fileNamePrefix=name,
-                                             region=region, crs="EPSG:4326", crsTransform=GRID_TRANSFORM,
-                                             maxPixels=10 ** 13, fileFormat="GeoTIFF")
+        common = dict(image=img, description=name, region=region, crs="EPSG:4326", crsTransform=GRID_TRANSFORM,
+                      maxPixels=10 ** 13, fileFormat="GeoTIFF", formatOptions={"noData": NODATA})
+        if a.to_drive:
+            task = ee.batch.Export.image.toDrive(folder=a.prefix, fileNamePrefix=name, **common)
+        else:
+            task = ee.batch.Export.image.toCloudStorage(bucket=a.bucket, fileNamePrefix=f"{a.prefix}/{name}", **common)
         task.start()
         print(f"started {name} (task {task.id}); follow it at https://code.earthengine.google.com/tasks")
 
