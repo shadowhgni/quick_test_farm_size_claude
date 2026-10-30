@@ -394,6 +394,7 @@
   "events",
   "friction",
   "traveltime",
+  "roadonly",
   "outputs",
   "store",
   "compare",

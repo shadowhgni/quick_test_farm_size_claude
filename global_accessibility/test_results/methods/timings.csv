@@ -1,34 +1,35 @@
 step,seconds,rss_gb
-stage download,109.0,0.54
-Weiss et al. 2015 friction surface,0.1,0.56
-land cover (WorldCover 2021),2.0,0.67
-slope (Copernicus GLO-90),3.0,1.1
-countries and African borders,0.2,1.12
-settlements GHSL 2015,0.8,1.14
-settlements GHSL 2020,0.7,1.14
-settlements GHSL 2025,0.7,1.14
-stage grids,7.6,1.14
-Microsoft ML roads,23.2,3.2
-stage roads,103.8,3.19
-stage events,1.2,3.32
+stage download,417.3,0.54
+Weiss et al. 2015 friction surface,0.1,0.55
+land cover (WorldCover 2021),1.7,0.67
+slope (Copernicus GLO-90),2.6,1.05
+countries and African borders,0.3,1.07
+settlements GHSL 2015,1.1,1.09
+settlements GHSL 2020,1.0,1.09
+settlements GHSL 2025,1.0,1.09
+stage grids,7.9,1.09
+Microsoft ML roads,45.7,3.15
+stage roads,167.4,3.15
+stage events,1.6,3.26
 stage friction,0.2,3.26
-stage traveltime,6.0,3.24
-COG travel time 2015 1km,0.9,3.25
-COG travel time 2020 1km,0.9,3.25
-COG travel time 2026 1km,0.9,3.26
-COG change 2020-2015 1km,0.7,3.26
-COG change 2026-2020 1km,0.7,3.26
-COG change 2026-2015 1km,0.8,3.27
-COG travel time 2015 10km,0.1,3.27
-COG travel time 2020 10km,0.1,3.27
-COG travel time 2026 10km,0.1,3.27
-COG change 2020-2015 10km,0.1,3.27
-COG change 2026-2020 10km,0.1,3.27
-COG change 2026-2015 10km,0.1,3.27
-PNG maps,12.8,3.26
-summary tables,3.9,3.24
-stage outputs,22.5,3.24
-stage store,2.8,3.24
-stage compare,0.8,3.24
-stage validate,13.0,3.25
-stage sensitivity,4.7,3.24
+stage traveltime,8.9,3.24
+stage roadonly,0.0,3.24
+COG travel time 2015 1km,1.4,3.25
+COG travel time 2020 1km,1.3,3.26
+COG travel time 2026 1km,1.4,3.26
+COG change 2020-2015 1km,1.2,3.26
+COG change 2026-2020 1km,1.0,3.26
+COG change 2026-2015 1km,1.3,3.26
+COG travel time 2015 10km,0.2,3.26
+COG travel time 2020 10km,0.2,3.26
+COG travel time 2026 10km,0.2,3.26
+COG change 2020-2015 10km,0.2,3.26
+COG change 2026-2020 10km,0.2,3.26
+COG change 2026-2015 10km,0.2,3.26
+PNG maps,23.8,3.25
+summary tables,9.8,3.18
+stage outputs,42.9,3.18
+stage store,4.6,3.18
+stage compare,1.5,3.18
+stage validate,13.5,3.18
+stage sensitivity,8.2,3.18
