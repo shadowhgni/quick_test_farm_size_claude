@@ -365,6 +365,8 @@ def main(argv=None):
     off_sea = ee.Image.cat([w.And(bits.rightShift(k % 12).bitwiseAnd(1).Not()) for k, w in enumerate(in_win)])
 
     # --- monthly vegetation indices, on the fine grid -----------------------------------------------------
+    # the monthly images are cast to plain float too: a collection must have one band type (MODIS NDVI x 0.0001
+    # is typed Float<-3.2768, 3.2767>, which Earth Engine does not merge with Float)
     blank = ee.Image.constant([0, 0]).rename(["ndvi", "evi"]).toFloat().updateMask(ee.Image.constant(0))
 
     def modis_month(y, m):
@@ -373,7 +375,7 @@ def main(argv=None):
         def prep(img):
             ok = img.select("SummaryQA").lte(1)
             return ee.Image.cat(img.select("NDVI").multiply(0.0001).rename("ndvi"),
-                                img.select("EVI").multiply(0.0001).rename("evi")).updateMask(ok)
+                                img.select("EVI").multiply(0.0001).rename("evi")).updateMask(ok).toFloat()
         # the blank image keeps the bands when a month has no composite (start or end of the record)
         col = modis.filterDate(start_d, start_d.advance(1, "month")).map(prep).merge(ee.ImageCollection([blank]))
         return col.mean().reproject(**to_fine)
@@ -388,7 +390,7 @@ def main(argv=None):
             b2, b4, b8 = [img.select(b).multiply(0.0001) for b in ("B2", "B4", "B8")]
             ndvi = b8.subtract(b4).divide(b8.add(b4))
             evi = b8.subtract(b4).multiply(2.5).divide(b8.add(b4.multiply(6)).subtract(b2.multiply(7.5)).add(1))
-            return ee.Image.cat(ndvi.rename("ndvi"), evi.rename("evi")).updateMask(ok)
+            return ee.Image.cat(ndvi.rename("ndvi"), evi.rename("evi")).updateMask(ok).toFloat()
         col = ee.ImageCollection(ASSETS["s2"]).filterDate(start_d, start_d.advance(1, "month")).filterBounds(region) \
             .linkCollection(cs, ["cs_cdf"]).map(prep).merge(ee.ImageCollection([blank]))
         return col.median().setDefaultProjection(ee.Projection("EPSG:4326").atScale(10)) \
