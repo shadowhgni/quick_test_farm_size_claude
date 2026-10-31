@@ -93,7 +93,7 @@ CROPLAND_YEARS = range(2014, 2025)  # cropland years read (conversion needs the 
 STABLE_CROP_FROM = 2015             # stable cropland = cropland in every year from 2015 (yield weights, design)
 CONVERSION_WINDOW = 2               # conversion: loss in t, not cropland in t-1, cropland in one of t..t+2
 LANDUSE_STRIP_ROWS = 1000           # Hansen rows read at a time (0.25 degree)
-LANDUSE_TASK_GB = 6
+LANDUSE_TASK_GB = 10                # peak per worker on an all-land 10-degree tile (measured ~9.6 GB)
 
 # --- land-cover cross-checks and forest replacement (revision 2; stage landcover_alt) -----------------
 AFCD_URL = "https://zenodo.org/api/records/14920706/files/AFCD_{y}.tif/content"   # Africa cropland 2000-2022,
@@ -110,7 +110,7 @@ TMF_ENABLED = True                  # each revision-2 layer can be switched off;
 GLC_ENABLED = True
 MASOLELE_ENABLED = True
 DESCALS_ENABLED = True
-LANDCOVER_ALT_TASK_GB = 10
+LANDCOVER_ALT_TASK_GB = 18          # peak per worker on an all-land tile (measured ~17.5 GB with the GDAL cache)
 REPL_MIN_LOSS_KM2 = 0.01            # E1c shares only where >= 0.01 km2 of forest was lost (draft, to approve)
 E2D_MIN_STABLE = 0.5                # E2d cells: stable rainfed cropland >= 50% of the cell,
 E2D_MAX_TREECOVER = 10              # tree cover 2000 on it <= 10%, irrigated <= 5% (drafts, to approve)
@@ -388,6 +388,9 @@ os.environ.setdefault("CPL_VSIL_CURL_ALLOWED_EXTENSIONS", ".tif,.TIF")
 os.environ.setdefault("GDAL_HTTP_MAX_RETRY", "6")
 os.environ.setdefault("GDAL_HTTP_RETRY_DELAY", "3")
 os.environ.setdefault("GDAL_HTTP_USERAGENT", USER_AGENT)
+# GDAL's block cache defaults to 5% of RAM per process: with dozens of workers reading 40000-pixel Hansen rows
+# that is several GB each, outside the worker memory budget
+os.environ.setdefault("GDAL_CACHEMAX", "256")
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ.setdefault(_v, "1")
 bootstrap(_WD)
@@ -1438,14 +1441,17 @@ def stage_landcover_alt(ctx):
             log(f"landcover_alt {t['tile']}: Hansen tile missing (run stage landuse first); tile skipped")
             continue
         tmf = {}
-        if TMF_ENABLED and -20 <= tn <= 30:
+        # TMF tiles exist for the humid tropics only (tile rows 20N to 10S here); the JRC server answers
+        # HTTP 500, not 404, for a tile it does not have, so a failure cannot be told apart from an outage:
+        # it is logged, and TMF (an E1c cross-check only) is missing for that tile
+        if TMF_ENABLED and -10 <= tn <= 20:
             try:
-                tf_ = download(tmf_tile_url(tw, tn), dl / "tmf" / f"TMF_TransitionMap_Subtypes_{t['tile']}.tif", sess)
+                tf_ = download(tmf_tile_url(tw, tn), dl / "tmf" / f"TMF_TransitionMap_Subtypes_{t['tile']}.tif", sess,
+                               retries=2)
                 tmf = file_bounds([tf_])
             except RemoteUnavailable as e:
-                if not not_found(e):
-                    raise                      # never cache a tile with TMF silently missing
-                tmf = {}                       # outside the humid tropics there is no tile
+                log(f"landcover_alt {t['tile']}: no TMF tile ({str(e)[:120]}); the TMF cross-check is missing here")
+                tmf = {}
         crop_sources = gaced_index(ctx, sess, (t["w"], t["s"], t["e"], t["n"])) if CROPLAND_SOURCE == "gaced30" \
             else glad_annual_sources()
         jobs.append({"tile": t["tile"], "win": t["win"], "treatment": str(tf), **files, "crop_sources": crop_sources,
@@ -1717,6 +1723,8 @@ def stage_projects(ctx):
     try:
         road_projects(ctx, sess)
     except RemoteUnavailable as e:
+        if not not_found(e):
+            raise                              # a server failure must stop the stage (rerun resumes)
         log(f"projects: GeoGCDF v3 not available ({str(e)[:200]}); dated-project checks skipped")
         return {"projects": 0}
     jobs = []
@@ -1973,6 +1981,8 @@ def stage_admin(ctx):
         csv = fetch_github_file(HARVESTSTAT_CSV_URL, ctx["dl"] / "harveststat" / Path(HARVESTSTAT_CSV_URL).name, sess)
         gpkg = fetch_github_file(HARVESTSTAT_GPKG_URL, ctx["dl"] / "harveststat" / Path(HARVESTSTAT_GPKG_URL).name, sess)
     except RemoteUnavailable as e:
+        if not not_found(e):
+            raise                              # a server failure must stop the stage (rerun resumes)
         log(f"admin: HarvestStat not available ({str(e)[:200]}); E2a skipped")
         return {"units": 0}
     units = gpd.read_file(gpkg).to_crs(4326)
@@ -2211,6 +2221,8 @@ def stage_lsms(ctx):
     try:
         plots = lsms_plots(ctx, sess)
     except (RemoteUnavailable, ImportError) as e:
+        if isinstance(e, RemoteUnavailable) and not not_found(e):
+            raise                              # a server failure must stop the stage (rerun resumes)
         log(f"lsms: harmonised panel not available ({str(e)[:200]}); E2b skipped")
         return {"ea": 0}
     pts = ea_points(plots)
