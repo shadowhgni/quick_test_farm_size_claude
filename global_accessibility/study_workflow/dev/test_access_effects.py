@@ -226,6 +226,12 @@ def run(tmp_path_factory):
     mp.setattr(ae, "TMF_ENABLED", False)
     mp.setattr(ae, "NDVI_DIR", str(src / "ndvi"))
     ctx = ae.make_ctx(root / "work", root / "results", BBOX)
+    # a tile with no Sub-Saharan cell (ocean, North Africa): its treatment file is empty and every stage must
+    # skip it (a real run on the HPC has such tiles)
+    empty = ae.treatment_job({"tile": "empty", "win": ctx["tiles"][0]["win"], "ga_results": [str(STORE)],
+                              "ssa": [], "series": {}, "out": str(root / "work" / "treatment" / "empty.parquet")})
+    assert empty["cells"] == 0
+    ctx["tiles"].append({**ctx["tiles"][0], "tile": "empty"})
     want = [s for s in ae.STAGES if s not in ("estimate", "gate_c")]
     ae.run_stages(ctx, want)
     yield ctx
@@ -565,3 +571,9 @@ def test_ee_download_detects_changed_content(tmp_path):
         def __init__(self, data):
             self.md5_hash = base64.b64encode(hashlib.md5(data).digest()).decode()
     assert ex.same_file(f, Blob(b"abcd")) and not ex.same_file(f, Blob(b"abce"))
+
+
+def test_sparse_travel_time_years_warn():
+    assert ae.warn_sparse_years({("roadonly", "cities_11"): ("tt", [2015, 2020, 2026])}) == [5, 6]
+    assert ae.warn_sparse_years({("roadonly", "cities_11"): ("tt", list(range(2015, 2027)))}) == []
+    assert "not annual" in ae.LOG[-1]

@@ -767,6 +767,25 @@ def treatment_plan(store):
     return series
 
 
+def warn_sparse_years(series):
+    """Warn when the travel-time reference years are not annual (returns the gaps found)."""
+    gaps = sorted({b - a for _, ys in series.values() for a, b in zip(ys, ys[1:]) if b - a > 1})
+    if gaps:
+        log(f"WARNING: the travel-time years are {gaps} years apart, not annual. An access gain is dated to the "
+            "first reference year that shows it, so roads opened in different years share one cohort and the "
+            "event-study pre-periods (Gate C criterion 1) include treated years. For E1 and E2 event studies, "
+            "run global_accessibility_v3.py with --years 2015 2016 ... 2026 --weiss-years none and list that run "
+            "first in GA_RESULTS")
+    return gaps
+
+
+def treatment_file(work, t):
+    """work/treatment/<tile>.parquet, or None when it is missing or has no cells (a tile outside Sub-Saharan
+    Africa): every later stage skips such tiles."""
+    tf = Path(work) / "treatment" / f"{t['tile']}.parquet"
+    return tf if tf.exists() and pq.read_metadata(tf).num_rows > 0 else None
+
+
 def treatment_job(job):
     """One tile -> work/treatment/<tile>.parquet: one row per land cell of Sub-Saharan Africa."""
     out = Path(job["out"])
@@ -778,7 +797,7 @@ def treatment_job(job):
     cid = store.read("countries", None, None, job["win"]).astype(np.int32)
     keep = np.isin(cid, list(job["ssa"]))
     if not keep.any():
-        write_parquet(pd.DataFrame({"cell": pd.Series([], np.int64)}), out)
+        write_parquet(pd.DataFrame({"cell": pd.Series([], dtype=np.int64)}), out)
         return {"tile": job["tile"], "cells": 0}
     rows, cols = np.nonzero(keep)
     d = {"cell": ((rows + r0).astype(np.int64) * grid.width + cols + c0),
@@ -837,6 +856,7 @@ def stage_treatment(ctx):
     ssa, _ = ssa_country_ids(store)
     for (ver, layer), (name, ys) in series.items():
         log(f"treatment {ver} {layer}: years {ys}")
+    warn_sparse_years(series)
     jobs = [{"tile": t["tile"], "win": t["win"], "ga_results": GA_RESULTS, "ssa": sorted(ssa),
              "series": series, "out": str(ctx["work"] / "treatment" / f"{t['tile']}.parquet")}
             for t in ctx["tiles"]]
@@ -1062,8 +1082,8 @@ def stage_landuse(ctx):
     jobs = []
     glad = glad_annual_sources() if CROPLAND_SOURCE == "glad_annual" else None
     for t in ctx["tiles"]:
-        tf = ctx["work"] / "treatment" / f"{t['tile']}.parquet"
-        if not tf.exists() or pq.read_metadata(tf).num_rows == 0:
+        tf = treatment_file(ctx["work"], t)
+        if tf is None:
             continue
         w, n = int(math.floor(t["w"] / 10) * 10), int(math.ceil(t["n"] / 10) * 10)
         hid = hansen_tile_id(w, n)
@@ -1363,8 +1383,8 @@ def stage_landcover_alt(ctx):
                              r"_Annual_V1\.1\.tif$"))
     jobs = []
     for t in ctx["tiles"]:
-        tf = ctx["work"] / "treatment" / f"{t['tile']}.parquet"
-        if not tf.exists() or pq.read_metadata(tf).num_rows == 0:
+        tf = treatment_file(ctx["work"], t)
+        if tf is None:
             continue
         tw, tn = int(math.floor(t["w"] / 10) * 10), int(math.ceil(t["n"] / 10) * 10)
         hid = hansen_tile_id(tw, tn)
@@ -1541,8 +1561,8 @@ def stage_covariates(ctx):
     conflict_events(ctx, sess)
     jobs = []
     for t in ctx["tiles"]:
-        tf = ctx["work"] / "treatment" / f"{t['tile']}.parquet"
-        if not tf.exists():
+        tf = treatment_file(ctx["work"], t)
+        if tf is None:
             continue
         transform, shape = tile_grid(ctx, t)
         jobs.append({"tile": t["tile"], "win": t["win"], "treatment": str(tf), "transform": transform,
@@ -1654,8 +1674,8 @@ def stage_projects(ctx):
     jobs = []
     halo = PROJECT_BUFFER_KM / 111.0 + 0.05
     for t in ctx["tiles"]:
-        tf = ctx["work"] / "treatment" / f"{t['tile']}.parquet"
-        if not tf.exists():
+        tf = treatment_file(ctx["work"], t)
+        if tf is None:
             continue
         transform, shape = tile_grid(ctx, t)
         jobs.append({"tile": t["tile"], "win": t["win"], "treatment": str(tf), "transform": transform,
@@ -1675,8 +1695,8 @@ def stage_gate_t(ctx):
     _, countries = ssa_country_ids(ctx["store"])
     iso = dict(zip(countries.cid, countries.iso3))
     for t in ctx["tiles"]:
-        tf = ctx["work"] / "treatment" / f"{t['tile']}.parquet"
-        if not tf.exists():
+        tf = treatment_file(ctx["work"], t)
+        if tf is None:
             continue
         cols = pq.read_schema(tf).names
         spec = PRIMARY_SPEC if f"ev_{PRIMARY_SPEC}" in cols else (spec_names(cols) or [None])[0]
@@ -1910,8 +1930,8 @@ def stage_admin(ctx):
     units.to_file(uf)
     jobs = []
     for t in ctx["tiles"]:
-        tf = work / "treatment" / f"{t['tile']}.parquet"
-        if not tf.exists():
+        tf = treatment_file(work, t)
+        if tf is None:
             continue
         transform, shape = tile_grid(ctx, t)
         jobs.append({"tile": t["tile"], "win": t["win"], "treatment": str(tf), "transform": transform,
@@ -2142,8 +2162,8 @@ def stage_lsms(ctx):
     write_parquet(pts, pf)
     jobs = []
     for t in ctx["tiles"]:
-        tf = ctx["work"] / "treatment" / f"{t['tile']}.parquet"
-        if tf.exists():
+        tf = treatment_file(ctx["work"], t)
+        if tf is not None:
             jobs.append({"tile": t["tile"], "treatment": str(tf), "points": str(pf),
                          "bounds": (t["w"], t["s"], t["e"], t["n"]),
                          "landuse": str(ctx["work"] / "landuse" / f"{t['tile']}.parquet")})
@@ -2278,8 +2298,8 @@ def stage_ndvi(ctx):
     log(f"ndvi: exports found {inv}")
     jobs = []
     for t in ctx["tiles"]:
-        tf = ctx["work"] / "treatment" / f"{t['tile']}.parquet"
-        if not tf.exists():
+        tf = treatment_file(ctx["work"], t)
+        if tf is None:
             continue
         transform, shape = tile_grid(ctx, t)
         jobs.append({"tile": t["tile"], "win": t["win"], "treatment": str(tf), "transform": transform,
@@ -2771,8 +2791,8 @@ def stage_panels(ctx):
     nt = max(1, E1_SAMPLE_TREATED // max(len(ctx["tiles"]), 1))
     nc = max(1, E1_SAMPLE_CONTROL // max(len(ctx["tiles"]), 1))
     for i, t in enumerate(ctx["tiles"]):
-        tf = work / "treatment" / f"{t['tile']}.parquet"
-        if not tf.exists():
+        tf = treatment_file(work, t)
+        if tf is None:
             continue
         if specs_avail is None:
             specs_avail = spec_names(pq.read_schema(tf).names)
@@ -3040,6 +3060,7 @@ def dry_run(ctx):
     log(f"GA runs: {json.dumps(store.runs, default=str)}")
     for (v, l), (n, ys) in series.items():
         log(f"treatment series {v} {l}: {ys}")
+    warn_sparse_years(series)
     log(f"road events (OSM) for reference years: {store.years('road_events')}")
     log(f"tiles: {len(ctx['tiles'])} ({', '.join(t['tile'] for t in ctx['tiles'][:12])}"
         f"{' ...' if len(ctx['tiles']) > 12 else ''})")
