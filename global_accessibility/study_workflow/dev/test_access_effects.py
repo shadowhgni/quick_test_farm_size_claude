@@ -18,6 +18,8 @@ sys.path.insert(0, str(HERE.parent))
 sys.path.insert(0, str(HERE))
 import access_effects_v01 as ae  # noqa: E402
 
+REAL_DOWNLOAD = ae.download         # the pipeline fixture replaces ae.download with local files
+
 import geopandas as gpd  # noqa: E402
 import rasterio  # noqa: E402
 from rasterio.transform import from_origin  # noqa: E402
@@ -200,7 +202,7 @@ def local_download(src):
         name = Path(url.split("/content")[0]).name.replace("%2B", "+") if "zenodo" in url else Path(url).name
         f = src / name
         if not f.exists():
-            raise ae.RemoteUnavailable(f"HTTP 404 for {url}")
+            raise ae.RemoteUnavailable(f"HTTP 404 for {url}", status=404)
         dest = Path(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
         if not dest.exists():
@@ -575,5 +577,86 @@ def test_ee_download_detects_changed_content(tmp_path):
 
 def test_sparse_travel_time_years_warn():
     assert ae.warn_sparse_years({("roadonly", "cities_11"): ("tt", [2015, 2020, 2026])}) == [5, 6]
-    assert ae.warn_sparse_years({("roadonly", "cities_11"): ("tt", list(range(2015, 2027)))}) == []
     assert "not annual" in ae.LOG[-1]
+    n = len(ae.LOG)
+    assert ae.warn_sparse_years({("roadonly", "cities_11"): ("tt", list(range(2015, 2027)))}) == []
+    assert len(ae.LOG) == n                                             # annual years: no warning
+
+
+# --- regressions from the review of the empty-tile fix ---------------------------------------------
+def test_treatment_file_missing_is_an_error_and_empty_is_skipped(tmp_path):
+    t = {"tile": "X"}
+    with pytest.raises(RuntimeError, match="run stage treatment first"):
+        ae.treatment_file(tmp_path, t)
+    ae.write_parquet(pd.DataFrame({"cell": pd.Series([], dtype=np.int64)}), ae.treatment_path(tmp_path, "X"))
+    assert ae.treatment_file(tmp_path, t) is None
+
+
+def test_treatment_cache_refuses_other_series(run):
+    sf = run["work"] / "treatment" / "_signature.json"
+    sig = json.loads(sf.read_text())
+    try:
+        sf.write_text(json.dumps({**sig, "series": {"roadonly_cities_11": ["x", [2015, 2016]]}}))
+        (run["work"] / "_done" / "treatment").unlink()
+        with pytest.raises(RuntimeError, match="new --work-dir"):
+            ae.run_stages(run, ["treatment"])
+    finally:
+        sf.write_text(json.dumps(sig))
+        ae.mark_done(run, "treatment")
+
+
+def test_panels_sample_budget_ignores_empty_tiles(run):
+    # the fixture has one real tile and one empty tile: the real tile gets the whole budget
+    s = json.loads((run["results"] / "tables" / "panels_summary.json").read_text())
+    assert s["e1_cells"] == 8000
+
+
+def test_on_lattice_tolerates_float_error():
+    assert ae.on_lattice(-8171.999999999999 / 120, 1 / 120) and not ae.on_lattice(0.5 / 120, 1 / 120)
+
+
+def test_admin_unit_key_with_blank_fields():
+    units = pd.DataFrame({"fnid": ["A", "B"], "uid": [1, 2], "lat": [0.0, 1.0], "lon": [0.0, 1.0],
+                          "country_code": ["NG", "NG"]})
+    hv = pd.DataFrame({"fnid": ["A", "A", "B", "B"], "product": ["Maize"] * 4, "season_name": ["Main"] * 4,
+                       "crop_production_system": [np.nan] * 4, "qc_flag": 0, "yield": 1.5, "area": 1.0,
+                       "production": 1.5, "harvest_year": [2016, 2017, 2016, 2017]})
+    a = ae.admin_panel(pd.DataFrame({"uid": [1, 2]}), hv, units)
+    assert a.groupby("id").fnid.nunique().max() == 1 and a["id"].nunique() == 2 and (a["id"] > 0).all()
+
+
+def test_download_completes_a_finished_part(tmp_path):
+    class R:
+        def __init__(self, status, headers=None):
+            self.status_code, self.headers = status, headers or {}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def close(self):
+            pass
+
+    class S:
+        def get(self, url, **k):
+            return R(416, {"Content-Range": "bytes */4"})
+    dest = tmp_path / "f.bin"
+    dest.with_name("f.bin.part").write_bytes(b"abcd")
+    assert REAL_DOWNLOAD("http://x/f.bin", dest, sess=S()).read_bytes() == b"abcd"
+
+
+def test_only_a_missing_file_is_skipped():
+    assert ae.not_found(ae.RemoteUnavailable("x", status=404))
+    assert not ae.not_found(ae.RemoteUnavailable("download failed after 5 attempts"))
+    assert not ae.not_found(ae.RemoteUnavailable("HTTP 403", status=403))
+
+
+def test_longdiff_only_when_treatment_not_annual(tmp_path):
+    import estimate_effects as ef
+    est = pd.DataFrame([dict(dataset="E1_cells", outcome="conv_share", crop=None, spec="s", estimator="longdiff",
+                             control="all", term="overall", estimate=0.4, se=0.1, p=0.001, n=100, error=None,
+                             note=None)], columns=ef.COLUMNS)
+    g = ef.gate_c_longdiff(est, {**ef.DEFAULTS, "primary_spec": "s"})
+    assert len(g) == 1 and not g.causal.iloc[0] and "not annual" in g.label.iloc[0] and g.significant_bh.iloc[0]

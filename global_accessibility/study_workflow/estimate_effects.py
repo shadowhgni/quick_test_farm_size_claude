@@ -48,7 +48,9 @@ DEFAULTS = {   # approved 2026-10-27 (revision 2 drafts marked in the study desi
     "max_units_cs": 200000,
     "max_units_sa": 100000,
     "composite_shift": 0.05, "gate_v_r": 0.3, "gate_v_min_n": 30, "gate_v_r_sensor": 0.8,
+    "annual_treatment": True,   # False: travel-time reference years not annual -> long differences only
 }
+LONGDIFF_ONLY = "long differences only: travel-time years not annual, so the event study is not identified"
 COLUMNS = ["dataset", "outcome", "crop", "spec", "estimator", "control", "term", "estimate", "se", "p", "n",
            "error", "note"]
 SHARE_OUTCOMES = ["share_maize", "share_cassava", "share_rice", "share_sorghum_millet", "share_cash",
@@ -435,6 +437,19 @@ def gate_c(est, cfg):
     return g
 
 
+def gate_c_longdiff(est, cfg):
+    """Gate C when only long differences exist: no criterion can be assessed, every result is an association."""
+    ld = est[(est.estimator == "longdiff") & (est.spec == cfg["primary_spec"]) & (est.term == "overall")]
+    g = pd.DataFrame({"dataset": ld.dataset, "outcome": ld.outcome, "crop": ld.crop, "effect": ld.estimate,
+                      "p": ld.p, "c1_pretrends": None, "c2_placebo": None, "c3_controls_versions": None,
+                      "c4_longdiff": None, "causal": False, "label": f"association ({LONGDIFF_ONLY})"},
+                     columns=GATE_C_COLUMNS).reset_index(drop=True)
+    if len(g):
+        g["q_bh"] = bh(g.p)
+        g["significant_bh"] = g.q_bh <= cfg["bh_q"]
+    return g
+
+
 def composite_label(gc_tab, est, cfg):
     if gc_tab.empty:
         return gc_tab
@@ -528,6 +543,11 @@ def main(panels_dir="ae_results/panels", out_dir="ae_results/estimates", cfg_fil
     P = {n: read_panel(panels_dir, n) for n in ("e1_cells", "e1c_replacement", "e2a_admin", "e2b_ea", "e2d_vigour",
                                                  "e2e_admin", "e2e_ea", "e3_longdiff")}
     rows = []
+    if not cfg["annual_treatment"]:
+        # cohorts dated to 5-6-year reference intervals put treated years in the pre-periods and treated
+        # units among the controls: the event-study estimators would report artefacts, so only E3 runs
+        log("event studies skipped: the travel-time reference years are not annual (long differences only)")
+        P = {n: (v if n == "e3_longdiff" else None) for n, v in P.items()}
     rows += run_dataset(P["e1_cells"], "E1_cells", ["conv_share", "conv_annual_share", "conv_tree_share",
                                                     "newcrop_share", "loss_share"], cfg, rng)
     rows += run_dataset(P["e1c_replacement"], "E1c_replacement", ["repl_annual", "repl_tree", "repl_pasture",
@@ -541,7 +561,8 @@ def main(panels_dir="ae_results/panels", out_dir="ae_results/estimates", cfg_fil
     rows += run_longdiff(P["e3_longdiff"], cfg)
     est = pd.DataFrame(rows, columns=COLUMNS)
     est.to_csv(out / "estimates.csv", index=False)
-    gc_tab = composite_label(gate_c(est, cfg), est, cfg) if len(est) else pd.DataFrame(columns=GATE_C_COLUMNS)
+    gate = gate_c if cfg["annual_treatment"] else gate_c_longdiff
+    gc_tab = composite_label(gate(est, cfg), est, cfg) if len(est) else pd.DataFrame(columns=GATE_C_COLUMNS)
     gc_tab.to_csv(out / "gate_c.csv", index=False)
     gate_v(est, Path(panels_dir) / "gate_v_inputs.csv", cfg).to_csv(out / "gate_v.csv", index=False)
     (out / "versions.txt").write_text(json.dumps(versions(), indent=1))

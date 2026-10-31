@@ -15,7 +15,10 @@ from the travel-time store of `global_accessibility_v3.py`.
 ## Run on the HPC
 
 1. Finish a `global_accessibility_v3.py` run (stage `store`). For annual treatment, run it with
-   `--years 2015 2016 … 2026 --weiss-years none`. The default 2015/2020/2026 run gives the long-term level.
+   `--years 2015 2016 … 2026 --weiss-years none`. The default 2015/2020/2026 run gives the long-term level only.
+   With it, an access gain can only be dated to a reference year, so stage `estimate` then runs the long
+   differences (E3) only, and Gate C labels every result an association. The event studies (E1, E2a, E2b, E2d,
+   E2e) need the annual run.
 2. Put this folder next to the GA results and set `GA_RESULTS` at the top of `access_effects_v01.py`.
    If you have both an annual run and a three-year run, list the annual run first.
 3. Stage `estimate` needs Python 3.12 or later (`moderndid` requires it). On first use it installs
@@ -65,7 +68,9 @@ from the travel-time store of `global_accessibility_v3.py`.
    - `--to-drive` is refused with a service-account key, because the files would land in the service account's own Drive.
    - The first version failed in every task: a mosaic has no fixed projection, which `reduceResolution` rejects. That is fixed, and `--dry-run` now evaluates the real export image for the first and last year, so an error of this kind shows up before any task starts. **No full export has run yet.**
 
-Each stage resumes where it stopped. To rerun a stage, delete `ae_work/_done/<stage>`. Results go to
+Each stage resumes where it stopped. To rerun a stage, delete `ae_work/_done/<stage>`. Per-tile tables are
+kept, and every stage builds on the treatment cells. If `GA_RESULTS`, the travel-time years or the countries
+change, use a new `--work-dir`. Stage `treatment` refuses a work folder built from other series. Results go to
 `ae_results/`:
 
 - `tables/` holds Gate T, matching balance, panel summary, access check and the LSMS inventory.

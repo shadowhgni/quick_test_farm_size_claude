@@ -52,9 +52,10 @@ WORK_DIR = "./ae_work"          # downloads and intermediate files
 RESULTS_DIR = "./ae_results"    # analysis tables, estimates, gates, logs (kept)
 ANALYSIS_BBOX = (-18.0, -35.0, 52.0, 25.0)   # W, S, E, N: Sub-Saharan Africa and its margins
 TILE_DEG = 10                   # work unit: 10 x 10 degree tiles aligned on multiples of 10 (as Hansen GFC)
-SSA_EXCLUDE = {"DZA", "EGY", "LBY", "MAR", "TUN", "ESH", "SDN"}
+SSA_EXCLUDE = {"DZA", "EGY", "LBY", "MAR", "TUN", "ESH", "SDN", "BRT"}
                                 # African countries outside Sub-Saharan Africa (UN M49 Northern Africa,
-                                # recalled; Sudan is in Northern Africa in M49). Remove "SDN" to keep Sudan
+                                # recalled; Sudan is in Northern Africa in M49). Remove "SDN" to keep Sudan.
+                                # BRT: Bir Tawil, the unclaimed desert strip between Egypt and Sudan
 
 # --- treatment (Phase 0; defaults approved 2026-10-27) --------------------------------
 TREAT_LAYERS = ["cities_11", "cities_12", "ports_5"]   # cities_11 primary
@@ -473,8 +474,23 @@ def session():
     return s
 
 
+def on_lattice(offset, res):
+    """offset is a whole number of cells (x % 1 would give ~1 for 8171.9999999)."""
+    x = offset / res
+    return abs(x - round(x)) <= 1e-6
+
+
 class RemoteUnavailable(RuntimeError):
-    """A server kept failing: stop instead of guessing."""
+    """A server kept failing: stop instead of guessing. status: the HTTP status when the server answered
+    401/403/404 (404 = the file does not exist), else None (repeated failures)."""
+    def __init__(self, msg, status=None):
+        super().__init__(msg)
+        self.status = status
+
+
+def not_found(e):
+    """The remote file does not exist (HTTP 404), as opposed to a server or network failure."""
+    return isinstance(e, RemoteUnavailable) and e.status == 404
 
 
 def download(url, dest, sess=None, retries=5, headers=None):
@@ -498,14 +514,22 @@ def download(url, dest, sess=None, retries=5, headers=None):
             if tmp.exists():
                 h["Range"] = f"bytes={tmp.stat().st_size}-"
             with sess.get(url, stream=True, timeout=300, headers=h, allow_redirects=True) as r:
-                if r.status_code == 416:
-                    break
-                if r.status_code in (401, 403, 404):
-                    raise RemoteUnavailable(f"HTTP {r.status_code} for {url}")
-                r.raise_for_status()
-                with open(tmp, "ab" if r.status_code == 206 else "wb") as fh:
-                    for chunk in r.iter_content(1 << 22):
-                        fh.write(chunk)
+                if r.status_code == 416 and tmp.exists():
+                    # the .part already holds the whole file (a crash before the rename): keep it when the
+                    # server's size agrees, otherwise start again
+                    total = re.search(r"/(\d+)$", r.headers.get("Content-Range", ""))
+                    if total and int(total.group(1)) == tmp.stat().st_size:
+                        r.close()
+                    else:
+                        tmp.unlink()
+                        raise IOError(f"HTTP 416 with a .part of {tmp.stat().st_size if tmp.exists() else 0} bytes")
+                elif r.status_code in (401, 403, 404):
+                    raise RemoteUnavailable(f"HTTP {r.status_code} for {url}", status=r.status_code)
+                else:
+                    r.raise_for_status()
+                    with open(tmp, "ab" if r.status_code == 206 else "wb") as fh:
+                        for chunk in r.iter_content(1 << 22):
+                            fh.write(chunk)
             tmp.replace(dest)
             info = {"url": url, "bytes": dest.stat().st_size,
                     "downloaded": dt.datetime.now().isoformat(timespec="seconds")}
@@ -631,9 +655,9 @@ class Store:
             g = Grid.from_dict(m["grid"])
             if self.grid is None:
                 self.grid = g
-            elif abs(g.res - self.grid.res) > 1e-12 or abs((g.west - self.grid.west) / g.res % 1) > 1e-6 \
-                    or abs((g.north - self.grid.north) / g.res % 1) > 1e-6:
-                raise ValueError(f"{rd}: grid {m['grid']} is not on the lattice of {GA_RESULTS[0]}")
+            elif abs(g.res - self.grid.res) > 1e-12 or not on_lattice(g.west - self.grid.west, g.res) \
+                    or not on_lattice(g.north - self.grid.north, g.res):
+                raise ValueError(f"{rd}: grid {m['grid']} is not on the lattice of {self.runs[0]['dir']}")
             self.runs.append({"dir": str(rd), "script": m.get("script"), "years": m.get("years"), "grid": m["grid"]})
             missing = 0
             for it in m["items"]:
@@ -773,17 +797,25 @@ def warn_sparse_years(series):
     if gaps:
         log(f"WARNING: the travel-time years are {gaps} years apart, not annual. An access gain is dated to the "
             "first reference year that shows it, so roads opened in different years share one cohort and the "
-            "event-study pre-periods (Gate C criterion 1) include treated years. For E1 and E2 event studies, "
-            "run global_accessibility_v3.py with --years 2015 2016 ... 2026 --weiss-years none and list that run "
-            "first in GA_RESULTS")
+            "event-study pre-periods (Gate C criterion 1) include treated years, so stage estimate will run the "
+            "long differences (E3) only. For the E1 and E2 event studies, run global_accessibility_v3.py with "
+            "--years 2015 2016 ... 2026 --weiss-years none, list that run first in GA_RESULTS and use a new "
+            "--work-dir")
     return gaps
 
 
+def treatment_path(work, tile):
+    return Path(work) / "treatment" / f"{tile}.parquet"
+
+
 def treatment_file(work, t):
-    """work/treatment/<tile>.parquet, or None when it is missing or has no cells (a tile outside Sub-Saharan
-    Africa): every later stage skips such tiles."""
-    tf = Path(work) / "treatment" / f"{t['tile']}.parquet"
-    return tf if tf.exists() and pq.read_metadata(tf).num_rows > 0 else None
+    """work/treatment/<tile>.parquet, or None when it has no cells (a tile outside Sub-Saharan Africa, skipped
+    by every later stage). A missing file is an error: stage treatment writes one for every tile, so a
+    missing one means it has not run (or ran for another tile set), and skipping would drop the tile."""
+    tf = treatment_path(work, t["tile"])
+    if not tf.exists():
+        raise RuntimeError(f"{tf} not found: run stage treatment first (for this --bbox and GA_RESULTS)")
+    return tf if pq.read_metadata(tf).num_rows > 0 else None
 
 
 def treatment_job(job):
@@ -857,8 +889,18 @@ def stage_treatment(ctx):
     for (ver, layer), (name, ys) in series.items():
         log(f"treatment {ver} {layer}: years {ys}")
     warn_sparse_years(series)
+    # treatment tables are cached per tile, and every later stage builds on their cells: they must come from
+    # the same travel-time series, grid and countries as this run
+    sig = {"series": {f"{v}_{l}": [n, list(ys)] for (v, l), (n, ys) in series.items()},
+           "ssa": sorted(int(c) for c in ssa), "grid": store.runs[0]["grid"]}
+    sf = ctx["work"] / "treatment" / "_signature.json"
+    if sf.exists() and json.loads(sf.read_text()) != json.loads(json.dumps(sig)):
+        raise RuntimeError(f"{ctx['work']} holds treatment tables built from other travel-time series, grid or "
+                           "countries than this run: use a new --work-dir (every stage depends on them)")
+    sf.parent.mkdir(parents=True, exist_ok=True)
+    sf.write_text(json.dumps(sig, indent=1))
     jobs = [{"tile": t["tile"], "win": t["win"], "ga_results": GA_RESULTS, "ssa": sorted(ssa),
-             "series": series, "out": str(ctx["work"] / "treatment" / f"{t['tile']}.parquet")}
+             "series": series, "out": str(treatment_path(ctx["work"], t["tile"]))}
             for t in ctx["tiles"]]
     nyears = max(len(ys) for _, ys in series.values())
     mem = 1440 * 1440 * 4 * (len(series) * nyears * 2 + 30)
@@ -1092,7 +1134,9 @@ def stage_landuse(ctx):
             for layer in ("treecover2000", "lossyear", "datamask"):
                 files[layer] = str(download(hansen_url(layer, hid), ctx["dl"] / "hansen" / Path(hansen_url(layer, hid)).name, sess))
         except RemoteUnavailable as e:
-            log(f"landuse {t['tile']}: Hansen tile {hid} not available ({str(e)[:120]}); tile skipped")
+            if not not_found(e):
+                raise                          # a server failure must stop the stage (rerun resumes)
+            log(f"landuse {t['tile']}: Hansen tile {hid} does not exist ({str(e)[:120]}); tile skipped")
             continue
         if CROPLAND_SOURCE == "gaced30":
             # a download failure stops the stage (rerun resumes): zero cropland must never be written
@@ -1398,7 +1442,9 @@ def stage_landcover_alt(ctx):
             try:
                 tf_ = download(tmf_tile_url(tw, tn), dl / "tmf" / f"TMF_TransitionMap_Subtypes_{t['tile']}.tif", sess)
                 tmf = file_bounds([tf_])
-            except RemoteUnavailable:
+            except RemoteUnavailable as e:
+                if not not_found(e):
+                    raise                      # never cache a tile with TMF silently missing
                 tmf = {}                       # outside the humid tropics there is no tile
         crop_sources = gaced_index(ctx, sess, (t["w"], t["s"], t["e"], t["n"])) if CROPLAND_SOURCE == "gaced30" \
             else glad_annual_sources()
@@ -1557,7 +1603,9 @@ def stage_covariates(ctx):
         try:
             rain_files[y] = str(download(CHIRPS_ANNUAL_URL.format(y=y), ctx["dl"] / "chirps" / f"chirps-v3.0.{y}.tif", sess))
         except RemoteUnavailable as e:
-            log(f"CHIRPS {y}: not available ({str(e)[:120]}); rain_{y} missing")
+            if not not_found(e):
+                raise                          # a server failure must stop the stage (rerun resumes)
+            log(f"CHIRPS {y}: not published ({str(e)[:120]}); rain_{y} missing")
     conflict_events(ctx, sess)
     jobs = []
     for t in ctx["tiles"]:
@@ -1718,24 +1766,30 @@ def stage_gate_t(ctx):
     d = pd.concat(rows, ignore_index=True)
     spec = d.spec.iloc[0]
     cls = d[f"evclass_{spec}"]
-    d["burst"] = cls == 2
-    d["remote"] = cls == 3
+    # shares among the events that could be attributed (class 0 = no OSM road-event layer for that year)
+    d["attributed"] = cls > 0
+    d["burst"] = (cls == 2).where(d.attributed)
+    d["remote"] = (cls == 3).where(d.attributed)
     near = d.get("proj_year", pd.Series(0, index=d.index)).fillna(0) > 0
     d["near_project"] = near
     d["project_agrees"] = near & ((d[f"ev_{spec}"] - d.get("proj_year", 0)).abs() <= GATE_T_DATE_TOL)
     g = d.groupby("zone").agg(event_cells=("cell", "size"), event_km2=("area_km2", "sum"),
+                              attributed=("attributed", "sum"),
                               share_burst=("burst", "mean"), share_remote=("remote", "mean"),
                               near_project=("near_project", "sum"), project_agrees=("project_agrees", "sum"))
     g["share_project_agrees"] = g.project_agrees / g.near_project.where(g.near_project > 0)
     g["imagery_confirmed_share"] = np.nan        # not implemented (Valle et al. 2024 method): see README
-    g["pass_burst"] = g.share_burst <= GATE_T_MAX_BURST
-    g["gate_t"] = np.where(g.pass_burst, "burst criterion passed; imagery confirmation not assessed",
-                           "failed (burst share): long-term analysis (E3) only")
+    g["pass_burst"] = (g.share_burst <= GATE_T_MAX_BURST).where(g.attributed > 0)
+    g["gate_t"] = np.select([g.attributed == 0, g.pass_burst == True],                # noqa: E712 (NaN-aware)
+                            ["not assessed: no OSM road events for the event years",
+                             "burst criterion passed; imagery confirmation not assessed"],
+                            "failed (burst share): long-term analysis (E3) only")
     g = g.reset_index()
     g.insert(1, "spec", spec)
     g.to_csv(ctx["results"] / "tables" / "gate_t.csv", index=False)
-    log(f"gate_t: {len(g)} zones, {int(g.pass_burst.sum())} pass the burst criterion")
-    return {"zones": len(g), "pass_burst": int(g.pass_burst.sum())}
+    npass = int((g.pass_burst == True).sum())                                          # noqa: E712
+    log(f"gate_t: {len(g)} zones, {npass} pass the burst criterion, {int((g.attributed == 0).sum())} not assessed")
+    return {"zones": len(g), "pass_burst": npass}
 
 
 # =============================================================================
@@ -1844,8 +1898,10 @@ def admin_panel(units_tr, hv, units):
     hv = hv.merge(units[["fnid", "uid", "lat", "lon", "country_code"]], on="fnid", how="inner")
     hv = hv.merge(units_tr, on="uid", how="inner")
     hv["crop"] = hv["product"].astype(str)
-    hv["unit"] = (hv.fnid.astype(str) + "|" + hv.crop + "|" + hv.season_name.astype(str) + "|"
-                  + hv.crop_production_system.astype(str))
+    # pandas 3 keeps NaN through astype(str): blanks become "" so a blank season or system cannot make
+    # the whole key NaN (factorize would give every such series id 0)
+    part = lambda c: hv[c].astype(object).where(hv[c].notna(), "").astype(str)
+    hv["unit"] = part("fnid") + "|" + part("crop") + "|" + part("season_name") + "|" + part("crop_production_system")
     hv["id"] = pd.factorize(hv["unit"])[0] + 1
     hv["year"] = hv.harvest_year.astype(int)
     hv["log_yield"] = np.log(hv["yield"].astype(float))
@@ -2786,25 +2842,23 @@ def stage_panels(ctx):
     work, res = ctx["work"], ctx["results"]
     pdir = res / "panels"
     pdir.mkdir(parents=True, exist_ok=True)
-    specs_avail = None
+    # tiles with cells only: the sample budget is shared by them, not by the empty tiles (ocean, North
+    # Africa), and the seed stays the tile's position in the full tile list
+    tiles = [(i, t, tf) for i, t in enumerate(ctx["tiles"]) if (tf := treatment_file(work, t)) is not None]
+    if not tiles:
+        raise RuntimeError("panels: no treatment table has cells; run stage treatment first")
+    specs_avail = spec_names(pq.read_schema(tiles[0][2]).names)
+    primary = PRIMARY_SPEC if PRIMARY_SPEC in specs_avail else specs_avail[0]
+    nt = max(1, E1_SAMPLE_TREATED // len(tiles))
+    nc = max(1, E1_SAMPLE_CONTROL // len(tiles))
     jobs = []
-    nt = max(1, E1_SAMPLE_TREATED // max(len(ctx["tiles"]), 1))
-    nc = max(1, E1_SAMPLE_CONTROL // max(len(ctx["tiles"]), 1))
-    for i, t in enumerate(ctx["tiles"]):
-        tf = treatment_file(work, t)
-        if tf is None:
-            continue
-        if specs_avail is None:
-            specs_avail = spec_names(pq.read_schema(tf).names)
+    for i, t, tf in tiles:
         jobs.append({"tile": t["tile"], "seed": i, "treatment": str(tf),
                      "landuse": str(work / "landuse" / f"{t['tile']}.parquet"),
                      "covariates": str(work / "covariates" / f"{t['tile']}.parquet"),
                      "landcover_alt": str(work / "landcover_alt" / f"{t['tile']}.parquet"),
                      "ndvi": str(work / "ndvi" / f"{t['tile']}.parquet"),
-                     "primary": PRIMARY_SPEC if PRIMARY_SPEC in (specs_avail or []) else (specs_avail or [None])[0],
-                     "n_treated": nt, "n_control": nc})
-    if not jobs:
-        raise RuntimeError("panels: no treatment tables; run stage treatment first")
+                     "primary": primary, "n_treated": nt, "n_control": nc})
     res_parts = [p for p in run_parallel(panel_tile_job, jobs, 6e9, "panel tiles") if p is not None]
     for name in ("e2a_admin", "e2b_ea", "e2e_admin", "e2e_ea"):
         f = work / "panels_parts" / f"{name}.parquet"
@@ -2841,7 +2895,7 @@ def stage_panels(ctx):
     if prim != PRIMARY_SPEC:
         log(f"WARNING: {PRIMARY_SPEC} is not in the treatment tables (the travel-time store has no road-only "
             f"layers); the panels use {prim} as primary. Add road-only travel time with "
-            "global_accessibility_v3.py >= 3.3 (stage roadonly), then delete ae_work/_done/treatment and rerun")
+            "global_accessibility_v3.py >= 3.3 (stage roadonly), then rerun with a new --work-dir")
     g, _ = cohort_dose(s, prim)
     match_cols = [c for c in (f"tt_{prim}_{tt_years(s.columns, prim)[0]}", f"pop_{POP_EPOCHS_IN(s)[0]}"
                               if POP_EPOCHS_IN(s) else None, "tan_slope", "forest2000_km2", "loss_pre_km2",
@@ -2949,6 +3003,16 @@ def find_estimation_script():
     return None
 
 
+def treatment_is_annual(ctx, spec):
+    """The reference years of spec in tables/treatment_series.json are consecutive."""
+    f = ctx["results"] / "tables" / "treatment_series.json"
+    if not f.exists():
+        return True
+    ser = json.loads(f.read_text())
+    ys = (ser.get(spec) or next(iter(ser.values()), {})).get("years", [])
+    return all(b - a == 1 for a, b in zip(ys, ys[1:]))
+
+
 def stage_estimate(ctx):
     script = find_estimation_script()
     if script is None:
@@ -2964,7 +3028,11 @@ def stage_estimate(ctx):
         log(f"WARNING: primary specification {PRIMARY_SPEC} is not in the panels; {prim} is used instead "
             "(road-only travel time missing from the store? run global_accessibility_v3.py >= 3.3 stage roadonly)")
     specs = [prim] + [x for x in ESTIMATE_SPECS if x != prim]
-    cfg = {"primary_spec": prim, "specs": specs, "min_e": EVENT_WINDOW[0],
+    annual = treatment_is_annual(ctx, prim)
+    if not annual:
+        log("WARNING: the travel-time years of the treatment are not annual: estimate_effects.py runs the long "
+            "differences (E3) only, and Gate C labels every result an association")
+    cfg = {"primary_spec": prim, "specs": specs, "annual_treatment": annual, "min_e": EVENT_WINDOW[0],
            "max_e": EVENT_WINDOW[1], "conley_km": CONLEY_KM, "bh_q": BH_Q, "seed": SEED,
            "bootstrap_iters": BOOTSTRAP_ITERS, "max_units_cs": MAX_UNITS_CS, "max_units_sa": MAX_UNITS_SA,
            "composite_shift": COMPOSITE_SHIFT, "gate_v_r": GATE_V_R, "gate_v_min_n": GATE_V_MIN_N,
