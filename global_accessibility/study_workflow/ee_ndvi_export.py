@@ -41,9 +41,9 @@ Pixel-years with fewer than MIN_SEASON_COVER of their season months valid are le
 
 Season year. Season months are fixed per pixel from the 2001-2014 MODIS climatology (months whose mean NDVI is
 at least halfway between the climatological minimum and maximum), so roads built after 2014 cannot move them.
-Season year y is the 12 months that start at the climatological minimum month and contain the peak month of
-calendar year y. A southern-African season (Nov-Apr) is therefore one season year, labelled by the year of its
-peak (harvest), instead of being split across two calendar years.
+Season year y is the 12 months that start at the pixel's climatological minimum month and whose last season
+month (the end of the season, near harvest) falls in calendar year y. A southern-African season (Nov-Apr) is
+therefore one season year, labelled by its harvest year, instead of being split across two calendar years.
 
 Grids. Monthly indices are computed on a fine grid aligned with the 30" cells: 7.5" (4 x 4 per cell, about
 230 m) for MODIS, 3" (10 x 10, about 90 m) for Sentinel-2, whose cloud mask and indices are computed at the

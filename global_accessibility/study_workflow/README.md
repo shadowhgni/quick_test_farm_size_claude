@@ -54,7 +54,10 @@ from the travel-time store of `global_accessibility_v3.py`.
      python ee_ndvi_export.py --bucket <bucket> --sensor s2 --bbox W S E N --years 2017-2024
      ```
    - **Quota.** A Community-tier project has 150 EECU-hours a month. Past that, tasks still run but more slowly, until the 1st of the month. Only about 2 tasks run at once; the others wait in the queue and do not fail. A rerun skips years already in the bucket or queued (`--force` exports them again).
-   - **Season year.** Each pixel's 12-month window starts at its climatological NDVI minimum and contains the peak month of the labelled year. A November–April season in southern Africa is therefore one season year, labelled by its harvest year.
+   - **Season year.** Each pixel's 12-month window starts at its climatological NDVI minimum. The window is labelled by the calendar year in which its last season month falls, near harvest. A November–April season in southern Africa is therefore one season year, labelled by its harvest year.
+   - **Fixed layers.** The static asset's name includes the `--bbox` and a hash of the mask and season rules. A changed rule makes a new asset instead of reusing a stale one.
+   - **Re-exports.** `--force` exports again. `--download` and stage `ndvi` then compare MD5 checksums and file times, so changed files replace the old ones.
+   - **Rainfall in E2d.** Vigour years are season years, but CHIRPS rainfall is by calendar year. The E2d panel therefore keeps `rain` (year *y*) and `rain_prev` (*y*−1). Neither is used as a control.
    - When the tasks finish (see https://code.earthengine.google.com/tasks), copy the files to `ndvi_exports/`. Use either of these:
      - `python ee_ndvi_export.py --bucket <bucket> --download ndvi_exports`;
      - add `--ndvi-bucket <bucket>` to the `access_effects_v01.py` command, and stage `ndvi` downloads the new files itself. If an earlier run skipped E2d, stage `ndvi` and the stages after it rerun on their own.

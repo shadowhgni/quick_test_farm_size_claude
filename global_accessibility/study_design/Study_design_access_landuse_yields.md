@@ -203,7 +203,7 @@ NDVI is used directly as an outcome, with its own label, because it tracks small
 - **Metrics:**
   - Seasonal peak and seasonal integral of NDVI, kNDVI and EVI.
   - The season window is fixed per pixel from the MODIS 2001–2014 climatology: the months whose mean NDVI is at least halfway between the climatological minimum and maximum. Because it is fixed before 2015, roads cannot move it.
-  - **Season year:** the 12 months that start at the pixel's climatological NDVI minimum and contain the peak month of year *y*. A season that crosses the new year (southern Africa) stays in one season year, labelled by its harvest year.
+  - **Season year:** the 12 months that start at the pixel's climatological NDVI minimum and whose last season month (near harvest) falls in year *y*. A season that crosses the new year (southern Africa) stays in one season year, labelled by its harvest year.
   - **Integral:** the mean of the valid season months times the number of season months, so cloudy months do not lower it. A pixel-year with fewer than half its season months valid is left out.
   - PML-V2 GPP is used as a robustness check.
 - **Sensors:**
