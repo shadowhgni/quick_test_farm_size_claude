@@ -203,10 +203,12 @@ NDVI is used directly as an outcome, with its own label, because it tracks small
 - **Metrics:**
   - Seasonal peak and seasonal integral of NDVI, kNDVI and EVI.
   - The season window is fixed per pixel from the MODIS 2001–2014 climatology: the months whose mean NDVI is at least halfway between the climatological minimum and maximum. Because it is fixed before 2015, roads cannot move it.
+  - **Season year:** the 12 months that start at the pixel's climatological NDVI minimum and contain the peak month of year *y*. A season that crosses the new year (southern Africa) stays in one season year, labelled by its harvest year.
+  - **Integral:** the mean of the valid season months times the number of season months, so cloudy months do not lower it. A pixel-year with fewer than half its season months valid is left out.
   - PML-V2 GPP is used as a robustness check.
 - **Sensors:**
   - MODIS MOD13Q1 250 m, aggregated to the cell: the continuous 2001–2024 series for the event study. The same sensor runs across the whole event window.
-  - Sentinel-2 (cloud masking with Cloud Score+, computed at 100 m) for 2017–2024: the sensor robustness series (Gate V criterion 4).
+  - Sentinel-2 (cloud masking with Cloud Score+ and the indices computed at 10 m, then averaged to about 90 m) for 2017–2024: the sensor robustness series (Gate V criterion 4). Because of its cost, it is run on the pilot countries.
   - MODIS science data ends in 2027 and its orbit has drifted, so the late years are checked against Sentinel-2.
 - **Computation:** per-cell and per-unit season metrics are computed in Google Earth Engine and exported as tables, then joined on the HPC.
 - **Gate V** (draft thresholds below). It must pass before any E2d result is interpreted:
@@ -448,6 +450,7 @@ The pipeline `access_effects_v01.py` and the estimation script (`estimate_effect
 | 2026-10-30 | Annual/tree-crop split of E1; new E1c and E2e; E2c redefined as E2d (vigour, Gate V) | Author's question on GLC_FCS30D, NDVI and crop change; research review | Yes |
 | 2026-10-30 | Road-only travel time added to the HPC run after the fact (GA 3.3.0 stage `roadonly`) | The September travel-time run predates road-only | Yes |
 | 2026-10-30 | Estimation moved from R (`did`, `fixest`, `contdid`) to Python: `moderndid` 0.4.1, `pyfixest` 0.60.0, and Conley errors computed in the script with the `fixest` conventions. Parity on simulated panels: identical point estimates and pre-trend tests, Conley errors within 3%, bootstrap errors within 15%, identical Gate C decisions | The HPC container has no R | Yes |
+| 2026-10-30 | E2d: season year per pixel (starts at the climatological minimum) instead of the calendar year; integral = mean of the valid season months × season length; Sentinel-2 masked at 10 m and run on the pilot countries | Code review of the Earth Engine export: seasons crossing the new year were split, cloudy months lowered the integral, and the 80 m pyramid blurred the cloud mask | Yes (no export had succeeded) |
 | 2026-10-30 | Continuous dose (`cont_did`): balanced units only and unweighted. The R script's overall ACRT error was about 10 times too small (wrong field); a Monte Carlo with a true slope of 0 supports the Python error | Package limits; bug found in the parity check | Yes |
 
 **Risks specific to revision 2.**

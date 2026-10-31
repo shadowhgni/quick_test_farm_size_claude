@@ -42,16 +42,25 @@ from the travel-time store of `global_accessibility_v3.py`.
      ```
    - Run the exports. The default project is `post-harvest-aidi-field-mgt`.
      ```
-     python ee_ndvi_export.py --bucket <bucket> --dry-run       # checks the key, the bucket, every asset and band
+     python ee_ndvi_export.py --bucket <bucket> --dry-run       # key, bucket, assets, and the computation on a small box
+     python ee_ndvi_export.py --bucket <bucket> --make-static   # one task: masks and season window, as an asset
+     # when that task has finished:
      python ee_ndvi_export.py --bucket <bucket> --sensor modis --years 2001-2024
-     python ee_ndvi_export.py --bucket <bucket> --sensor s2 --years 2017-2024
      ```
+   - Sentinel-2 (the sensor check) is computed at 10 m, which is expensive. Run it on the pilot countries:
+     ```
+     python ee_ndvi_export.py --bucket <bucket> --sensor s2 --bbox W S E N --dry-run
+     python ee_ndvi_export.py --bucket <bucket> --sensor s2 --bbox W S E N --make-static
+     python ee_ndvi_export.py --bucket <bucket> --sensor s2 --bbox W S E N --years 2017-2024
+     ```
+   - **Quota.** A Community-tier project has 150 EECU-hours a month. Past that, tasks still run but more slowly, until the 1st of the month. Only about 2 tasks run at once; the others wait in the queue and do not fail. A rerun skips years already in the bucket or queued (`--force` exports them again).
+   - **Season year.** Each pixel's 12-month window starts at its climatological NDVI minimum and contains the peak month of the labelled year. A November–April season in southern Africa is therefore one season year, labelled by its harvest year.
    - When the tasks finish (see https://code.earthengine.google.com/tasks), copy the files to `ndvi_exports/`. Use either of these:
      - `python ee_ndvi_export.py --bucket <bucket> --download ndvi_exports`;
      - add `--ndvi-bucket <bucket>` to the `access_effects_v01.py` command, and stage `ndvi` downloads the new files itself. If an earlier run skipped E2d, stage `ndvi` and the stages after it rerun on their own.
    - Without the exports, stage `ndvi` logs that E2d is skipped and the rest runs.
    - `--to-drive` is refused with a service-account key, because the files would land in the service account's own Drive.
-   - **This script has not been run against Earth Engine yet.** Start with `--dry-run`.
+   - The first version failed in every task: a mosaic has no fixed projection, which `reduceResolution` rejects. That is fixed, and `--dry-run` now evaluates the real export image for the first and last year, so an error of this kind shows up before any task starts. **No full export has run yet.**
 
 Each stage resumes where it stopped. To rerun a stage, delete `ae_work/_done/<stage>`. Results go to
 `ae_results/`:
@@ -192,7 +201,8 @@ simulated panels with a known effect):
   least-cost-route instrument.
 - **Not yet validated:**
   - **E2d season windows** come from a MODIS climatology per pixel rather than per agro-ecological zone. No
-    zone layer is in the workflow yet; the window is still fixed before 2015.
+    zone layer is in the workflow yet; the window is still fixed before 2015. Bimodal areas (two seasons a
+    year) get one window that covers both seasons.
   - **The Earth Engine export** has not been run.
 
 **Checks still owed by the author:**

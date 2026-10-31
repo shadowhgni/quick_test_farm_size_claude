@@ -2218,8 +2218,10 @@ def vigour_inventory():
 def ndvi_job(job):
     out = Path(job["out"])
     want = {f"{b}_{sen}_{y}" for sen, ys in job["inventory"].items() for y in ys for b in VIGOUR_BANDS}
-    if out.exists() and want <= set(pq.read_schema(out).names):
-        return job["tile"]                      # every export found is already in the tile table
+    files = [f for sen, ys in job["inventory"].items() for y in ys for f in vigour_files(sen, y)]
+    newest = max((f.stat().st_mtime for f in files), default=0)
+    if out.exists() and want <= set(pq.read_schema(out).names) and out.stat().st_mtime >= newest:
+        return job["tile"]                      # every export is in the tile table and none changed since
     cell, rr, cc = tile_cells(job)
     d = {"cell": cell}
     if len(cell):
@@ -2681,8 +2683,11 @@ def e2d_long(s, years, sensor):
             c = f"{b}_{sensor}_{y}"
             if c in s and b not in ("crop_frac", "n_obs"):
                 d[b] = s[c].to_numpy(np.float32)
-        if f"rain_{y}" in s:
-            d["rain"] = s[f"rain_{y}"].to_numpy(np.float32)
+        # vigour year y is a season year (it can start in y-1), rain is calendar-year CHIRPS: both years are
+        # kept (not used as controls by estimate_effects.py)
+        for col, yy in (("rain", y), ("rain_prev", y - 1)):
+            if f"rain_{yy}" in s:
+                d[col] = s[f"rain_{yy}"].to_numpy(np.float32)
         parts.append(pd.DataFrame(d))
     out = pd.concat(parts, ignore_index=True)
     return recode_cohorts(out, specs, years[0], years[-1])

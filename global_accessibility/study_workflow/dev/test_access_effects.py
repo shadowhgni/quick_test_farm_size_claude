@@ -519,3 +519,49 @@ def test_ee_export_refuses_drive_with_service_account(tmp_path):
     import ee_ndvi_export as ex
     with pytest.raises(SystemExit, match="service account"):
         ex.main(["--to-drive", "--key-file", str(tmp_path / "k.json")])
+
+
+def test_ee_export_helpers():
+    import ee_ndvi_export as ex
+    assert ex.EXPORT_BANDS == ae.VIGOUR_BANDS
+
+    def window(m_min, season):
+        """first month index and season-year label (calendar year of the last season month: 0 = y-1)"""
+        last = max((m - m_min) % 12 for m in season)
+        st = ex.season_window_start(m_min, last)
+        return st, (st + last) // 12
+    # southern Africa: minimum Oct, season Dec-Apr -> Oct of y-1 .. Sep of y, labelled by the harvest year y
+    assert window(9, [11, 0, 1, 2, 3]) == (9, 1)
+    # Sahel: minimum Apr, season Jul-Oct -> Apr of y .. Mar of y+1, season in y
+    assert window(3, [6, 7, 8, 9]) == (15, 1)
+    # same minimum (Sep), seasons ending in Dec or in Jan: each is labelled by the year in which it ends
+    assert window(8, [9, 10, 11]) == (20, 1) and window(8, [10, 11, 0]) == (8, 1)
+    # windows stay inside the 36 months and off the blank months
+    used = {ex.season_window_start(lo, last) + k for lo in range(12) for last in range(12) for k in range(12)}
+    assert not used & set(ex.UNUSED_MONTHS) and min(used) >= 0 and max(used) <= 35
+    f = ex.fine_transform("modis")
+    assert f[0] * 4 == ex.GRID_RES and f[2] == ex.GRID_TRANSFORM[2] and f[5] == ex.GRID_TRANSFORM[5]
+    assert ex.probe_box(ex.SSA_BBOX) == ex.PROBE_BOX
+    w, s, e, n = ex.probe_box((30.0, -20.0, 35.0, -10.0), 0.05)
+    assert 30 <= w < e <= 35 and -20 <= s < n <= -10 and abs(e - w - 0.05) < 1e-9
+    with pytest.raises(SystemExit):
+        ex.parse_years("2024-2001")
+    assert ex.static_name("modis", ex.SSA_BBOX).startswith("static_modis_v")
+    assert ex.static_name("s2", (33.5, -5, 42, 5)).startswith("static_s2_33p5_m5_42_5_v")
+    assert ex.export_name("s2", 2019, (33.5, -5, 42, 5)) == "vigour_s2_2019_33p5_m5_42_5"
+    assert ex.export_name("modis", 2019, ex.SSA_BBOX) == "vigour_modis_2019"
+
+
+def test_ee_download_detects_changed_content(tmp_path):
+    import base64
+    import hashlib
+    import ee_ndvi_export as ex
+    f = tmp_path / "a.tif"
+    f.write_bytes(b"abcd")
+
+    class Blob:
+        size = 4
+
+        def __init__(self, data):
+            self.md5_hash = base64.b64encode(hashlib.md5(data).digest()).decode()
+    assert ex.same_file(f, Blob(b"abcd")) and not ex.same_file(f, Blob(b"abce"))
