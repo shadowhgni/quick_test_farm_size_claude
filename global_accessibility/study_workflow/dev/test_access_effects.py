@@ -660,3 +660,16 @@ def test_longdiff_only_when_treatment_not_annual(tmp_path):
                              note=None)], columns=ef.COLUMNS)
     g = ef.gate_c_longdiff(est, {**ef.DEFAULTS, "primary_spec": "s"})
     assert len(g) == 1 and not g.causal.iloc[0] and "not annual" in g.label.iloc[0] and g.significant_bh.iloc[0]
+
+
+def test_read_dta_with_latin1_text(tmp_path):
+    """The harmonised panel holds a Latin-1 value (b'MA\\xefS') in a UTF-8 Stata file (HPC crash)."""
+    import pyreadstat
+    f = tmp_path / "t.dta"
+    pyreadstat.write_dta(pd.DataFrame({"crop_name": ["MAXS", "Maïze", "Beans"], "harvest_kg": [1.0, 2.0, 3.0]}), str(f))
+    f.write_bytes(f.read_bytes().replace(b"MAXS", b"MA\xefS"))
+    with pytest.raises(UnicodeDecodeError):
+        pyreadstat.read_dta(str(f))
+    d = ae.read_dta(f, ["crop_name", "harvest_kg"])
+    assert d.crop_name.tolist() == ["MAïS", "Maïze", "Beans"]              # UTF-8 values decoded back
+    assert list(ae.crop_group(d.crop_name)) == ["maize", "other", "staples_other"]

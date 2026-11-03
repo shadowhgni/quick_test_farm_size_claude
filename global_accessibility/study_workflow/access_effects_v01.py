@@ -2068,11 +2068,30 @@ def lsms_plan(ctx):
 
 
 def read_dta(path, columns=None):
+    """Stata file as a DataFrame. Stata 14+ files should hold UTF-8 text, but some values of the harmonised
+    panel are Latin-1 (e.g. b"MA\\xefS", maize in French), which pyreadstat refuses. Such a file is read as
+    Latin-1 and every text value that is valid UTF-8 is decoded back, so both kinds come out right."""
     import pyreadstat
     if columns is not None:
         meta = pyreadstat.read_dta(str(path), metadataonly=True)[1]
         columns = [c for c in columns if c in meta.column_names]
-    df, _ = pyreadstat.read_dta(str(path), usecols=columns, apply_value_formats=False)
+    try:
+        df, _ = pyreadstat.read_dta(str(path), usecols=columns, apply_value_formats=False)
+        return df
+    except UnicodeDecodeError:
+        df, _ = pyreadstat.read_dta(str(path), usecols=columns, apply_value_formats=False, encoding="ISO-8859-1")
+    n_latin = 0
+    for c in df.columns:
+        if df[c].dtype == object or pd.api.types.is_string_dtype(df[c]):
+            vals = df[c].to_numpy(dtype=object)
+            for i, v in enumerate(vals):
+                if isinstance(v, str) and not v.isascii():
+                    try:
+                        vals[i] = v.encode("latin-1").decode("utf-8")
+                    except UnicodeError:
+                        n_latin += 1               # a genuine Latin-1 value: kept as read
+            df[c] = vals
+    log(f"{Path(path).name}: text is not all UTF-8; read as Latin-1 ({n_latin} Latin-1 values kept)")
     return df
 
 
@@ -2458,7 +2477,7 @@ def gate_v_inputs(s2, sensors, primary, pdir, work):
 # stage cropmix (E2e): crop composition per admin unit x year and EA x wave
 # =============================================================================
 CROP_GROUPS = [  # (group, regex on the lower-case crop name); first match wins; recalled crop vocabularies
-    ("maize", r"maize|corn"),
+    ("maize", r"maize|corn|ma[iï]s\b"),
     ("cassava", r"cassava|manioc"),
     ("rice", r"rice|paddy"),
     ("sorghum_millet", r"sorghum|millet"),
