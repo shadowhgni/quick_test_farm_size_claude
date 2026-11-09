@@ -724,7 +724,7 @@ def test_conley_refuses_clustered_locations():
 
 
 def test_ea_value_per_hectare_counts_valued_plots_only():
-    plots = pd.DataFrame({"country": "Malawi", "ea_id_obs": 1, "household_id_obs": [f"h{i}" for i in range(10)],
+    plots = pd.DataFrame({"country": "Malawi", "ea_id_obs": 1, "season": 1, "household_id_obs": [f"h{i}" for i in range(10)],
                           "plot_id_obs": [f"p{i}" for i in range(10)], "crop_name": "MAIZE", "year": 2016,
                           "harvest_kg": 100.0, "crop_area_ha": 1.0, "intercropped": False,
                           "harvest_value_USD": [100.0] * 5 + [np.nan] * 5, "total_hired_labor_days": [2.0] * 5 + [np.nan] * 5,

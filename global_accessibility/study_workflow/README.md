@@ -91,7 +91,7 @@ cloud sandbox (HTTP 206); the HPC must be checked with `check`.
 | Conflict | UCDP GED 26.1 | ACLED (`CONFLICT_SOURCE = "acled"`, credentials in environment variables) is experimental: its paging and country names were not tested |
 | Dated road projects | AidData GeoGCDF v3.0.1 | Road geometry type not verified; the stage logs the geometry types it finds |
 | Admin yields | HarvestStat Africa v1.2 (CSV and boundaries, joined on `fnid`) | Rows with `qc_flag` 0 only |
-| LSMS-ISA | Harmonised panel v2.0 (Bentze & Wollburg; Zenodo 15774761) | Ethiopia, Malawi, Nigeria, Tanzania, Uganda; main season. Licence: Zenodo says CC0, the paper says CC BY-NC-ND 4.0, so do not redistribute |
+| LSMS-ISA | Harmonised panel v2.0 (Bentze & Wollburg; Zenodo 15774761) | Ethiopia, Malawi, Nigeria, Tanzania, Uganda (Mali and Niger left out: their EA ids are not unique); Uganda's two seasons kept as separate series. A plot's area is split between its crop rows. Licence: Zenodo says CC0, the paper says CC BY-NC-ND 4.0, so do not redistribute |
 
 ## Revision 2 (v0.2, 2026-10-30)
 

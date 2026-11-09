@@ -156,8 +156,7 @@ LSMS_WAVE_YEARS = {                 # harvest (agricultural) year of each panel 
     "Nigeria": {1: 2010, 2: 2012, 3: 2015, 4: 2018, 5: 2023},
     "Tanzania": {1: 2008, 2: 2010, 3: 2012, 4: 2014, 5: 2019},
     "Uganda": {1: 2009, 2: 2010, 3: 2011, 4: 2013, 5: 2015, 7: 2018, 8: 2019},
-    "Niger": {1: 2011, 2: 2014},
-    "Mali": {1: 2014, 2: 2017},
+    # Mali and Niger are left out: the panel documentation says their ea_id does not identify an EA
 }
 CROPMIX_MIN_REPORT = 2 / 3          # E2e admin: a crop is in a unit's fixed set if reported in >= 2/3 of its years
 EA_RADIUS_KM = 5.0                  # EA treatment: cropland-weighted access of the cells within 5 km of the point
@@ -2174,10 +2173,13 @@ def lsms_plots(ctx, sess):
     d = d[d.year.notna()].copy()
     d["year"] = d.year.astype(int)
     # crop area: the whole plot for a single crop; intercropped plots split equally between their crops
-    # (the panel has no per-crop share of the plot); intercropped rows are flagged and analysed apart
+    # (the panel has no per-crop share of the plot); intercropped rows are flagged and analysed apart.
+    # A plot that is not intercropped but has several crop rows (Uganda: the plot file is at parcel level,
+    # so pure stands on one parcel share its area) is split between its rows, never credited in full to each
     n = pd.to_numeric(d.nb_seasonal_crop, errors="coerce").clip(lower=1).fillna(1)
+    k = d.groupby(keys).crop_name.transform("size").astype(float)
     inter = pd.to_numeric(d.intercropped, errors="coerce").fillna(0) > 0
-    d["crop_area_ha"] = np.where(inter, d.plot_area_GPS / n, d.plot_area_GPS)
+    d["crop_area_ha"] = d.plot_area_GPS / np.where(inter, n, k)
     d["intercropped"] = inter
     write_parquet(d, out)
     return d
@@ -2198,7 +2200,8 @@ def ea_aggregate(plots, intercropped=False):
     d["ea"] = d.country.astype(str) + "|" + d.ea_id_obs.astype(str)
     hd = pd.to_numeric(d.total_hired_labor_days, errors="coerce")
     d["hired"] = (hd > 0).astype(float).where(hd.notna())          # missing stays missing (mean skips it)
-    g = d.groupby(["ea", "country", "crop_name", "year"]).agg(
+    # per season: Uganda observes two seasons in each wave (season is 1 elsewhere)
+    g = d.groupby(["ea", "country", "crop_name", "season", "year"]).agg(
         kg=("harvest_kg", "sum"), ha=("crop_area_ha", "sum"), n_hh=("household_id_obs", "nunique"),
         n_plots=("plot_id_obs", "nunique"), fert=("inorganic_fertilizer", "mean"), improved=("improved", "mean"),
         hired=("hired", "mean"), sold=("share_kg_sold", "mean"), pw=("pw", "sum")).reset_index()
@@ -2208,12 +2211,12 @@ def ea_aggregate(plots, intercropped=False):
     # plots with a value only: an unvalued plot (no price or conversion) must not add area without value
     v = plots[(plots.crop_area_ha > 0) & plots.harvest_value_USD.notna()] \
         .assign(ea=lambda x: x.country.astype(str) + "|" + x.ea_id_obs.astype(str))
-    vv = v.groupby(["ea", "country", "year"]).agg(usd=("harvest_value_USD", "sum"), ha=("crop_area_ha", "sum"),
+    vv = v.groupby(["ea", "country", "season", "year"]).agg(usd=("harvest_value_USD", "sum"), ha=("crop_area_ha", "sum"),
                                                   n_hh=("household_id_obs", "nunique")).reset_index()
     vv = vv[vv.n_hh >= EA_MIN_HH]
     vv["log_value_ha"] = np.log(vv.usd / vv.ha).replace([-np.inf, np.inf], np.nan)
     vv["crop_name"] = "ALL"
-    return pd.concat([g, vv[["ea", "country", "crop_name", "year", "n_hh", "log_value_ha"]]], ignore_index=True)
+    return pd.concat([g, vv[["ea", "country", "crop_name", "season", "year", "n_hh", "log_value_ha"]]], ignore_index=True)
 
 
 def ea_sums_job(job):
@@ -2269,10 +2272,11 @@ def ea_panel(agg, pts, tr):
     """EA x crop rows with the treatment columns of estimate_effects.py."""
     d = agg.merge(pts[["ea", "uid", "lat", "lon"]], on="ea").merge(tr, on="uid")
     d["crop"] = d.crop_name.astype(str)
-    d["id"] = pd.factorize(d.ea + "|" + d.crop)[0] + 1
+    season = d["season"].astype(str) if "season" in d else "1"
+    d["id"] = pd.factorize(d.ea + "|" + d.crop + "|" + season)[0] + 1       # one series per EA x crop x season
     d["region"] = d.country.astype(str)
     d["w"] = d.get("n_plots", pd.Series(1.0, index=d.index)).fillna(1.0).astype(float)
-    keep = ["id", "uid", "ea", "country", "crop", "year", "log_yield", "log_value_ha", "n_hh", "n_plots", "fert",
+    keep = ["id", "uid", "ea", "country", "crop", "season", "year", "log_yield", "log_value_ha", "n_hh", "n_plots", "fert",
             "improved", "hired", "sold", "region", "lat", "lon", "w"]
     keep += [c for c in d.columns if c.startswith("share_") or c in ("shannon", "n_crops")]
     out = d[[c for c in dict.fromkeys(keep) if c in d]].copy()
