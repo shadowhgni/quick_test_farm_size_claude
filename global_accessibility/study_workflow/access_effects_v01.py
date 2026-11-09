@@ -217,6 +217,7 @@ import subprocess
 import sys
 import time
 import traceback
+import warnings
 import zipfile
 from pathlib import Path
 
@@ -2068,31 +2069,62 @@ def lsms_plan(ctx):
 
 
 def read_dta(path, columns=None):
-    """Stata file as a DataFrame. Stata 14+ files should hold UTF-8 text, but some values of the harmonised
-    panel are Latin-1 (e.g. b"MA\\xefS", maize in French), which pyreadstat refuses. Such a file is read as
-    Latin-1 and every text value that is valid UTF-8 is decoded back, so both kinds come out right."""
+    """Stata file as a DataFrame (pyreadstat; the requested columns that exist).
+
+    Stata 14+ files should hold UTF-8 text, but the harmonised panel has Latin-1 bytes (b"MA\\xefS", maize in
+    French), which pyreadstat refuses in data, labels and strL columns alike. Such a file is read again with
+    every text decoded as Latin-1 (lossless), then each value that is valid UTF-8 is decoded back and the
+    rest is read as Windows-1252 (the legacy Stata encoding), so mixed files come out right."""
     import pyreadstat
-    if columns is not None:
-        meta = pyreadstat.read_dta(str(path), metadataonly=True)[1]
-        columns = [c for c in columns if c in meta.column_names]
     try:
+        if columns is not None:
+            meta = pyreadstat.read_dta(str(path), metadataonly=True)[1]
+            columns = [c for c in columns if c in meta.column_names]
         df, _ = pyreadstat.read_dta(str(path), usecols=columns, apply_value_formats=False)
         return df
     except UnicodeDecodeError:
-        df, _ = pyreadstat.read_dta(str(path), usecols=columns, apply_value_formats=False, encoding="ISO-8859-1")
-    n_latin = 0
+        pass
+    df = read_dta_bytes_as_latin1(path, columns)
+    n_legacy = 0
     for c in df.columns:
         if df[c].dtype == object or pd.api.types.is_string_dtype(df[c]):
             vals = df[c].to_numpy(dtype=object)
             for i, v in enumerate(vals):
                 if isinstance(v, str) and not v.isascii():
-                    try:
-                        vals[i] = v.encode("latin-1").decode("utf-8")
-                    except UnicodeError:
-                        n_latin += 1               # a genuine Latin-1 value: kept as read
+                    vals[i], legacy = redecode(v)
+                    n_legacy += legacy
             df[c] = vals
-    log(f"{Path(path).name}: text is not all UTF-8; read as Latin-1 ({n_latin} Latin-1 values kept)")
+    log(f"{Path(path).name}: text is not all UTF-8; reread byte for byte ({n_legacy} legacy-encoded values)")
     return df
+
+
+def redecode(v):
+    """(text, 1 if legacy) for a string read as Latin-1: its UTF-8 meaning when valid, else Windows-1252
+    (curly quotes, the euro sign...), else Latin-1 as read."""
+    b = v.encode("latin-1")
+    try:
+        return b.decode("utf-8"), 0
+    except UnicodeDecodeError:
+        try:
+            return b.decode("cp1252"), 1
+        except UnicodeDecodeError:
+            return v, 1
+
+
+def read_dta_bytes_as_latin1(path, columns=None):
+    """pandas' Stata reader with every string, strL and label decoded as Latin-1."""
+    from pandas.io.stata import StataReader
+
+    class Latin1Reader(StataReader):
+        def _set_encoding(self):                # pandas picks UTF-8 for format 118+; force Latin-1
+            self._encoding = "latin-1"
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        with Latin1Reader(str(path), convert_categoricals=False, convert_dates=True) as r:
+            if columns is not None:
+                names = set(r.variable_labels())
+                columns = [c for c in columns if c in names]
+            return r.read(columns=columns)
 
 
 def lsms_plots(ctx, sess):
@@ -2110,6 +2142,11 @@ def lsms_plots(ctx, sess):
     p = read_dta(pl, keys + ["plot_area_GPS", "intercropped", "nb_seasonal_crop", "inorganic_fertilizer",
                              "total_hired_labor_days", "share_kg_sold", "irrigated", "plot_slope"])
     d = c.merge(p, on=keys, how="left")
+    raw = d.crop_name.astype(str)
+    d["crop_name"] = canonical_crop(raw)
+    moved = sorted(set(zip(raw[raw != d.crop_name], d.crop_name[raw != d.crop_name])))
+    if moved:
+        log(f"lsms: crop labels unified ({len(moved)}), e.g. {moved[:8]}")
     d["year"] = [lsms_wave_year(a, b) for a, b in zip(d.country, d.wave)]
     miss = d[d.year.isna()][["country", "wave"]].drop_duplicates()
     if len(miss):
@@ -2476,19 +2513,45 @@ def gate_v_inputs(s2, sensors, primary, pdir, work):
 # =============================================================================
 # stage cropmix (E2e): crop composition per admin unit x year and EA x wave
 # =============================================================================
-CROP_GROUPS = [  # (group, regex on the lower-case crop name); first match wins; recalled crop vocabularies
-    ("maize", r"maize|corn|ma[iï]s\b"),
+CROP_GROUPS = [  # (group, regex on the normalised crop name: lower case, no accents); first match wins;
+    # English and French survey names (Mali, Niger and other francophone panels use raw French labels)
+    ("maize", r"maize|(?<!guinea )corn|\bmais\b"),
     ("cassava", r"cassava|manioc"),
-    ("rice", r"rice|paddy"),
-    ("sorghum_millet", r"sorghum|millet"),
-    ("cash", r"coffee|cocoa|cacao|tea\b|cotton|tobacco|sugar|cashew|palm|rubber|sesame|vanilla|clove|coconut"),
-    ("staples_other", r"wheat|barley|teff|yam|potato|cocoyam|taro|plantain|banana|bean|cowpea|groundnut|"
-                      r"peanut|soy|pea\b|peas|lentil|chickpea|pigeon"),
+    ("rice", r"rice|paddy|\briz\b"),
+    ("sorghum_millet", r"sorghum|millet|guinea corn|sorgho|\bmil\b|fonio"),
+    ("cash", r"coffee|cafe\b|cocoa|cacao|tea\b|cotton|coton|tobacco|tabac|sugar|sucre|cashew|anacarde|cajou|"
+             r"palm|rubber|hevea|sesame|vanilla|vanille|clove|girofle|coconut|coco\b"),
+    ("staples_other", r"wheat|\bble\b|barley|\borge\b|teff|yam|igname|potato|pomme de terre|patate|cocoyam|taro|"
+                      r"plantain|banana|banane|bean|haricot|cowpea|niebe|groundnut|peanut|arachide|soy|soja|"
+                      r"pea\b|peas|\bpois\b|lentil|lentille|chickpea|pigeon|voandzou"),
 ]
 
 
+CROP_FRENCH = {   # normalised French survey label -> English label of the anglophone panels
+    "MAIS": "MAIZE", "MIL": "MILLET", "PETIT MIL": "MILLET", "SORGHO": "SORGHUM", "RIZ": "RICE",
+    "RIZ PADDY": "RICE", "ARACHIDE": "GROUNDNUT", "NIEBE": "COWPEA", "HARICOT": "BEANS", "COTON": "COTTON",
+    "IGNAME": "YAM", "PATATE DOUCE": "SWEET POTATO", "POMME DE TERRE": "POTATO", "MANIOC": "CASSAVA",
+    "SOJA": "SOYBEAN", "BLE": "WHEAT", "VOANDZOU": "BAMBARA NUT", "TABAC": "TOBACCO", "GOMBO": "OKRA",
+    "OIGNON": "ONION", "TOMATE": "TOMATO", "SESAME": "SESAME", "FONIO": "FONIO", "POIS D'ANGOLE": "PIGEON PEA",
+}
+
+
+def canonical_crop(names):
+    """One label per crop across panels and languages: upper case, no accents, single spaces, French names
+    translated (CROP_FRENCH). Per-crop yield models and crop shares group on it."""
+    up = normalise_crop(names).str.upper().str.split().str.join(" ")
+    return up.map(lambda v: CROP_FRENCH.get(v, v)).to_numpy()
+
+
+def normalise_crop(names):
+    """Crop names for matching: lower case, accents removed, typographic apostrophes made plain."""
+    import unicodedata
+    low = pd.Series(names, dtype=object).astype(str).str.lower().str.replace("\u2019", "'", regex=False)
+    return low.map(lambda v: "".join(ch for ch in unicodedata.normalize("NFKD", v) if not unicodedata.combining(ch)))
+
+
 def crop_group(names):
-    low = pd.Series(names, dtype=object).astype(str).str.lower()
+    low = normalise_crop(names)
     out = pd.Series("other", index=low.index, dtype=object)
     for g, rx in reversed(CROP_GROUPS):          # reversed + overwrite = first match wins
         out[low.str.contains(rx, regex=True, na=False)] = g

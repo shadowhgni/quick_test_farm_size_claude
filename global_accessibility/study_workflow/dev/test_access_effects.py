@@ -662,14 +662,31 @@ def test_longdiff_only_when_treatment_not_annual(tmp_path):
     assert len(g) == 1 and not g.causal.iloc[0] and "not annual" in g.label.iloc[0] and g.significant_bh.iloc[0]
 
 
-def test_read_dta_with_latin1_text(tmp_path):
-    """The harmonised panel holds a Latin-1 value (b'MA\\xefS') in a UTF-8 Stata file (HPC crash)."""
+@pytest.mark.parametrize("kind", ["str", "strl", "labels"])
+def test_read_dta_with_latin1_text(tmp_path, kind):
+    """The harmonised panel holds Latin-1 bytes (b'MA\\xefS') in a UTF-8 Stata file (HPC crash): in a str#
+    column, a strL column, or in variable and value labels."""
     import pyreadstat
     f = tmp_path / "t.dta"
-    pyreadstat.write_dta(pd.DataFrame({"crop_name": ["MAXS", "Maïze", "Beans"], "harvest_kg": [1.0, 2.0, 3.0]}), str(f))
-    f.write_bytes(f.read_bytes().replace(b"MAXS", b"MA\xefS"))
+    df = pd.DataFrame({"crop_name": ["MAXS", "Maïze", "POIS DQANGOLE"], "harvest_kg": [1.0, 2.0, 3.0],
+                       "zone": [1, 2, 1]})
+    kw = {"convert_strl": ["crop_name"]} if kind == "strl" else {}
+    if kind == "labels":
+        kw = {"variable_labels": {"zone": "zone agro-Xcologique"}, "value_labels": {"zone": {1: "SahXl", 2: "N"}}}
+    df.to_stata(f, version=118, write_index=False, **kw)
+    b = f.read_bytes().replace(b"MAXS", b"MA\xefS").replace(b"DQANGOLE", b"D\x92ANGOLE")
+    f.write_bytes(b.replace(b"agro-Xcologique", b"agro-\xe9cologique").replace(b"SahXl", b"Sah\xe9l"))
     with pytest.raises(UnicodeDecodeError):
-        pyreadstat.read_dta(str(f))
-    d = ae.read_dta(f, ["crop_name", "harvest_kg"])
-    assert d.crop_name.tolist() == ["MAïS", "Maïze", "Beans"]              # UTF-8 values decoded back
-    assert list(ae.crop_group(d.crop_name)) == ["maize", "other", "staples_other"]
+        pyreadstat.read_dta(str(f), metadataonly=kind == "labels")
+    d = ae.read_dta(f, ["crop_name", "harvest_kg", "not_in_file"])
+    assert list(d.columns) == ["crop_name", "harvest_kg"]
+    assert d.crop_name.tolist() == ["MAïS", "Maïze", "POIS D’ANGOLE"]   # UTF-8 kept, cp1252 legacy byte read
+    assert d.harvest_kg.tolist() == [1.0, 2.0, 3.0]
+    assert list(ae.crop_group(d.crop_name)) == ["maize", "maize", "staples_other"]   # accents removed
+
+
+def test_canonical_crop_unifies_languages_and_spellings():
+    got = list(ae.canonical_crop(["MAïS", "Maize", "maize ", "PETIT  MIL", "Niébé", "POIS D’ANGOLE", "Groundnuts"]))
+    assert got == ["MAIZE", "MAIZE", "MAIZE", "MILLET", "COWPEA", "PIGEON PEA", "GROUNDNUTS"]
+    assert list(ae.crop_group(got)) == ["maize"] * 3 + ["sorghum_millet", "staples_other", "staples_other",
+                                                       "staples_other"]
