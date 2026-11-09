@@ -2402,7 +2402,9 @@ def add_covariate_changes(out, tr_rows, y0, y1, window):
         pb = [nearest_year(pops, int(y), 3) for y in y1]
         v = np.full(n, np.nan)
         for i, (a, b) in enumerate(zip(pa, pb)):
-            if a and b and a < b:
+            if a and b and a == b:
+                v[i] = 0.0                     # both waves nearest the same population epoch: no measured change
+            elif a and b and a < b:
                 v[i] = np.log1p(tr_rows[f"pop_{b}"].iat[i]) - np.log1p(tr_rows[f"pop_{a}"].iat[i])
         out["d_logpop"] = v.astype(np.float32)
 
@@ -2545,7 +2547,9 @@ def gate_v_inputs(s2, sensors, primary, pdir, work):
                 rows.append({"zone": z, "source": "admin", "n": k, "r_within": r})
     e2b_f = pdir / "e2b_ea.parquet"
     if e2b_f.exists():
-        y = pd.read_parquet(e2b_f, columns=["ea", "crop", "year", "log_yield", "lat", "lon"])
+        cols_b = set(pq.read_schema(e2b_f).names)
+        y = pd.read_parquet(e2b_f, columns=["ea", "crop", "year", "log_yield", "lat", "lon"]
+                            + (["season"] if "season" in cols_b else []))
         if len(y):
             ea = y.drop_duplicates("ea")[["ea", "lat", "lon"]]
             c0 = np.cos(np.radians(ea.lat.mean()))
@@ -2555,7 +2559,7 @@ def gate_v_inputs(s2, sensors, primary, pdir, work):
             if len(pairs):
                 en = long.merge(pairs, on="cell").groupby(["ea", "zone", "year"], as_index=False).ndvi.mean()
                 m = y.merge(en, on=["ea", "year"])
-                m["key"] = m.ea + "|" + m.crop
+                m["key"] = m.ea + "|" + m.crop + ("|" + m.season.astype(str) if "season" in m else "")
                 m["dy"], m["dn"] = detrended(m, "log_yield", "key"), detrended(m, "ndvi", "key")
                 for z, g in m.groupby("zone"):
                     r, k = within_r(g, "dy", "dn")
@@ -2947,6 +2951,31 @@ def cem_weights(s, treated, cols, bins=5):
     return w.astype(np.float32), st
 
 
+E3_OUTCOMES = (("loss_share", "loss_km2"), ("conv_share", "conv_km2"),
+               ("conv_annual_share", "conv_annual_km2"), ("conv_tree_share", "conv_tree_km2"))
+
+
+def e3_outcome_years(columns, col, name, during):
+    """Years of an epoch summed for one E3 outcome. Conversion needs cropland up to CONVERSION_WINDOW years
+    after the loss, so only loss years whose window is observed in full count (late epochs not censored)."""
+    have = sorted(int(c.rsplit("_", 1)[1]) for c in columns if re.fullmatch(rf"{col}_\d{{4}}", c))
+    if not have:
+        return []
+    last = have[-1] - (CONVERSION_WINDOW if name != "loss_share" else 0)
+    return [y for y in during if y in have and y <= last]
+
+
+def log_e3_years(columns, epochs, loss_years):
+    """One log line per epoch and outcome whose years differ from the epoch (run in the parent)."""
+    for a, b in epochs:
+        during = [y for y in loss_years if a < y <= b]
+        for name, col in E3_OUTCOMES:
+            use = e3_outcome_years(columns, col, name, during)
+            if during and use != during:
+                got = f"years {use[0]}-{use[-1]}" if use else "no year observed in full: not estimated"
+                log(f"E3 {a}-{b} d_{name}: {got} (epoch {during[0]}-{during[-1]})")
+
+
 def e3_longdiff(s, epochs, loss_years):
     """Long differences per sampled cell and epoch: access gain -(d log tt) per specification and the
     outcomes summed over the epoch relative to the forest at its start."""
@@ -2975,19 +3004,10 @@ def e3_longdiff(s, epochs, loss_years):
         rem = forest - sum(s.get(f"loss_km2_{y}", 0) for y in before)
         rem = np.maximum(np.asarray(rem, np.float64), 0)
         with np.errstate(invalid="ignore", divide="ignore"):
-            for name, col in (("loss_share", "loss_km2"), ("conv_share", "conv_km2"),
-                              ("conv_annual_share", "conv_annual_km2"), ("conv_tree_share", "conv_tree_km2")):
-                have = sorted(int(c.rsplit("_", 1)[1]) for c in s.columns if re.fullmatch(rf"{col}_\d{{4}}", c))
-                if not have:
-                    continue
-                # conversion needs cropland up to CONVERSION_WINDOW years after the loss: only loss years whose
-                # window is fully observed count, so the late epochs are not censored without notice
-                last = have[-1] - (CONVERSION_WINDOW if name != "loss_share" else 0)
-                use = [y for y in during if y in have and y <= last]
+            for name, col in E3_OUTCOMES:
+                use = e3_outcome_years(s.columns, col, name, during)
                 if not use:
                     continue
-                if use != during:
-                    log(f"E3 {a}-{b} d_{name}: years {use[0]}-{use[-1]} (observed in full), not {during[0]}-{during[-1]}")
                 tot = sum(s[f"{col}_{y}"].to_numpy(np.float64) for y in use)
                 d[f"d_{name}"] = np.where(rem > 0, tot / rem, np.nan).astype(np.float32)
         ra = [f"rain_{y}" for y in range(a - 2, a + 1) if f"rain_{y}" in s]
@@ -3031,6 +3051,15 @@ def stage_panels(ctx):
                      "ndvi": str(work / "ndvi" / f"{t['tile']}.parquet"),
                      "primary": primary, "n_treated": nt, "n_control": nc})
     res_parts = [p for p in run_parallel(panel_tile_job, jobs, 6e9, "panel tiles") if p is not None]
+    cols = []
+    for j in jobs:                     # E3 outcome years, logged once here (the tile jobs run in workers)
+        for k in ("landuse", "landcover_alt"):
+            if Path(j[k]).exists():
+                cols += pq.read_schema(j[k]).names
+        if cols:
+            break
+    log_e3_years(cols, LONG_EPOCHS,
+                 sorted(int(c.rsplit("_", 1)[1]) for c in cols if re.fullmatch(r"loss_km2_\d{4}", c)))
     for name in ("e2a_admin", "e2b_ea", "e2e_admin", "e2e_ea"):
         f = work / "panels_parts" / f"{name}.parquet"
         if f.exists():

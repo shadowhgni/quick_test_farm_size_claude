@@ -733,3 +733,13 @@ def test_ea_value_per_hectare_counts_valued_plots_only():
     allc = g[g.crop_name == "ALL"]
     assert np.exp(allc.log_value_ha.iloc[0]) == pytest.approx(100.0)
     assert g[g.crop_name == "MAIZE"].hired.iloc[0] == pytest.approx(1.0)     # missing labour is not 'none'
+
+
+def test_ea_longdiff_same_population_epoch_is_zero_change():
+    tr = pd.DataFrame({"uid": [1], "ev_roadonly_cities_11": [0], "pop_2010": [10.0], "pop_2015": [20.0]}).assign(
+        **{f"tt_roadonly_cities_11_{y}": 100.0 for y in range(2009, 2020)})
+    panel = pd.DataFrame({"id": 1, "uid": 1, "crop": "MAIZE", "lat": 9.0, "lon": 39.0, "region": "NGA", "w": 1.0,
+                          "year": [2010, 2012, 2015], "log_yield": [0.1, 0.2, 0.3]})
+    d = ae.ea_longdiff(panel, tr)
+    assert list(d.epoch) == ["2010-2012", "2012-2015"]
+    assert d.d_logpop.tolist()[0] == 0.0 and d.d_logpop.notna().all()
