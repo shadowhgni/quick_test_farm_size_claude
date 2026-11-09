@@ -450,6 +450,7 @@ The pipeline `access_effects_v01.py` and the estimation script (`estimate_effect
 | 2026-10-30 | Annual/tree-crop split of E1; new E1c and E2e; E2c redefined as E2d (vigour, Gate V) | Author's question on GLC_FCS30D, NDVI and crop change; research review | Yes |
 | 2026-10-30 | Road-only travel time added to the HPC run after the fact (GA 3.3.0 stage `roadonly`) | The September travel-time run predates road-only | Yes |
 | 2026-10-30 | Estimation moved from R (`did`, `fixest`, `contdid`) to Python: `moderndid` 0.4.1, `pyfixest` 0.60.0, and Conley errors computed in the script with the `fixest` conventions. Parity on simulated panels: identical point estimates and pre-trend tests, Conley errors within 3%, bootstrap errors within 15%, identical Gate C decisions | The HPC container has no R | Yes |
+| 2026-11-09 | Revision 3: Tier 1 (annual, short term, headline = mean of event years 1–3) and Tier 2 (long differences, total travel time primary, own gate: pre-period placebo, burst exclusion, versions); E2e tested as its own hypothesis in both tiers; BH within tier and family | Author's request; the HPC travel-time run is not annual | Yes |
 | 2026-10-31 | When the travel-time reference years are not annual (the HPC run has 2015/2020/2026), only the long differences (E3) are estimated, and Gate C labels every result an association | A simulation in code review: binned cohorts turned a true effect of +1 into 0.04 with failed pre-trends, and pushed treated cells into the never-treated controls | Yes |
 | 2026-10-30 | E2d: season year per pixel (starts at the climatological minimum) instead of the calendar year; integral = mean of the valid season months × season length; Sentinel-2 masked at 10 m and run on the pilot countries | Code review of the Earth Engine export: seasons crossing the new year were split, cloudy months lowered the integral, and the 80 m pyramid blurred the cloud mask | Yes (no export had succeeded) |
 | 2026-10-30 | Continuous dose (`cont_did`): balanced units only and unweighted. The R script's overall ACRT error was about 10 times too small (wrong field); a Monte Carlo with a true slope of 0 supports the Python error | Package limits; bug found in the parity check | Yes |
@@ -459,6 +460,41 @@ The pipeline `access_effects_v01.py` and the estimation script (`estimate_effect
 - **Tree crops under shade** (cocoa) may never show as Hansen loss.
 - **Masolele's classes describe 2022**, so short-lived uses after loss are missed.
 - **NDVI can move with weeds, fallow and crop switching.** Gate V and the composite label exist for this.
+
+## Revision 3: two tiers and the crop-mix hypothesis (2026-11-09)
+
+**Why.** The travel-time run on the HPC has the reference years 2015, 2020 and 2026. Dating roads to a year needs
+annual travel time; long-term change does not. The author also asked that the crop mix be a hypothesis of its own.
+
+**Tier 1, short term (annual travel time).**
+- Event studies (Callaway–Sant'Anna main, Sun–Abraham, continuous dose, TWFE for comparison) on access events dated
+  to the year. Primary series: road-only travel time to cities.
+- Headline effect: the mean of event years 1–3 after the change (`lag_1_3`). The full profile e0…e5 is reported.
+  This window was fixed on 2026-11-09, before any outcome was examined.
+- Gate (as Gate C): pre-trends; burst placebo; controls and travel-time versions; same sign in the Tier 2 long
+  difference.
+- Runs only when the travel-time years are annual. E1c and E2d need Tier 1.
+
+**Tier 2, long term (any reference years).**
+- Long differences 2015→2020, 2020→2025 and 2015→2025, with Conley errors (50 km) and region × epoch effects.
+  Covariates: rainfall and population change.
+- Primary series: total travel time to cities (Weiss-completed). Road-only travel time is the robustness series.
+- Units: cells (E1), admin units (E2a, E2e), survey EAs (E2b, E2e).
+- Gate (all three must pass for "causal, long term"; otherwise "association, long term"):
+  1. **Pre-period placebo.** The outcome change over 2010→2015 (forest loss for cells, before cropland maps exist;
+     yields and crop shares for units and EAs, waves up to 2015) is regressed on the later access change
+     (2015→2025). It must be small (p > 0.10 and below a third of the main effect).
+  2. **Burst exclusion.** Without the units whose access change is attributed to a mapping burst, the effect keeps
+     its sign and stays within half to twice its size.
+  3. **Versions.** Road-only and total travel time give the same sign.
+
+**E2e, crop mix, as a hypothesis.** "Access changes the crop mix" is tested on its own: crop shares (maize,
+cassava, rice, sorghum and millet, cash crops, other staples) and Shannon diversity, for admin units and EAs, in
+both tiers. Yield and vigour results in a tier where a crop share changes (significant after BH; in Tier 1 also
+≥ 5 points) keep the label "composite (yield + crop mix)".
+
+**Multiple testing.** Benjamini–Hochberg within each tier and outcome family: land use (E1, E1c), yield (E2a, E2b),
+vigour (E2d), crop mix (E2e).
 
 ## Limitations and risks
 

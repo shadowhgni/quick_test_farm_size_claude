@@ -270,7 +270,10 @@ def test_stages_write_tables(run):
     assert {"g__roadonly_cities_11", "log_yield", "n_hh", "n_plots"} <= set(e2b.columns)
     # waves 2010/2012/2015/2018 against travel time 2015/2020/2026: only 2015 is within a year of a reference
     # year, so no wave pair has a measured access change and E2b has no long difference
-    assert "E2b_ea" not in set(e3.dataset)
+    assert "E2b_ea" not in set(e3[e3.period == "main"].dataset)
+    assert (e3[e3.dataset == "E2b_ea"].period == "pre").all()           # placebo pairs before 2015 exist
+    assert {"E2e_admin", "E2e_ea"} <= set(e3.dataset)                  # E2e: a hypothesis of its own (Tier 2)
+    assert e3[(e3.dataset == "E1_cells") & (e3.period == "pre")].d_loss_share.notna().any()
     assert "d_rain" in e3.columns and e3[e3.dataset == "E2a_admin"].d_rain.notna().all()
     # --- revision 2 -------------------------------------------------------------------------------------
     tile = run["tiles"][0]["tile"]
@@ -656,14 +659,27 @@ def test_only_a_missing_file_is_skipped():
     assert not ae.not_found(ae.RemoteUnavailable("HTTP 403", status=403))
 
 
-def test_longdiff_only_when_treatment_not_annual(tmp_path):
+def test_tier2_gate(tmp_path):
     import estimate_effects as ef
-    est = pd.DataFrame([dict(dataset="E1_cells", outcome="conv_share", crop=None, spec="s", estimator="longdiff",
-                             control="all", term="overall", estimate=0.4, se=0.1, p=0.001, n=100, error=None,
-                             note=None)], columns=ef.COLUMNS)
-    g = ef.gate_c_longdiff(est, {**ef.DEFAULTS, "primary_spec": "s"})
-    assert len(g) == 1 and not g.causal.iloc[0] and "not annual" in g.label.iloc[0] and g.significant_bh.iloc[0]
+    cfg = {**ef.DEFAULTS, "primary_spec": "roadonly_cities_11", "tier2_primary_spec": "total_cities_11",
+           "annual_treatment": False}
 
+    def r(est_name, spec, estimate, p):
+        return dict(dataset="E1_cells", outcome="conv_share", crop=None, spec=spec, estimator=est_name, control="all",
+                    term="overall", estimate=estimate, se=0.01, p=p, n=100, error=None, note=None)
+    est = pd.DataFrame([r("longdiff", "total_cities_11", 0.4, 0.001), r("longdiff_pre", "total_cities_11", 0.01, 0.7),
+                        r("longdiff_noburst", "total_cities_11", 0.35, 0.002), r("longdiff", "roadonly_cities_11", 0.3, 0.01)],
+                       columns=ef.COLUMNS)
+    g = ef.gate_table(est, cfg)
+    assert list(g.tier) == [2] and g.causal.iloc[0] and g.label.iloc[0] == ef.TIER2_CAUSAL
+    assert g.family.iloc[0] == "land use" and g.significant_bh.iloc[0]
+    # a pre-period placebo that follows the later access change fails the gate
+    est.loc[est.estimator == "longdiff_pre", ["estimate", "p"]] = [0.3, 0.001]
+    g = ef.gate_table(est, cfg)
+    assert not g.causal.iloc[0] and g.c1_pretrends.iloc[0] is False or g.c1_pretrends.iloc[0] == False   # noqa: E712
+    # no placebo estimate: not assessed, never causal
+    g = ef.gate_table(est[est.estimator != "longdiff_pre"], cfg)
+    assert g.c1_pretrends.isna().iloc[0] and not g.causal.iloc[0]
 
 @pytest.mark.parametrize("kind", ["str", "strl", "labels"])
 def test_read_dta_with_latin1_text(tmp_path, kind):
@@ -703,6 +719,8 @@ def test_ea_longdiff_pairs_waves_by_reference_year():
     panel = pd.DataFrame({"id": 1, "uid": 1, "crop": "MAIZE", "lat": 9.0, "lon": 39.0, "region": "ETH", "w": 1.0,
                           "year": [2011, 2013, 2015, 2021], "log_yield": [0.1, 0.2, 0.3, 0.7]})
     d = ae.ea_longdiff(panel, tr)
+    assert set(d[d.period == "pre"].epoch) == {"pre:2011-2013", "pre:2013-2015"}
+    d = d[d.period == "main"]
     assert len(d) == 1 and d.epoch.iloc[0] == "2015-2021"
     assert d.d_log_yield.iloc[0] == pytest.approx(0.4)
     assert d["d_access__roadonly_cities_11"].iloc[0] == pytest.approx(np.log1p(100) - np.log1p(50), rel=1e-5)
@@ -711,7 +729,8 @@ def test_ea_longdiff_pairs_waves_by_reference_year():
     # annual reference years: consecutive waves, as before
     tr_annual = pd.DataFrame({"uid": [1], "ev_roadonly_cities_11": [2019]}).assign(
         **{f"tt_roadonly_cities_11_{y}": 100.0 - y % 100 for y in range(2011, 2022)})
-    assert list(ae.ea_longdiff(panel, tr_annual).epoch) == ["2011-2013", "2013-2015", "2015-2021"]
+    d2 = ae.ea_longdiff(panel, tr_annual)
+    assert list(d2[d2.period == "main"].epoch) == ["2011-2013", "2013-2015", "2015-2021"]
 
 
 def test_conley_refuses_clustered_locations():
@@ -741,5 +760,6 @@ def test_ea_longdiff_same_population_epoch_is_zero_change():
     panel = pd.DataFrame({"id": 1, "uid": 1, "crop": "MAIZE", "lat": 9.0, "lon": 39.0, "region": "NGA", "w": 1.0,
                           "year": [2010, 2012, 2015], "log_yield": [0.1, 0.2, 0.3]})
     d = ae.ea_longdiff(panel, tr)
+    d = d[d.period == "main"]
     assert list(d.epoch) == ["2010-2012", "2012-2015"]
     assert d.d_logpop.tolist()[0] == 0.0 and d.d_logpop.notna().all()

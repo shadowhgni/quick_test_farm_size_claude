@@ -45,7 +45,10 @@ def both(tmp_path_factory):
     r = subprocess.run(["Rscript", str(HERE / "reference_estimate_effects.R"), str(p), str(root / "r")],
                        capture_output=True, text=True, timeout=3600)
     assert r.returncode == 0, r.stdout[-2000:] + r.stderr[-2000:]
-    q = subprocess.run([sys.executable, str(HERE.parent / "estimate_effects.py"), str(p), str(root / "py")],
+    # the R reference has no Tier 1 lag headline and no Tier 2 gate: compare with the overall headline
+    cf = root / "py_config.json"
+    cf.write_text('{"tier1_lag": null}')
+    q = subprocess.run([sys.executable, str(HERE.parent / "estimate_effects.py"), str(p), str(root / "py"), str(cf)],
                        capture_output=True, text=True, timeout=3600,
                        env={**os.environ, "PYTHONPATH": os.pathsep.join(sys.path)})
     assert q.returncode == 0, q.stdout[-2000:] + q.stderr[-2000:]
@@ -89,7 +92,10 @@ def test_bootstrap_errors_close(both):
 def test_gate_c_same_decisions(both):
     _, root = both
     gr, gp = pd.read_csv(root / "r" / "gate_c.csv"), pd.read_csv(root / "py" / "gate_c.csv")
+    gp = gp[gp.tier == 1]
     k = ["dataset", "outcome"]
     g = gr.merge(gp, on=k + ["crop"] if gr.crop.notna().any() else k, suffixes=("_r", "_py"))
-    for c in ("c1_pretrends", "c3_controls_versions", "causal", "label"):
+    for c in ("c1_pretrends", "c3_controls_versions", "causal"):
         assert (g[f"{c}_r"].astype(str) == g[f"{c}_py"].astype(str)).all(), c
+    # label wording differs (revision 3 names the tier); the composite flag must agree
+    assert (g.label_r.str.contains("composite") == g.label_py.str.contains("composite")).all()

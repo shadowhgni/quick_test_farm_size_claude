@@ -16,9 +16,9 @@ from the travel-time store of `global_accessibility_v3.py`.
 
 1. Finish a `global_accessibility_v3.py` run (stage `store`). For annual treatment, run it with
    `--years 2015 2016 … 2026 --weiss-years none`. The default 2015/2020/2026 run gives the long-term level only.
-   With it, an access gain can only be dated to a reference year, so stage `estimate` then runs the long
-   differences (E3) only, and Gate C labels every result an association. The event studies (E1, E2a, E2b, E2d,
-   E2e) need the annual run.
+   With it, an access gain can only be dated to a reference year, so stage `estimate` then runs Tier 2 only
+   (long differences with their own gate; revision 3 of the design). Tier 1 (event studies, headline = mean of
+   event years 1–3) needs the annual run.
 2. Put this folder next to the GA results and set `GA_RESULTS` at the top of `access_effects_v01.py`.
    If you have both an annual run and a three-year run, list the annual run first.
 3. Stage `estimate` needs Python 3.12 or later (`moderndid` requires it). On first use it installs

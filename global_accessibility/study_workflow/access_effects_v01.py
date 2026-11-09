@@ -74,6 +74,10 @@ BAND_MAX_KM = 40.0              # distances are computed up to this (sensitivity
 LONG_EPOCHS = [(2015, 2020), (2020, 2025), (2015, 2025)]   # E3; a missing year uses the nearest one
                                                            # within LONG_EPOCH_TOL years
 LONG_EPOCH_TOL = 1
+# Tier 2 placebo (revision 3): the outcome change over a pre-period (2010-2015, before any measured access
+# change) regressed on the later access change (2015-2025) should be ~0
+PRE_EPOCH = (2010, 2015)
+PLACEBO_ACCESS_EPOCH = (2015, 2025)
 
 # --- land use (Phase 1) -------------------------------------------------------------
 HANSEN_VERSION = "GFC-2025-v1.13"   # Hansen/UMD Global Forest Change (loss 2001-2025; CC BY 4.0). v1.13 reprocessed
@@ -164,7 +168,9 @@ EA_MIN_HH = 5                       # EA x crop x season kept with >= 5 househol
 EA_MIN_PLOTS = 8                    # ... and >= 8 plots (approved defaults)
 
 # --- panels and estimation ------------------------------------------------------------
-PRIMARY_SPEC = "roadonly_cities_11"
+PRIMARY_SPEC = "roadonly_cities_11"           # Tier 1 (annual event studies)
+TIER2_PRIMARY_SPEC = "total_cities_11"        # Tier 2 (long differences): total travel time, Weiss-completed
+TIER1_LAG = (1, 3)                            # Tier 1 headline: mean effect over event years 1-3 after the change
 ESTIMATE_SPECS = ["roadonly_cities_11", "total_cities_11", "roadonly_cities_12", "roadonly_ports_5"]
 E1_FOREST_MIN_KM2 = 0.05            # E1 cells: >= 0.05 km2 of forest in 2000 (~6% of a cell)
 E1_SAMPLE_TREATED = 150000          # sampled cells (stratified by tile, with sampling weights)
@@ -1965,32 +1971,57 @@ def unit_year_treatment(out, d, specs):
     return out
 
 
-def admin_longdiff(units_tr, hv_panel, units):
-    """E3 for admin units: mean log yield over the 3 harvest years ending at each epoch end, differenced,
-    against the unit access gain over the epoch."""
+def window_longdiff(df, tr, dataset, values, key, crop=None, window=2):
+    """Tier 2 long differences for units observed every year (admin units): the mean of each value over the
+    window years ending at each epoch end, differenced, against the unit access change over the epoch; plus
+    the pre-period placebo (PRE_EPOCH outcome change against the PLACEBO_ACCESS_EPOCH access change).
+    df: one row per series and year with key, uid, year, lat, lon, region, crop (optional) and the values."""
+    specs = spec_names(tr.columns)
+    trx = tr.set_index("uid")
+    meta = df.drop_duplicates(key).set_index(key)[["uid", "lat", "lon", "region"] + ([crop] if crop else [])]
+    plan = [("main", a, b, a, b) for a, b in LONG_EPOCHS] + [("pre", *PRE_EPOCH, *PLACEBO_ACCESS_EPOCH)]
     rows = []
-    specs = spec_names(units_tr.columns)
-    for a, b in LONG_EPOCHS:
-        ya = hv_panel[hv_panel.year.between(a - 2, a)].groupby(["unit", "crop"]).log_yield.mean()
-        yb = hv_panel[hv_panel.year.between(b - 2, b)].groupby(["unit", "crop"]).log_yield.mean()
-        dy = (yb - ya).dropna().rename("d_log_yield").reset_index()
-        if dy.empty:
+    for period, a, b, xa, xb in plan:
+        wa = df[df.year.between(a - window, a)].groupby(key)[values].mean()
+        wb = df[df.year.between(b - window, b)].groupby(key)[values].mean()
+        dv = (wb - wa).dropna(how="all")
+        if dv.empty:
             continue
-        dy["fnid"] = dy.unit.str.split("|").str[0]          # unit = fnid|crop|season|system
-        dy = dy.merge(units[["fnid", "uid", "lat", "lon", "country_code"]], on="fnid").merge(units_tr, on="uid")
-        rec = pd.DataFrame({"dataset": "E2a_admin", "crop": dy.crop, "id": pd.factorize(dy.unit)[0] + 1,
-                            "lat": dy.lat, "lon": dy.lon, "region": dy.country_code, "w": 1.0,
-                            "epoch": f"{a}-{b}", "d_log_yield": dy.d_log_yield})
-        for sp in specs:
-            ys = tt_years(units_tr.columns, sp)
-            y0, y1 = nearest_year(ys, a, LONG_EPOCH_TOL), nearest_year(ys, b, LONG_EPOCH_TOL)
-            if y0 and y1 and y0 < y1:
-                rec[f"d_access__{sp}"] = -(np.log1p(dy[f"tt_{sp}_{y1}"]) - np.log1p(dy[f"tt_{sp}_{y0}"])).to_numpy()
-        add_covariate_changes(rec, dy, np.full(len(dy), a), np.full(len(dy), b), window=2)
-        yrs = sorted(hv_panel.year[hv_panel.year.between(b - 2, b)].unique().tolist())
-        log(f"E2a long difference {a}-{b}: {len(rec):,} unit-crop series; end-window harvest years {yrs}")
+        dv = dv.join(meta, how="inner").reset_index()
+        rec = pd.DataFrame({"dataset": dataset, "crop": dv[crop].to_numpy() if crop else None, "series": dv[key].to_numpy(),
+                            "lat": dv.lat.to_numpy(), "lon": dv.lon.to_numpy(), "region": dv.region.to_numpy(),
+                            "w": 1.0, "epoch": f"{a}-{b}" if period == "main" else f"pre:{a}-{b}", "period": period})
+        for v in values:
+            rec[f"d_{v}"] = dv[v].to_numpy()
+        tr_rows = trx.loc[dv.uid]
+        add_access_changes(rec, tr_rows, specs, xa, xb)
+        add_covariate_changes(rec, tr_rows, np.full(len(dv), a), np.full(len(dv), b), window=window)
         rows.append(rec)
-    return pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
+    if not rows:
+        return pd.DataFrame()
+    out = pd.concat(rows, ignore_index=True)
+    out.insert(2, "id", pd.factorize(out.pop("series"))[0] + 1)
+    log(f"{dataset} long differences: " + ", ".join(f"{e} {n:,}" for e, n in out.groupby("epoch").size().items()))
+    return out
+
+
+def add_access_changes(rec, tr_rows, specs, ya, yb):
+    """d_access__<spec> = -(change in log travel time) between the reference years nearest ya and yb, and
+    burst__<spec> (the unit's access event is attributed to a mapping burst) for the burst-exclusion check."""
+    for sp in specs:
+        ys = tt_years(tr_rows.columns, sp)
+        y0, y1 = nearest_year(ys, ya, LONG_EPOCH_TOL), nearest_year(ys, yb, LONG_EPOCH_TOL)
+        if y0 and y1 and y0 < y1:
+            rec[f"d_access__{sp}"] = (-(np.log1p(tr_rows[f"tt_{sp}_{y1}"].to_numpy(np.float64))
+                                        - np.log1p(tr_rows[f"tt_{sp}_{y0}"].to_numpy(np.float64)))).astype(np.float32)
+        if f"evclass_{sp}" in tr_rows:
+            rec[f"burst__{sp}"] = tr_rows[f"evclass_{sp}"].to_numpy() == 2
+
+
+def admin_longdiff(units_tr, hv_panel, units):
+    """E2a Tier 2: mean log yield over the 3 harvest years ending at each epoch end, per unit x crop series."""
+    df = hv_panel.merge(units[["fnid", "uid"]], on="fnid")
+    return window_longdiff(df, units_tr, "E2a_admin", ["log_yield"], "unit", crop="crop")
 
 
 def stage_admin(ctx):
@@ -2344,42 +2375,66 @@ def stage_lsms(ctx):
     return {"ea": int(panel.ea.nunique()), "rows": len(panel), "weight": weight}
 
 
-def ea_longdiff(panel, tr):
-    """E3 for EAs: log-yield differences of each EA x crop between survey waves, against the access gain
-    between the travel-time reference years of the two waves. Each wave is matched to the reference year
-    nearest to it (within LONG_EPOCH_TOL; the closest wave per reference year is kept), and successive
-    matched waves are paired: consecutive waves with annual travel time, e.g. 2015 -> 2021 for the
-    reference years 2015/2020/2026. Rainfall and population changes of the EA are the covariates."""
+def ea_longdiff(panel, tr, values=("log_yield",), dataset="E2b_ea"):
+    """Tier 2 long differences for EAs (survey waves): differences of each EA series between waves, against
+    the access change between the travel-time reference years of the two waves. Each wave is matched to the
+    reference year nearest to it (within LONG_EPOCH_TOL; the closest wave per reference year is kept) and
+    successive matched waves are paired: consecutive waves with annual travel time, e.g. 2015 -> 2021 for the
+    reference years 2015/2020/2026. Placebo: successive waves up to PRE_EPOCH's end against the EA's later
+    access change (PLACEBO_ACCESS_EPOCH). Rainfall and population changes of the EA are the covariates."""
+    values = list(values)
     specs = spec_names(tr.columns)
     common = [set(tt_years(tr.columns, sp)) for sp in specs]
     ys = sorted(set.intersection(*common)) if common else []
-    p = panel.dropna(subset=["log_yield"]).copy()
+    trx = tr.set_index("uid")
+    base = panel.dropna(subset=values, how="all").sort_values(["id", "year"])
+    parts = []
+    # main pairs
+    p = base.copy()
     p["ref"] = [nearest_year(ys, int(y), LONG_EPOCH_TOL) if ys else None for y in p.year]
     p = p[p.ref.notna()].copy()
-    if p.empty:
+    if len(p):
+        p["ref"] = p.ref.astype(int)
+        p["gap"] = (p.year - p.ref).abs()
+        p = p.sort_values(["id", "ref", "gap", "year"]).drop_duplicates(["id", "ref"]).sort_values(["id", "ref"])
+        nxt = p.groupby("id")[["year", "ref"] + values].shift(-1)
+        d = p.assign(y1=nxt.year, ref1=nxt.ref, **{f"{v}__1": nxt[v] for v in values}).dropna(subset=["y1", "ref1"])
+        if len(d):
+            parts.append((d, "main", d.ref.to_numpy(), d.ref1.to_numpy()))
+    # placebo pairs: successive waves before the access change
+    q = base[base.year <= PRE_EPOCH[1]]
+    nxt = q.groupby("id")[["year"] + values].shift(-1)
+    d = q.assign(y1=nxt.year, **{f"{v}__1": nxt[v] for v in values}).dropna(subset=["y1"])
+    if len(d) and ys:
+        xa, xb = nearest_year(ys, PLACEBO_ACCESS_EPOCH[0], LONG_EPOCH_TOL), nearest_year(ys, PLACEBO_ACCESS_EPOCH[1], LONG_EPOCH_TOL)
+        if xa and xb and xa < xb:
+            parts.append((d, "pre", np.full(len(d), xa), np.full(len(d), xb)))
+    rows = []
+    for d, period, r0, r1 in parts:
+        lab = d.year.astype(int).astype(str).to_numpy() + "-" + d.y1.astype(int).astype(str).to_numpy()
+        out = pd.DataFrame({"dataset": dataset, "crop": d.crop.to_numpy(), "id": d.id.to_numpy(),
+                            "lat": d.lat.to_numpy(), "lon": d.lon.to_numpy(), "region": d.region.to_numpy(),
+                            "w": d.w.to_numpy(), "epoch": lab if period == "main" else np.char.add("pre:", lab.astype(str)),
+                            "period": period})
+        for v in values:
+            out[f"d_{v}"] = (d[f"{v}__1"] - d[v]).to_numpy()
+        tr_rows = trx.loc[d.uid]
+        for sp in specs:
+            a = tr_rows[[f"tt_{sp}_{y}" for y in ys]].to_numpy(np.float64)
+            col = {y: i for i, y in enumerate(ys)}
+            i0 = np.array([col[int(y)] for y in r0]); i1 = np.array([col[int(y)] for y in r1])
+            k = np.arange(len(d))
+            out[f"d_access__{sp}"] = (-(np.log1p(a[k, i1]) - np.log1p(a[k, i0]))).astype(np.float32)
+            if f"evclass_{sp}" in tr_rows:
+                out[f"burst__{sp}"] = tr_rows[f"evclass_{sp}"].to_numpy() == 2
+        add_covariate_changes(out, tr_rows, d.year.astype(int).to_numpy(), d.y1.astype(int).to_numpy(), window=0)
+        rows.append(out)
+    if not rows:
         return pd.DataFrame()
-    p["ref"] = p.ref.astype(int)
-    p["gap"] = (p.year - p.ref).abs()
-    p = p.sort_values(["id", "ref", "gap", "year"]).drop_duplicates(["id", "ref"]).sort_values(["id", "ref"])
-    nxt = p.groupby("id")[["year", "ref", "log_yield"]].shift(-1)
-    d = p.assign(y1=nxt.year, ref1=nxt.ref, ly1=nxt.log_yield).dropna(subset=["y1", "ref1", "ly1"])
-    if d.empty:
-        return pd.DataFrame()
-    out = pd.DataFrame({"dataset": "E2b_ea", "crop": d.crop.to_numpy(), "id": d.id.to_numpy(),
-                        "lat": d.lat.to_numpy(), "lon": d.lon.to_numpy(), "region": d.region.to_numpy(),
-                        "w": d.w.to_numpy(),
-                        "epoch": d.year.astype(int).astype(str).to_numpy() + "-" + d.y1.astype(int).astype(str).to_numpy(),
-                        "d_log_yield": (d.ly1 - d.log_yield).to_numpy()})
-    trx = tr.set_index("uid")
-    for sp in specs:
-        a = trx.loc[d.uid, [f"tt_{sp}_{y}" for y in ys]].to_numpy(np.float64)
-        col = {y: i for i, y in enumerate(ys)}
-        i0 = np.array([col[int(y)] for y in d.ref]); i1 = np.array([col[int(y)] for y in d.ref1])
-        rows = np.arange(len(d))
-        out[f"d_access__{sp}"] = (-(np.log1p(a[rows, i1]) - np.log1p(a[rows, i0]))).astype(np.float32)
-    add_covariate_changes(out, trx.loc[d.uid], d.year.astype(int).to_numpy(), d.y1.astype(int).to_numpy(), window=0)
-    by = out.groupby("region").size().to_dict()
-    log(f"E2b long differences: {len(out):,} EA-crop wave pairs by country {by}")
+    out = pd.concat(rows, ignore_index=True)
+    main = out[out.period == "main"]
+    log(f"{dataset} long differences: {len(main):,} wave pairs by country {main.groupby('region').size().to_dict()}, "
+        f"{(out.period == 'pre').sum():,} placebo pairs")
     return out
 
 
@@ -2682,6 +2737,10 @@ def stage_cropmix(ctx):
             [c for c in d.columns if c.startswith("share_")]
         panel = unit_year_treatment(d[cols].copy(), d, spec_names(tr.columns))
         write_parquet(panel, out_parts / "e2e_admin.parquet")
+        shares = [c for c in d.columns if c.startswith("share_")] + ["shannon"]
+        ld = window_longdiff(d, tr, "E2e_admin", shares, "fnid")       # E2e is a hypothesis of its own (Tier 2)
+        if not ld.empty:
+            write_parquet(ld, out_parts / "e3_e2e_admin.parquet")
         info["admin_units"] = int(panel.id.nunique())
         log(f"cropmix: {panel.id.nunique():,} admin units, {len(panel):,} unit-years")
     else:
@@ -2700,8 +2759,13 @@ def stage_cropmix(ctx):
         comp = comp.merge(hh, on=["ea", "year"])
         comp = comp[comp.n_hh >= EA_MIN_HH]
         comp["crop_name"] = "MIX"
-        panel = ea_panel(comp, pd.read_parquet(pts_f), pd.read_parquet(tf))
+        tr_ea = pd.read_parquet(tf)
+        panel = ea_panel(comp, pd.read_parquet(pts_f), tr_ea)
         write_parquet(panel, out_parts / "e2e_ea.parquet")
+        shares = [c for c in panel.columns if c.startswith("share_") and c != "share_sold"] + ["shannon"]
+        ld = ea_longdiff(panel, tr_ea, values=shares, dataset="E2e_ea")
+        if not ld.empty:
+            write_parquet(ld, out_parts / "e3_e2e_ea.parquet")
         info["ea"] = int(panel.ea.nunique())
         log(f"cropmix: {panel.ea.nunique():,} EAs, {len(panel):,} EA-waves")
     else:
@@ -2951,6 +3015,7 @@ def cem_weights(s, treated, cols, bins=5):
     return w.astype(np.float32), st
 
 
+E3_PARTS = ("e3_admin.parquet", "e3_ea.parquet", "e3_e2e_admin.parquet", "e3_e2e_ea.parquet")
 E3_OUTCOMES = (("loss_share", "loss_km2"), ("conv_share", "conv_km2"),
                ("conv_annual_share", "conv_annual_km2"), ("conv_tree_share", "conv_tree_km2"))
 
@@ -2982,19 +3047,24 @@ def e3_longdiff(s, epochs, loss_years):
     rows = []
     specs = spec_names(s.columns)
     forest = s["forest2000_km2"].to_numpy(np.float64)
-    for a, b in epochs:
+    # main epochs, then the Tier 2 placebo: forest loss over PRE_EPOCH against the later access change
+    plan = [("main", a, b, a, b) for a, b in epochs] + [("pre", *PRE_EPOCH, *PLACEBO_ACCESS_EPOCH)]
+    for period, a, b, xa, xb in plan:
         d = {"id": s["cell"].to_numpy(np.int64), "lat": s["lat"].to_numpy(), "lon": s["lon"].to_numpy(),
              "region": s["iso3"].to_numpy() if "iso3" in s else s["cid"].astype(str).to_numpy(),
-             "w": s["w"].to_numpy(np.float32), "epoch": f"{a}-{b}"}
+             "w": s["w"].to_numpy(np.float32), "epoch": f"{a}-{b}" if period == "main" else f"pre:{a}-{b}",
+             "period": period}
         ok_any = False
         for sp in specs:
             ys = tt_years(s.columns, sp)
-            ya, yb = nearest_year(ys, a, LONG_EPOCH_TOL), nearest_year(ys, b, LONG_EPOCH_TOL)
+            ya, yb = nearest_year(ys, xa, LONG_EPOCH_TOL), nearest_year(ys, xb, LONG_EPOCH_TOL)
             if ya is None or yb is None or ya >= yb:
                 continue
             ok_any = True
             d[f"d_access__{sp}"] = -(np.log1p(s[f"tt_{sp}_{yb}"].to_numpy(np.float64))
                                      - np.log1p(s[f"tt_{sp}_{ya}"].to_numpy(np.float64))).astype(np.float32)
+            if f"evclass_{sp}" in s:
+                d[f"burst__{sp}"] = s[f"evclass_{sp}"].to_numpy() == 2
         if not ok_any:
             continue
         before = [y for y in loss_years if y <= a]
@@ -3005,6 +3075,8 @@ def e3_longdiff(s, epochs, loss_years):
         rem = np.maximum(np.asarray(rem, np.float64), 0)
         with np.errstate(invalid="ignore", divide="ignore"):
             for name, col in E3_OUTCOMES:
+                if period == "pre" and name != "loss_share":
+                    continue                   # no cropland map before 2014: the placebo is forest loss only
                 use = e3_outcome_years(s.columns, col, name, during)
                 if not use:
                     continue
@@ -3081,8 +3153,7 @@ def stage_panels(ctx):
     parts = [p["e1"] for p in res_parts if "e1" in p]
     if not parts:
         log("panels: no cell has land-use data with forest at baseline; E1, E1c and the E3 cell panel skipped")
-        e3 = pd.concat([pd.read_parquet(f) for f in (work / "panels_parts" / "e3_admin.parquet",
-                                                     work / "panels_parts" / "e3_ea.parquet") if f.exists()]
+        e3 = pd.concat([pd.read_parquet(f) for f in (work / "panels_parts" / x for x in E3_PARTS) if f.exists()]
                        or [pd.DataFrame()], ignore_index=True)
         if not e3.empty:
             write_parquet(e3, pdir / "e3_longdiff.parquet")
@@ -3112,7 +3183,7 @@ def stage_panels(ctx):
             write_parquet(e1c, pdir / "e1c_replacement.parquet")
             info["e1c_rows"] = len(e1c)
     e3 = e3_longdiff(s, LONG_EPOCHS, loss_years)
-    for extra in ("e3_admin.parquet", "e3_ea.parquet"):     # long differences of E2a / E2b (stages admin, lsms)
+    for extra in E3_PARTS:                 # long differences of E2a, E2b (stages admin, lsms) and E2e (cropmix)
         f = work / "panels_parts" / extra
         if f.exists():
             e3 = pd.concat([e3, pd.read_parquet(f)], ignore_index=True)
@@ -3232,7 +3303,8 @@ def stage_estimate(ctx):
     if not annual:
         log("WARNING: the travel-time years of the treatment are not annual: estimate_effects.py runs the long "
             "differences (E3) only, and Gate C labels every result an association")
-    cfg = {"primary_spec": prim, "specs": specs, "annual_treatment": annual, "min_e": EVENT_WINDOW[0],
+    cfg = {"primary_spec": prim, "specs": specs, "annual_treatment": annual,
+           "tier2_primary_spec": TIER2_PRIMARY_SPEC, "tier1_lag": list(TIER1_LAG), "min_e": EVENT_WINDOW[0],
            "max_e": EVENT_WINDOW[1], "conley_km": CONLEY_KM, "bh_q": BH_Q, "seed": SEED,
            "bootstrap_iters": BOOTSTRAP_ITERS, "max_units_cs": MAX_UNITS_CS, "max_units_sa": MAX_UNITS_SA,
            "composite_shift": COMPOSITE_SHIFT, "gate_v_r": GATE_V_R, "gate_v_min_n": GATE_V_MIN_N,

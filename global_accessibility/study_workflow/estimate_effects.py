@@ -48,9 +48,12 @@ DEFAULTS = {   # approved 2026-10-27 (revision 2 drafts marked in the study desi
     "max_units_cs": 200000,
     "max_units_sa": 100000,
     "composite_shift": 0.05, "gate_v_r": 0.3, "gate_v_min_n": 30, "gate_v_r_sensor": 0.8,
-    "annual_treatment": True,   # False: travel-time reference years not annual -> long differences only
+    "annual_treatment": True,   # False: travel-time reference years not annual -> Tier 2 (long differences) only
+    "tier1_lag": [1, 3],        # Tier 1 headline: mean effect over event years 1-3 (None: overall post-period mean)
+    "tier2_primary_spec": "total_cities_11",   # Tier 2 primary series (total travel time, Weiss-completed)
 }
-LONGDIFF_ONLY = "long differences only: travel-time years not annual, so the event study is not identified"
+FAMILIES = {"E1_cells": "land use", "E1c_replacement": "land use", "E2a_admin": "yield", "E2b_ea": "yield",
+            "E2d_vigour": "vigour", "E2e_admin": "crop mix", "E2e_ea": "crop mix"}   # one BH family each
 COLUMNS = ["dataset", "outcome", "crop", "spec", "estimator", "control", "term", "estimate", "se", "p", "n",
            "error", "note"]
 SHARE_OUTCOMES = ["share_maize", "share_cassava", "share_rice", "share_sorghum_millet", "share_cash",
@@ -227,14 +230,27 @@ def cs_estimate(d, yname, gname, control, meta, cfg, rng, weights="w"):
                     random_state=int(cfg["seed"]))
     dyn = md.aggte(att, type="dynamic", min_e=cfg["min_e"], max_e=cfg["max_e"], na_rm=True)
     simple = md.aggte(att, type="simple", na_rm=True)
+    lag = None
+    if cfg.get("tier1_lag"):
+        lo, hi = cfg["tier1_lag"]
+        lag = md.aggte(att, type="dynamic", min_e=int(lo), max_e=int(hi), na_rm=True)   # mean of e_lo..e_hi
     pre_p = getattr(att, "wald_pvalue", None)
     out = [row(meta, "overall", simple.overall_att, simple.overall_se, normal_p(simple.overall_att, simple.overall_se),
                n=dd["id"].nunique()),
            row(meta, "pretest_wald", np.nan, np.nan, pre_p if pre_p is not None else np.nan, n=n_treated,
                note=None if pre_p is not None else "Wald pre-test not available")]
+    if lag is not None:
+        out.append(row(meta, tier1_term(cfg), lag.overall_att, lag.overall_se,
+                       normal_p(lag.overall_att, lag.overall_se), n=n_treated))
     for e, a, s in zip(np.asarray(dyn.event_times), np.asarray(dyn.att_by_event), np.asarray(dyn.se_by_event)):
         out.append(row(meta, f"e{int(e)}", a, s, normal_p(a, s), n=n_treated))
     return out
+
+
+def tier1_term(cfg):
+    """Term of the Tier 1 headline effect: 'lag_1_3' (mean of event years 1-3) or 'overall'."""
+    lag = cfg.get("tier1_lag")
+    return f"lag_{int(lag[0])}_{int(lag[1])}" if lag else "overall"
 
 
 def sa_estimate(d, yname, gname, meta, cfg, rng):
@@ -378,15 +394,24 @@ def run_longdiff(d, cfg):
     ys = [c for c in d.columns if c.startswith("d_") and not c.startswith("d_access")
           and c not in ("d_rain", "d_logpop", "d_conflict")]
     specs = [c[len("d_access__"):] for c in d.columns if c.startswith("d_access__")]
+    period = d["period"] if "period" in d else pd.Series("main", index=d.index)
     rows = []
     for (ds, cr), dd in d.groupby(["dataset", d["crop"].fillna("__none__")], sort=True):
         crop = None if cr == "__none__" else cr
-        for y in [y for y in ys if dd[y].notna().any()]:
+        main, pre = dd[period.loc[dd.index] == "main"], dd[period.loc[dd.index] == "pre"]
+        for y in [y for y in ys if main[y].notna().any()]:
             for sp in specs:
                 x = f"d_access__{sp}"
-                base = {"dataset": ds, "outcome": y[2:], "crop": crop, "spec": sp, "estimator": "longdiff",
-                        "control": "all"}
-                rows += safely_run(lambda base=base, dd=dd, y=y, x=x: ld_estimate(dd, y, x, base, cfg), base)
+                # Tier 2: the long difference, its pre-period placebo, and the same without burst-attributed gains
+                fits = [("longdiff", main), ("longdiff_pre", pre)]
+                if f"burst__{sp}" in main and main[f"burst__{sp}"].fillna(False).astype(bool).any():
+                    fits.append(("longdiff_noburst", main[~main[f"burst__{sp}"].fillna(False).astype(bool)]))
+                for est_name, data in fits:
+                    if data.empty or not data[y].notna().any() or x not in data or not data[x].notna().any():
+                        continue
+                    base = {"dataset": ds, "outcome": y[2:], "crop": crop, "spec": sp, "estimator": est_name,
+                            "control": "all"}
+                    rows += safely_run(lambda base=base, data=data, y=y, x=x: ld_estimate(data, y, x, base, cfg), base)
     return rows
 
 
@@ -408,25 +433,34 @@ def same_crop(series, crop):
     return series.isna() if crop is None or (isinstance(crop, float) and np.isnan(crop)) else series == crop
 
 
-GATE_C_COLUMNS = ["dataset", "outcome", "crop", "effect", "p", "c1_pretrends", "c2_placebo", "c3_controls_versions",
-                  "c4_longdiff", "causal", "label"]
+GATE_C_COLUMNS = ["tier", "family", "dataset", "outcome", "crop", "effect", "p", "c1_pretrends", "c2_placebo",
+                  "c3_controls_versions", "c4_longdiff", "causal", "label"]
+TIER1_CAUSAL = "causal, short term (Tier 1 gate passed)"
+TIER2_CAUSAL = "causal, long term (Tier 2 gate passed)"
+
+
+def other_version(spec):
+    return spec.replace("roadonly_", "total_", 1) if spec.startswith("roadonly_") else spec.replace("total_", "roadonly_", 1)
 
 
 def gate_c(est, cfg):
-    prim = est[est.spec == cfg["primary_spec"]]
+    """Tier 1 (annual event studies): pre-trends, burst placebo, controls and versions, long-difference sign."""
+    ps, tm = cfg["primary_spec"], tier1_term(cfg)
+    prim = est[(est.spec == ps) & (est.estimator == "cs")]
     keys = prim[["dataset", "outcome", "crop"]].drop_duplicates()
     out = []
     for dataset, outcome, crop in keys.itertuples(index=False):
         crop = None if crop is None or (isinstance(crop, float) and np.isnan(crop)) else crop
 
-        def sel(e, ctrl, sp=cfg["primary_spec"], tm="overall"):
-            return est[(est.dataset == dataset) & (est.outcome == outcome) & same_crop(est.crop, crop)
-                       & (est.spec == sp) & (est.estimator == e) & (est.control == ctrl) & (est.term == tm)]
+        def sel(e, ctrl, sp=ps, term=tm):
+            r = est[(est.dataset == dataset) & (est.outcome == outcome) & same_crop(est.crop, crop)
+                    & (est.spec == sp) & (est.estimator == e) & (est.control == ctrl) & (est.term == term)]
+            return r if len(r) or term == "overall" else sel(e, ctrl, sp, "overall")
         main = sel("cs", "notyettreated")
         eff = main.estimate.iloc[0] if len(main) else np.nan
-        pre_p = sel("cs", "notyettreated", tm="pretest_wald").p
+        pre_p = sel("cs", "notyettreated", term="pretest_wald").p
         pre = est[(est.dataset == dataset) & (est.outcome == outcome) & same_crop(est.crop, crop)
-                  & (est.spec == cfg["primary_spec"]) & (est.estimator == "cs") & (est.control == "notyettreated")
+                  & (est.spec == ps) & (est.estimator == "cs") & (est.control == "notyettreated")
                   & est.term.str.match(r"^e-\d+$") & (est.term != "e-1")]
         c1 = bool(len(pre_p) == 1 and pre_p.iloc[0] > cfg["gate_pre_p"]
                   and (np.abs(pre.estimate.dropna()) < cfg["gate_pre_ratio"] * abs(eff)).all())
@@ -435,52 +469,80 @@ def gate_c(est, cfg):
               if len(plc) and np.isfinite(plc.estimate.iloc[0]) else None)
         ctrls = pd.concat([sel("cs", "notyettreated"), sel("cs", "nevertreated"), sel("cs", "matched"), sel("cs", "bands")])
         ctrls = ctrls[np.isfinite(ctrls.estimate)]
-        ps = cfg["primary_spec"]
-        other = ps.replace("roadonly_", "total_", 1) if ps.startswith("roadonly_") else ps.replace("total_", "roadonly_", 1)
-        alt = sel("cs", "notyettreated", sp=other)
+        alt = sel("cs", "notyettreated", sp=other_version(ps))
         c3 = bool((np.sign(ctrls.estimate) == np.sign(eff)).sum() >= 2
                   and (len(alt) == 0 or np.sign(alt.estimate.iloc[0]) == np.sign(eff)))
         ld = est[(est.estimator == "longdiff") & (est.outcome == outcome) & same_crop(est.crop, crop)
                  & (est.spec == ps) & (est.dataset == dataset)]
         c4 = bool(np.sign(ld.estimate.iloc[0]) == np.sign(eff)) if len(ld) and np.isfinite(ld.estimate.iloc[0]) else None
         causal = bool(c1 and c2 is True and c3 and c4 is True)
-        out.append({"dataset": dataset, "outcome": outcome, "crop": crop, "effect": eff,
-                    "p": main.p.iloc[0] if len(main) else np.nan, "c1_pretrends": c1, "c2_placebo": c2,
-                    "c3_controls_versions": c3, "c4_longdiff": c4, "causal": causal,
-                    "label": "causal (Gate C passed)" if causal else "association"})
-    g = pd.DataFrame(out, columns=GATE_C_COLUMNS)
-    if len(g):
-        g["q_bh"] = bh(g.p)
-        g["significant_bh"] = g.q_bh <= cfg["bh_q"]
-    return g
+        out.append({"tier": 1, "family": FAMILIES.get(dataset, "other"), "dataset": dataset, "outcome": outcome,
+                    "crop": crop, "effect": eff, "p": main.p.iloc[0] if len(main) else np.nan, "c1_pretrends": c1,
+                    "c2_placebo": c2, "c3_controls_versions": c3, "c4_longdiff": c4, "causal": causal,
+                    "label": TIER1_CAUSAL if causal else "association, short term"})
+    return pd.DataFrame(out, columns=GATE_C_COLUMNS)
 
 
-def gate_c_longdiff(est, cfg):
-    """Gate C when only long differences exist: no criterion can be assessed, every result is an association."""
-    ld = est[(est.estimator == "longdiff") & (est.spec == cfg["primary_spec"]) & (est.term == "overall")]
-    g = pd.DataFrame({"dataset": ld.dataset, "outcome": ld.outcome, "crop": ld.crop, "effect": ld.estimate,
-                      "p": ld.p, "c1_pretrends": None, "c2_placebo": None, "c3_controls_versions": None,
-                      "c4_longdiff": None, "causal": False, "label": f"association ({LONGDIFF_ONLY})"},
-                     columns=GATE_C_COLUMNS).reset_index(drop=True)
-    if len(g):
-        g["q_bh"] = bh(g.p)
-        g["significant_bh"] = g.q_bh <= cfg["bh_q"]
+def gate_t2(est, cfg):
+    """Tier 2 (long differences): c1 pre-period placebo (the pre-2015 outcome change does not follow the later
+    access change), c2 burst exclusion (same sign, ratio 0.5-2 without burst-attributed gains), c3 versions
+    (road-only and total travel time agree in sign)."""
+    ld = est[est.estimator.isin(["longdiff", "longdiff_pre", "longdiff_noburst"]) & (est.term == "overall")]
+    sp2 = cfg["tier2_primary_spec"] if (ld.spec == cfg["tier2_primary_spec"]).any() else cfg["primary_spec"]
+    keys = ld[(ld.spec == sp2) & (ld.estimator == "longdiff")][["dataset", "outcome", "crop"]].drop_duplicates()
+    out = []
+    for dataset, outcome, crop in keys.itertuples(index=False):
+        crop = None if crop is None or (isinstance(crop, float) and np.isnan(crop)) else crop
+
+        def sel(e, sp=sp2):
+            r = ld[(ld.dataset == dataset) & (ld.outcome == outcome) & same_crop(ld.crop, crop) & (ld.spec == sp)
+                   & (ld.estimator == e)]
+            return r[np.isfinite(r.estimate)]
+        main = sel("longdiff")
+        eff = main.estimate.iloc[0] if len(main) else np.nan
+        pre, nb, alt = sel("longdiff_pre"), sel("longdiff_noburst"), sel("longdiff", other_version(sp2))
+        c1 = (bool(pre.p.iloc[0] > cfg["gate_pre_p"] and abs(pre.estimate.iloc[0]) < cfg["gate_pre_ratio"] * abs(eff))
+              if len(pre) and np.isfinite(eff) else None)
+        ratio = nb.estimate.iloc[0] / eff if len(nb) and np.isfinite(eff) and eff != 0 else np.nan
+        c2 = bool(0.5 <= ratio <= 2) if np.isfinite(ratio) else None
+        c3 = bool(np.sign(alt.estimate.iloc[0]) == np.sign(eff)) if len(alt) and np.isfinite(eff) else None
+        causal = bool(c1 is True and c2 is True and c3 is True)
+        out.append({"tier": 2, "family": FAMILIES.get(dataset, "other"), "dataset": dataset, "outcome": outcome,
+                    "crop": crop, "effect": eff, "p": main.p.iloc[0] if len(main) else np.nan, "c1_pretrends": c1,
+                    "c2_placebo": c2, "c3_controls_versions": c3, "c4_longdiff": None, "causal": causal,
+                    "label": TIER2_CAUSAL if causal else "association, long term"})
+    return pd.DataFrame(out, columns=GATE_C_COLUMNS)
+
+
+def gate_table(est, cfg):
+    """Tier 1 (when the travel time is annual) and Tier 2 gates, with Benjamini-Hochberg q-values within each
+    tier and outcome family (land use, yield, vigour, crop mix)."""
+    parts = ([gate_c(est, cfg)] if cfg["annual_treatment"] else []) + [gate_t2(est, cfg)]
+    g = pd.concat([x for x in parts if len(x)] or [pd.DataFrame(columns=GATE_C_COLUMNS)], ignore_index=True)
+    g["q_bh"] = np.nan
+    for _, idx in g.groupby(["tier", "family"]).groups.items():
+        g.loc[idx, "q_bh"] = bh(g.loc[idx, "p"])
+    g["significant_bh"] = g.q_bh <= cfg["bh_q"]
     return g
 
 
 def composite_label(gc_tab, est, cfg):
+    """Yield and vigour results get the 'composite' label in a tier where access also shifts the crop mix
+    (E2e, a hypothesis of its own: a crop share significant after BH; in Tier 1 also >= composite_shift)."""
     if gc_tab.empty:
         return gc_tab
-    mix = est[est.dataset.str.startswith("E2e_") & (est.spec == cfg["primary_spec"]) & (est.estimator == "cs")
-              & (est.control == "notyettreated") & (est.term == "overall") & est.outcome.str.startswith("share_")
-              & (est.outcome != "share_sold") & np.isfinite(est.p)].copy()
-    mix["q"] = bh(mix.p)
-    mix["shift"] = (mix.q <= cfg["bh_q"]) & (mix.estimate.abs() >= cfg["composite_shift"])
-    shift_admin = bool(mix.loc[mix.dataset == "E2e_admin", "shift"].any())
-    shift_ea = bool(mix.loc[mix.dataset == "E2e_ea", "shift"].any())
     g = gc_tab.copy()
-    g["crop_mix_shift"] = np.select([g.dataset.isin(["E2a_admin", "E2d_vigour"]), g.dataset == "E2b_ea"],
-                                    [shift_admin | ((g.dataset == "E2d_vigour") & shift_ea), shift_ea], False)
+    g["crop_mix_shift"] = False
+    for tier in g.tier.unique():
+        mix = g[(g.tier == tier) & (g.family == "crop mix") & g.outcome.str.startswith("share_")
+                & (g.outcome != "share_sold") & (g.significant_bh == True)]                     # noqa: E712
+        if tier == 1:
+            mix = mix[mix.effect.abs() >= cfg["composite_shift"]]
+        shift_admin, shift_ea = (mix.dataset == "E2e_admin").any(), (mix.dataset == "E2e_ea").any()
+        t = g.tier == tier
+        g.loc[t & g.dataset.isin(["E2a_admin"]), "crop_mix_shift"] = shift_admin
+        g.loc[t & (g.dataset == "E2b_ea"), "crop_mix_shift"] = shift_ea
+        g.loc[t & (g.dataset == "E2d_vigour"), "crop_mix_shift"] = shift_admin or shift_ea
     comp = g.crop_mix_shift & g.dataset.isin(["E2a_admin", "E2b_ea", "E2d_vigour"])
     g.loc[comp, "label"] = g.loc[comp, "label"] + "; composite (yield + crop mix)"
     return g
@@ -564,8 +626,8 @@ def main(panels_dir="ae_results/panels", out_dir="ae_results/estimates", cfg_fil
     if not cfg["annual_treatment"]:
         # cohorts dated to 5-6-year reference intervals put treated years in the pre-periods and treated
         # units among the controls: the event-study estimators would report artefacts, so only E3 runs
-        log("event studies skipped: the travel-time reference years are not annual. Long differences only: "
-            "E1 (loss, conversion, annual/tree conversion), E2a and E2b; E1c, E2d and E2e are not estimated")
+        log("Tier 1 skipped: the travel-time reference years are not annual. Tier 2 (long differences) runs for "
+            "E1 (loss, conversion, annual/tree conversion), E2a, E2b and E2e; E1c and E2d need Tier 1")
         P = {n: (v if n == "e3_longdiff" else None) for n, v in P.items()}
     rows += run_dataset(P["e1_cells"], "E1_cells", ["conv_share", "conv_annual_share", "conv_tree_share",
                                                     "newcrop_share", "loss_share"], cfg, rng)
@@ -580,8 +642,7 @@ def main(panels_dir="ae_results/panels", out_dir="ae_results/estimates", cfg_fil
     rows += run_longdiff(P["e3_longdiff"], cfg)
     est = pd.DataFrame(rows, columns=COLUMNS)
     est.to_csv(out / "estimates.csv", index=False)
-    gate = gate_c if cfg["annual_treatment"] else gate_c_longdiff
-    gc_tab = composite_label(gate(est, cfg), est, cfg) if len(est) else pd.DataFrame(columns=GATE_C_COLUMNS)
+    gc_tab = composite_label(gate_table(est, cfg), est, cfg) if len(est) else pd.DataFrame(columns=GATE_C_COLUMNS)
     gc_tab.to_csv(out / "gate_c.csv", index=False)
     gate_v(est, Path(panels_dir) / "gate_v_inputs.csv", cfg).to_csv(out / "gate_v.csv", index=False)
     (out / "versions.txt").write_text(json.dumps(versions(), indent=1))
