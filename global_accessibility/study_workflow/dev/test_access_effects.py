@@ -268,7 +268,10 @@ def test_stages_write_tables(run):
     e2b = pd.read_parquet(r / "panels" / "e2b_ea.parquet")
     assert e2b.ea.nunique() == 6 and set(e2b.year) == {2010, 2012, 2015, 2018}
     assert {"g__roadonly_cities_11", "log_yield", "n_hh", "n_plots"} <= set(e2b.columns)
-    assert "E2b_ea" in set(e3.dataset)
+    # waves 2010/2012/2015/2018 against travel time 2015/2020/2026: only 2015 is within a year of a reference
+    # year, so no wave pair has a measured access change and E2b has no long difference
+    assert "E2b_ea" not in set(e3.dataset)
+    assert "d_rain" in e3.columns and e3[e3.dataset == "E2a_admin"].d_rain.notna().all()
     # --- revision 2 -------------------------------------------------------------------------------------
     tile = run["tiles"][0]["tile"]
     la = pd.read_parquet(w / "landcover_alt" / f"{tile}.parquet").merge(lu, on="cell")
@@ -690,3 +693,43 @@ def test_canonical_crop_unifies_languages_and_spellings():
     assert got == ["MAIZE", "MAIZE", "MAIZE", "MILLET", "COWPEA", "PIGEON PEA", "GROUNDNUTS"]
     assert list(ae.crop_group(got)) == ["maize"] * 3 + ["sorghum_millet", "staples_other", "staples_other",
                                                        "staples_other"]
+
+
+def test_ea_longdiff_pairs_waves_by_reference_year():
+    tr = pd.DataFrame({"uid": [1], "tt_roadonly_cities_11_2015": [100.0], "tt_roadonly_cities_11_2020": [50.0],
+                       "tt_roadonly_cities_11_2026": [40.0], "ev_roadonly_cities_11": [2019],
+                       "rain_2015": [800.0], "rain_2021": [900.0], "pop_2015": [10.0], "pop_2020": [20.0]})
+    # Ethiopia-like waves: 2011 and 2013 have no reference year within one year, 2015 -> 2015, 2021 -> 2020
+    panel = pd.DataFrame({"id": 1, "uid": 1, "crop": "MAIZE", "lat": 9.0, "lon": 39.0, "region": "ETH", "w": 1.0,
+                          "year": [2011, 2013, 2015, 2021], "log_yield": [0.1, 0.2, 0.3, 0.7]})
+    d = ae.ea_longdiff(panel, tr)
+    assert len(d) == 1 and d.epoch.iloc[0] == "2015-2021"
+    assert d.d_log_yield.iloc[0] == pytest.approx(0.4)
+    assert d["d_access__roadonly_cities_11"].iloc[0] == pytest.approx(np.log1p(100) - np.log1p(50), rel=1e-5)
+    assert d.d_rain.iloc[0] == pytest.approx(100.0)
+    assert d.d_logpop.iloc[0] == pytest.approx(np.log1p(20) - np.log1p(10), rel=1e-5)
+    # annual reference years: consecutive waves, as before
+    tr_annual = pd.DataFrame({"uid": [1], "ev_roadonly_cities_11": [2019]}).assign(
+        **{f"tt_roadonly_cities_11_{y}": 100.0 - y % 100 for y in range(2011, 2022)})
+    assert list(ae.ea_longdiff(panel, tr_annual).epoch) == ["2011-2013", "2013-2015", "2015-2021"]
+
+
+def test_conley_refuses_clustered_locations():
+    import estimate_effects as ef
+    with pytest.raises(ValueError, match="too few"):
+        ef.check_conley_support(np.zeros(5), np.arange(5) * 0.1, 50)
+    with pytest.raises(ValueError, match="too clustered"):
+        ef.check_conley_support(np.linspace(0, 0.3, 30), np.linspace(0, 0.3, 30), 50)
+    ef.check_conley_support(np.linspace(0, 5, 30), np.linspace(0, 5, 30), 50)       # 780 km: fine
+
+
+def test_ea_value_per_hectare_counts_valued_plots_only():
+    plots = pd.DataFrame({"country": "Malawi", "ea_id_obs": 1, "household_id_obs": [f"h{i}" for i in range(10)],
+                          "plot_id_obs": [f"p{i}" for i in range(10)], "crop_name": "MAIZE", "year": 2016,
+                          "harvest_kg": 100.0, "crop_area_ha": 1.0, "intercropped": False,
+                          "harvest_value_USD": [100.0] * 5 + [np.nan] * 5, "total_hired_labor_days": [2.0] * 5 + [np.nan] * 5,
+                          "inorganic_fertilizer": 1.0, "improved": 0.0, "share_kg_sold": 0.0, "pw": 1.0})
+    g = ae.ea_aggregate(plots)
+    allc = g[g.crop_name == "ALL"]
+    assert np.exp(allc.log_value_ha.iloc[0]) == pytest.approx(100.0)
+    assert g[g.crop_name == "MAIZE"].hired.iloc[0] == pytest.approx(1.0)     # missing labour is not 'none'

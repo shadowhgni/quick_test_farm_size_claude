@@ -1817,6 +1817,16 @@ def fetch_github_file(url, dest, sess):
     return f
 
 
+def with_covariates(t, cov_file):
+    """t with the rain_<y> columns of the tile's covariates table (stage covariates), when it exists."""
+    if not cov_file or not Path(cov_file).exists():
+        return t
+    names = [c for c in pq.read_schema(cov_file).names if re.fullmatch(r"rain_\d{4}", c)]
+    if not names:
+        return t
+    return t.merge(pd.read_parquet(cov_file, columns=["cell"] + names), on="cell", how="left")
+
+
 def unit_sums_job(job):
     """Per admin unit and reference year: weighted sums of log1p(travel time), weights, and the weight of
     event cells (all, burst) by event year; over the cells of one tile."""
@@ -1846,6 +1856,7 @@ def unit_sums_job(job):
     pops = sorted(c for c in t.columns if re.fullmatch(r"pop_\d{4}", c))
     if pops:
         wcols["population"] = t[pops[0]].fillna(0).to_numpy(np.float64)
+    t = with_covariates(t, job.get("covariates"))
     out = []
     for wname, w in wcols.items():
         rec = {"uid": t.uid.to_numpy()}
@@ -1853,6 +1864,8 @@ def unit_sums_job(job):
         for c in t.columns:
             if c.startswith("tt_"):
                 rec[f"s_{c}"] = w * np.log1p(t[c].to_numpy(np.float64))
+            elif re.fullmatch(r"(rain|pop)_\d{4}", c):
+                rec[f"s_{c}"] = w * t[c].fillna(0).to_numpy(np.float64)     # weighted mean rainfall, population
         for sp in spec_names(t.columns):
             ev, cls = t[f"ev_{sp}"].to_numpy(), t.get(f"evclass_{sp}")
             for y in np.unique(ev[ev > 0]):
@@ -1878,6 +1891,9 @@ def unit_treatment(sums, weight, fallback=None):
         used = pd.concat([used, pd.Series(fallback, index=f.index)])
     out = pd.DataFrame(index=s.index)
     out["weight_used"] = used.reindex(s.index).to_numpy()
+    for c in s.columns:                                  # weighted mean rainfall and population of the unit
+        if re.fullmatch(r"s_(rain|pop)_\d{4}", c):
+            out[c[2:]] = (s[c] / s.w).astype(np.float32).to_numpy()
     specs = sorted({c[5:].rsplit("_", 1)[0] for c in s.columns if c.startswith("s_tt_")})
     for sp in specs:
         ys = sorted(int(c.rsplit("_", 1)[1]) for c in s.columns if c.startswith(f"s_tt_{sp}_"))
@@ -1971,6 +1987,9 @@ def admin_longdiff(units_tr, hv_panel, units):
             y0, y1 = nearest_year(ys, a, LONG_EPOCH_TOL), nearest_year(ys, b, LONG_EPOCH_TOL)
             if y0 and y1 and y0 < y1:
                 rec[f"d_access__{sp}"] = -(np.log1p(dy[f"tt_{sp}_{y1}"]) - np.log1p(dy[f"tt_{sp}_{y0}"])).to_numpy()
+        add_covariate_changes(rec, dy, np.full(len(dy), a), np.full(len(dy), b), window=2)
+        yrs = sorted(hv_panel.year[hv_panel.year.between(b - 2, b)].unique().tolist())
+        log(f"E2a long difference {a}-{b}: {len(rec):,} unit-crop series; end-window harvest years {yrs}")
         rows.append(rec)
     return pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
 
@@ -2003,7 +2022,8 @@ def stage_admin(ctx):
         transform, shape = tile_grid(ctx, t)
         jobs.append({"tile": t["tile"], "win": t["win"], "treatment": str(tf), "transform": transform,
                      "shape": shape, "bounds": (t["w"], t["s"], t["e"], t["n"]), "units": str(uf),
-                     "landuse": str(work / "landuse" / f"{t['tile']}.parquet")})
+                     "landuse": str(work / "landuse" / f"{t['tile']}.parquet"),
+                     "covariates": str(work / "covariates" / f"{t['tile']}.parquet")})
     parts = [p for p in run_parallel(unit_sums_job, jobs, 3e9, "admin unit sums") if p is not None]
     if not parts:
         log("admin: no HarvestStat unit overlaps the treatment tiles")
@@ -2176,7 +2196,8 @@ def ea_aggregate(plots, intercropped=False):
     """EA x crop x year yields: ratio of sums (kg / ha) over the plots, with counts and mechanisms."""
     d = plots[(plots.harvest_kg >= 0) & (plots.crop_area_ha > 0) & (plots.intercropped == intercropped)].copy()
     d["ea"] = d.country.astype(str) + "|" + d.ea_id_obs.astype(str)
-    d["hired"] = pd.to_numeric(d.total_hired_labor_days, errors="coerce") > 0
+    hd = pd.to_numeric(d.total_hired_labor_days, errors="coerce")
+    d["hired"] = (hd > 0).astype(float).where(hd.notna())          # missing stays missing (mean skips it)
     g = d.groupby(["ea", "country", "crop_name", "year"]).agg(
         kg=("harvest_kg", "sum"), ha=("crop_area_ha", "sum"), n_hh=("household_id_obs", "nunique"),
         n_plots=("plot_id_obs", "nunique"), fert=("inorganic_fertilizer", "mean"), improved=("improved", "mean"),
@@ -2184,7 +2205,9 @@ def ea_aggregate(plots, intercropped=False):
     g = g[(g.n_hh >= EA_MIN_HH) & (g.n_plots >= EA_MIN_PLOTS)]
     g["log_yield"] = np.log(g.kg / g.ha).replace([-np.inf, np.inf], np.nan)
     # crop-agnostic outcome: value of output per hectare, all crops and plots of the EA
-    v = plots[plots.crop_area_ha > 0].assign(ea=lambda x: x.country.astype(str) + "|" + x.ea_id_obs.astype(str))
+    # plots with a value only: an unvalued plot (no price or conversion) must not add area without value
+    v = plots[(plots.crop_area_ha > 0) & plots.harvest_value_USD.notna()] \
+        .assign(ea=lambda x: x.country.astype(str) + "|" + x.ea_id_obs.astype(str))
     vv = v.groupby(["ea", "country", "year"]).agg(usd=("harvest_value_USD", "sum"), ha=("crop_area_ha", "sum"),
                                                   n_hh=("household_id_obs", "nunique")).reset_index()
     vv = vv[vv.n_hh >= EA_MIN_HH]
@@ -2218,7 +2241,9 @@ def ea_sums_job(job):
     tree = cKDTree(np.column_stack([t.lon.to_numpy() * c0, t.lat.to_numpy()]))
     hits = tree.query_ball_point(np.column_stack([pts.lon.to_numpy() * c0, pts.lat.to_numpy()]),
                                  EA_RADIUS_KM / 111.32)
+    t = with_covariates(t, job.get("covariates"))
     logtt = {c: np.log1p(t[c].to_numpy(np.float64)) for c in t.columns if c.startswith("tt_")}
+    covs = {c: t[c].fillna(0).to_numpy(np.float64) for c in t.columns if re.fullmatch(r"(rain|pop)_\d{4}", c)}
     evs = {sp: (t[f"ev_{sp}"].to_numpy(), t[f"evclass_{sp}"].to_numpy()) for sp in spec_names(t.columns)}
     rows = []
     for uid, h in zip(pts.uid, hits):
@@ -2228,6 +2253,8 @@ def ea_sums_job(job):
         for wname, ww in (("cropland", crop[h]), ("equal", np.ones(len(h)))):
             rec = {"uid": uid, "weight": wname, "w": ww.sum()}
             for c, v in logtt.items():
+                rec[f"s_{c}"] = float((ww * v[h]).sum())
+            for c, v in covs.items():
                 rec[f"s_{c}"] = float((ww * v[h]).sum())
             for sp, (ev, cls) in evs.items():
                 eh, ch = ev[h], cls[h]
@@ -2290,7 +2317,8 @@ def stage_lsms(ctx):
         if tf is not None:
             jobs.append({"tile": t["tile"], "treatment": str(tf), "points": str(pf),
                          "bounds": (t["w"], t["s"], t["e"], t["n"]),
-                         "landuse": str(ctx["work"] / "landuse" / f"{t['tile']}.parquet")})
+                         "landuse": str(ctx["work"] / "landuse" / f"{t['tile']}.parquet"),
+                         "covariates": str(ctx["work"] / "covariates" / f"{t['tile']}.parquet")})
     parts = [p for p in run_parallel(ea_sums_job, jobs, 3e9, "EA treatment") if p is not None]
     if not parts:
         log("lsms: no EA point inside the treatment tiles")
@@ -2313,11 +2341,24 @@ def stage_lsms(ctx):
 
 
 def ea_longdiff(panel, tr):
-    """E3 for EAs: consecutive-wave differences of log yield of each EA x crop against the access gain
-    between the two survey years (reference years nearest to them, within LONG_EPOCH_TOL)."""
-    p = panel.sort_values(["id", "year"])
-    nxt = p.groupby("id")[["year", "log_yield"]].shift(-1)
-    d = p.assign(y1=nxt.year, ly1=nxt.log_yield).dropna(subset=["y1", "ly1", "log_yield"])
+    """E3 for EAs: log-yield differences of each EA x crop between survey waves, against the access gain
+    between the travel-time reference years of the two waves. Each wave is matched to the reference year
+    nearest to it (within LONG_EPOCH_TOL; the closest wave per reference year is kept), and successive
+    matched waves are paired: consecutive waves with annual travel time, e.g. 2015 -> 2021 for the
+    reference years 2015/2020/2026. Rainfall and population changes of the EA are the covariates."""
+    specs = spec_names(tr.columns)
+    common = [set(tt_years(tr.columns, sp)) for sp in specs]
+    ys = sorted(set.intersection(*common)) if common else []
+    p = panel.dropna(subset=["log_yield"]).copy()
+    p["ref"] = [nearest_year(ys, int(y), LONG_EPOCH_TOL) if ys else None for y in p.year]
+    p = p[p.ref.notna()].copy()
+    if p.empty:
+        return pd.DataFrame()
+    p["ref"] = p.ref.astype(int)
+    p["gap"] = (p.year - p.ref).abs()
+    p = p.sort_values(["id", "ref", "gap", "year"]).drop_duplicates(["id", "ref"]).sort_values(["id", "ref"])
+    nxt = p.groupby("id")[["year", "ref", "log_yield"]].shift(-1)
+    d = p.assign(y1=nxt.year, ref1=nxt.ref, ly1=nxt.log_yield).dropna(subset=["y1", "ref1", "ly1"])
     if d.empty:
         return pd.DataFrame()
     out = pd.DataFrame({"dataset": "E2b_ea", "crop": d.crop.to_numpy(), "id": d.id.to_numpy(),
@@ -2326,19 +2367,40 @@ def ea_longdiff(panel, tr):
                         "epoch": d.year.astype(int).astype(str).to_numpy() + "-" + d.y1.astype(int).astype(str).to_numpy(),
                         "d_log_yield": (d.ly1 - d.log_yield).to_numpy()})
     trx = tr.set_index("uid")
-    for sp in spec_names(tr.columns):
-        ys = tt_years(tr.columns, sp)
-        vals = []
-        for u, y0, y1 in zip(d.uid, d.year, d.y1):
-            ya, yb = nearest_year(ys, int(y0), LONG_EPOCH_TOL), nearest_year(ys, int(y1), LONG_EPOCH_TOL)
-            if ya is None or yb is None:
-                vals.append(np.nan)
-            elif ya == yb:
-                vals.append(0.0)       # both surveys between the same reference years: no measured change
-            else:
-                vals.append(-(np.log1p(trx.at[u, f"tt_{sp}_{yb}"]) - np.log1p(trx.at[u, f"tt_{sp}_{ya}"])))
-        out[f"d_access__{sp}"] = np.asarray(vals, np.float32)
+    for sp in specs:
+        a = trx.loc[d.uid, [f"tt_{sp}_{y}" for y in ys]].to_numpy(np.float64)
+        col = {y: i for i, y in enumerate(ys)}
+        i0 = np.array([col[int(y)] for y in d.ref]); i1 = np.array([col[int(y)] for y in d.ref1])
+        rows = np.arange(len(d))
+        out[f"d_access__{sp}"] = (-(np.log1p(a[rows, i1]) - np.log1p(a[rows, i0]))).astype(np.float32)
+    add_covariate_changes(out, trx.loc[d.uid], d.year.astype(int).to_numpy(), d.y1.astype(int).to_numpy(), window=0)
+    by = out.groupby("region").size().to_dict()
+    log(f"E2b long differences: {len(out):,} EA-crop wave pairs by country {by}")
     return out
+
+
+def add_covariate_changes(out, tr_rows, y0, y1, window):
+    """d_rain (mean rainfall of years y-window..y, end minus start) and d_logpop (nearest population epochs)
+    from the unit columns rain_<y> and pop_<e> of tr_rows (one row per out row)."""
+    rain = {int(c.split("_")[1]): tr_rows[c].to_numpy(np.float64) for c in tr_rows.columns if re.fullmatch(r"rain_\d{4}", c)}
+    pops = sorted(int(c.split("_")[1]) for c in tr_rows.columns if re.fullmatch(r"pop_\d{4}", c))
+    n = len(out)
+    if rain:
+        def mean_rain(ends):
+            v = np.full(n, np.nan)
+            for i, e in enumerate(ends):
+                got = [rain[y][i] for y in range(e - window, e + 1) if y in rain]
+                v[i] = np.mean(got) if got else np.nan
+            return v
+        out["d_rain"] = (mean_rain(y1) - mean_rain(y0)).astype(np.float32)
+    if len(pops) >= 2:
+        pa = [nearest_year(pops, int(y), 3) for y in y0]
+        pb = [nearest_year(pops, int(y), 3) for y in y1]
+        v = np.full(n, np.nan)
+        for i, (a, b) in enumerate(zip(pa, pb)):
+            if a and b and a < b:
+                v[i] = np.log1p(tr_rows[f"pop_{b}"].iat[i]) - np.log1p(tr_rows[f"pop_{a}"].iat[i])
+        out["d_logpop"] = v.astype(np.float32)
 
 
 # =============================================================================
@@ -2909,10 +2971,21 @@ def e3_longdiff(s, epochs, loss_years):
         rem = forest - sum(s.get(f"loss_km2_{y}", 0) for y in before)
         rem = np.maximum(np.asarray(rem, np.float64), 0)
         with np.errstate(invalid="ignore", divide="ignore"):
-            for name, col in (("loss_share", "loss_km2"), ("conv_share", "conv_km2")):
-                tot = sum(s[f"{col}_{y}"].to_numpy(np.float64) for y in during if f"{col}_{y}" in s)
-                d[f"d_{name}"] = np.where(rem > 0, np.asarray(tot) / rem, np.nan).astype(np.float32) \
-                    if not np.isscalar(tot) else np.full(len(s), np.nan, np.float32)
+            for name, col in (("loss_share", "loss_km2"), ("conv_share", "conv_km2"),
+                              ("conv_annual_share", "conv_annual_km2"), ("conv_tree_share", "conv_tree_km2")):
+                have = sorted(int(c.rsplit("_", 1)[1]) for c in s.columns if re.fullmatch(rf"{col}_\d{{4}}", c))
+                if not have:
+                    continue
+                # conversion needs cropland up to CONVERSION_WINDOW years after the loss: only loss years whose
+                # window is fully observed count, so the late epochs are not censored without notice
+                last = have[-1] - (CONVERSION_WINDOW if name != "loss_share" else 0)
+                use = [y for y in during if y in have and y <= last]
+                if not use:
+                    continue
+                if use != during:
+                    log(f"E3 {a}-{b} d_{name}: years {use[0]}-{use[-1]} (observed in full), not {during[0]}-{during[-1]}")
+                tot = sum(s[f"{col}_{y}"].to_numpy(np.float64) for y in use)
+                d[f"d_{name}"] = np.where(rem > 0, tot / rem, np.nan).astype(np.float32)
         ra = [f"rain_{y}" for y in range(a - 2, a + 1) if f"rain_{y}" in s]
         rb = [f"rain_{y}" for y in range(b - 2, b + 1) if f"rain_{y}" in s]
         if ra and rb:

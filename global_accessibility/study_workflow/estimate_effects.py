@@ -56,6 +56,10 @@ COLUMNS = ["dataset", "outcome", "crop", "spec", "estimator", "control", "term",
 SHARE_OUTCOMES = ["share_maize", "share_cassava", "share_rice", "share_sorghum_millet", "share_cash",
                   "share_staples_other", "shannon"]
 R_EARTH_KM = 6371.0088
+# Conley errors need many locations spread well beyond the cutoff: with every observation within the cutoff
+# of every other, the scores sum to zero and the variance collapses to ~0 (p = 0 for pure noise)
+CONLEY_MIN_LOCATIONS = 20
+CONLEY_MIN_SPREAD = 2.0         # farthest location from any one location, in cutoffs
 
 
 def log(*a):
@@ -128,6 +132,19 @@ def conley_meat(scores, lat, lon, cutoff_km):
     return meat
 
 
+def check_conley_support(lat, lon, cutoff_km):
+    """Raise when the locations are too few or too close together for a Conley variance."""
+    loc = np.unique(np.column_stack([np.round(np.asarray(lat, float), 5), np.round(np.asarray(lon, float), 5)]), axis=0)
+    if len(loc) < CONLEY_MIN_LOCATIONS:
+        raise ValueError(f"{len(loc)} locations: too few for Conley errors (minimum {CONLEY_MIN_LOCATIONS})")
+    xyz = unit_xyz(loc[:, 0], loc[:, 1])
+    chord = np.linalg.norm(xyz - xyz[0], axis=1).max()
+    far = 2 * R_EARTH_KM * math.asin(min(1.0, chord / 2))
+    if far < CONLEY_MIN_SPREAD * cutoff_km:
+        raise ValueError(f"locations within {far:.0f} km of each other: too clustered for Conley errors with a "
+                         f"{cutoff_km:g} km cutoff")
+
+
 def fe_count(data, fes):
     """Number of fixed-effect parameters (levels of every FE dimension, minus one per extra dimension)."""
     k = 0
@@ -155,6 +172,7 @@ def feols_conley(fml, data, weights, cutoff_km, fes):
         raise ValueError(f"too few observations ({len(data)}) for {len(xs)} regressors and the fixed effects")
     if all(data[x].nunique() <= 1 for x in xs):
         raise ValueError("no variation in the regressors")
+    check_conley_support(data["lat"].to_numpy(), data["lon"].to_numpy(), cutoff_km)
     fit = pf.feols(fml, data=data, weights=weights, vcov="hetero", copy_data=False)
     used = fit._data
     s, bread = np.asarray(fit._scores), np.asarray(fit._bread)
@@ -546,7 +564,8 @@ def main(panels_dir="ae_results/panels", out_dir="ae_results/estimates", cfg_fil
     if not cfg["annual_treatment"]:
         # cohorts dated to 5-6-year reference intervals put treated years in the pre-periods and treated
         # units among the controls: the event-study estimators would report artefacts, so only E3 runs
-        log("event studies skipped: the travel-time reference years are not annual (long differences only)")
+        log("event studies skipped: the travel-time reference years are not annual. Long differences only: "
+            "E1 (loss, conversion, annual/tree conversion), E2a and E2b; E1c, E2d and E2e are not estimated")
         P = {n: (v if n == "e3_longdiff" else None) for n, v in P.items()}
     rows += run_dataset(P["e1_cells"], "E1_cells", ["conv_share", "conv_annual_share", "conv_tree_share",
                                                     "newcrop_share", "loss_share"], cfg, rng)
